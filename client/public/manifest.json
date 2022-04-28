@@ -1,0 +1,20 @@
+{
+  "short_name": "All That Calculator",
+  "name": "All That Calculator",
+  "icons": [
+    {
+      "src": "ATCLogo_c.png",
+      "type": "image/png",
+      "sizes": "300x300"
+    },
+    {
+      "src": "ATCLogo_b.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
