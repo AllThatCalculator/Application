@@ -15,8 +15,8 @@ AllThatCalculator Application
 APPLICATION
 ├─.github
 │  └─ISSUE_TEMPLATE
-├─calculets             // 계산기 모듈 저장
 ├─client                // frontend
+│  ├─calculets             // 계산기 모듈 저장
 │  ├─node_modules
 │  ├─public
 │  └─src
