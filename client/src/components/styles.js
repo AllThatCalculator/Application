@@ -1,0 +1,46 @@
+import "../css/font.css";
+const styleColor = {
+  blue900: "#143578",
+  blue400: "#6F8AC3",
+  blue200: "#9CB2DF",
+  blue50: "#CFD5DE",
+  white300: "#ffffff",
+  green100: "#C3EED2",
+};
+const styleLayout = {
+  basic100: "10px 14px",
+  basic200: "8px",
+  basic300: "10px",
+  basic400: "18px 22px",
+};
+const styleSize = {
+  buttonOperator: `heigth: 46px;
+width: 46px`,
+};
+const sytleText = {
+  text400: `font-family: "S-CoreDream-4Regular";
+font-size: 18px;`,
+  text200: `font-family: "S-CoreDream-3Light";
+font-size: 14px;`,
+  buttonWhite: `font-family: "S-CoreDream-5Medium";
+font-size: 14px;`,
+  buttonBlue: `font-family: "S-CoreDream-6Bold";
+font-size: 14px;`,
+};
+const styleBorder = {
+  basic100: `  border-radius: 7px;
+border: none;`,
+  basic200: `  border-radius: 10px;
+border: none;`,
+};
+const styleEffect = {
+  opacity100: `box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25)`,
+};
+export default {
+  styleColor,
+  styleLayout,
+  sytleText,
+  styleBorder,
+  styleEffect,
+  styleSize,
+};
