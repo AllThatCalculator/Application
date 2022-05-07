@@ -9,6 +9,7 @@ const styleColor = {
   blue400: "#6F8AC3",
   blue200: "#9CB2DF",
   blue50: "#CFD5DE",
+  blue30: "#ECF2FF",
   white300: "#ffffff",
   white100: { color: "#ffffff", opacity: 0.75 },
   white50: { color: "#ffffff", opacity: 0.65 },

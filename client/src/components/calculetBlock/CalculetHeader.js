@@ -9,7 +9,7 @@ const StyledItem = styled.button`
   border: 0;
   padding: 0;
   margin: 0;
-  background-color: ${styles.styleColor.white300};
+  background: none;
 `;
 
 const CalculetName = styled.div`
@@ -61,7 +61,7 @@ function CalculetHeader({ name, contributor, statistics }) {
       </FrontWrapper>
 
       <StatisticsWrapper>
-        <Item text="View" number={stats.viewCnt} onClick={console.log("ji")} />
+        <Item text="View" number={stats.viewCnt} />
         <Item text="Like" number={stats.likeCnt} />
         <Item text="Mark" number={stats.bookmarkCnt} />
         <Item text="Report" number={stats.reportCnt} />

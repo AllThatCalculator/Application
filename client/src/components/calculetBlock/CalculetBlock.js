@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import { useEffect, useState } from "react";
 
 // eslint-disable-next-line
-import srcCode from "raw-loader!../../calculets/arithmeticOperation.html";
+import srcCode from "raw-loader!../../calculets/arithmeticOperation/arithmeticOperation.html";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -20,35 +20,21 @@ function CalculetManual({ content }) {
   };
   return (
     <>
-      <ButtonGray text="자세히" toggle={toggle} onClick={onFlip} />
+      <div>
+        <ButtonGray text="자세히" toggle={toggle} onClick={onFlip} />
+      </div>
       {toggle && <ReactMarkdown children={content} toggle={toggle} />}
     </>
   );
 }
 
 async function loadCalculetManual(path, update) {
-  fetch(require("../../calculets/arithmeticOperation.md"))
+  fetch(require("../../calculets/arithmeticOperation/arithmeticOperation.md"))
     .then((res) => res.text())
     .then((textData) => update(textData));
 }
 
-function CalculetBlock() {
-  const [calculetObj, setCalculetObj] = useState({
-    name: "사칙연산 계산기",
-    id: 1,
-    srcCode: null,
-    contributor: "bas0322",
-    manual: null,
-    description: "사칙연산 계산기입니다.",
-    statistics: {
-      bookmarkCnt: 10,
-      likeCnt: 10,
-      reportCnt: 10,
-      viewCnt: 10,
-      calculationCnt: 10,
-      userCnt: 10,
-    },
-  });
+function CalculetBlock({ calculetObj }) {
   const [calculetCode, setCalculetCode] = useState(srcCode);
   const [calculetManual, setCalculetManual] = useState(null);
 
@@ -75,6 +61,7 @@ function CalculetBlock() {
         srcDoc={calculetCode}
         style={{ width: "100%", border: "none", overflow: "auto" }}
         onLoad={(e) => adjustHeight(e)}
+        scrolling="no"
       />
       <CalculetManual content={calculetManual} />
     </Wrapper>
