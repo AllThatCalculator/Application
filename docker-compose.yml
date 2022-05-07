@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  frontend:
+    stdin_open: true
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - ./client/:/client
+      - /client/node_modules
+    networks:
+      - app-tier
+    tty: true
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "8080:8080"
+    networks:
+      - app-tier
+    depends_on:
+      - frontend
+    volumes:
+      - ./client/:/client
+
+networks:
+  app-tier:
+    driver: bridge
