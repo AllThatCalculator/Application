@@ -1,7 +1,8 @@
-/*
-[필요한 함수]
-- isPossible (식 유효한지 검사)
-    - input: 입력식
+/* 함수 이름 규칙 통일
+타이틀[정수 사칙연산 계산기]
+[필요한 함수] - 함수는 동사형으로, isValid같은건 변수 이름
+- valid (식 유효한지 검사)
+    - input: 입력식(string)
     - output: true / false
 - parsing (식에서 단위 파싱)
     - input: 입력식
