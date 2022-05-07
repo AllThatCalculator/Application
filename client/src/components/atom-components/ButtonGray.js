@@ -47,20 +47,16 @@ const StyledText = styled.div`
  * 이벤트 나중에 구현
  * onClickHandler onClick={onClickHandler}
  * onClickHandler: propTypes.string */
-function ButtonGray({ text }) {
-  const [toggle, setToggle] = useState(false); //토글 처음엔 닫혀있음
-  const onFlip = () => {
-    setToggle((current) => !current);
-  };
+function ButtonGray({ text, toggle, onClick }) {
   return (
     <>
-      <StyledButton onClick={onFlip}>
+      <StyledButton onClick={onClick}>
         <div>
           <div style={{ marginRight: 10 }}>
             {toggle ? (
-              <StyledIcon name={`BsFillCaretRightFill`}></StyledIcon>
-            ) : (
               <StyledIcon name={`BsFillCaretDownFill`}></StyledIcon>
+            ) : (
+              <StyledIcon name={`BsFillCaretRightFill`}></StyledIcon>
             )}
           </div>
         </div>
