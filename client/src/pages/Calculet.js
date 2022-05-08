@@ -12,6 +12,8 @@ const Positioner = styled.div`
   align-self: center;
   gap: 14px;
   background: ${styles.styleColor.blue30};
+  margin-bottom: 15px;
+  padding: 15px;
 `;
 
 const Wrapper = styled.div`
@@ -24,7 +26,7 @@ function Calculet() {
     name: "사칙연산 계산기",
     id: 1,
     srcCode: null,
-    contributor: "bas0322",
+    contributor: "bsa0322",
     manual: null,
     description: "사칙연산 계산기입니다.",
     statistics: {
@@ -37,13 +39,15 @@ function Calculet() {
     },
   });
   return (
-    <Positioner>
-      <Wrapper>
-        <CalculetBlock calculetObj={calculetObj} />
-      </Wrapper>
-      <ButtonBlue text="계산기 등록" icon="BsUpload" />
+    <>
+      <Positioner>
+        <Wrapper>
+          <CalculetBlock calculetObj={calculetObj} />
+        </Wrapper>
+        <ButtonBlue text="계산기 등록" icon="BsUpload" />
+      </Positioner>
       <Recommend />
-    </Positioner>
+    </>
   );
 }
 
