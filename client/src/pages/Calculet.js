@@ -21,6 +21,12 @@ const Wrapper = styled.div`
   flex-direction: column;
   width: 897px;
 `;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 897px;
+`;
 function Calculet() {
   const [calculetObj, setCalculetObj] = useState({
     name: "사칙연산 계산기",
@@ -44,7 +50,9 @@ function Calculet() {
         <Wrapper>
           <CalculetBlock calculetObj={calculetObj} />
         </Wrapper>
-        <ButtonBlue text="계산기 등록" icon="BsUpload" />
+        <ButtonWrapper>
+          <ButtonBlue text="계산기 등록" icon="BsUpload" />
+        </ButtonWrapper>
       </Positioner>
       <Recommend />
     </>
