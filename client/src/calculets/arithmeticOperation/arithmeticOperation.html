@@ -428,21 +428,17 @@
         }
         //후위 표기식으로 변환해서 계산하는 함수
         function calculate(expression) {
-            console.log(expression);
             const postfixNotation = changePostfixNotation(expression); //후위 표기식 변환
-            console.log(postfixNotation);
             return postfixNotationCalculate(postfixNotation); //후위 표기식 연산
         }
         function main(input) {
             const valid = isValid(input);
-            console.log(valid);
             if (!valid) {
                 //식이 유효하지 않음
                 return false;
             }
             const result = parsing(input);
             const output = calculate(result);
-            console.log(output);
             return output;
         }
         const inputBox = document.querySelector("#input");
