@@ -42,7 +42,7 @@ font-size: 12px;`,
 font-size: 14px;`,
   buttonBlue: `font-family: "S-CoreDream-6Bold";
 font-size: 14px;`,
-  LogoTitle: `"S-CoreDream-7ExtraBold";
+  LogoTitle: `font-family: "S-CoreDream-7ExtraBold";
 font-size: 24px;`,
 };
 const styleBorder = {
