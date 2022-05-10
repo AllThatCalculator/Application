@@ -54,7 +54,8 @@ const StyledIcon = (props) => {
       width={Icons[props.name].width}
       viewBox={Icons[props.name].viewBox}
     >
-      <>{path(Icons[props.name].path)}</>
+      <path d={Icons[props.name].path[0]} />
+      <path d={Icons[props.name].path[1]} />
     </svg>
   );
 };
