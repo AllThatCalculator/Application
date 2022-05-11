@@ -1,7 +1,10 @@
-const operator = new Set(["+", "-", "*", "/"]); //+,-,*,/
-const openBracket = new Set(["(", "{", "["]); //여는 괄호
-const closeBracket = new Set([")", "}", "]"]); //닫는 괄호
-//후위 표기식 변환 시 필요한 연산자 우선순위
+//연산자(+, -, *, /), 한 번에 검사하기 위해 set으로 묶음
+const operator = new Set(["+", "-", "*", "/"]);
+//여는 괄호, 종류가 여러 개므로 한 번에 검사하기 위해 set으로 묶음
+const openBracket = new Set(["(", "{", "["]);
+//닫는 괄호, 종류가 여러 개므로 한 번에 검사하기 위해 set으로 묶음
+const closeBracket = new Set([")", "}", "]"]);
+//후위 표기식 변환 시 필요한 연산자 우선순위 (key: 연산자, value: 우선순위)
 const priority = new Map([
   ["*", 1],
   ["/", 1],
@@ -10,59 +13,66 @@ const priority = new Map([
   ["(", 3],
   [")", 3],
 ]);
-//닫는 괄호에 대해 여는 괄호 쌍 map에 저장
+//올바른 괄호 쌍 검사 시 사용할 괄호쌍 (key: 닫는 괄호, value: 여는 괄호)
 const bracket = new Map([
   [")", "("],
   ["}", "{"],
   ["]", "["],
 ]);
 
-//입력식이 유효한지 검사
-
 /**
- * hello this is a sample comment
+ * 입력식이 유효한지 검사하는 함수
  * @param {string} input
  * @returns boolean
  */
-function isValid(input) {
+function validate(input) {
   const len = input.length;
+  //길이 0이거나 '.'있으면
   if (len === 0 || input.includes(".")) {
-    //길이 0이거나 '.'있으면
     return false;
   }
   const first = input[0];
-  if (first === "*" || first === "/" || closeBracket.has(first)) {
-    //앞에 연산자
+  //처음이 숫자도 아니고, + or - 연산자도 아니고, 여는 괄호도 아닐 경우
+  if (
+    isNaN(first) &&
+    first !== "+" &&
+    first !== "-" &&
+    !openBracket.has(first)
+  ) {
     return false;
   }
+  //마지막 문자가 연산자인 경우
   if (operator.has(input[len - 1])) {
-    //마지막 문자가 연산자
-    return false;
-  }
-  if (isNaN(first) && !operator.has(first) && !openBracket.has(first)) {
     return false;
   }
 
+  //현재까지 검사한 원소가 수인지 true / false 저장
   let isNumber = !(first === "+" || first === "-");
+  //처음 시작인지 true / false 저장 (괄호 안의 식 처리하기 위해)
   let isFirst = openBracket.has(first);
-  const stack = []; //올바른 괄호쌍 검사
+  //올바른 괄호쌍 검사하기 위한 스택
+  const stack = [];
   if (isFirst) {
     stack.push(first);
   }
   for (let i = 1; i < len; i++) {
     const x = input[i];
-    //여는 괄호
+    //여는 괄호 -> 스택에 넣음
     if (openBracket.has(x)) {
       isFirst = true;
+      isNumber = false;
       stack.push(x);
       continue;
     }
-    //닫는 괄호 뒤에 무조건 연산자 와야하는걸!
+    //닫는 괄호
     else if (closeBracket.has(x)) {
+      //연산자 + 닫는 괄호 -> 유효하지 않은 식
       if (!isNumber) {
         return false;
       }
+      //닫는 괄호 뒤에 연산자 와야 하므로 isNumber = true로 설정
       isNumber = true;
+      //올바른 괄호쌍 확인
       if (stack.length === 0 || stack[stack.length - 1] !== bracket.get(x)) {
         return false;
       }
@@ -70,11 +80,13 @@ function isValid(input) {
     }
     //연산자
     else if (operator.has(x)) {
+      //첫 시작인 경우 + or - 연산자 가능
       if (isFirst && (x === "-" || x === "+")) {
         isNumber = false;
         isFirst = false;
         continue;
       }
+      //연산자 + 연산자 -> 유효하지 않은 식
       if (!isNumber) {
         return false;
       }
@@ -82,12 +94,14 @@ function isValid(input) {
     }
     //숫자
     else if (!isNaN(x)) {
-      //그 전 값이 닫는 괄호면 -> 유효한 식 x
+      //그 전 값이 닫는 괄호면 -> 유효하지 않은 식
       if (closeBracket.has(input[i - 1])) {
         return false;
       }
       isNumber = true;
-    } else {
+    }
+    //그 외의 다른 문자
+    else {
       return false;
     }
     isFirst = false;
@@ -98,28 +112,23 @@ function isValid(input) {
   return true;
 }
 
-//입력식 파싱하는 함수
+/**
+ * 유효한 입력식 파싱하는 함수
+ * @param {string} input
+ * @returns array
+ */
 function parsing(input) {
+  //파싱한 결과 저장하는 배열
   const parsingResult = [];
-  let isFirst = false;
+  //괄호 관리하기 위해 식의 첫 시작 관리
+  let isFirst = true;
+  //숫자 문자 연결하는 문자열. 나중에 int형으로 바꿔서 parsingResult에 넣음
   let number = "";
+  //음수, 양수 관리하는 변수
   let isMinus = false;
   let isPlus = false;
 
-  const first = input[0];
-  if (first === "-") {
-    isMinus = true;
-  } else if (first === "+") {
-    isPlus = true;
-  } else if (openBracket.has(first)) {
-    //여는 괄호
-    parsingResult.push("("); //소괄호 통일
-    isFirst = true;
-  } else {
-    number += first;
-  }
-
-  for (let i = 1; i < input.length; i++) {
+  for (let i = 0; i < input.length; i++) {
     const x = input[i];
     if (isFirst && x === "-") {
       isMinus = true;
@@ -133,12 +142,13 @@ function parsing(input) {
     }
     isFirst = false;
 
+    //숫자
     if (!isNaN(x)) {
-      //숫자라면
       number += x;
       continue;
     }
     //숫자 x
+    //수 채운 문자열이 채워져 있다면 -> 수로 바꿈
     if (number.length) {
       let num = parseInt(number);
       if (isMinus) {
@@ -151,6 +161,7 @@ function parsing(input) {
       parsingResult.push(num);
       number = "";
     }
+    //여는 괄호
     if (openBracket.has(x)) {
       if (isMinus || isPlus) {
         if (isMinus) {
@@ -162,16 +173,22 @@ function parsing(input) {
         }
         parsingResult.push("*");
       }
-      if (!isNaN(input[i - 1]) || closeBracket.has(input[i - 1])) {
+      //곱하기 생략된 경우 처리
+      if (i > 0 && (!isNaN(input[i - 1]) || closeBracket.has(input[i - 1]))) {
         parsingResult.push("*");
       }
       isFirst = true;
-      parsingResult.push("("); //소괄호로 통일
+      //소괄호로 통일
+      parsingResult.push("(");
       continue;
-    } else if (closeBracket.has(x)) {
-      parsingResult.push(")"); //소괄호로 통일
-    } else {
-      //연산 기호
+    }
+    //닫는 괄호
+    else if (closeBracket.has(x)) {
+      //소괄호로 통일
+      parsingResult.push(")");
+    }
+    //연산자
+    else {
       parsingResult.push(x);
     }
     isFirst = false;
@@ -192,7 +209,13 @@ function parsing(input) {
   return parsingResult;
 }
 
-//두 수 받아서 사칙연산한 결과 돌려주는 함수
+/**
+ * 두 수 받아서 사칙연산한 결과 돌려주는 함수
+ * @param {*} first
+ * @param {*} second
+ * @param {*} op
+ * @returns int
+ */
 function arithmeticOperation(first, second, op) {
   if (op === "+") {
     return first + second;
@@ -205,13 +228,17 @@ function arithmeticOperation(first, second, op) {
   }
 }
 
-//후위 표기식 계산하는 함수
+/**
+ * 후위 표기식 계산하는 함수
+ * @param {*} postfixNotation
+ * @returns int
+ */
 function postfixNotationCalculate(postfixNotation) {
   const stack = [];
   for (let i = 0; i < postfixNotation.length; i++) {
     const x = postfixNotation[i];
+    //x가 숫자라면
     if (!isNaN(x)) {
-      //x가 숫자라면
       stack.push(x);
       continue;
     }
@@ -222,17 +249,22 @@ function postfixNotationCalculate(postfixNotation) {
   return stack.pop();
 }
 
-//후위 표기식으로 변환하는 함수
+/**
+ * 후위 표기식으로 변환하는 함수
+ * @param {*} expression
+ * @returns array
+ */
 function changePostfixNotation(expression) {
   const postfixNotation = [];
   const stack = [];
   for (let i = 0; i < expression.length; i++) {
     const x = expression[i];
+    //여는 괄호면 스택에 넣기
     if (x === "(") {
-      //여는 괄호면 스택에 넣기
       stack.push(x);
-    } else if (x === ")") {
-      //닫는 괄호면 스택에서 연산자 빼오기
+    }
+    //닫는 괄호면 스택에서 연산자 빼오기
+    else if (x === ")") {
       while (stack.length && stack[stack.length - 1] !== "(") {
         postfixNotation.push(stack.pop());
       }
@@ -255,19 +287,30 @@ function changePostfixNotation(expression) {
   return postfixNotation;
 }
 
-//후위 표기식으로 변환해서 계산하는 함수
+/**
+ * 후위 표기식으로 변환해서 계산하는 함수
+ * @param {*} expression
+ * @returns int
+ */
 function calculate(expression) {
   console.log(expression);
-  const postfixNotation = changePostfixNotation(expression); //후위 표기식 변환
+  //후위 표기식 변환
+  const postfixNotation = changePostfixNotation(expression);
   console.log(postfixNotation);
-  return postfixNotationCalculate(postfixNotation); //후위 표기식 연산
+  //후위 표기식 연산
+  return postfixNotationCalculate(postfixNotation);
 }
 
+/**
+ * 메인 함수
+ * @param {*} input
+ * @returns int
+ */
 function main(input) {
-  const valid = isValid(input);
-  console.log(valid);
-  if (!valid) {
-    //식이 유효하지 않음
+  const isValid = validate(input);
+  console.log(isValid);
+  //식이 유효하지 않음
+  if (!isValid) {
     return false;
   }
   const result = parsing(input);
@@ -279,12 +322,17 @@ function main(input) {
 const inputBox = document.querySelector("#input");
 const outputBox = document.querySelector("#output");
 const enterBtn = document.querySelector("#enter-button");
+const errorMsg = "올바른 식을 입력해주세요.";
 
+/**
+ * 엔터 키 눌렀을 때 이벤트 함수
+ * @param {*} event
+ */
 function onKeyEvent(event) {
   if (event.key == "Enter") {
     const output = main(inputBox.value);
     if (output === false) {
-      outputBox.value = "올바른 식을 입력해주세요.";
+      outputBox.value = errorMsg;
     } else {
       outputBox.value = output;
     }
@@ -292,10 +340,14 @@ function onKeyEvent(event) {
   }
 }
 
+/**
+ * 엔터 버튼 눌렀을 때 버튼 이벤트 함수
+ * @param {*} event
+ */
 function onClickEvent(event) {
   const output = main(inputBox.value);
   if (output === false) {
-    outputBox.value = "올바른 식을 입력해주세요.";
+    outputBox.value = errorMsg;
   } else {
     outputBox.value = output;
   }
@@ -312,6 +364,9 @@ const divisionBtn = document.querySelector("#division");
 const bracketOpenBtn = document.querySelector("#bracket-open");
 const bracketCloseBtn = document.querySelector("#bracket-close");
 
+/**
+ * 연산자 버튼 이벤트 함수
+ */
 function onPlusEvent() {
   inputBox.value = `${inputBox.value}+`;
   inputBox.focus();
