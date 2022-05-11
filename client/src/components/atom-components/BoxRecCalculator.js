@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import propTypes from "prop-types";
 import { React } from "react";
 import styles from "../styles.js";
 
@@ -7,14 +6,13 @@ import styles from "../styles.js";
 const StyledButton = styled.button`
   display: flex;
   flex-direction: column;
-
+  gap: ${styles.styleLayout.basic700};
   width: 255px;
   height: 100px;
 
   padding: ${styles.styleLayout.basic100};
 
-  background: ${styles.styleColor.white100.color};
-  opacity: ${styles.styleColor.white100.opacity};
+  ${styles.styleColor.white100};
   color: ${styles.styleColor.black};
 
   ${styles.styleBorder.basic200};
@@ -24,7 +22,7 @@ const StyledButton = styled.button`
 // 프로필, 계산기이름 감쌈
 const Positioner = styled.div`
   display: flex;
-  margin-bottom: 5px;
+  gap: ${styles.styleLayout.basic700};
 `;
 // 프로필
 // 배경 바꿔야함 url(`${props.profileImg}`)
@@ -43,10 +41,7 @@ const StyledName = styled.div`
 const StyledDescription = styled.div`
   ${styles.sytleText.text100};
 `;
-// 간격
-const Spacer = styled.div`
-  margin-right: 5px;
-`;
+
 /**
  *
  * @param {계산기 이름, 간단 설명, 프로필이미지} param0
@@ -57,9 +52,7 @@ function BoxRecCalculator({ name, description, profileImg }) {
     <>
       <StyledButton id={name} description={description} profileImg={profileImg}>
         <Positioner>
-          <Spacer>
-            <StyledProfileImg profileImg={profileImg}></StyledProfileImg>
-          </Spacer>
+          <StyledProfileImg profileImg={profileImg}></StyledProfileImg>
           <StyledName>{name}</StyledName>
         </Positioner>
         <StyledDescription>{description}</StyledDescription>
@@ -67,9 +60,5 @@ function BoxRecCalculator({ name, description, profileImg }) {
     </>
   );
 }
-BoxRecCalculator.propTypes = {
-  name: propTypes.string.isRequired,
-  description: propTypes.string,
-  profileImg: propTypes.string,
-};
+
 export default BoxRecCalculator;

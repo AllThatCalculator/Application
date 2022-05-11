@@ -1,9 +1,7 @@
 import styled from "styled-components";
-import propTypes from "prop-types";
 import { React } from "react";
 import styles from "../styles.js";
-
-import { Icons } from "./Icons.js";
+import { svgPath } from "./svgs/svgPath";
 //스타일드 버튼
 const StyledButton = styled.button`
   color: ${(props) =>
@@ -11,41 +9,63 @@ const StyledButton = styled.button`
       ? `${styles.styleColor.blue900}`
       : `${styles.styleColor.white300}`};
 
-  display: inline-flex;
   background-color: transparent;
   padding: 0;
   border: none;
   ${styles.styleEffect.opacity100};
   cursor: pointer;
 `;
-// 스타일드 아이콘?
-const StyledIcon = (props) => {
-  return (
-    <svg
-      stroke="currentColor"
-      fill="currentColor"
-      strokeWidth="0"
-      xmlns="http://www.w3.org/2000/svg"
-      height={Icons[props.name].height}
-      width={Icons[props.name].width}
-      viewBox={Icons[props.name].viewBox}
-    >
-      <path d={Icons[props.name].path} />
-    </svg>
-  );
-};
-function ButtonIcon({ text, icon, color }) {
+const ImgIcon = styled.img`
+  width: 100%;
+`;
+//작은 아이콘 버튼
+const StyledBtnSmallIcon = styled(StyledButton)`
+  color: ${styles.styleSize.small};
+`;
+//중간 아이콘 버튼
+const StyledBtnMiddleIcon = styled(StyledButton)`
+  color: ${styles.styleSize.middle};
+`;
+
+// 검색창 안에 검색버튼용
+const StyledBtnInputIcon = styled(StyledBtnSmallIcon)`
+  position: absolute;
+  top: 23%;
+  right: 0%;
+  width: 8%;
+  right: 4%;
+`;
+
+/**
+ *
+ * @param {무슨 용도, 아이콘 이름, 파란색?하얀색?} param0
+ * @returns
+ */
+function BtnSmallIcon({ text, icon, color }) {
   return (
     <>
-      <StyledButton id={text} name={icon} color={color}>
-        <StyledIcon id={text} name={icon}></StyledIcon>
-      </StyledButton>
+      <StyledBtnSmallIcon id={text} name={icon} color={color}>
+        <ImgIcon src={svgPath[icon]} />
+      </StyledBtnSmallIcon>
     </>
   );
 }
-ButtonIcon.propTypes = {
-  text: propTypes.string.isRequired,
-  icon: propTypes.string.isRequired,
-  color: propTypes.string,
-};
-export default ButtonIcon;
+function BtnMiddleIcon({ text, icon, color }) {
+  return (
+    <>
+      <StyledBtnSmallIcon id={text} name={icon} color={color}>
+        <ImgIcon src={svgPath[icon]} />
+      </StyledBtnSmallIcon>
+    </>
+  );
+}
+function BtnInputIcon({ text, icon, color }) {
+  return (
+    <>
+      <StyledBtnInputIcon id={text} name={icon} color={color}>
+        <ImgIcon src={svgPath[icon]} />
+      </StyledBtnInputIcon>
+    </>
+  );
+}
+export { BtnSmallIcon, BtnMiddleIcon, BtnInputIcon };

@@ -11,7 +11,12 @@ const styleColor = {
   blue50: "#CFD5DE",
   blue30: "#ECF2FF",
   white300: "#ffffff",
-  white100: { color: "#ffffff", opacity: 0.75 },
+  white100: `
+  background: linear-gradient(
+    137deg,
+    rgba(255, 255, 255, 0.75) 38%,
+    rgba(255, 255, 255, 0) 122%
+  );`,
   white50: { color: "#ffffff", opacity: 0.65 },
   green100: "#C3EED2",
   black: "#000000",
@@ -20,14 +25,21 @@ const styleColor = {
 const styleLayout = {
   basic100: "10px 14px",
   basic200: "8px",
-  basic300: "10px",
+  basic300: "20px",
   basic400: "18px 22px",
   basic500: "8px 14px",
   basic600: "12px 35px",
+  basic700: "10px",
+  basic800: "12px 14px",
+  basic900: "14px",
 };
 const styleSize = {
   buttonOperator: `heigth: 46px;
 width: 46px`,
+  small: `heigth: 1.2em;
+  width: 1.2em`,
+  middle: `heigth: 1.4em;
+  width: 1.4em`,
 };
 const sytleText = {
   text400: `font-family: "S-CoreDream-4Regular";
