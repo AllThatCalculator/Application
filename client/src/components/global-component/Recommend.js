@@ -25,7 +25,7 @@ const Wrapper = styled(StyledDiv)`
  *
  * 추천 계산기 렌더하는 함수 (Recommend 내에서 처리하는 함수에요)
  *
- * @param {Array, boolean}
+ * @param {object, boolean}
  * calculets : 추천 계산기 전체 정보
  * loading : 렌더할 준비 되었는지 (정보 잘 가져왔는지)
  *

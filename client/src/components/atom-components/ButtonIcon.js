@@ -60,10 +60,13 @@ const StyledNumberText = styled(StyledNameText)`
 `;
 // 토글 닫는 버튼 스타일
 const StyledBtnToggle = styled(StyledBtnSmallIcon)`
-  background: ${styles.styleColor.blue50};
   color: ${styles.styleColor.blue900};
   border-radius: 50%;
   filter: none;
+  padding: 0px 0px 1px 0px;
+  &:hover {
+    background: ${styles.styleColor.blue50};
+  }
 `;
 //========================================================
 /**
