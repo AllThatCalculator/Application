@@ -1,7 +1,6 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import styles from "../styles.js";
-import { React } from "react";
-import { svgPath } from "./svgs/svgPath";
+import { Icons } from "./Icons.js";
 // 스타일드 기본 버튼
 const StyledButton = styled.button`
   display: flex;
@@ -24,35 +23,66 @@ const StyledText = styled.div`
   ${styles.sytleText.text100}
 `;
 // 스타일드 기본 아이콘
-const ImgIcon = styled.object`
-  color: ${styles.styleColor.blue900};
-`;
-const StyledDiv = styled.div`
-  display: flex;
+const StyledIcon = (props) => {
+  return (
+    <svg
+      stroke="currentColor"
+      fill="currentColor"
+      strokeWidth="0"
+      xmlns="http://www.w3.org/2000/svg"
+      height={Icons[props.name].height}
+      width={Icons[props.name].width}
+      viewBox={Icons[props.name].viewBox}
+    >
+      <path d={Icons[props.name].path[0]} />
+      {Icons[props.name].path[1] && <path d={Icons[props.name].path[1]} />}
+    </svg>
+  );
+};
+//스타일드 애니메이션
+const transform = keyframes`
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(0.95);
+  }
 `;
 //========================================================
-// 흰색버튼
+// 흰색버튼 스타일
 const StyledBtnWhite = styled(StyledButton)`
   ${styles.styleEffect.opacity100};
+  &:hover {
+    background: ${styles.styleColor.blue900};
+    color: ${styles.styleColor.white300};
+  }
 `;
 const StyledBtnWhiteText = styled(StyledText)`
   ${styles.sytleText.buttonWhite};
 `;
 //========================================================
-// 파란버튼
+// 파란버튼 스타일
 const StyledBtnBlue = styled(StyledButton)`
   padding: ${styles.styleLayout.basic400};
 
   background: ${styles.styleColor.blue900};
   color: ${styles.styleColor.green100};
-  ${styles.styleBorder.basic200};
+
+  ${styles.styleBorder.basic300};
   ${styles.styleEffect.opacity100};
+
+  &:active {
+    animation-duration: 0.7s;
+    animation-timing-function: ease-out;
+    animation-name: ${transform};
+    animation-fill-mode: forwards;
+  }
 `;
 const StyledBtnBlueText = styled(StyledText)`
   ${styles.sytleText.buttonBlue}
 `;
 //========================================================
-// 회색버튼
+// 회색버튼 스타일
 const StyledBtnGray = styled(StyledButton)`
   padding: ${styles.styleLayout.basic700};
   background: ${styles.styleColor.blue50};
@@ -60,71 +90,53 @@ const StyledBtnGray = styled(StyledButton)`
   ${styles.styleBorder.basic100};
 `;
 const StyledBtnGrayText = styled(StyledText)`
-  ${styles.sytleText.text200};
+  ${styles.sytleText.text100};
 `;
-
-function ButtonTemplate({ text, icon }) {
+//========================================================
+/**
+ *
+ * @param {버튼 내용, 아이콘 유무(아이콘 정의), 클릭이벤트} param0
+ * @returns
+ */
+function ButtonTemplate({ text, icon, onClick }) {
   return (
-    <>
-      <StyledBtnBlue>
-        {icon === undefined ? (
-          ""
-        ) : (
-          <StyledDiv>
-            <ImgIcon data={svgPath[icon]} className={icon} />
-          </StyledDiv>
-        )}
-        <StyledText>{text}</StyledText>
-      </StyledBtnBlue>
-    </>
+    <StyledBtnBlue id={text} onClick={onClick}>
+      {icon && <StyledIcon name={icon}></StyledIcon>}
+      <StyledText>{text}</StyledText>
+    </StyledBtnBlue>
   );
 }
-function BtnWhite({ text, icon }) {
+function BtnWhite({ text, icon, onClick }) {
   return (
-    <>
-      <StyledBtnWhite>
-        {icon === undefined ? (
-          ""
-        ) : (
-          <StyledDiv>
-            <ImgIcon data={svgPath[icon]} className={icon} />
-          </StyledDiv>
-        )}
-        <StyledBtnWhiteText>{text}</StyledBtnWhiteText>
-      </StyledBtnWhite>
-    </>
+    <StyledBtnWhite id={text} onClick={onClick}>
+      {icon && <StyledIcon name={icon}></StyledIcon>}
+      <StyledBtnWhiteText>{text}</StyledBtnWhiteText>
+    </StyledBtnWhite>
   );
 }
-function BtnBlue({ text, icon }) {
+function BtnBlue({ text, icon, onClick }) {
   return (
-    <>
-      <StyledBtnBlue>
-        {icon === undefined ? (
-          ""
-        ) : (
-          <StyledDiv>
-            <ImgIcon data={svgPath[icon]} className={icon} />
-          </StyledDiv>
-        )}
-        <StyledBtnBlueText>{text}</StyledBtnBlueText>
-      </StyledBtnBlue>
-    </>
+    <StyledBtnBlue id={text} onClick={onClick}>
+      {icon && <StyledIcon name={icon}></StyledIcon>}
+      <StyledBtnBlueText>{text}</StyledBtnBlueText>
+    </StyledBtnBlue>
   );
 }
-function BtnGray({ text, icon }) {
+/**
+ *
+ * @param {버튼 내용, 토글 상태, 클릭이벤트} param0
+ * @returns
+ */
+function BtnGray({ text, toggle, onClick }) {
   return (
-    <>
-      <StyledBtnGray>
-        {icon === undefined ? (
-          ""
-        ) : (
-          <StyledDiv>
-            <ImgIcon data={svgPath[icon]} className={icon} />
-          </StyledDiv>
-        )}
-        <StyledBtnGrayText>{text}</StyledBtnGrayText>
-      </StyledBtnGray>
-    </>
+    <StyledBtnGray id={text} onClick={onClick}>
+      {JSON.parse(toggle) ? (
+        <StyledIcon name={`CaretDownFill`}></StyledIcon>
+      ) : (
+        <StyledIcon name={`CaretRightFill`}></StyledIcon>
+      )}
+      <StyledBtnGrayText>{text}</StyledBtnGrayText>
+    </StyledBtnGray>
   );
 }
 export { ButtonTemplate, BtnWhite, BtnBlue, BtnGray };

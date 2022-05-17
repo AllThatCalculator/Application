@@ -1,47 +1,51 @@
-import ButtonBlue from "../components/atom-components/ButtonBlue";
-import Recommend from "../components/global-component/Recommend";
 import styled from "styled-components";
 import CalculetBlock from "../components/calculetBlock/CalculetBlock";
 import { useState } from "react";
 import styles from "../components/styles";
 import {
-  ButtonTemplate,
   BtnWhite,
   BtnBlue,
-  BtnGray,
 } from "../components/atom-components/ButtonTemplate";
 import TextWhite from "../components/atom-components/TextWhite";
+import Recommend from "../components/global-component/Recommend";
+import BookmarkBar from "../components/global-component/BookmarkBar";
+
+// 계산기 블록 배경
 const Positioner = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-self: center;
-  gap: ${styles.styleLayout.basic300};
+  background: ${styles.styleColor.white200.color};
+  opacity: ${styles.styleColor.white200.opacity};
+`;
+// 계산기 등록 버튼 배경
+const PositionerBottom = styled.div`
   background: ${styles.styleColor.blue30};
-  padding: ${styles.styleLayout.basic300};
+  ${styles.styleEffect.opacity300};
 `;
-// 계산기 블록
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+// 계산기 블록 감쌈
+const BoxCalculet = styled.div`
+  margin: 0 auto;
+  ${styles.sizes.desktopWidth100};
+  padding: ${styles.styleLayout.basic350};
 `;
-// 계산기 등록 버튼
-const ButtonWrapper = styled.div`
+// 계산기 등록 버튼 감쌈
+const BoxCalculetBottom = styled(BoxCalculet)`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  padding: ${styles.styleLayout.basic750};
   gap: ${styles.styleLayout.basic300};
 `;
+const Wrapper = styled.div`
+  display: flex;
+`;
+const WrapperCol = styled(BoxCalculet)`
+  display: flex;
+  flex-direction: column;
+  gap: ${styles.styleLayout.basic700};
+`;
+// 설명
 const Explain = styled.div`
   ${styles.sytleText.text200}
 `;
-// 계산기 블록 밑
-const WrapperBottom = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${styles.styleLayout.basic300};
-`;
-
 // 계산기 추천
 function Calculet() {
   const [calculetObj, setCalculetObj] = useState({
@@ -63,19 +67,29 @@ function Calculet() {
   return (
     <>
       <Positioner>
-        <Wrapper>
+        <BoxCalculet>
           <CalculetBlock calculetObj={calculetObj} />
-        </Wrapper>
-        <ButtonWrapper>
+        </BoxCalculet>
+      </Positioner>
+
+      <PositionerBottom>
+        <BoxCalculetBottom>
           <Explain>자신만의 계산기를 만드세요!</Explain>
           <BtnBlue text="계산기 등록" icon="Upload" />
-        </ButtonWrapper>
-      </Positioner>
-      <WrapperBottom>
-        <TextWhite text="다른 계산기들도 있어요 🤗" />
-        <BtnWhite text="더보기" />
-      </WrapperBottom>
-      <Recommend />
+        </BoxCalculetBottom>
+      </PositionerBottom>
+
+      <WrapperCol>
+        <WrapperCol>
+          <TextWhite text="다른 계산기들도 있어요 🤗" />
+          <Wrapper>
+            <BtnWhite text="더보기" />
+          </Wrapper>
+        </WrapperCol>
+        <Wrapper>
+          <Recommend />
+        </Wrapper>
+      </WrapperCol>
     </>
   );
 }

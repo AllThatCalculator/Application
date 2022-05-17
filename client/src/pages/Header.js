@@ -1,35 +1,28 @@
 import styled from "styled-components";
-import { React } from "react";
-import LogoHeader from "../atom-components/LogoHeader.js";
-import BoxSearchInput from "../atom-components/BoxSearchInput.js";
-import {
-  BtnSmallIcon,
-  BtnMiddleIcon,
-  BtnInputIcon,
-} from "../atom-components/ButtonIcon.js";
-import { svgPath } from "../atom-components/svgs/svgPath";
-import styles from "../styles.js";
-import {
-  ButtonTemplate,
-  BtnWhite,
-  BtnBlue,
-  BtnGray,
-} from "../atom-components/ButtonTemplate";
+import LogoHeader from "../components/atom-components/LogoHeader";
+import BoxSearchInput from "../components/atom-components/BoxSearchInput";
+import styles from "../components/styles.js";
+import { BtnMiddleIcon } from "../components/atom-components/ButtonIcon.js";
+import { BtnWhite } from "../components/atom-components/ButtonTemplate";
+
 // 상단 고정
 const Positioner = styled.div`
+  position: fixed;
   top: 0px;
   width: 100%;
+  height: 60px;
   padding: ${styles.styleLayout.basic600};
 `;
 // 내용 정렬
 const WhiteBackground = styled.div`
   display: flex;
   justify-content: space-evenly;
-  gap: 10px;
+  gap: ${styles.styleLayout.basic700};
 `;
 const HeaderContents = styled.div`
   display: flex;
-  gap: 10px;
+  align-items: center;
+  gap: ${styles.styleLayout.basic700};
 `;
 
 function Header() {

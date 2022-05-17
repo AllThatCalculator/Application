@@ -1,18 +1,21 @@
 import styled from "styled-components";
-import { React } from "react";
+import { React, useState } from "react";
 import styles from "../styles.js";
-import { BtnSmallIcon, BtnMiddleIcon, BtnInputIcon } from "./ButtonIcon.js";
+import { BtnSmallIcon } from "./ButtonIcon.js";
 
-//스타일드 버튼
+//스타일드 폼
+const StyledForm = styled.form`
+  position: relative;
+`;
+//스타일드 인풋
 const StyledInput = styled.input`
-  width: 100%;
-  min-width: 240px;
-  box-sizing: border-box;
+  ${styles.styleSize.input};
+  padding: ${styles.styleLayout.basic100};
+  padding-right: ${styles.styleLayout.basic1050};
   background: ${styles.styleColor.white50.color};
   opacity: ${styles.styleColor.white50.opacity};
-  padding: ${styles.styleLayout.basic800};
   color: ${styles.styleColor.black};
-  border: ${styles.styleLayout.basic100} solid black;
+  border: ${styles.styleLayout.basic200} solid black;
 
   ${styles.styleBorder.basic100};
   ${styles.styleEffect.opacity100};
@@ -20,20 +23,75 @@ const StyledInput = styled.input`
   ${styles.sytleText.text100};
   outline: none;
 `;
+// 입력창 안에 버튼 위치
 const StyledDiv = styled.div`
-  position: relative;
-  align-items: center;
-  display: inline-block;
+  display: flex;
+  height: ${styles.styleLayout.basic950};
+  gap: ${styles.styleLayout.basic50};
+  position: absolute;
+  top: 25%;
+  right: 3%;
 `;
-
+/**
+ *
+ * @param {검색창 placeholder} param0
+ * @returns
+ */
 function BoxSearchInput({ text }) {
+  // 입력한 내용
+  const [inputText, setInputText] = useState("");
+  const onChange = (event) => {
+    setInputText(event.target.value);
+    console.log(event.target.value);
+  };
+  // 제출 이벤트
+  const onSubmit = (event) => {
+    event.preventDefault();
+    console.log("검색!" + inputText);
+    if (inputText === "") return;
+    setInputText("");
+  };
+  // 입력 내용 전체 삭제
+  const onReset = (event) => {
+    event.preventDefault();
+    console.log("삭제");
+    setInputText("");
+  };
+  // 버튼 막음
+  const onKeyDown = (event) => {
+    if (event.keyCode == 13) {
+      onSubmit(event);
+    }
+  };
+
   return (
-    <>
+    <StyledForm name="form" onKeyDown={onKeyDown}>
+      <StyledInput
+        value={inputText}
+        onChange={onChange}
+        onSubmit={onSubmit}
+        text="text"
+        placeholder={text}
+      />
       <StyledDiv>
-        <StyledInput type="search" placeholder={text} />
-        <BtnInputIcon text="검색" icon="Search" color="blue" />
+        {inputText && (
+          <BtnSmallIcon
+            text="지우기"
+            icon="X"
+            color="blue"
+            onClick={onReset}
+            type="button"
+          />
+        )}
+        <BtnSmallIcon
+          text="검색"
+          icon="Search"
+          color="blue"
+          type="submit"
+          onClick={onSubmit}
+        />
       </StyledDiv>
-    </>
+    </StyledForm>
   );
 }
 export default BoxSearchInput;
