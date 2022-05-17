@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import CalculetBlock from "../components/calculetBlock/CalculetBlock";
+import CalculetBlock from "../components/calculet-block/CalculetBlock";
 import { useState } from "react";
 import styles from "../components/styles";
 import {

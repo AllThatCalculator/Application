@@ -1,16 +1,8 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { BoxIcon } from "../atom-components/BoxIcon";
+import { BtnSmallIcon, BtnStatisticsIcon } from "../atom-components/ButtonIcon";
 import styles from "../styles";
-
-const StyledItem = styled.button`
-  display: flex;
-  flex-direction: row;
-  gap: 3px;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  background: none;
-`;
 
 const CalculetName = styled.div`
   padding: 0;
@@ -18,55 +10,88 @@ const CalculetName = styled.div`
   ${styles.sytleText.text300};
 `;
 
-const Wrapper = styled.div`
+const WrapperBox = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 10px;
 
   ${styles.sytleText.text50}
 `;
 
-const StatisticsWrapper = styled.div`
+const WrapperLine = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 16px;
+  justify-content: space-between;
 `;
 
-const FrontWrapper = styled.div`
+const WrapperGroup = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 9px;
+  gap: 10px;
   align-items: flex-end;
 `;
 
-function Item({ text, number }) {
-  return (
-    <StyledItem>
-      <div style={{ color: styles.styleColor.blue900 }}>{text}</div>
-      {number !== null && (
-        <div style={{ color: styles.styleColor.gray100 }}>{number}</div>
-      )}
-    </StyledItem>
-  );
-}
+const StyledHr = styled.div`
+  width: 897px;
+  height: 1px;
+  background-color: ${styles.styleColor.blue200};
+`;
 
 function CalculetHeader({ name, contributor, statistics }) {
   const [stats, setStats] = useState(statistics);
   return (
-    <Wrapper>
-      <FrontWrapper>
-        <CalculetName>{name}</CalculetName>
-        <Item text={contributor} number={null} />
-      </FrontWrapper>
+    <>
+      <WrapperBox>
+        <WrapperLine>
+          <WrapperGroup>
+            <CalculetName>{name}</CalculetName>
+            <BtnSmallIcon
+              text="info"
+              icon="InfoCircle"
+              color="blue"
+              onClick={() => {
+                console.log("information");
+              }}
+            />
+          </WrapperGroup>
+        </WrapperLine>
+        <WrapperLine>
+          <WrapperGroup>
+            <BoxIcon
+              text={contributor}
+              icon="PeopleCircle"
+              profile="/img/ori.png"
+            />
+            <BoxIcon text="view" icon="EyeFill" number={stats.viewCnt} />
+          </WrapperGroup>
 
-      <StatisticsWrapper>
-        <Item text="View" number={stats.viewCnt} />
-        <Item text="Like" number={stats.likeCnt} />
-        <Item text="Mark" number={stats.bookmarkCnt} />
-        <Item text="Report" number={stats.reportCnt} />
-      </StatisticsWrapper>
-    </Wrapper>
+          <WrapperGroup>
+            <BtnStatisticsIcon
+              text="좋아요"
+              icon="Heart"
+              number={stats.likeCnt}
+              isClicked={false}
+              onClick={() => console.log("clicked")}
+            />
+            <BtnStatisticsIcon
+              text="북마크"
+              icon="BookmarkStar"
+              number={stats.bookmarkCnt}
+              isClicked={false}
+              onClick={() => console.log("clicked")}
+            />
+            <BtnStatisticsIcon
+              text="신고"
+              icon="Flag"
+              number={stats.reportCnt}
+              isClicked={false}
+              onClick={() => console.log("clicked")}
+            />
+          </WrapperGroup>
+        </WrapperLine>
+      </WrapperBox>
+      <StyledHr />
+    </>
   );
 }
 

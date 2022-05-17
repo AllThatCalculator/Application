@@ -1,8 +1,16 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import ButtonGray from "../atom-components/ButtonGray";
+import styled from "styled-components";
+import { BtnToggle } from "../atom-components/ButtonIcon";
+import { BtnGray } from "../atom-components/ButtonTemplate";
 // import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+`;
 
 /**
  * 마크다운 문법으로 작성된 문자열을 리액트 컴포넌트로 반환하는 함수
@@ -53,10 +61,17 @@ function CalculetManual({ content }) {
   return (
     <>
       <div>
-        <ButtonGray text="자세히" toggle={visibility} onClick={toggle} />
-        <div style={{ backgroundColor: "white" }}>
-          {visibility && <Markdown content={content} />}
-        </div>
+        <BtnGray text="자세히" toggle={visibility} onClick={toggle} />
+        {visibility && (
+          <>
+            <div style={{ backgroundColor: "tomato" }}>
+              <Markdown content={content} />
+            </div>
+            <Wrapper>
+              <BtnToggle onClick={toggle} />
+            </Wrapper>
+          </>
+        )}
       </div>
     </>
   );
