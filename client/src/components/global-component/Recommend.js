@@ -21,7 +21,15 @@ const Wrapper = styled(StyledDiv)`
   justify-content: space-around;
 `;
 
-// 추천 계산기 렌더
+/**
+ *
+ * 추천 계산기 렌더하는 함수 (Recommend 내에서 처리하는 함수에요)
+ *
+ * @param {Array, boolean}
+ * calculets : 추천 계산기 전체 정보
+ * loading : 렌더할 준비 되었는지 (정보 잘 가져왔는지)
+ *
+ */
 function RenderCalculet({ calculets, loading }) {
   return (
     <>
@@ -39,7 +47,13 @@ function RenderCalculet({ calculets, loading }) {
     </>
   );
 }
-// 추천 계산기 모듈
+/**
+ *
+ * 원하는 네비게이션 바에 따라, 추천 계산기 페이지를 렌더하는 함수
+ * 한 번에 계산기들 fetch 후, KEY_MAX 만큼 자름 -> 추천 계산기 전체 수
+ * 한 페이지 당 KEY_PAGE 만큼 렌더하도록 함
+ *
+ */
 function Recommend() {
   // 추천 계산기 최대 개수
   const KEY_MAX = 15;
@@ -54,6 +68,7 @@ function Recommend() {
   const [currentPage, setCurrentPage] = useState(1);
 
   // 계산기 정보 15개 가져오고 로딩 품
+  // 우선, 예제 api 가져옴
   useEffect(() => {
     async function fetchData() {
       setLoading(true);

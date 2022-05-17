@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 import styles from "../styles.js";
 import { Icons } from "./Icons.js";
@@ -42,7 +41,6 @@ const StyledBtnSmallIcon = styled(StyledButton)`
 const StyledBtnMiddleIcon = styled(StyledButton)`
   ${styles.styleSize.middle};
 `;
-
 // 통계버튼 스타일
 const StyledBtnStatisticsIcon = styled(StyledButton)`
   color: ${styles.styleColor.blue900};
@@ -70,8 +68,14 @@ const StyledBtnToggle = styled(StyledBtnSmallIcon)`
 //========================================================
 /**
  *
- * @param {무슨 용도, 아이콘 이름, 파란색?하얀색?, 클릭이벤트} param0
- * @returns
+ * 아이콘으로만 된 작은 크기의 버튼을 반환하는 함수
+ *
+ * @param {string, string, string, function}
+ * text : 해당 아이콘이 무슨 용도인지 작성
+ * icon : 아이콘 이름
+ * color : 해당 아이콘 색이 파란색인지, 하얀색인지 (파란색 - "blue", 하얀색 - 인자없음)
+ * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ *
  */
 function BtnSmallIcon({ text, icon, color, onClick }) {
   return (
@@ -80,6 +84,17 @@ function BtnSmallIcon({ text, icon, color, onClick }) {
     </StyledBtnSmallIcon>
   );
 }
+/**
+ *
+ * 아이콘으로만 된 중간 크기의 버튼을 반환하는 함수
+ *
+ * @param {string, string, string, function}
+ * text : 해당 아이콘이 무슨 용도인지 작성
+ * icon : 아이콘 이름
+ * color : 해당 아이콘 색이 파란색인지, 하얀색인지 (파란색 - "blue", 하얀색 - 인자없음)
+ * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ *
+ */
 function BtnMiddleIcon({ text, icon, color, onClick }) {
   return (
     <StyledBtnMiddleIcon id={text} name={icon} color={color} onClick={onClick}>
@@ -89,46 +104,42 @@ function BtnMiddleIcon({ text, icon, color, onClick }) {
 }
 /**
  *
- * @param {버튼 이름, 아이콘, 통계수, 눌러져 있는지, 클릭이벤트} param0
- * @returns
+ * 아이콘 + 정보 를 나타내는 컴포넌트 반환 함수
+ * -> 버튼 눌렀을 때 {눌러져있다면 not fill로 변환}, {안 눌러져 있다면 fill로 변환}
+ *
+ * @param {string, string, int, boolean, function}
+ * text : 버튼 정보 (좋아요, 북마크, 신고)
+ * icon : 아이콘 이름
+ * number : 통계수
+ * isClicked : 버튼이 눌러져 있는지 상태
+ * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ *
  */
 function BtnStatisticsIcon({ text, icon, number, isClicked, onClick }) {
-  // 현재 아이콘 상태 (not fill, fill)
-  const [btnIcon, setBtnIcon] = useState(icon);
-  // 현재 통계수
-  const [num, setNum] = useState(parseInt(number));
-  // true: 눌림, false: 안 눌림
-  const [click, setClick] = useState(JSON.parse(isClicked));
-
-  const numberChange = () => {
-    // 눌렀을 때 {눌러져있다면 -1, not fill} {안 눌러져 있다면 +1, fill}
-    if (click === true) {
-      setNum((current) => current - 1);
-      setBtnIcon((current) => current.replace("Fill", ""));
-    } else {
-      setNum((current) => current + 1);
-      setBtnIcon((current) => current + "Fill");
-    }
-    setClick((current) => !current);
-  };
-
   return (
-    <StyledBtnStatisticsIcon id={text} name={btnIcon} onClick={numberChange}>
-      <StyledIcon id={btnIcon} name={btnIcon}></StyledIcon>
+    <StyledBtnStatisticsIcon id={text} name={icon} onClick={onClick}>
+      <StyledIcon
+        id={icon}
+        name={isClicked ? icon + "Fill" : icon}
+      ></StyledIcon>
       <StyledNameText>{text}</StyledNameText>
-      <StyledNumberText>{num}</StyledNumberText>
+      <StyledNumberText>{number}</StyledNumberText>
     </StyledBtnStatisticsIcon>
   );
 }
 /**
  *
- * 토글 닫기 버튼
+ * 토글 닫기 동그란 작은 버튼 반환 함수
+ *
+ * @param {function}
+ * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ *
  */
-function BtnToggle() {
+function BtnToggle({ onClick }) {
   const icon = "CaretUpFill";
   return (
     <StyledBtnToggle>
-      <StyledIcon id={icon} name={icon}></StyledIcon>
+      <StyledIcon id={icon} name={icon} onClick={onClick}></StyledIcon>
     </StyledBtnToggle>
   );
 }

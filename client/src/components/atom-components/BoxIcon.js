@@ -52,8 +52,14 @@ const StyledProfileImg = styled.img`
 `;
 /**
  *
- * @param {정보이름, 아이콘, 통계수, 프로필 이미지} param0
- * @returns
+ * 버튼이 아닌! 아이콘 + 정보 를 나타내는 컴포넌트 반환 함수
+ *
+ * @param {string, string, int, string}
+ * text : 버튼 정보 (조회수, 제작자닉네임)
+ * icon : 아이콘 이름
+ * number : 통계수
+ * profile : 프로필 이미지 경로
+ *
  */
 function BoxIcon({ text, icon, number, profile }) {
   return (

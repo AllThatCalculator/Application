@@ -34,8 +34,13 @@ const StyledDiv = styled.div`
 `;
 /**
  *
- * @param {검색창 placeholder} param0
- * @returns
+ * 검색창을 반환하는 함수
+ * -> 돋보기 아이콘으로 검색가능
+ * -> 검색창 내에 입력하면 엑스 아이콘 생김 -> 엑스 누르면 입력 내용 전체 삭제
+ *
+ * @param {string}
+ * text : 검색창 내의 placeholder 내용
+ *
  */
 function BoxSearchInput({ text }) {
   // 입력한 내용
@@ -59,7 +64,7 @@ function BoxSearchInput({ text }) {
   };
   // 버튼 막음
   const onKeyDown = (event) => {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       onSubmit(event);
     }
   };

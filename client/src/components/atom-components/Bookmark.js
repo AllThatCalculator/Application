@@ -11,11 +11,16 @@ const Positioner = styled.div`
   background: ${styles.styleColor.black50.color};
   opacity: ${styles.styleColor.black50.opacity};
 `;
+// 해당 계산기 페이지로 넘어갈 수 있도록 Link를 스타일드 했다.
 const StyledLink = styled(Link)`
   color: ${styles.styleColor.white300};
   ${styles.sytleText.text100};
   text-decoration-line: none;
 `;
+/**
+ * 북마크한 계산기 리스트 컴포넌트를 반환하는 함수
+ *
+ */
 function Bookmark() {
   return (
     <Positioner>

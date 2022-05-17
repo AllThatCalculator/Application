@@ -24,14 +24,20 @@ const StyledButton = styled.button`
   }
 `;
 // 네비 버튼 활성화 됐을 때
-const StyledActiveButton = styled(StyledButton)`
-  background: ${styles.styleColor.green200.color};
-  opacity: ${styles.styleColor.green200.opacity};
-`;
+const active = {
+  background: `${styles.styleColor.green200.color}`,
+  opacity: `${styles.styleColor.green200.opacity}`,
+};
+
 /**
+ * 왼쪽, 오른쪽, 동그라미 네비버튼 눌러서 원하는 페이지 보이게 하는 네비게이션 바
  *
- * @param {한 페이지 당 계산기 개수, 전체 개수, onClick에 따라 현재 페이지를 네비할 함수} param0
- * @returns
+ * @param {int , int, function, int}
+ * renderPerPage : 한 페이지 당 렌더할 계산기 개수
+ * renderTotal : 계산기 전체 개수 (처음~끝 페이지)
+ * paginate : onClick에 따라 현재 페이지를 네비할 함수 -> paginate에 의해 currentPage 바뀜
+ * currentPage : 현재 페이지
+ *
  */
 const Pagination = ({ renderPerPage, renderTotal, paginate, currentPage }) => {
   // 동그라미 개수(페이지 개수)
@@ -58,10 +64,10 @@ const Pagination = ({ renderPerPage, renderTotal, paginate, currentPage }) => {
         icon="ChevronLeft"
         onClick={() => prvPage()}
       />
-      {pageNumbers.map((number) => (
+      {pageNumbers.map((number, index) => (
         <StyledButton
+          style={index + 1 === currentPage ? active : null}
           key={number}
-          className="page-link"
           onClick={() => paginate(number)}
         />
       ))}

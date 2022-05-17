@@ -12,6 +12,7 @@ const Positioner = styled.div`
   width: 100%;
   height: 60px;
   padding: ${styles.styleLayout.basic600};
+  z-index: 99;
 `;
 // 내용 정렬
 const WhiteBackground = styled.div`
@@ -24,7 +25,11 @@ const HeaderContents = styled.div`
   align-items: center;
   gap: ${styles.styleLayout.basic700};
 `;
-
+/**
+ * 헤더
+ * 메뉴(계산기 카테고리), 로고, 검색창, 로그인 버튼
+ *
+ */
 function Header() {
   return (
     <Positioner>

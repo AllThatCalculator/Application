@@ -95,8 +95,13 @@ const StyledBtnGrayText = styled(StyledText)`
 //========================================================
 /**
  *
- * @param {버튼 내용, 아이콘 유무(아이콘 정의), 클릭이벤트} param0
- * @returns
+ * 완전 쌩 기본 버튼 템플릿 반환하는 함수
+ *
+ * @param {string, string, function}
+ * text : 버튼에 들어갈 내용
+ * icon : 아이콘 넣기 -> 아이콘 이름 작성 || 아이콘 안 넣기 -> 인자 없음
+ * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ *
  */
 function ButtonTemplate({ text, icon, onClick }) {
   return (
@@ -106,6 +111,15 @@ function ButtonTemplate({ text, icon, onClick }) {
     </StyledBtnBlue>
   );
 }
+/**
+ * 흰색 버튼 반환하는 함수
+ *
+ * @param {string, string, function}
+ * text : 버튼에 들어갈 내용
+ * icon : 아이콘 넣기 -> 아이콘 이름 작성 || 아이콘 안 넣기 -> 인자 없음
+ * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ *
+ */
 function BtnWhite({ text, icon, onClick }) {
   return (
     <StyledBtnWhite id={text} onClick={onClick}>
@@ -114,6 +128,17 @@ function BtnWhite({ text, icon, onClick }) {
     </StyledBtnWhite>
   );
 }
+
+/**
+ *
+ * 파란 버튼 반환하는 함수
+ *
+ * @param {string, string, function}
+ * text : 버튼에 들어갈 내용
+ * icon : 아이콘 넣기 -> 아이콘 이름 작성 || 아이콘 안 넣기 -> 인자 없음
+ * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ *
+ */
 function BtnBlue({ text, icon, onClick }) {
   return (
     <StyledBtnBlue id={text} onClick={onClick}>
@@ -124,13 +149,19 @@ function BtnBlue({ text, icon, onClick }) {
 }
 /**
  *
- * @param {버튼 내용, 토글 상태, 클릭이벤트} param0
- * @returns
+ * 회색 버튼 반환하는 함수 (토글 함수)
+ * -> 버튼 눌렀을 때 {눌러져있다면 ▶️로 변환}, {안 눌러져 있다면 🔽로 변환}
+ *
+ * @param {string, boolean, function}
+ * text : 버튼에 들어갈 내용
+ * isToggle : 버튼이 눌러져 있는지 상태 (토글 되어져 있는지 상태)
+ * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ *
  */
-function BtnGray({ text, toggle, onClick }) {
+function BtnGray({ text, isToggle, onClick }) {
   return (
     <StyledBtnGray id={text} onClick={onClick}>
-      {JSON.parse(toggle) ? (
+      {isToggle ? (
         <StyledIcon name={`CaretDownFill`}></StyledIcon>
       ) : (
         <StyledIcon name={`CaretRightFill`}></StyledIcon>

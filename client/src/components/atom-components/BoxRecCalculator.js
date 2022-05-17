@@ -81,10 +81,16 @@ const StyledNameOF = styled.div`
 const StyledDescriptionOF = styled(StyledNameOF)`
   ${styles.sytleText.text100};
 `;
+
 /**
  *
- * @param {계산기 이름, 간단 설명, 프로필이미지} param0
- * @returns
+ * 추천 계산기 컴포넌트(카드 같이 생긴 거)를 반환하는 함수
+ *
+ * @param {string, string, string}
+ * name : 계산기 이름
+ * description : 계산기에 대한 간단한 설명
+ * profile : 프로필 이미지 경로
+ *
  */
 function BoxRecCalculator({ name, description, profile }) {
   return (
