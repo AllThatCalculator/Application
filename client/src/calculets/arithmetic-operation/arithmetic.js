@@ -325,7 +325,7 @@ const enterBtn = document.querySelector("#enter-button");
 const errorMsg = "올바른 식을 입력해주세요.";
 
 /**
- * 엔터 키 눌렀을 때 이벤트 함수
+ * 엔터 키 눌렀을 때 입력 받은 수식을 계산한 결과값 얻어서 result 박스에 보여주는 함수
  * @param {*} event
  */
 function onKeyEvent(event) {
@@ -341,7 +341,7 @@ function onKeyEvent(event) {
 }
 
 /**
- * 엔터 버튼 눌렀을 때 버튼 이벤트 함수
+ * 엔터 버튼 눌렀을 때 입력 받은 수식을 계산한 결과값 얻어서 result 박스에 보여주는 함수
  * @param {*} event
  */
 function onClickEvent(event) {
@@ -365,7 +365,7 @@ const bracketOpenBtn = document.querySelector("#bracket-open");
 const bracketCloseBtn = document.querySelector("#bracket-close");
 
 /**
- * 연산자 버튼 이벤트 함수
+ * 연산자 버튼 눌렀을 때 연산자가 input 박스에 써지도록 하는 함수
  */
 function onPlusEvent() {
   inputBox.value = `${inputBox.value}+`;
