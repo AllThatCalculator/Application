@@ -1,10 +1,8 @@
 import "../css/font.css";
 const sizes = {
-  desktop: "1080px",
-  tablet: "768px",
-  phone: "360px",
-  desktopWidth100: `width: 897px`,
-  desktopWidth200: `width: 163px`,
+  desktop: `width: 1080px`,
+  tablet: `width:768px`,
+  phone: `width:360px`,
 };
 const styleColor = {
   blue900: "#143578",

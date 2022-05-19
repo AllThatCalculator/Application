@@ -23,7 +23,7 @@ const PositionerBottom = styled.div`
 // 계산기 블록 감쌈
 const BoxCalculet = styled.div`
   margin: 0 auto;
-  ${styles.sizes.desktopWidth100};
+  ${styles.sizes.desktop};
   padding: ${styles.styleLayout.basic350};
 `;
 // 계산기 등록 버튼 감쌈

@@ -17,7 +17,7 @@ const Positioner = styled(StyledDiv)`
 `;
 // 추천 계산기 모듈 감싼거
 const Wrapper = styled(StyledDiv)`
-  ${styles.sizes.desktopWidth100};
+  ${styles.sizes.desktop};
   justify-content: space-around;
 `;
 
