@@ -32,13 +32,58 @@ const WrapperGroup = styled.div`
 `;
 
 const StyledHr = styled.div`
-  width: 897px;
+  width: ${styles.sizes.desktop};
   height: 1px;
   background-color: ${styles.styleColor.blue200};
 `;
 
 function CalculetHeader({ name, contributor, statistics }) {
-  const [stats, setStats] = useState(statistics);
+  // 좋아요 관련 정보
+  // {int} number: 해당 계산기의 좋아요 수
+  // {boolean} liked: 현재 유저가 좋아요를 눌렀는지 여부
+  const [likeObj, setLikeObj] = useState({
+    number: statistics.likeCnt,
+    liked: statistics.liked,
+  });
+  // 북마크 관련 정보
+  // {int} number: 해당 계산기의 북마크 수
+  // {boolean} bookmarked: 현재 유저가 북마크로 설정했는지 여부
+  const [bookmarkObj, setBookmarkObj] = useState({
+    number: statistics.bookmarkCnt,
+    bookmarked: statistics.bookmarked,
+  });
+
+  /**
+   * 좋아요 버튼 이벤트 함수
+   * - 좋아요 수 변경, 아이콘 색 채움 여부 변경
+   * - 추후 DB 갱신을 위한 백엔드와의 통신 필요
+   */
+  async function toggleLike() {
+    if (likeObj.liked) {
+      setLikeObj((prev) => ({ number: prev.number - 1, liked: !prev.liked }));
+    } else {
+      setLikeObj((prev) => ({ number: prev.number + 1, liked: !prev.liked }));
+    }
+  }
+  /**
+   * 북마크 버튼 이벤트 함수
+   * - 북마크 수 변경, 아이콘 색 채움 여부 변경
+   * - 추후 DB 갱신을 위한 백엔드와의 통신 필요
+   */
+  async function toggleBookmark() {
+    if (bookmarkObj.bookmarked) {
+      setBookmarkObj((prev) => ({
+        number: prev.number - 1,
+        bookmarked: !prev.bookmarked,
+      }));
+    } else {
+      setBookmarkObj((prev) => ({
+        number: prev.number + 1,
+        bookmarked: !prev.bookmarked,
+      }));
+    }
+  }
+
   return (
     <>
       <WrapperBox>
@@ -50,7 +95,7 @@ function CalculetHeader({ name, contributor, statistics }) {
               icon="InfoCircle"
               color="blue"
               onClick={() => {
-                console.log("information");
+                console.log("see information");
               }}
             />
           </WrapperGroup>
@@ -62,30 +107,30 @@ function CalculetHeader({ name, contributor, statistics }) {
               icon="PeopleCircle"
               profile="/img/ori.png"
             />
-            <BoxIcon text="view" icon="EyeFill" number={stats.viewCnt} />
+            <BoxIcon text="view" icon="EyeFill" number={statistics.viewCnt} />
           </WrapperGroup>
 
           <WrapperGroup>
             <BtnStatisticsIcon
               text="좋아요"
               icon="Heart"
-              number={stats.likeCnt}
-              isClicked={false}
-              onClick={() => console.log("clicked")}
+              number={likeObj.number}
+              isClicked={likeObj.liked}
+              onClick={toggleLike}
             />
             <BtnStatisticsIcon
               text="북마크"
               icon="BookmarkStar"
-              number={stats.bookmarkCnt}
-              isClicked={false}
-              onClick={() => console.log("clicked")}
+              number={bookmarkObj.number}
+              isClicked={bookmarkObj.bookmarked}
+              onClick={toggleBookmark}
             />
             <BtnStatisticsIcon
               text="신고"
               icon="Flag"
-              number={stats.reportCnt}
+              number={statistics.reportCnt}
               isClicked={false}
-              onClick={() => console.log("clicked")}
+              onClick={() => console.log("move to report page")}
             />
           </WrapperGroup>
         </WrapperLine>

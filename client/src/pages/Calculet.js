@@ -65,7 +65,9 @@ function Calculet() {
   const [calculetObj, setCalculetObj] = useState(null);
   // {object}  statistics: {
   //   {integer} bookmarkCnt: 10,  - 북마크 수
+  //   {boolean} bookmarked: false - 유저가 북마크를 해두었는지 여부
   //   {integer} likeCnt: 5,       - 좋아요 수
+  //   {boolean} liked: false      - 유저가 좋아요를 눌러 두었는지 여부
   //   {integer} reportCnt: 1,     - 신고 수
   //   {integer} viewCnt: 100,     - 조회수
   //   {integer} calculationCnt: 10, - 연산수
@@ -98,7 +100,9 @@ function Calculet() {
       });
       setStatistics({
         bookmarkCnt: 10,
+        bookmarked: false,
         likeCnt: 5,
+        liked: false,
         reportCnt: 1,
         viewCnt: 100,
         calculationCnt: 10,
