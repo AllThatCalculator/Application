@@ -13,7 +13,7 @@ import CalculetHeader from "../components/calculet-block/CalculetHeader";
 // (임시) html 파일 string으로 읽어오기 위해 사용
 // -> 백엔드 연결 이후에는 http request로 계산기 정보들과 함께 받음
 // eslint-disable-next-line
-import srcCode from "raw-loader!../calculets/arithmeticOperation/arithmeticOperation.html";
+import srcCode from "raw-loader!../calculets/arithmetic-operation/arithmeticOperation.html";
 
 // 계산기 블록 배경
 const Positioner = styled.div`
@@ -80,7 +80,7 @@ function Calculet() {
    */
   async function loadCalculetManual() {
     fetch(
-      require("../calculets/arithmeticOperation/arithmeticOperation.md")
+      require("../calculets/arithmetic-operation/arithmeticOperation.md")
     ).then((res) => res.text());
   }
 
