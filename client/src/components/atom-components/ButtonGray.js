@@ -54,9 +54,9 @@ function ButtonGray({ text, toggle, onClick }) {
         <div>
           <div style={{ marginRight: 10 }}>
             {toggle ? (
-              <StyledIcon name={`BsFillCaretDownFill`}></StyledIcon>
+              <StyledIcon name={`CaretDownFill`}></StyledIcon>
             ) : (
-              <StyledIcon name={`BsFillCaretRightFill`}></StyledIcon>
+              <StyledIcon name={`CaretRightFill`}></StyledIcon>
             )}
           </div>
         </div>
