@@ -37,7 +37,7 @@ const StyledHr = styled.div`
   background-color: ${styles.styleColor.blue200};
 `;
 
-function CalculetHeader({ name, contributor, statistics }) {
+function CalculetHeader({ title, contributor, statistics }) {
   // 좋아요 관련 정보
   // {int} number: 해당 계산기의 좋아요 수
   // {boolean} liked: 현재 유저가 좋아요를 눌렀는지 여부
@@ -89,7 +89,7 @@ function CalculetHeader({ name, contributor, statistics }) {
       <WrapperBox>
         <WrapperLine>
           <WrapperGroup>
-            <CalculetName>{name}</CalculetName>
+            <CalculetName>{title}</CalculetName>
             <BtnSmallIcon
               text="info"
               icon="InfoCircle"

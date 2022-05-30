@@ -56,7 +56,7 @@ const Explain = styled.div`
 function Calculet() {
   // 계산기 객체
   // {object} calculetObj 계산기 객체
-  //         {string} name: "사칙연산 계산기", - 계산기 이름
+  //         {string} title: "사칙연산 계산기", - 계산기 이름
   //         {integer} id: 1,                 - 계산기 id
   //         {string} srcCode: null,          - 계산기 소스코드
   //         {string} contributor: "bsa0322", - 계산기 저작자
@@ -76,39 +76,40 @@ function Calculet() {
   const [statistics, setStatistics] = useState(null);
 
   /**
-   * (임시) 마크다운 파일 string으로 읽어오는 함수
-   */
-  async function loadCalculetManual() {
-    fetch(
-      require("../calculets/arithmetic-operation/arithmeticOperation.md")
-    ).then((res) => res.text());
-  }
-
-  /**
    * (임시) 계산기 정보 불러오는 함수
    * -> 백엔드 도입하면 http request로 받아올 예정
    */
+  // function
+  function loadCalculetObj() {
+    fetch(require("../calculets/arithmetic-operation/arithmeticOperation.md"))
+      .then((res) => res.text())
+      .then((mdCode) => {
+        setCalculetObj({
+          title: "사칙연산 계산기",
+          id: 1,
+          srcCode: srcCode,
+          contributor: "bsa0322",
+          manual: mdCode,
+          description: "사칙연산 계산기입니다.",
+        });
+        setStatistics({
+          bookmarkCnt: 10,
+          bookmarked: false,
+          likeCnt: 5,
+          liked: false,
+          reportCnt: 1,
+          viewCnt: 100,
+          calculationCnt: 10,
+          userCnt: 10,
+        });
+      });
+  }
+
+  /**
+   * (임시) 계산기 객체 불러오기
+   */
   useEffect(() => {
-    setTimeout(() => {
-      setCalculetObj({
-        name: "사칙연산 계산기",
-        id: 1,
-        srcCode: srcCode,
-        contributor: "bsa0322",
-        manual: loadCalculetManual(),
-        description: "사칙연산 계산기입니다.",
-      });
-      setStatistics({
-        bookmarkCnt: 10,
-        bookmarked: false,
-        likeCnt: 5,
-        liked: false,
-        reportCnt: 1,
-        viewCnt: 100,
-        calculationCnt: 10,
-        userCnt: 10,
-      });
-    }, 1000);
+    setTimeout(loadCalculetObj, 1000);
   }, []);
 
   return (
@@ -118,7 +119,7 @@ function Calculet() {
           {calculetObj !== null ? (
             <>
               <CalculetHeader
-                name={calculetObj.name}
+                title={calculetObj.title}
                 contributor={calculetObj.contributor}
                 statistics={statistics}
               />
