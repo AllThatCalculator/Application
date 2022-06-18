@@ -141,8 +141,8 @@ function BtnStatisticsIcon({ text, icon, number, isClicked, onClick }) {
 function BtnToggle({ onClick }) {
   const icon = "CaretUpFill";
   return (
-    <StyledBtnToggle>
-      <StyledIcon id={icon} name={icon} onClick={onClick}></StyledIcon>
+    <StyledBtnToggle onClick={onClick}>
+      <StyledIcon id={icon} name={icon} ></StyledIcon>
     </StyledBtnToggle>
   );
 }
