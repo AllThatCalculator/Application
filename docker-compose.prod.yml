@@ -9,12 +9,20 @@ services:
     volumes:
       - ./client/:/client
       - /client/node_modules
-    ports:
-      - "3000:3000"
     networks:
       - app-tier
     tty: true
 
+  nginx:
+    build: ./nginx
+    ports:
+      - "8080:8080"
+    networks:
+      - app-tier
+    depends_on:
+      - frontend
+    volumes:
+      - ./client/:/client
 
 networks:
   app-tier:

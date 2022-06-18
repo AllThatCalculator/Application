@@ -12,5 +12,8 @@ RUN npm install react-script -g --silent
 
 COPY . ./
 
-# RUN npm run build --prod
-CMD [ "npm", "run", "build" ] 
+# 개발용
+CMD ["npm", "start"]
+
+# 배포용
+# CMD [ "npm", "run", "build" ]
