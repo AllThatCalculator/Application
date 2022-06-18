@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import styles from "../styles";
 import { Icons } from "../atom-components/Icons";
+import { useState } from "react";
 
 // 스타일드 탭
 const StyledTab = styled.div`
@@ -28,11 +29,9 @@ const StyledBgClicked = styled.div`
   align-items: center;
   padding: ${styles.styleLayout.basic200};
   background: ${styles.styleColor.white300};
+  ${styles.sytleText.buttonWhite};
   color: black;
-  ${styles.sytleText.text100};
-
-  & {
-  }
+  border-bottom: 4px solid ${styles.styleColor.green100};
 
   cursor: pointer;
 `;
@@ -69,25 +68,55 @@ const StyledIcon = (props) => {
   );
 };
 
-function ButtonTab({ text, icon, onClick }) {
+function ButtonTab({ text, icon, isValid, onClick }) {
   return (
-    <StyledBg id={text} onClick={onClick}>
-      <StyledButton>
-        {icon && <StyledIcon name={icon}></StyledIcon>}
-        <>{text}</>
-      </StyledButton>
-    </StyledBg>
+    <>
+      {" "}
+      {!isValid ? (
+        <StyledBg id={text} onClick={onClick}>
+          <StyledButton id={text}>
+            {icon && <StyledIcon id={text} name={icon}></StyledIcon>}
+            <div id={text}>{text}</div>
+          </StyledButton>
+        </StyledBg>
+      ) : (
+        <StyledBgClicked id={text} onClick={onClick}>
+          <StyledButton id={text}>
+            {icon && <StyledIcon id={text} name={icon}></StyledIcon>}
+            <div id={text}>{text}</div>
+          </StyledButton>
+        </StyledBgClicked>
+      )}{" "}
+    </>
   );
 }
 
 function TabMenu() {
+  const [code, setCode] = useState(true);
+  const [eye, setEye] = useState(false);
   function onClickButtonTab(event) {
-    console.log(event.target);
+    if (event.target.id === "코드 작성") {
+      setCode(true);
+      setEye(false);
+    } else {
+      setEye(true);
+      setCode(false);
+    }
   }
   return (
     <StyledTab>
-      <ButtonTab text="코드 작성" icon="Code" onClick={onClickButtonTab} />
-      <ButtonTab text="미리 보기" icon="Eye" onClick={onClickButtonTab} />
+      <ButtonTab
+        text="코드 작성"
+        icon="Code"
+        isValid={code}
+        onClick={onClickButtonTab}
+      />
+      <ButtonTab
+        text="미리 보기"
+        icon="Eye"
+        isValid={eye}
+        onClick={onClickButtonTab}
+      />
     </StyledTab>
   );
 }
