@@ -4,6 +4,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import styled from "styled-components";
 import { BtnToggle } from "../atom-components/ButtonIcon";
 import { BtnGray } from "../atom-components/ButtonTemplate";
+import styles from "../styles";
 // import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const Wrapper = styled.div`
@@ -17,7 +18,7 @@ const Wrapper = styled.div`
  * @param {string} content 마크다운 문법으로 이루어진 string
  * 내부 함수 = code -> 재귀적으로 코드블럭에 syntax highlight 적용
  */
-function Markdown({ content }) {
+function MarkdownCode({ content }) {
   return (
     <ReactMarkdown
       children={content}
@@ -43,6 +44,11 @@ function Markdown({ content }) {
   );
 }
 
+const MarkdownWrapper = styled.div`
+  background-color: tomato;
+  ${styles.sytleText.text100}
+`
+
 /**
  * 계산기 설명서(매뉴얼)를 볼 것인지 선택하는 토글 버튼과 설명문을 포함하는 컴포넌트
  * @param {string} content 마크다운 문법으로 이루어진 string
@@ -61,12 +67,12 @@ function CalculetManual({ content }) {
   return (
     <>
       <div>
-        <BtnGray text="자세히" toggle={visibility} onClick={toggle} />
+        <BtnGray text="자세히" isToggle={visibility} onClick={toggle} />
         {visibility && (
           <>
-            <div style={{ backgroundColor: "tomato" }}>
-              <Markdown content={content} />
-            </div>
+            <MarkdownWrapper>
+              <MarkdownCode content={content} />
+            </MarkdownWrapper>
             <Wrapper>
               <BtnToggle onClick={toggle} />
             </Wrapper>
