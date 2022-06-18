@@ -47,19 +47,16 @@ function BoxSearchInput({ text }) {
   const [inputText, setInputText] = useState("");
   const onChange = (event) => {
     setInputText(event.target.value);
-    console.log(event.target.value);
   };
   // 제출 이벤트
   const onSubmit = (event) => {
     event.preventDefault();
-    console.log("검색!" + inputText);
     if (inputText === "") return;
     setInputText("");
   };
   // 입력 내용 전체 삭제
   const onReset = (event) => {
     event.preventDefault();
-    console.log("삭제");
     setInputText("");
   };
   // 버튼 막음
