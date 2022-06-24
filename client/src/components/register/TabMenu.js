@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import styles from "../styles";
-import { Icons } from "../atom-components/Icons";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import CalculetBlock from "../calculet-block/CalculetBlock";
+import Editor from "@monaco-editor/react";
+import { StyledIcon } from "../atom-components/ButtonTemplate";
 
 // 스타일드 탭
 const StyledTab = styled.div`
@@ -50,24 +52,6 @@ const StyledButton = styled.div`
   }
 `;
 
-// 스타일드 기본 탭 버튼 아이콘
-const StyledIcon = (props) => {
-  return (
-    <svg
-      stroke="currentColor"
-      fill="currentColor"
-      strokeWidth="0"
-      xmlns="http://www.w3.org/2000/svg"
-      height={Icons[props.name].height}
-      width={Icons[props.name].width}
-      viewBox={Icons[props.name].viewBox}
-    >
-      <path d={Icons[props.name].path[0]} />
-      {Icons[props.name].path[1] && <path d={Icons[props.name].path[1]} />}
-    </svg>
-  );
-};
-
 function ButtonTab({ text, icon, isValid, onClick }) {
   return (
     <>
@@ -93,31 +77,95 @@ function ButtonTab({ text, icon, isValid, onClick }) {
 
 function TabMenu() {
   const [code, setCode] = useState(true);
+  const [md, setMd] = useState(false);
   const [eye, setEye] = useState(false);
+
+  const editorRef = useRef(null);
+
+  const [htmlScript, setHtmlScript] = useState("<!DOCTYPE html>");
+  const [markdown, setMarkdown] = useState("### wirte detail!");
+
   function onClickButtonTab(event) {
-    if (event.target.id === "코드 작성") {
+    if (event.target.id === "HTML") {
       setCode(true);
+      setMd(false);
+      setEye(false);
+    } else if (event.target.id === "MARKDOWN") {
+      setCode(false);
+      setMd(true);
       setEye(false);
     } else {
-      setEye(true);
       setCode(false);
+      setMd(false);
+      setEye(true);
     }
   }
+
   return (
-    <StyledTab>
-      <ButtonTab
-        text="코드 작성"
-        icon="Code"
-        isValid={code}
-        onClick={onClickButtonTab}
-      />
-      <ButtonTab
-        text="미리 보기"
-        icon="Eye"
-        isValid={eye}
-        onClick={onClickButtonTab}
-      />
-    </StyledTab>
+    <>
+      <StyledTab>
+        <ButtonTab
+          text="HTML"
+          icon="Code"
+          isValid={code}
+          onClick={onClickButtonTab}
+        />
+        <ButtonTab
+          text="MARKDOWN"
+          icon="MarkDown"
+          isValid={md}
+          onClick={onClickButtonTab}
+        />
+        <ButtonTab
+          text="미리 보기"
+          icon="Eye"
+          isValid={eye}
+          onClick={onClickButtonTab}
+        />
+      </StyledTab>
+      <>
+        {code ? (
+          <Editor
+            height="63vh"
+            theme="vs-dark"
+            defaultLanguage="html"
+            defaultValue={htmlScript}
+            onMount={(editor) => {
+              editorRef.current = editor;
+            }}
+            onChange={() => {
+              setHtmlScript(editorRef.current.getValue());
+            }}
+          />
+        ) : (
+          <></>
+        )}
+        {md ? (
+          <Editor
+            height="63vh"
+            theme="vs-dark"
+            defaultLanguage="markdown"
+            defaultValue={markdown}
+            onMount={(editor) => {
+              editorRef.current = editor;
+            }}
+            onChange={() => {
+              setMarkdown(editorRef.current.getValue());
+            }}
+          />
+        ) : (
+          <></>
+        )}
+        {eye ? (
+          <CalculetBlock
+            srcCode={htmlScript + "<style>*{margin:0px;}</style>"}
+            manual={markdown}
+          />
+        ) : (
+          <></>
+        )}
+      </>
+    </>
   );
 }
 

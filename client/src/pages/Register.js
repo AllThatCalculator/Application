@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import styles from "../components/styles";
 import TabMenu from "../components/register/TabMenu";
+import StyledTitle from "../components/register/Title";
 
 // 계산기 저작 배경 색
 const Positioner = styled.div`
@@ -19,6 +20,7 @@ function Register() {
     <>
       <Positioner>
         <Wrapper>
+          <StyledTitle>계산기 코드 입력하기</StyledTitle>
           <TabMenu></TabMenu>
         </Wrapper>
       </Positioner>
