@@ -15,6 +15,20 @@ services:
       - app-tier
     tty: true
 
+  mariadb:
+    image: mariadb:10
+    ports:
+      - 3306:3306
+    volumes:
+      - ./database/conf.d:/etc/mysql/conf.d
+      - ./database/data:/var/lib/mysql
+      - ./database/initdb.d:/docker-entrypoint-initdb.d
+    env_file: .env
+    environment:
+      TZ: Asia/Seoul
+    networks:
+      - app-tier
+    restart: always
 
 networks:
   app-tier:
