@@ -22,10 +22,12 @@ const styleColor = {
   green200: { color: "#A4ECBD", opacity: 0.8 },
   green100: "#C3EED2",
   green25: { color: "#C3EED2", opacity: 0.25 },
+  green25a: "#C3EED240",
   black: "#000000",
   black50: { color: "#000000", opacity: 0.6 },
   black25: { color: "#BEBEBE", opacity: 0.25 },
   gray100: "#5E5E5E",
+  gray50: "#929292BF",
 };
 const styleLayout = {
   basic50: "3px",
