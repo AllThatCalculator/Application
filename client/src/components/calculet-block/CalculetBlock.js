@@ -31,6 +31,7 @@ function CalculetBlock({ srcCode, manual }) {
         style={{ width: "100%", border: "none", overflow: "auto" }}
         onLoad={(e) => adjustHeight(e)}
         scrolling="no"
+        title="calculet"
       />
       <CalculetManual content={manual} />
     </Wrapper>
