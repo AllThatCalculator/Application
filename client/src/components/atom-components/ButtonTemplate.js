@@ -34,8 +34,9 @@ const StyledIcon = (props) => {
       width={Icons[props.name].width}
       viewBox={Icons[props.name].viewBox}
     >
-      <path d={Icons[props.name].path[0]} />
-      {Icons[props.name].path[1] && <path d={Icons[props.name].path[1]} />}
+      {Icons[props.name].path.map((d, i) => {
+        return <path d={d} key={i} />;
+      })}
     </svg>
   );
 };
@@ -170,4 +171,12 @@ function BtnGray({ text, isToggle, onClick }) {
     </StyledBtnGray>
   );
 }
-export { ButtonTemplate, BtnWhite, BtnBlue, BtnGray };
+export {
+  StyledButton,
+  StyledText,
+  StyledIcon,
+  ButtonTemplate,
+  BtnWhite,
+  BtnBlue,
+  BtnGray,
+};
