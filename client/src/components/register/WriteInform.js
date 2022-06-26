@@ -3,11 +3,31 @@ import StyledTitle from "./Title";
 import styles from "../styles";
 import { useState } from "react";
 import { StyledIcon } from "../atom-components/ButtonTemplate";
+import PreviewBanner from "./PreviewBanner";
 
-const Wrapper = styled.div`
+//정보칸 + 배너 미리보기 감싸는 컴포넌트
+const WrapperInformBanner = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0px 0px 38px;
+  height: 100%;
+  gap: ${styles.styleLayout.basic300};
+  border-bottom: 1px solid ${styles.styleColor.blue50};
+`;
+
+const WrapperInform = styled.div`
   display: flex;
   flex-direction: column;
+  width: 713px;
   gap: ${styles.styleLayout.basic900};
+`;
+
+const WrapperBanner = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  width: 347px;
 `;
 
 const WrapperRatio1 = styled.div`
@@ -179,59 +199,68 @@ function WriteInform() {
     setDescription(event.target.value);
   }
   return (
-    <Wrapper>
-      <StyledTitle>정보 입력하기</StyledTitle>
-      <MiddleText>계산기 정보</MiddleText>
-      <InformBox>
-        <ExplanationInput
-          explanation="계산기 이름"
-          placeholder="ex. 사칙연산 계산기"
-          value={title}
-          onChange={nameChange}
+    <WrapperInformBanner>
+      <WrapperInform>
+        <StyledTitle>정보 입력하기</StyledTitle>
+        <MiddleText>계산기 정보</MiddleText>
+        <InformBox>
+          <ExplanationInput
+            explanation="계산기 이름"
+            placeholder="ex. 사칙연산 계산기"
+            value={title}
+            onChange={nameChange}
+          />
+          <ExplanationInput
+            explanation="계산기에 대한 간단한 설명"
+            placeholder="ex. 사칙연산을 하는 계산기입니다."
+            value={description}
+            onChange={descriptionChange}
+          />
+          <Explanation>
+            <WrapperRatio1>
+              <SmallText>카테고리</SmallText>
+            </WrapperRatio1>
+            <WrapperRatio2dot8>
+              <SelectBox
+                isLine={true}
+                options={OPTIONS_BIG_CATEGORY}
+                defaultValue="default"
+              />
+              <SelectBox
+                isLine={false}
+                options={OPTIONS_BIG_CATEGORY}
+                defaultValue="default"
+              />
+            </WrapperRatio2dot8>
+          </Explanation>
+        </InformBox>
+        <MiddleText>제작자 정보</MiddleText>
+        <InformBox>
+          <Explanation>
+            <WrapperRatio1>
+              <SmallText>이메일</SmallText>
+            </WrapperRatio1>
+            <WrapperRatio2dot8>
+              <StyledInput placeholder="주소" />
+              <SmallText>@</SmallText>
+              <StyledInput placeholder="도메인" />
+              <SelectBox
+                isLine={false}
+                options={OPTIONS_BIG_CATEGORY}
+                defaultValue="default"
+              />
+            </WrapperRatio2dot8>
+          </Explanation>
+        </InformBox>
+      </WrapperInform>
+      <WrapperBanner>
+        <PreviewBanner
+          profile="/img/ori.png"
+          title={title}
+          description={description}
         />
-        <ExplanationInput
-          explanation="계산기에 대한 간단한 설명"
-          placeholder="ex. 사칙연산을 하는 계산기입니다."
-          value={description}
-          onChange={descriptionChange}
-        />
-        <Explanation>
-          <WrapperRatio1>
-            <SmallText>카테고리</SmallText>
-          </WrapperRatio1>
-          <WrapperRatio2dot8>
-            <SelectBox
-              isLine={true}
-              options={OPTIONS_BIG_CATEGORY}
-              defaultValue="default"
-            />
-            <SelectBox
-              isLine={false}
-              options={OPTIONS_BIG_CATEGORY}
-              defaultValue="default"
-            />
-          </WrapperRatio2dot8>
-        </Explanation>
-      </InformBox>
-      <MiddleText>제작자 정보</MiddleText>
-      <InformBox>
-        <Explanation>
-          <WrapperRatio1>
-            <SmallText>이메일</SmallText>
-          </WrapperRatio1>
-          <WrapperRatio2dot8>
-            <StyledInput placeholder="주소" />
-            <SmallText>@</SmallText>
-            <StyledInput placeholder="도메인" />
-            <SelectBox
-              isLine={false}
-              options={OPTIONS_BIG_CATEGORY}
-              defaultValue="default"
-            />
-          </WrapperRatio2dot8>
-        </Explanation>
-      </InformBox>
-    </Wrapper>
+      </WrapperBanner>
+    </WrapperInformBanner>
   );
 }
 

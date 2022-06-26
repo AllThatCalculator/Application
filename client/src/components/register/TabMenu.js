@@ -4,6 +4,14 @@ import { useState, useRef } from "react";
 import CalculetBlock from "../calculet-block/CalculetBlock";
 import Editor from "@monaco-editor/react";
 import { StyledIcon } from "../atom-components/ButtonTemplate";
+import StyledTitle from "./Title";
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+  gap: ${styles.styleLayout.basic900};
+`;
 
 // 스타일드 탭
 const StyledTab = styled.div`
@@ -102,7 +110,8 @@ function TabMenu() {
   }
 
   return (
-    <>
+    <Wrapper>
+      <StyledTitle>계산기 코드 입력하기</StyledTitle>
       <StyledTab>
         <ButtonTab
           text="HTML"
@@ -165,7 +174,7 @@ function TabMenu() {
           <></>
         )}
       </>
-    </>
+    </Wrapper>
   );
 }
 
