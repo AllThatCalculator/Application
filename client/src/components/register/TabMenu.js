@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import styles from "../styles";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import CalculetBlock from "../calculet-block/CalculetBlock";
 import Editor from "@monaco-editor/react";
 import { StyledIcon } from "../atom-components/ButtonTemplate";
@@ -83,15 +83,10 @@ function ButtonTab({ text, icon, isValid, onClick }) {
   );
 }
 
-function TabMenu() {
+function TabMenu(props) {
   const [code, setCode] = useState(true);
   const [md, setMd] = useState(false);
   const [eye, setEye] = useState(false);
-
-  const editorRef = useRef(null);
-
-  const [htmlScript, setHtmlScript] = useState("<!DOCTYPE html>");
-  const [markdown, setMarkdown] = useState("### wirte detail!");
 
   function onClickButtonTab(event) {
     if (event.target.id === "HTML") {
@@ -138,13 +133,11 @@ function TabMenu() {
             height="63vh"
             theme="vs-dark"
             defaultLanguage="html"
-            defaultValue={htmlScript}
+            defaultValue={props.htmlScript}
             onMount={(editor) => {
-              editorRef.current = editor;
+              props.editorRef.current = editor;
             }}
-            onChange={() => {
-              setHtmlScript(editorRef.current.getValue());
-            }}
+            onChange={props.htmlScriptChange}
           />
         ) : (
           <></>
@@ -154,21 +147,19 @@ function TabMenu() {
             height="63vh"
             theme="vs-dark"
             defaultLanguage="markdown"
-            defaultValue={markdown}
+            defaultValue={props.markdown}
             onMount={(editor) => {
-              editorRef.current = editor;
+              props.editorRef.current = editor;
             }}
-            onChange={() => {
-              setMarkdown(editorRef.current.getValue());
-            }}
+            onChange={props.markdownChange}
           />
         ) : (
           <></>
         )}
         {eye ? (
           <CalculetBlock
-            srcCode={htmlScript + "<style>*{margin:0px;}</style>"}
-            manual={markdown}
+            srcCode={props.htmlScript + "<style>*{margin:0px;}</style>"}
+            manual={props.markdown}
           />
         ) : (
           <></>

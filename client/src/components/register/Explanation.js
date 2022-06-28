@@ -43,17 +43,26 @@ const ExplanationLine = styled(Explanation)`
  * @param {string, string, string, function}
  * explanation: 입력 칸의 정보에 대한 설명
  * placeholder: 인풋 칸 초기값
- * value: 인풋값
+ * defaultValue: 인풋값
  * onChange: 인풋값 관리하는 함수
  */
-function ExplanationInputLine({ explanation, placeholder, value, onChange }) {
+function ExplanationInputLine({
+  explanation,
+  placeholder,
+  defaultValue,
+  onChange,
+}) {
   return (
     <ExplanationLine>
       <WrapperRatio1>
         <SmallTitle content={explanation} />
       </WrapperRatio1>
       <WrapperRatio2dot8>
-        <InputBox placeholder={placeholder} value={value} onChange={onChange} />
+        <InputBox
+          placeholder={placeholder}
+          defaultValue={defaultValue}
+          onChange={onChange}
+        />
       </WrapperRatio2dot8>
     </ExplanationLine>
   );
@@ -114,13 +123,13 @@ function ExplanationEmail({
       <WrapperRatio2dot8>
         <InputBox
           placeholder="주소"
-          value={address}
+          defaultValue={address}
           onChange={onChangeAddress}
         />
         <SmallTitle content="@" />
         <InputBox
           placeholder="도메인"
-          value={domain}
+          defaultValue={domain}
           onChange={onChangeDomain}
         />
         <SelectBox options={OPTIONS_EMAIL_ADDRESS} onChange={onChangeSelect} />

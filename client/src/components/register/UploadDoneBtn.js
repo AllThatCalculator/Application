@@ -9,10 +9,13 @@ const Wrapper = styled.div`
   padding: 0px;
 `;
 
-function UploadDoneBtn() {
+function UploadDoneBtn(props) {
+  function onClick() {
+    console.log(props);
+  }
   return (
     <Wrapper>
-      <BtnBlue text="계산기 등록" icon="Upload" />
+      <BtnBlue text="계산기 등록" icon="Upload" onClick={onClick} />
     </Wrapper>
   );
 }

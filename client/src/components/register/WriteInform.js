@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import styles from "../styles";
-import { useState } from "react";
 import PreviewBanner from "./PreviewBanner";
 import BigTitle from "./BigTitle";
 import MiddleTitle from "./MiddleTitle";
@@ -9,11 +8,7 @@ import {
   ExplanationEmail,
   ExplanationInputLine,
 } from "./Explanation";
-import {
-  OPTIONS_BIG_CATEGORY,
-  OPTIONS_EMAIL_ADDRESS,
-  OPTIONS_SMALL_CATEGORY,
-} from "./CONSTANT";
+import { OPTIONS_BIG_CATEGORY, OPTIONS_EMAIL_ADDRESS } from "./CONSTANT";
 
 // 정보칸 + 배너 미리보기 감싸는 스타일 정의
 const WrapperInformBanner = styled.div`
@@ -53,51 +48,7 @@ const InformBox = styled.div`
   border-radius: 7px;
 `;
 
-function WriteInform() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [bigCategory, setBigCategory] = useState("");
-  const [smallCategoryOption, setSmallCategoryOption] = useState([
-    { value: "default", name: "-" },
-  ]);
-  const [smallCategory, setSmallCategory] = useState("");
-  const [address, setAddress] = useState("");
-  const [domain, setDomain] = useState("");
-  const [email, setEmail] = useState("");
-
-  function nameChange(event) {
-    setTitle(event.target.value);
-  }
-  function descriptionChange(event) {
-    setDescription(event.target.value);
-  }
-  function bigCategoryChange(event) {
-    const targetValue = event.target.value;
-    const option = OPTIONS_BIG_CATEGORY.filter((x) => x.value === targetValue);
-    const smallOption = OPTIONS_SMALL_CATEGORY.filter(
-      (x) => x.big === option[0].value
-    );
-    setBigCategory(option[0].name);
-    setSmallCategoryOption(smallOption[0].options);
-  }
-  function smallCategoryChange(event) {
-    const targetValue = event.target.value;
-    const option = smallCategoryOption.filter((x) => x.value === targetValue);
-    setSmallCategory(option[0].name);
-  }
-  function addressChange(event) {
-    setAddress(event.target.value);
-    setEmail(`${address}@${domain}`);
-  }
-  function domainChange(event) {
-    setDomain(event.target.value);
-  }
-  function domainSelectChange(event) {
-    const targetValue = event.target.value;
-    const option = OPTIONS_EMAIL_ADDRESS.filter((x) => x.value === targetValue);
-    setDomain(option[0].name);
-    setEmail(`${address}@${domain}`);
-  }
+function WriteInform(props) {
   return (
     <WrapperInformBanner>
       <WrapperInform>
@@ -107,40 +58,40 @@ function WriteInform() {
           <ExplanationInputLine
             explanation="계산기 이름"
             placeholder="ex. 사칙연산 계산기"
-            value={title}
-            onChange={nameChange}
+            defaultValue={props.title}
+            onChange={props.titleChange}
           />
           <ExplanationInputLine
             explanation="계산기에 대한 간단한 설명"
             placeholder="ex. 사칙연산을 하는 계산기입니다."
-            value={description}
-            onChange={descriptionChange}
+            defaultValue={props.description}
+            onChange={props.descriptionChange}
           />
           <ExplanationCategory
             explanation="카테고리"
             OPTIONS_BIG_CATEGORY={OPTIONS_BIG_CATEGORY}
-            onBigChange={bigCategoryChange}
-            OPTIONS_SMALL_CATEGORY={smallCategoryOption}
-            onSmallChange={smallCategoryChange}
+            onBigChange={props.bigCategoryChange}
+            OPTIONS_SMALL_CATEGORY={props.smallCategoryOption}
+            onSmallChange={props.smallCategoryChange}
           />
         </InformBox>
         <MiddleTitle content="제작자 정보" />
         <InformBox>
           <ExplanationEmail
-            address={address}
-            onChangeAddress={addressChange}
-            domain={domain}
-            onChangeDomain={domainChange}
+            address={props.address}
+            onChangeAddress={props.addressChange}
+            domain={props.domain}
+            onChangeDomain={props.domainChange}
             OPTIONS_EMAIL_ADDRESS={OPTIONS_EMAIL_ADDRESS}
-            onChangeSelect={domainSelectChange}
+            onChangeSelect={props.domainSelectChange}
           />
         </InformBox>
       </WrapperInform>
       <WrapperBanner>
         <PreviewBanner
           profile="/img/ori.png"
-          title={title}
-          description={description}
+          title={props.title}
+          description={props.description}
         />
       </WrapperBanner>
     </WrapperInformBanner>
