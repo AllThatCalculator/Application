@@ -40,7 +40,7 @@ function Register() {
   const editorRef = useRef(null);
 
   const [htmlScript, setHtmlScript] = useState("<!DOCTYPE html>");
-  const [markdown, setMarkdown] = useState("### wirte detail!");
+  const [markdown, setMarkdown] = useState("### write detail!");
 
   function titleChange(event) {
     setTitle(event.target.value);
