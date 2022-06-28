@@ -80,7 +80,7 @@ function onClick() {
     output.value = binaryToDecimal(input.value).toString();
   } else if (_from === "from_decimal" && _to === "to_binary") {
     output.value = decimalToBinary(input.value).toString();
-  } 
+  }
 }
 
 function onKeyEvent(event) {

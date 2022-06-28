@@ -1,1 +1,287 @@
-final
+<!DOCTYPE html>
+  <head>
+    <style>
+        @font-face {
+        font-family: "S-CoreDream-3Light";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-3Light.woff")
+            format("woff");
+        font-weight: normal;
+        font-style: normal;
+        }
+        @font-face {
+        font-family: "S-CoreDream-4Regular";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff")
+            format("woff");
+        font-weight: normal;
+        font-style: normal;
+        }
+        @font-face {
+        font-family: "S-CoreDream-5Medium";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-5Medium.woff")
+            format("woff");
+        font-weight: normal;
+        font-style: normal;
+        }
+        @font-face {
+        font-family: "S-CoreDream-6Bold";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-6Bold.woff")
+            format("woff");
+        font-weight: normal;
+        font-style: normal;
+        }
+        @font-face {
+        font-family: "S-CoreDream-7ExtraBold";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-7ExtraBold.woff")
+            format("woff");
+        font-weight: normal;
+        font-style: normal;
+        }
+
+        .container {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+        }
+        
+        .text {
+          display: flex;
+          font-family: "S-CoreDream-3Light";
+          font-size: 14px;
+          color: #143578;
+        }
+        
+        .box {
+          display: flex;
+          background-color: #ffffff;
+          border-radius: 7px;
+          outline-style: none;
+          border: none;
+          margin-top: 10px;
+          padding: 12px;
+          height: 21px;
+          font-family: "S-CoreDream-3Light";
+          font-size: 17px;
+          box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.25);
+        }
+        
+        .input-inner-box {
+          outline-style: none;
+          border: none;
+          width: 100%;
+          height: 100%;
+          font-family: "S-CoreDream-3Light";
+          font-size: 17px;
+          padding: 0px;
+          margin-right: 10px;
+        }
+        
+        .input-btn {
+          display: flex;
+          align-items: center;
+          background-color: transparent;
+          outline-style: none;
+          border: none;
+          padding: 0px;
+        }
+        
+        .input-btn:hover {
+          cursor: pointer;
+        }
+        .input-btn:hover:after {
+          left: 0;
+          width: 100%;
+        }
+        .input-btn:active {
+          margin-top: 2px;
+        }
+        
+        .operator-box {
+          display: flex;
+          align-items: center;
+          padding: 10px;
+          background-color: #546ea4;
+          border-radius: 10px;
+          height: 56px;
+          margin-top: 14px;
+          margin-bottom: 14px;
+        }
+        
+        .operator-inner-box {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          padding: 5px;
+          height: 46px;
+        }
+        
+        .operator-btn {
+          display: flex;
+          outline-style: none;
+          border: none;
+          background-color: #9cb2df;
+          box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+          border-radius: 7px;
+          padding: 8px;
+          width: 30px;
+          height: 30px;
+          font-family: "S-CoreDream-4Regular";
+          font-size: 18px;
+          color: #ffffff;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          margin-right: 10px;
+          transition-duration: 0.3s;
+        }
+        
+        .operator-btn:hover {
+          background-color: #6f8ac3;
+          cursor: pointer;
+        }
+        .operator-btn:hover:after {
+          left: 0;
+          width: 100%;
+        }
+        .operator-btn:active {
+          box-shadow: none;
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/6f574e281b.js" crossorigin="anonymous"></script>
+    <title>BinaryOperation</title>
+  </head>
+  <body>
+    <div class="container">
+        <div class="operator-inner-box">
+            <select id="from">
+                <option class="text">진수 선택</option>
+                <option class="text" value="from_binary">2진수</option>
+                <option class="text" value="from_decimal">10진수</option>
+                <option class="text" value="from_hexa">16진수</option>
+            </select>
+            <span class="text">에서</span>
+            <select id="to">
+                <option class="text">진수 선택</option>
+                <option class="text" value="to_binary">2진수</option>
+                <option class="text" value="to_decimal">10진수</option>
+                <option class="text" value="to_hexa">16진수</option>
+            </select>
+            <span class="text">으로</span>
+        </div>
+      <div class="container">
+        <span class="text">입력</span>
+        <div class="box">
+          <input
+            id="input"
+            type="text"
+            class="input-inner-box"
+            placeholder="숫자를 입력하세요."
+            autofocus/>
+          <button id="enter-button" class="input-btn">
+            <i class="fa-solid fa-align-center" style="font-size: 21px; color:#143578"></i>
+          </button>
+        </div>
+      </div>
+      <div class="container">
+        <span class="text">결과</span>
+        <input id="output" type="text" class="box" disabled />
+      </div>
+    </div>
+    <script>
+        const input = document.querySelector("#input");
+        const output = document.querySelector("#output");
+        const from = document.querySelector("#from");
+        const to = document.querySelector("#to");
+        
+        /**
+         * 2진수 -> 10진수
+         * @param {string} input
+         */
+        function binaryToDecimal(input) {
+          input = parseInt(input);
+          let p = 1;
+          let output = 0;
+          while (input) {
+            const num = input % 10;
+            if (num > 1) {
+              return "식이 올바르지 않음.";
+            }
+            output += num * p;
+            p *= 2;
+            input = parseInt(input / 10);
+          }
+          return output;
+        }
+        
+        /**
+         * 10진수 -> 2진수
+         * @param {string} input
+         */
+        function decimalToBinary(input) {
+          input = parseInt(input);
+          let output = "";
+          while (input > 0) {
+            output += input % 2;
+            input = parseInt(input / 2);
+          }
+          return output.split("").reverse().join("");
+        }
+        
+        /**
+         * 2진수 -> 16진수
+         * @param {string} input
+         */
+        function binaryToHexa(input) {}
+        
+        /**
+         * 16진수 -> 2진수
+         * @param {string} input
+         */
+        function hexaToBinary(input) {}
+        
+        /**
+         * 10진수 -> 16진수
+         * @param {string} input
+         */
+        function decimalToHexa(input) {}
+        
+        /**
+         * 16진수 -> 10진수
+         * @param {string} input
+         */
+        function hexaToDecimal(input) {}
+        
+        let _from = "";
+        let _to = "";
+        function onFromChange(event) {
+          _from = event.target.value;
+        }
+        function onToChange(event) {
+          _to = event.target.value;
+        }
+        
+        from.addEventListener("change", onFromChange);
+        to.addEventListener("change", onToChange);
+        
+        const btn = document.querySelector("#enter-button");
+        function onClick() {
+          console.log(_from, _to);
+          if (_from === "from_binary" && _to === "to_decimal") {
+            output.value = binaryToDecimal(input.value).toString();
+          } else if (_from === "from_decimal" && _to === "to_binary") {
+            output.value = decimalToBinary(input.value).toString();
+          } 
+        }
+        
+        function onKeyEvent(event) {
+          if (event.key == "Enter") {
+            if (_from === "from_binary" && _to === "to_decimal") {
+              output.value = binaryToDecimal(input.value).toString();
+            }
+          }
+        }
+        
+        btn.addEventListener("click", onClick);
+        input.addEventListener("keypress", onKeyEvent);
+    </script>
+  </body>
+</html>
