@@ -27,6 +27,7 @@ const Banner = styled.div`
   display: flex:
   flex-direction: row;
   align-items: flex-start;
+  pointer-events: none;
   ${styles.styleEffect.opacity100};
 `;
 
