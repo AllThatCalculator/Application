@@ -7,7 +7,9 @@ const sizes = {
 const styleColor = {
   blue900: "#143578",
   blue400: "#6F8AC3",
+  blue300: "#546EA4",
   blue200: "#9CB2DF",
+  blue100: "#3F68B9",
   blue50: "#CFD5DE",
   blue30: "#ECF2FF",
   white300: "#ffffff",
@@ -31,6 +33,7 @@ const styleColor = {
   gray50: "#929292BF",
 };
 const styleLayout = {
+  basic25: "1px",
   basic50: "3px",
   basic100: "10px 14px",
   basic200: "8px",
@@ -54,6 +57,7 @@ const styleSize = {
   big: `heigth: 38px; width: 38px;`,
   buttonRecommend: `height: 118px; width: 280px;`,
   input: `width: 25em;`,
+  modalCalculetInfo: `width: 529px; height: 550px;`,
 };
 const sytleText = {
   text400: `font-family: "S-CoreDream-4Regular";
@@ -79,6 +83,7 @@ const styleBorder = {
   basic300: `border-radius: 10px; border: 1px solid;`,
 };
 const styleEffect = {
+  opacity50: `box-shadow: inset 0px 1px 5px rgba(0, 0, 0, 0.25);`,
   opacity100: `filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.25));`,
   opacity200: `filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.3));`,
   opacity300: `filter: drop-shadow(0px 15px 35px rgba(0, 0, 0, 0.25));`,

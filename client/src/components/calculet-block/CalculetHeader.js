@@ -1,7 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { BoxIcon } from "../atom-components/BoxIcon";
 import { BtnSmallIcon, BtnStatisticsIcon } from "../atom-components/ButtonIcon";
+import { Modal } from "../atom-components/Modal";
+import ModalCalculetInfo from "../global-component/ModalCalculetInfo";
 import styles from "../styles";
 
 const CalculetName = styled.div`
@@ -84,8 +86,47 @@ function CalculetHeader({ title, contributor, statistics }) {
     }
   }
 
+  // {bool} modalOpen 계산기 정보 팝업창 불러오기 상태
+  const [modalOpen, setModalOpen] = React.useState(false);
+
+  /**
+   * i 버튼 누르면 계산기 정보 팝업창 열림
+   * -> 팝업창 X 누르면 팝업창 닫힘
+   */
+  const onModalOpen = () => {
+    setModalOpen(true);
+  };
+  const onModalClose = () => {
+    setModalOpen(false);
+  };
+  // 계산기 정보 팝업창에 들어갈 내용
+  const contents = {
+    profile_img: "",
+    contributor_id: "bsa0322",
+    calculation_cnt: "1,000,000",
+    user_cnt: "12,345",
+    title: "사칙연산 계산기",
+    category_main: "수학",
+    category_sub: "계산",
+    birthday: "2022.06.24",
+    update_log: [
+      ["2022.06.26", ["버그수정", "내용 수정"]],
+      ["2022.06.28", []],
+      ["2022.06.29", ["오류 수정", "내용 수정", "asdfasdf"]],
+      ["2022.06.30", ["오류 수정", "내용 수정", "asdfasdf"]],
+      ["2022.07.09", ["오류 수정", "내용 수정", "asdfasdf"]],
+      ["2022.10.05", ["오류 수정", "내용 수정", "asdfasdf"]],
+    ],
+  };
+
   return (
     <>
+      {modalOpen && (
+        <Modal
+          onClick={onModalClose}
+          contents={<ModalCalculetInfo info={contents} />}
+        />
+      )}
       <WrapperBox>
         <WrapperLine>
           <WrapperGroup>
@@ -94,9 +135,7 @@ function CalculetHeader({ title, contributor, statistics }) {
               text="info"
               icon="InfoCircle"
               color="blue"
-              onClick={() => {
-                console.log("see information");
-              }}
+              onClick={onModalOpen}
             />
           </WrapperGroup>
         </WrapperLine>

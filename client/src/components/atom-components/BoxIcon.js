@@ -50,6 +50,12 @@ const StyledProfileImg = styled.img`
   ${styles.styleSize.small};
   border-radius: 50%;
 `;
+// 프로필 큰 사진
+const StyledProfileImgBig = styled.img`
+  background: ${styles.styleColor.blue900};
+  ${styles.styleSize.big};
+  border-radius: 50%;
+`;
 /**
  *
  * 버튼이 아닌! 아이콘 + 정보 를 나타내는 컴포넌트 반환 함수
@@ -74,4 +80,4 @@ function BoxIcon({ text, icon, number, profile }) {
     </StyledDiv>
   );
 }
-export { BoxIcon };
+export { BoxIcon, StyledIcon, StyledProfileImgBig };
