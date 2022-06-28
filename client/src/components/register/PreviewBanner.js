@@ -3,6 +3,7 @@ import BoxRecCalculator from "../atom-components/BoxRecCalculator";
 import styles from "../styles";
 import BigTitle from "./BigTitle";
 
+// 배너 미리보기 감싸는 가장 바깥 스타일 정의
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -13,6 +14,7 @@ const Wrapper = styled.div`
   gap: ${styles.styleLayout.basic900};
 `;
 
+// 배너 박스 스타일 정의
 const BannerBox = styled.div`
   display: flex;
   flex-direction: column;
@@ -23,6 +25,7 @@ const BannerBox = styled.div`
   height: 100%;
 `;
 
+// 배너에 그림자 효과 주기 위한 스타일 정의
 const Banner = styled.div`
   display: flex:
   flex-direction: row;
@@ -31,6 +34,13 @@ const Banner = styled.div`
   ${styles.styleEffect.opacity100};
 `;
 
+/**
+ * 배너 미리보기 컴포넌트
+ * @param {image, string, string} param0
+ * profile: 사용자 프로필
+ * title: 계산기 제목
+ * description: 계산기 설명
+ */
 function PreviewBanner({ profile, title, description }) {
   return (
     <Wrapper>

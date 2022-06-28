@@ -1,19 +1,8 @@
 import styled from "styled-components";
-import styles from "../styles";
-import { useState } from "react";
-import CalculetBlock from "../calculet-block/CalculetBlock";
-import Editor from "@monaco-editor/react";
-import { StyledIcon } from "../atom-components/ButtonTemplate";
-import BigTitle from "./BigTitle";
+import { StyledIcon } from "../atom-components/ButtonTemplate.js";
+import styles from "../styles.js";
 
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0px;
-  gap: ${styles.styleLayout.basic900};
-`;
-
-// 스타일드 탭
+// 탭의 가장 바깥 스타일 정의
 const StyledTab = styled.div`
   display: flex;
   flex-direction: row;
@@ -23,7 +12,7 @@ const StyledTab = styled.div`
   border-bottom: 1px solid ${styles.styleColor.blue50};
 `;
 
-// 스타일드 기본 탭 버튼 배경
+// 기본 탭 버튼 배경 스타일 정의
 const StyledBg = styled.div`
   align-items: center;
   padding: ${styles.styleLayout.basic200};
@@ -34,19 +23,13 @@ const StyledBg = styled.div`
   cursor: pointer;
 `;
 
-// 스타일드 기본 탭 버튼 클릭됨
-const StyledBgClicked = styled.div`
-  align-items: center;
-  padding: ${styles.styleLayout.basic200};
-  background: ${styles.styleColor.white300};
+// 기본 탭 버튼 클릭됐을 때 스타일 정의
+const StyledBgClicked = styled(StyledBg)`
   ${styles.sytleText.buttonWhite};
-  color: black;
   border-bottom: 4px solid ${styles.styleColor.green100};
-
-  cursor: pointer;
 `;
 
-// 스타일드 기본 탭 버튼
+// 기본 탭 버튼 스타일 정의
 const StyledButton = styled.div`
   display: flex;
   flex-direction: row;
@@ -60,113 +43,59 @@ const StyledButton = styled.div`
   }
 `;
 
-function ButtonTab({ text, icon, isValid, onClick }) {
+/**
+ * 탭 안의 버튼 컴포넌트
+ * @param {string, string, boolean, function} param0
+ * text: 버튼 텍스트
+ * icon: 버튼 아이콘
+ * isClick: 지금 클릭되어 있는지 확인하는 변수
+ * onClick: 버튼 클릭 함수
+ */
+function TabButton({ text, icon, isClick, onClick }) {
   return (
     <>
-      {" "}
-      {!isValid ? (
-        <StyledBg id={text} onClick={onClick}>
-          <StyledButton id={text}>
-            {icon && <StyledIcon id={text} name={icon}></StyledIcon>}
-            <div id={text}>{text}</div>
-          </StyledButton>
-        </StyledBg>
-      ) : (
+      {isClick ? (
         <StyledBgClicked id={text} onClick={onClick}>
           <StyledButton id={text}>
             {icon && <StyledIcon id={text} name={icon}></StyledIcon>}
             <div id={text}>{text}</div>
           </StyledButton>
         </StyledBgClicked>
-      )}{" "}
+      ) : (
+        <StyledBg id={text} onClick={onClick}>
+          <StyledButton id={text}>
+            {icon && <StyledIcon id={text} name={icon}></StyledIcon>}
+            <div id={text}>{text}</div>
+          </StyledButton>
+        </StyledBg>
+      )}
     </>
   );
 }
 
-function TabMenu(props) {
-  const [code, setCode] = useState(true);
-  const [md, setMd] = useState(false);
-  const [eye, setEye] = useState(false);
-
-  function onClickButtonTab(event) {
-    if (event.target.id === "HTML") {
-      setCode(true);
-      setMd(false);
-      setEye(false);
-    } else if (event.target.id === "MARKDOWN") {
-      setCode(false);
-      setMd(true);
-      setEye(false);
-    } else {
-      setCode(false);
-      setMd(false);
-      setEye(true);
-    }
-  }
-
+/**
+ * 탭 메뉴 컴포넌트
+ * @param {object array} param0
+ * tabInforms: 탭의 메뉴 정보가 담긴 객체 배열
+ * - text: 탭 메뉴 text
+ * - icon: 탭 메뉴 icon
+ * - isClick: 현재 선택됐는지 확인
+ * - onClick: 클릭 시 함수
+ */
+function TabMenu({ tabs }) {
   return (
-    <Wrapper>
-      <BigTitle content="계산기 코드 입력하기" />
-      <StyledTab>
-        <ButtonTab
-          text="HTML"
-          icon="Code"
-          isValid={code}
-          onClick={onClickButtonTab}
+    <StyledTab>
+      {tabs.map((menu, key) => (
+        <TabButton
+          text={menu.text}
+          icon={menu.icon}
+          isClick={menu.isClick}
+          onClick={menu.onClick}
+          key={key}
         />
-        <ButtonTab
-          text="MARKDOWN"
-          icon="MarkDown"
-          isValid={md}
-          onClick={onClickButtonTab}
-        />
-        <ButtonTab
-          text="미리 보기"
-          icon="Eye"
-          isValid={eye}
-          onClick={onClickButtonTab}
-        />
-      </StyledTab>
-      <>
-        {code ? (
-          <Editor
-            height="63vh"
-            theme="vs-dark"
-            defaultLanguage="html"
-            defaultValue={props.htmlScript}
-            onMount={(editor) => {
-              props.editorRef.current = editor;
-            }}
-            onChange={props.htmlScriptChange}
-          />
-        ) : (
-          <></>
-        )}
-        {md ? (
-          <Editor
-            height="63vh"
-            theme="vs-dark"
-            defaultLanguage="markdown"
-            defaultValue={props.markdown}
-            onMount={(editor) => {
-              props.editorRef.current = editor;
-            }}
-            onChange={props.markdownChange}
-          />
-        ) : (
-          <></>
-        )}
-        {eye ? (
-          <CalculetBlock
-            srcCode={props.htmlScript + "<style>*{margin:0px;}</style>"}
-            manual={props.markdown}
-          />
-        ) : (
-          <></>
-        )}
-      </>
-    </Wrapper>
+      ))}
+    </StyledTab>
   );
 }
 
-export default TabMenu;
+export { TabButton, TabMenu };

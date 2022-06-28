@@ -8,7 +8,7 @@ import {
   ExplanationEmail,
   ExplanationInputLine,
 } from "./Explanation";
-import { OPTIONS_BIG_CATEGORY, OPTIONS_EMAIL_ADDRESS } from "./CONSTANT";
+import { OPTIONS_BIG_CATEGORY, OPTIONS_EMAIL_ADDRESS } from "./OPTIONS";
 
 // 정보칸 + 배너 미리보기 감싸는 스타일 정의
 const WrapperInformBanner = styled.div`
@@ -48,6 +48,11 @@ const InformBox = styled.div`
   border-radius: 7px;
 `;
 
+/**
+ * 계산기 정보 입력창 컴포넌트 (정보 입력 + 배너 미리보기)
+ * @param {*} props
+ * props: 계산기에 대한 정보 state들
+ */
 function WriteInform(props) {
   return (
     <WrapperInformBanner>
