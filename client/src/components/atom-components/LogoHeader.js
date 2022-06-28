@@ -8,6 +8,12 @@ const StyledDiv = styled.div`
   ${styles.styleEffect.opacity200};
   min-width: max-content;
   align-items: center;
+
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 `;
 /**
  *
