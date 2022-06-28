@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import CalculetBlock from "../calculet-block/CalculetBlock";
 import Editor from "@monaco-editor/react";
 import { StyledIcon } from "../atom-components/ButtonTemplate";
-import StyledTitle from "./Title";
+import BigTitle from "./BigTitle";
 
 const Wrapper = styled.div`
   display: flex;
@@ -111,7 +111,7 @@ function TabMenu() {
 
   return (
     <Wrapper>
-      <StyledTitle>계산기 코드 입력하기</StyledTitle>
+      <BigTitle content="계산기 코드 입력하기" />
       <StyledTab>
         <ButtonTab
           text="HTML"

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import BoxRecCalculator from "../atom-components/BoxRecCalculator";
 import styles from "../styles";
-import StyledTitle from "./Title";
+import BigTitle from "./BigTitle";
 
 const Wrapper = styled.div`
   display: flex;
@@ -33,7 +33,7 @@ const Banner = styled.div`
 function PreviewBanner({ profile, title, description }) {
   return (
     <Wrapper>
-      <StyledTitle>배너 미리보기</StyledTitle>
+      <BigTitle content="배너 미리보기" />
       <BannerBox>
         <Banner>
           <BoxRecCalculator
