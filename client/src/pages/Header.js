@@ -48,15 +48,19 @@ function Contents() {
 
 /**
  * 헤더
- * 메뉴(계산기 카테고리), 로고, 검색창, 로그인 버튼
  * -> 스크롤 내리면 색 바뀜
+ *
+ * 메뉴(계산기 카테고리), 로고, 검색창, 로그인 버튼
  *
  */
 function Header() {
+  // 스크롤의 위치
   const [scrollPosition, setScrollPosition] = useState(0);
-  const updateScroll = () => {
+  // 스크롤 위치 변화에 따라 scrollPosition 변화
+  function updateScroll() {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
-  };
+  }
+  // 스크롤 위치 감지
   useEffect(() => {
     window.addEventListener("scroll", updateScroll);
   });
