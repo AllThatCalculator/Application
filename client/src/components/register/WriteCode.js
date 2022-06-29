@@ -2,9 +2,9 @@ import styled from "styled-components";
 import styles from "../styles";
 import { useState } from "react";
 import CalculetBlock from "../calculet-block/CalculetBlock";
-import BigTitle from "./BigTitle";
 import { TabMenu } from "./TabMenu";
 import CodeEditor from "./CodeEditor";
+import BigTitle from "../atom-components/BigTitle";
 
 // 가장 바깥 스타일 정의
 const Wrapper = styled.div`
@@ -96,10 +96,12 @@ function WriteCode(props) {
           />
         )}
         {preview && (
-          <CalculetBlock
-            srcCode={props.htmlScript + "<style>*{margin:0px;}</style>"}
-            manual={props.markdown}
-          />
+          <>
+            <CalculetBlock
+              srcCode={props.htmlScript + "<style>*{margin:0px;}</style>"}
+              manual={props.markdown}
+            />
+          </>
         )}
       </>
     </Wrapper>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
+import BigTitle from "../atom-components/BigTitle";
 import BoxRecCalculator from "../atom-components/BoxRecCalculator";
 import styles from "../styles";
-import BigTitle from "./BigTitle";
 
 // 배너 미리보기 감싸는 가장 바깥 스타일 정의
 const Wrapper = styled.div`

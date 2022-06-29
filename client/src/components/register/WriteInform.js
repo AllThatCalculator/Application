@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import styles from "../styles";
 import PreviewBanner from "./PreviewBanner";
-import BigTitle from "./BigTitle";
 import MiddleTitle from "./MiddleTitle";
 import {
   ExplanationCategory,
@@ -9,6 +8,7 @@ import {
   ExplanationInputLine,
 } from "./Explanation";
 import { OPTIONS_BIG_CATEGORY, OPTIONS_EMAIL_ADDRESS } from "./OPTIONS";
+import BigTitle from "../atom-components/BigTitle";
 
 // 정보칸 + 배너 미리보기 감싸는 스타일 정의
 const WrapperInformBanner = styled.div`
