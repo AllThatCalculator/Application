@@ -10,10 +10,23 @@ services:
       - ./client/:/client
       - /client/node_modules
     ports:
-      - "3000:3000"
+      - 3000:3000
     networks:
       - app-tier
     tty: true
+
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - ./server/:/server
+      - /server/node_modules
+    networks:
+      - app-tier
+    restart: always
 
   mariadb:
     image: mariadb:10
