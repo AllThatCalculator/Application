@@ -25,6 +25,7 @@ const styleColor = {
   green25a: "#C3EED240",
   black: "#000000",
   black50: { color: "#000000", opacity: 0.6 },
+  black50a: "#00000099",
   black25: { color: "#BEBEBE", opacity: 0.25 },
   gray100: "#5E5E5E",
   gray50: "#929292BF",
