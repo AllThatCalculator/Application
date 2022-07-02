@@ -165,11 +165,7 @@ function LeftBox({ info }) {
       <PositionerCol>
         <PositionerColGap20>
           <PositionerUnderCenter>
-            {info.profile_img ? (
-              <StyledProfileImgBig src={info.profile_img}></StyledProfileImgBig>
-            ) : (
-              <StyledIcon name="PeopleCircle"></StyledIcon>
-            )}
+            <StyledProfileImgBig src={info.profile_img}></StyledProfileImgBig>
             <StyledFont100>{info.contributor_id}</StyledFont100>
           </PositionerUnderCenter>
           <InfoBox

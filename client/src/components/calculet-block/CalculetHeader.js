@@ -101,7 +101,7 @@ function CalculetHeader({ title, contributor, statistics }) {
   };
   // 계산기 정보 팝업창에 들어갈 내용
   const contents = {
-    profile_img: "",
+    profile_img: "/img/ori.png",
     contributor_id: "bsa0322",
     calculation_cnt: "1,000,000",
     user_cnt: "12,345",
