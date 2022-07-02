@@ -74,8 +74,12 @@ function WriteInform(props) {
           />
           <ExplanationCategory
             explanation="카테고리"
+            bigCategory={props.bigCategory}
+            bigPlaceholder="대분류"
             OPTIONS_BIG_CATEGORY={OPTIONS_BIG_CATEGORY}
             onBigChange={props.bigCategoryChange}
+            smallCategory={props.smallCategory}
+            smallPlaceholder="소분류"
             OPTIONS_SMALL_CATEGORY={props.smallCategoryOption}
             onSmallChange={props.smallCategoryChange}
           />

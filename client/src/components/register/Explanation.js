@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import styles from "../styles.js";
-import InputBox from "./InputBox.js";
+import { InputBox, InputBoxLine } from "./InputBox.js";
 import { SelectBox, SelectBoxLine } from "./SelectBox.js";
 import SmallTitle from "./SmallTitle.js";
 
@@ -79,8 +79,12 @@ function ExplanationInputLine({
  */
 function ExplanationCategory({
   explanation,
+  bigCategory,
+  bigPlaceholder,
   OPTIONS_BIG_CATEGORY,
   onBigChange,
+  smallCategory,
+  smallPlaceholder,
   OPTIONS_SMALL_CATEGORY,
   onSmallChange,
 }) {
@@ -90,8 +94,18 @@ function ExplanationCategory({
         <SmallTitle content={explanation} />
       </WrapperRatio1>
       <WrapperRatio2dot8>
-        <SelectBoxLine options={OPTIONS_BIG_CATEGORY} onChange={onBigChange} />
-        <SelectBox options={OPTIONS_SMALL_CATEGORY} onChange={onSmallChange} />
+        <SelectBoxLine
+          options={OPTIONS_BIG_CATEGORY}
+          placeholder={bigPlaceholder}
+          selected={bigCategory}
+          onChange={onBigChange}
+        />
+        <SelectBox
+          options={OPTIONS_SMALL_CATEGORY}
+          placeholder={smallPlaceholder}
+          selected={smallCategory}
+          onChange={onSmallChange}
+        />
       </WrapperRatio2dot8>
     </Explanation>
   );
@@ -127,12 +141,17 @@ function ExplanationEmail({
           onChange={onChangeAddress}
         />
         <SmallTitle content="@" />
-        <InputBox
+        <InputBoxLine
           placeholder="도메인"
           defaultValue={domain}
           onChange={onChangeDomain}
         />
-        <SelectBox options={OPTIONS_EMAIL_ADDRESS} onChange={onChangeSelect} />
+        <SelectBox
+          options={OPTIONS_EMAIL_ADDRESS}
+          placeholder="직접 입력"
+          selected={domain}
+          onChange={onChangeSelect}
+        />
       </WrapperRatio2dot8>
     </Explanation>
   );

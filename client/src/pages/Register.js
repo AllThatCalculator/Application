@@ -35,9 +35,7 @@ function Register() {
   const [bigCategory, setBigCategory] = useState("");
   const [smallCategory, setSmallCategory] = useState("");
   // 대분류 종류에 맞는 소분류 옵션 배열
-  const [smallCategoryOption, setSmallCategoryOption] = useState([
-    { value: "default", name: "-" },
-  ]);
+  const [smallCategoryOption, setSmallCategoryOption] = useState(null);
   const [address, setAddress] = useState("");
   const [domain, setDomain] = useState("");
   const [email, setEmail] = useState("");
@@ -73,12 +71,18 @@ function Register() {
    */
   function bigCategoryChange(event) {
     const targetValue = event.target.value;
+    console.log(targetValue);
     const option = OPTIONS_BIG_CATEGORY.filter((x) => x.value === targetValue);
     const smallOption = OPTIONS_SMALL_CATEGORY.filter(
       (x) => x.big === option[0].value
     );
     setBigCategory(option[0].name);
-    setSmallCategoryOption(smallOption[0].options);
+    setSmallCategory(null);
+    if (smallOption.length) {
+      setSmallCategoryOption(smallOption[0].options);
+    } else {
+      setSmallCategoryOption(null);
+    }
   }
 
   /**
@@ -88,8 +92,12 @@ function Register() {
    */
   function smallCategoryChange(event) {
     const targetValue = event.target.value;
-    const option = smallCategoryOption.filter((x) => x.value === targetValue);
-    setSmallCategory(option[0].name);
+    console.log(smallCategoryOption);
+    if (smallCategoryOption) {
+      const option = smallCategoryOption.filter((x) => x.value === targetValue);
+      console.log(option);
+      setSmallCategory(option[0].name);
+    }
   }
 
   /**

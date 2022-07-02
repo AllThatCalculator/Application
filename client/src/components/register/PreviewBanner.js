@@ -23,6 +23,7 @@ const BannerBox = styled.div`
   padding: 0px;
   width: 100%;
   height: 100%;
+  background: ${styles.styleColor.white300};
 `;
 
 // 배너에 그림자 효과 주기 위한 스타일 정의
@@ -31,6 +32,7 @@ const Banner = styled.div`
   flex-direction: row;
   align-items: flex-start;
   pointer-events: none;
+  background: none;
   ${styles.styleEffect.opacity100};
 `;
 
