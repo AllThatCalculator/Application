@@ -101,17 +101,16 @@ const StyledOptionItem = styled.button`
   }
 `;
 
-//
+// 선택된 옵션 아이템 스타일 정의
 const StyledOptionSelect = styled.div`
   ${styles.sytleText.buttonWhite};
   pointer-events: none;
 `;
 
+// 선택된 옵션 아이템의 아이콘 스타일 정의
 const StyledIconSelect = styled.div`
   width: 14px;
-  &: first-child {
-    display: ${(props) => (props.item === props.value ? `block` : `none`)};
-  }
+  opacity: ${(props) => (props.item === props.value ? `1` : `0`)};
   pointer-events: none;
 `;
 
