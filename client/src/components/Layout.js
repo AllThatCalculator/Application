@@ -21,7 +21,6 @@ const HeaderLayout = styled.div`
  * 컨텐트 감싸는 최상위 레이아웃
  */
 const ContentLayout = styled.div`
-  background: tomato;
   margin: 0 auto;
   @media (min-width: ${PHONE}) and (max-width: ${TABLET}) {
     ${styles.sizes.phone};
