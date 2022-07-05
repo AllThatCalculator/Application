@@ -124,7 +124,8 @@ function ExplanationCategory({
 function ExplanationEmail({
   address,
   onChangeAddress,
-  domain,
+  writeDomain,
+  selectDomain,
   onChangeDomain,
   OPTIONS_EMAIL_ADDRESS,
   onChangeSelect,
@@ -143,13 +144,14 @@ function ExplanationEmail({
         <SmallTitle content="@" />
         <InputBoxLine
           placeholder="도메인"
-          defaultValue={domain}
+          defaultValue={writeDomain}
           onChange={onChangeDomain}
+          disabled={selectDomain !== "직접 입력" ? true : false}
         />
         <SelectBox
           options={OPTIONS_EMAIL_ADDRESS}
           placeholder="직접 입력"
-          selected={domain}
+          selected={selectDomain}
           onChange={onChangeSelect}
         />
       </WrapperRatio2dot8>

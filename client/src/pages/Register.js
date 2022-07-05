@@ -3,7 +3,7 @@ import styles from "../components/styles";
 import WriteCode from "../components/register/WriteCode";
 import WriteInform from "../components/register/WriteInform";
 import UploadDoneBtn from "../components/register/UploadDoneBtn";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   OPTIONS_BIG_CATEGORY,
   OPTIONS_EMAIL_ADDRESS,
@@ -37,6 +37,8 @@ function Register() {
   // 대분류 종류에 맞는 소분류 옵션 배열
   const [smallCategoryOption, setSmallCategoryOption] = useState(null);
   const [address, setAddress] = useState("");
+  const [writeDomain, setWriteDomain] = useState("");
+  const [selectDomain, setSelectDomain] = useState("");
   const [domain, setDomain] = useState("");
   const [email, setEmail] = useState("");
 
@@ -46,13 +48,15 @@ function Register() {
   const [htmlScript, setHtmlScript] = useState("<!DOCTYPE html>");
   const [markdown, setMarkdown] = useState("### write detail!");
 
+  // 바로 초기화하면 defaultValue로 설정해서인지 값이 안 바뀌어서 나중에 set하기 위해 useEffect 사용
+  useEffect(() => setSelectDomain("직접 입력"), []);
+
   /**
    * 계산기 제목 입력값 change 함수
    * @param {*} event
    */
   function titleChange(event) {
     setTitle(event.target.value);
-    console.log(event.target);
   }
 
   /**
@@ -71,7 +75,6 @@ function Register() {
    */
   function bigCategoryChange(event) {
     const targetValue = event.target.value;
-    console.log(targetValue);
     const option = OPTIONS_BIG_CATEGORY.filter((x) => x.value === targetValue);
     const smallOption = OPTIONS_SMALL_CATEGORY.filter(
       (x) => x.big === option[0].value
@@ -92,10 +95,8 @@ function Register() {
    */
   function smallCategoryChange(event) {
     const targetValue = event.target.value;
-    console.log(smallCategoryOption);
     if (smallCategoryOption) {
       const option = smallCategoryOption.filter((x) => x.value === targetValue);
-      console.log(option);
       setSmallCategory(option[0].name);
     }
   }
@@ -103,7 +104,7 @@ function Register() {
   /**
    * email 세팅하는 함수 = address + @ + domain
    */
-  function settingEmail() {
+  function settingEmail(address, domain) {
     setEmail(`${address}@${domain}`);
   }
 
@@ -114,7 +115,7 @@ function Register() {
    */
   function addressChange(event) {
     setAddress(event.target.value);
-    settingEmail();
+    settingEmail(event.target.value, domain);
   }
 
   /**
@@ -123,8 +124,10 @@ function Register() {
    * @param {*} event
    */
   function domainChange(event) {
-    setDomain(event.target.value);
-    settingEmail();
+    const targetValue = event.target.value;
+    setWriteDomain(targetValue);
+    setDomain(targetValue);
+    settingEmail(address, targetValue);
   }
 
   /**
@@ -136,8 +139,15 @@ function Register() {
   function domainSelectChange(event) {
     const targetValue = event.target.value;
     const option = OPTIONS_EMAIL_ADDRESS.filter((x) => x.value === targetValue);
-    setDomain(option[0].name);
-    settingEmail();
+    const domainValue = option[0].name;
+    if (domainValue === "직접 입력") {
+      setWriteDomain("");
+    } else {
+      setWriteDomain(domainValue);
+    }
+    setSelectDomain(domainValue);
+    setDomain(domainValue);
+    settingEmail(address, domainValue);
   }
 
   /**
@@ -166,6 +176,8 @@ function Register() {
           smallCategoryOption={smallCategoryOption}
           smallCategory={smallCategory}
           address={address}
+          writeDomain={writeDomain}
+          selectDomain={selectDomain}
           domain={domain}
           email={email}
           titleChange={titleChange}

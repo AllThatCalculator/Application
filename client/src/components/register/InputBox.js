@@ -14,6 +14,9 @@ const StyledInput = styled.input`
   :focus {
     outline: none;
   }
+  :disabled {
+    background: none;
+  }
 `;
 
 // 정보 입력 칸의 input 컴포넌트에 오른쪽 구분선 스타일 정의
@@ -28,12 +31,13 @@ const StyledInputLine = styled(StyledInput)`
  * defaultValue: 입력값
  * onChange: 입력값 가져오기 위한 함수
  */
-function InputBox({ placeholder, defaultValue, onChange }) {
+function InputBox({ placeholder, defaultValue, onChange, disabled }) {
   return (
     <StyledInput
       placeholder={placeholder}
       defaultValue={defaultValue}
       onChange={onChange}
+      disabled={disabled}
     />
   );
 }
@@ -45,12 +49,13 @@ function InputBox({ placeholder, defaultValue, onChange }) {
  * defaultValue: 입력값
  * onChange: 입력값 가져오기 위한 함수
  */
-function InputBoxLine({ placeholder, defaultValue, onChange }) {
+function InputBoxLine({ placeholder, defaultValue, onChange, disabled }) {
   return (
     <StyledInputLine
       placeholder={placeholder}
-      defaultValue={defaultValue}
+      value={defaultValue}
       onChange={onChange}
+      disabled={disabled}
     />
   );
 }

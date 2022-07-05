@@ -89,7 +89,8 @@ function WriteInform(props) {
           <ExplanationEmail
             address={props.address}
             onChangeAddress={props.addressChange}
-            domain={props.domain}
+            writeDomain={props.writeDomain}
+            selectDomain={props.selectDomain}
             onChangeDomain={props.domainChange}
             OPTIONS_EMAIL_ADDRESS={OPTIONS_EMAIL_ADDRESS}
             onChangeSelect={props.domainSelectChange}
