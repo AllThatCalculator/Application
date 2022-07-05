@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCallback } from "react";
 import styled from "styled-components";
 import { StyledIcon } from "../atom-components/ButtonTemplate.js";
@@ -140,6 +140,8 @@ function SelectBox({ options, placeholder, selected, onChange }) {
   const [value, setValue] = useState("");
   const [item, setItem] = useState(null);
 
+  const modalRef = useRef();
+
   const onActiveToggle = useCallback(() => {
     setIsActive((prev) => !prev);
   }, []);
@@ -156,8 +158,22 @@ function SelectBox({ options, placeholder, selected, onChange }) {
     }
   };
 
+  function clickModalOutside(event) {
+    if (!modalRef.current.contains(event.target)) {
+      setIsActive(false);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousedown", clickModalOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", clickModalOutside);
+    };
+  }, []);
+
   return (
-    <Wrapper>
+    <Wrapper ref={modalRef}>
       <StyledSelectBox onClick={onActiveToggle}>
         <StyledSelectText
           placeholder={placeholder}
@@ -196,6 +212,8 @@ function SelectBoxLine({ options, placeholder, selected, onChange }) {
   const [value, setValue] = useState("");
   const [item, setItem] = useState(null);
 
+  const modalRef = useRef();
+
   const onActiveToggle = useCallback(() => {
     setIsActive((prev) => !prev);
   }, []);
@@ -212,8 +230,22 @@ function SelectBoxLine({ options, placeholder, selected, onChange }) {
     }
   };
 
+  function clickModalOutside(event) {
+    if (!modalRef.current.contains(event.target)) {
+      setIsActive(false);
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousedown", clickModalOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", clickModalOutside);
+    };
+  }, []);
+
   return (
-    <Wrapper>
+    <Wrapper ref={modalRef}>
       <StyledSelectBoxLine onClick={onActiveToggle}>
         <StyledSelectText
           placeholder={placeholder}
