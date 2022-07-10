@@ -53,6 +53,7 @@ const styleSize = {
   big: `heigth: 38px; width: 38px;`,
   buttonRecommend: `height: 118px; width: 280px;`,
   input: `width: 25em;`,
+  category_desktop: `width: 253px;`,
 };
 const sytleText = {
   text400: `font-family: "S-CoreDream-4Regular";
