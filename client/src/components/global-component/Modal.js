@@ -1,27 +1,28 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import styles from "../styles";
-import { BtnSmallIcon } from "./ButtonIcon";
+import { BtnSmallIcon } from "../atom-components/ButtonIcon";
 
-// 위에서 아래로 애니메이션
-const StyledAni = styled.div`
-  animation: modal-show 1s;
-  @keyframes modal-show {
-    from {
-      opacity: 0;
-      margin-top: -50px;
-    }
-    to {
-      opacity: 1;
-      margin-top: 0;
-    }
-  }
+//스타일드 애니메이션
+const slideDown = keyframes`
+from {
+  opacity: 0;
+  margin-top: -50px;
+}
+to {
+  opacity: 1;
+  margin-top: 0;
+}
+`;
+const StyledSlideDown = styled.div`
+  animation: ${slideDown} 1s;
 `;
 // 바깥 배경
 const StyledBackground = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  z-index: 100;
+  z-index: 101;
+
   top: 0;
   left: 0;
   right: 0;
@@ -31,10 +32,10 @@ const StyledBackground = styled.div`
   align-items: center;
   background: ${styles.styleColor.black50a};
 `;
-// 애니메이션 + 정가운데 위치
-const StyledCenter = styled(StyledAni)`
+// 정가운데 위치
+const StyledCenter = styled.div`
   position: absolute;
-  top: 8rem;
+  top: 125px;
 `;
 // 감쌈
 const Positioner = styled.div`
@@ -70,37 +71,7 @@ const StyledHeader = styled.div`
 const PositionerUnder = styled.div`
   height: 100%;
 `;
-/**
- * 모달(팝업창) 반환하는 함수 - 화면 정가운데에 위치 고정
- *
- * @param {function, function} param0
- * onClick : X 버튼 눌렀을 때 일어나는 이벤트
- * contents : 모달 안에 넣을 내용물
- */
-function Modal({ onClick, contents }) {
-  return (
-    <>
-      <StyledBackground>
-        <StyledCenter>
-          <Positioner>
-            <StyledBox>
-              <StyledHeader>
-                <BtnSmallIcon
-                  text="닫기"
-                  icon="X"
-                  color="blue"
-                  onClick={onClick}
-                  type="button"
-                />
-              </StyledHeader>
-              <PositionerUnder>{contents}</PositionerUnder>
-            </StyledBox>
-          </Positioner>
-        </StyledCenter>
-      </StyledBackground>
-    </>
-  );
-}
+
 /**
  * 모달(팝업창) 반환하는 함수 - 화면 정가운데에 위치 고정 안 함
  *
@@ -111,7 +82,7 @@ function Modal({ onClick, contents }) {
 function ModalNonFix({ onClick, contents }) {
   return (
     <>
-      <StyledAni>
+      <StyledSlideDown>
         <Positioner>
           <StyledBox>
             <StyledHeader>
@@ -126,7 +97,26 @@ function ModalNonFix({ onClick, contents }) {
             <PositionerUnder>{contents}</PositionerUnder>
           </StyledBox>
         </Positioner>
-      </StyledAni>
+      </StyledSlideDown>
+    </>
+  );
+}
+
+/**
+ * 모달(팝업창) 반환하는 함수 - 화면 정가운데에 위치 고정
+ *
+ * @param {function, function} param0
+ * onClick : X 버튼 눌렀을 때 일어나는 이벤트
+ * contents : 모달 안에 넣을 내용물
+ */
+function Modal({ onClick, contents }) {
+  return (
+    <>
+      <StyledBackground>
+        <StyledCenter>
+          <ModalNonFix onClick={onClick} contents={contents} />
+        </StyledCenter>
+      </StyledBackground>
     </>
   );
 }

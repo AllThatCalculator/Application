@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { BoxIcon } from "../atom-components/BoxIcon";
 import { BtnSmallIcon, BtnStatisticsIcon } from "../atom-components/ButtonIcon";
-import { Modal } from "../atom-components/Modal";
+import { Modal } from "../global-component/Modal";
+
 import ModalCalculetInfo from "../global-component/ModalCalculetInfo";
 import styles from "../styles";
 
@@ -87,7 +88,7 @@ function CalculetHeader({ title, contributor, statistics }) {
   }
 
   // {bool} modalOpen 계산기 정보 팝업창 불러오기 상태
-  const [modalOpen, setModalOpen] = React.useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   /**
    * i 버튼 누르면 계산기 정보 팝업창 열림

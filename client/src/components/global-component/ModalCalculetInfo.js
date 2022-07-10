@@ -116,12 +116,12 @@ function IconBox({ icon, color }) {
     <>
       {color === "blue400" && (
         <StyledBlue400>
-          <StyledIcon name={icon}></StyledIcon>
+          <StyledIcon name={icon} />
         </StyledBlue400>
       )}
       {color === "green100" && (
         <StyledGreen100>
-          <StyledIcon name={icon}></StyledIcon>
+          <StyledIcon name={icon} />
         </StyledGreen100>
       )}
     </>
@@ -133,7 +133,7 @@ function InfoBox({ explain, contents, icon, color }) {
     <PositionerColGap10>
       <StyledFont50Blue300>{explain}</StyledFont50Blue300>
       <WrapperGap8>
-        {icon && <IconBox icon={icon} color={color}></IconBox>}
+        {icon && <IconBox icon={icon} color={color} />}
         <StyledFont100>{contents}</StyledFont100>
       </WrapperGap8>
     </PositionerColGap10>
@@ -147,7 +147,7 @@ function UpdateBox({ explain, contents, icon, color }) {
       {contents.map((conts, index) => (
         <PositionerColGap3 key={index}>
           <WrapperGap8>
-            <IconBox icon={icon} color={color}></IconBox>
+            <IconBox icon={icon} color={color} />
             <StyledFont100>{conts[0]}</StyledFont100>
           </WrapperGap8>
           {conts[1].map((cont) => (
@@ -165,14 +165,11 @@ function LeftBox({ info }) {
       <PositionerCol>
         <PositionerColGap20>
           <PositionerUnderCenter>
-            <StyledProfileImgBig src={info.profile_img}></StyledProfileImgBig>
+            <StyledProfileImgBig src={info.profile_img} />
             <StyledFont100>{info.contributor_id}</StyledFont100>
           </PositionerUnderCenter>
-          <InfoBox
-            explain="누적 연산 수"
-            contents={info.calculation_cnt}
-          ></InfoBox>
-          <InfoBox explain="누적 사용자 수" contents={info.user_cnt}></InfoBox>
+          <InfoBox explain="누적 연산 수" contents={info.calculation_cnt} />
+          <InfoBox explain="누적 사용자 수" contents={info.user_cnt} />
         </PositionerColGap20>
       </PositionerCol>
     </PositionerColGap20Center>
@@ -189,14 +186,14 @@ function RightBox_log({ info }) {
               contents={info.birthday}
               icon="Check2Circle"
               color="blue400"
-            ></InfoBox>
+            />
           </PositionerUnder>
           <UpdateBox
             explain="업데이트"
             contents={info.update_log}
             icon="Circle"
             color="green100"
-          ></UpdateBox>
+          />
         </PositionerColGap20>
       </StyledScrollbar>
     </PositionerPad18>
@@ -224,7 +221,7 @@ function ModalCalculetInfo({ info }) {
     <Positioner>
       {/* 제작자 프로필 & ID / 누적 연산 수 / 누적 사용자 수 */}
       <StyledBoxL>
-        <LeftBox info={info}></LeftBox>
+        <LeftBox info={info} />
       </StyledBoxL>
 
       {/* 계산기 이름 / 대분류 & 소분류 / 등록일 / 업뎃로그 */}
@@ -238,7 +235,7 @@ function ModalCalculetInfo({ info }) {
               </StyledFont100Blue300>
             </Wrapper>
           </PositionerColGap10>
-          <RightBox_log info={info}></RightBox_log>
+          <RightBox_log info={info} />
         </PositionerColGap10Hei100>
       </StyledBoxR>
     </Positioner>
