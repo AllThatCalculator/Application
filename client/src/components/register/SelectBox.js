@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useCallback } from "react";
 import styled from "styled-components";
 import { StyledIcon } from "../atom-components/ButtonTemplate.js";
 import styles from "../styles.js";
@@ -22,12 +21,10 @@ const StyledSelectBox = styled.button`
   color: ${styles.styleColor.blue900};
   padding: 0px 8px 0px 0px;
 
-  cursor: pointer;
-`;
+  border-right: ${(props) =>
+    props.isLine ? `1px solid ${styles.styleColor.blue50}` : `0px`};
 
-// 기본 select에 오른쪽 구분선 들어간 스타일 정의
-const StyledSelectBoxLine = styled(StyledSelectBox)`
-  border-right: 1px solid ${styles.styleColor.blue50};
+  cursor: pointer;
 `;
 
 // select 안 스타일 정의
@@ -99,6 +96,8 @@ const StyledOptionItem = styled.button`
     border-bottom: none;
     border-radius: 0px 0px 7px 7px;
   }
+
+  cursor: pointer;
 `;
 
 // 선택된 옵션 아이템 스타일 정의
@@ -114,6 +113,15 @@ const StyledIconSelect = styled.div`
   pointer-events: none;
 `;
 
+/**
+ * select 박스의 option 하나에 대한 컴포넌트
+ * @param {object} props
+ * value: 각 option의 value
+ * onClick: option 클릭 시 실행되는 onClick 함수
+ * item: 현재 선택된 option의 value
+ * name: 각 option의 name
+ * @returns
+ */
 function Option(props) {
   return (
     <StyledOptionItem value={props.value} onClick={props.onClick}>
@@ -130,33 +138,40 @@ function Option(props) {
 }
 
 /**
- * 기본 select 박스 컴포넌트
- * @param {object, function}
- * options: select 옵션들
- * onChange: select된 값 관리
+ * 기본 select 박스에 대한 컴포넌트
+ * @param {array, string, string, function, boolean}
+ * options: select 박스에 대한 option 리스트들
+ * placeholder: select 박스 선택 전 보이는 회색 글씨에 대한 내용
+ * selected: 선택된 option의 name 저장
+ * onChange: 선택한 option이 바뀔 때 일어나는 함수
+ * isLine: select 박스의 오른쪽에 구분선이 있는지 없는지를 나타내는 변수
+ * @returns
  */
-function SelectBox({ options, placeholder, selected, onChange }) {
+function DefaultSelectBox({
+  options,
+  placeholder,
+  selected,
+  onChange,
+  isLine,
+}) {
+  // option box 활성화 상태에 대한 변수
   const [isActive, setIsActive] = useState(false);
-  const [value, setValue] = useState("");
+  // 현재 선택된 option item의 value 저장
   const [item, setItem] = useState(null);
 
+  // 현재 컴포넌트에 접근하기 위한 useRef (컴포넌트 밖 영역 클릭 시 컴포넌트 닫히도록 하기 위해 필요)
   const modalRef = useRef();
 
-  const onActiveToggle = useCallback(() => {
+  function onActiveToggle() {
     setIsActive((prev) => !prev);
-  }, []);
+  }
 
-  const onSelectItem = (e) => {
-    onChange(e);
-    console.log(e.target.value);
-    const targetId = e.target.value;
-    const option = options.filter((x) => x.value === targetId);
-    setItem(targetId);
+  function onSelectItem(event) {
+    onChange(event);
+    const targetValue = event.target.value;
+    setItem(targetValue);
     setIsActive(false);
-    if (option) {
-      setValue(option[0].name);
-    }
-  };
+  }
 
   function clickModalOutside(event) {
     if (!modalRef.current.contains(event.target)) {
@@ -174,7 +189,7 @@ function SelectBox({ options, placeholder, selected, onChange }) {
 
   return (
     <Wrapper ref={modalRef}>
-      <StyledSelectBox onClick={onActiveToggle}>
+      <StyledSelectBox onClick={onActiveToggle} isLine={isLine}>
         <StyledSelectText
           placeholder={placeholder}
           onChange={onChange}
@@ -202,74 +217,42 @@ function SelectBox({ options, placeholder, selected, onChange }) {
 }
 
 /**
- * 기본 select 박스에 오른쪽 구분선이 있는 컴포넌트
- * @param {object, function}
- * options: select 옵션들
- * onChange: select된 값 관리
+ * 구분선이 없는 select 박스 컴포넌트
+ * @param {array, string, string, function}
+ * options: select 박스에 대한 option 리스트들
+ * placeholder: select 박스 선택 전 보이는 회색 글씨에 대한 내용
+ * selected: 선택된 option의 name 저장
+ * onChange: 선택한 option이 바뀔 때 일어나는 함수
+ */
+function SelectBox({ options, placeholder, selected, onChange }) {
+  return (
+    <DefaultSelectBox
+      options={options}
+      placeholder={placeholder}
+      selected={selected}
+      onChange={onChange}
+      isLine={false}
+    />
+  );
+}
+
+/**
+ * 구분선이 있는 select 박스 컴포넌트
+ * @param {array, string, string, function}
+ * options: select 박스에 대한 option 리스트들
+ * placeholder: select 박스 선택 전 보이는 회색 글씨에 대한 내용
+ * selected: 선택된 option의 name 저장
+ * onChange: 선택한 option이 바뀔 때 일어나는 함수
  */
 function SelectBoxLine({ options, placeholder, selected, onChange }) {
-  const [isActive, setIsActive] = useState(false);
-  const [value, setValue] = useState("");
-  const [item, setItem] = useState(null);
-
-  const modalRef = useRef();
-
-  const onActiveToggle = useCallback(() => {
-    setIsActive((prev) => !prev);
-  }, []);
-
-  const onSelectItem = (e) => {
-    onChange(e);
-    console.log(e.target.value);
-    const targetId = e.target.value;
-    const option = options.filter((x) => x.value === targetId);
-    setItem(targetId);
-    setIsActive(false);
-    if (option) {
-      setValue(option[0].name);
-    }
-  };
-
-  function clickModalOutside(event) {
-    if (!modalRef.current.contains(event.target)) {
-      setIsActive(false);
-    }
-  }
-
-  useEffect(() => {
-    document.addEventListener("mousedown", clickModalOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", clickModalOutside);
-    };
-  }, []);
-
   return (
-    <Wrapper ref={modalRef}>
-      <StyledSelectBoxLine onClick={onActiveToggle}>
-        <StyledSelectText
-          placeholder={placeholder}
-          onChange={onChange}
-          defaultValue={selected}
-          disabled
-        />
-        <StyledIcon name="CaretDownFill" />
-      </StyledSelectBoxLine>
-      <OptionWrapper isActive={isActive}>
-        <StyledOptionBox>
-          {options &&
-            options.map((option) => (
-              <Option
-                value={option.value}
-                name={option.name}
-                key={option.value}
-                item={item}
-                onClick={onSelectItem}
-              />
-            ))}
-        </StyledOptionBox>
-      </OptionWrapper>
-    </Wrapper>
+    <DefaultSelectBox
+      options={options}
+      placeholder={placeholder}
+      selected={selected}
+      onChange={onChange}
+      isLine={true}
+    />
   );
 }
 
