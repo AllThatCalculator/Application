@@ -1,46 +1,54 @@
 import styled from "styled-components";
 import { StyledIcon } from "../atom-components/ButtonTemplate.js";
+import { FlexRowLayout } from "../Layout.js";
 import styles from "../styles.js";
 
-// 탭의 가장 바깥 스타일 정의
-const StyledTab = styled.div`
-  display: flex;
-  flex-direction: row;
-  background: ${styles.styleColor.white300};
-  padding: 0px;
+/**
+ * 탭의 가장 바깥 스타일 정의
+ */
+const WrapperTab = styled(FlexRowLayout)`
   gap: ${styles.styleLayout.basic200};
   border-bottom: 1px solid ${styles.styleColor.blue50};
 `;
 
-// 기본 탭 버튼 배경 스타일 정의
-const StyledBg = styled.div`
-  align-items: center;
+/**
+ * 기본 탭 버튼 배경 스타일 정의
+ * - props로 현재 선택된 값(item)과 해당 탭의 text를 받아서 스타일 지정
+ */
+const StyledTapBackground = styled.div`
   padding: ${styles.styleLayout.basic200};
-  background: ${styles.styleColor.white300};
-  ${styles.sytleText.text100};
-  color: black;
+  color: ${styles.styleColor.black};
+
+  ${(props) =>
+    props.text === props.item
+      ? `${styles.sytleText.buttonWhite}`
+      : `${styles.sytleText.text100}`};
+
+  border-bottom: ${(props) =>
+    props.text === props.item
+      ? `4px solid ${styles.styleColor.green100}`
+      : `none`};
 
   cursor: pointer;
 `;
 
-// 기본 탭 버튼 클릭됐을 때 스타일 정의
-const StyledBgClicked = styled(StyledBg)`
-  ${styles.sytleText.buttonWhite};
-  border-bottom: 4px solid ${styles.styleColor.green100};
-`;
-
-// 기본 탭 버튼 스타일 정의
-const StyledButton = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background: ${styles.styleColor.white300};
+/**
+ * 기본 탭 버튼 스타일 정의
+ */
+const StyledButton = styled(FlexRowLayout)`
   padding: ${styles.styleLayout.basic50};
   gap: ${styles.styleLayout.basic200};
   border-radius: 7px;
   &:hover {
     background: ${styles.styleColor.green25a};
   }
+`;
+
+/**
+ * 탭의 아이콘 스타일 정의
+ */
+const StyledTapIcon = styled.div`
+  pointer-events: none;
 `;
 
 /**
@@ -51,25 +59,16 @@ const StyledButton = styled.div`
  * isClick: 지금 클릭되어 있는지 확인하는 변수
  * onClick: 버튼 클릭 함수
  */
-function TabButton({ text, icon, isClick, onClick }) {
+function TabButton({ text, icon, item, onClick }) {
   return (
-    <>
-      {isClick ? (
-        <StyledBgClicked id={text} onClick={onClick}>
-          <StyledButton id={text}>
-            {icon && <StyledIcon id={text} name={icon}></StyledIcon>}
-            <div id={text}>{text}</div>
-          </StyledButton>
-        </StyledBgClicked>
-      ) : (
-        <StyledBg id={text} onClick={onClick}>
-          <StyledButton id={text}>
-            {icon && <StyledIcon id={text} name={icon}></StyledIcon>}
-            <div id={text}>{text}</div>
-          </StyledButton>
-        </StyledBg>
-      )}
-    </>
+    <StyledTapBackground id={text} onClick={onClick} text={text} item={item}>
+      <StyledButton id={text}>
+        <StyledTapIcon id={text}>
+          <StyledIcon name={icon} />
+        </StyledTapIcon>
+        <div id={text}>{text}</div>
+      </StyledButton>
+    </StyledTapBackground>
   );
 }
 
@@ -79,22 +78,22 @@ function TabButton({ text, icon, isClick, onClick }) {
  * tabInforms: 탭의 메뉴 정보가 담긴 객체 배열
  * - text: 탭 메뉴 text
  * - icon: 탭 메뉴 icon
- * - isClick: 현재 선택됐는지 확인
+ * - item: 현재 선택된 값
  * - onClick: 클릭 시 함수
  */
 function TabMenu({ tabs }) {
   return (
-    <StyledTab>
+    <WrapperTab>
       {tabs.map((menu, key) => (
         <TabButton
           text={menu.text}
           icon={menu.icon}
-          isClick={menu.isClick}
+          item={menu.item}
           onClick={menu.onClick}
           key={key}
         />
       ))}
-    </StyledTab>
+    </WrapperTab>
   );
 }
 

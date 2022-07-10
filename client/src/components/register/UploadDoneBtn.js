@@ -1,13 +1,12 @@
 import styled from "styled-components";
 import { BtnBlue } from "../atom-components/ButtonTemplate";
+import { FlexColumnLayout } from "../Layout";
 
-// 가장 바깥 스타일 정의
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/**
+ * 가장 바깥 스타일 정의
+ */
+const Wrapper = styled(FlexColumnLayout)`
   align-items: flex-end;
-  padding: 0px;
 `;
 
 /**

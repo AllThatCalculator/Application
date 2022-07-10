@@ -1,18 +1,10 @@
-import styled from "styled-components";
 import styles from "../styles";
 import { useState } from "react";
 import CalculetBlock from "../calculet-block/CalculetBlock";
 import { TabMenu } from "./TabMenu";
 import CodeEditor from "./CodeEditor";
 import BigTitle from "../atom-components/BigTitle";
-
-// 가장 바깥 스타일 정의
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0px;
-  gap: ${styles.styleLayout.basic900};
-`;
+import { FlexColumnLayout } from "../Layout";
 
 /**
  * 계산기 코드 작성 컴포넌트
@@ -20,28 +12,15 @@ const Wrapper = styled.div`
  * @param {*} props
  */
 function WriteCode(props) {
-  const [code, setCode] = useState(true);
-  const [markdown, setMarkdown] = useState(false);
-  const [preview, setPreview] = useState(false);
+  // Tab 버튼에서 선택된 값
+  const [item, setItem] = useState("HTML");
 
   /**
-   * Tab 버튼 onClick 함수 - 각 state를 true 값으로 변경
+   * Tab 버튼 onClick 함수
    * @param {*} event
    */
   function onClickButtonTab(event) {
-    if (event.target.id === "HTML") {
-      setCode(true);
-      setMarkdown(false);
-      setPreview(false);
-    } else if (event.target.id === "MARKDOWN") {
-      setCode(false);
-      setMarkdown(true);
-      setPreview(false);
-    } else {
-      setCode(false);
-      setMarkdown(false);
-      setPreview(true);
-    }
+    setItem(event.target.id);
   }
 
   // 탭 메뉴 정보 객체 배열
@@ -49,19 +28,19 @@ function WriteCode(props) {
     {
       text: "HTML",
       icon: "Code",
-      isClick: code,
+      item: item,
       onClick: onClickButtonTab,
     },
     {
       text: "MARKDOWN",
       icon: "MarkDown",
-      isClick: markdown,
+      item: item,
       onClick: onClickButtonTab,
     },
     {
       text: "미리 보기",
       icon: "Eye",
-      isClick: preview,
+      item: item,
       onClick: onClickButtonTab,
     },
   ];
@@ -75,11 +54,11 @@ function WriteCode(props) {
   }
 
   return (
-    <Wrapper>
+    <FlexColumnLayout gap={styles.styleLayout.basic900}>
       <BigTitle content="계산기 코드 입력하기" />
       <TabMenu tabs={writeCodeTab} />
       <>
-        {code && (
+        {item === "HTML" && (
           <CodeEditor
             defaultLanguage="html"
             defaultValue={props.htmlScript}
@@ -87,7 +66,7 @@ function WriteCode(props) {
             onChange={props.htmlScriptChange}
           />
         )}
-        {markdown && (
+        {item === "MARKDOWN" && (
           <CodeEditor
             defaultLanguage="markdown"
             defaultValue={props.markdown}
@@ -95,7 +74,7 @@ function WriteCode(props) {
             onChange={props.markdownChange}
           />
         )}
-        {preview && (
+        {item === "미리 보기" && (
           <>
             <CalculetBlock
               srcCode={props.htmlScript + "<style>*{margin:0px;}</style>"}
@@ -104,7 +83,7 @@ function WriteCode(props) {
           </>
         )}
       </>
-    </Wrapper>
+    </FlexColumnLayout>
   );
 }
 

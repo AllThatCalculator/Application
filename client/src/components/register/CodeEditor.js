@@ -11,7 +11,7 @@ import Editor from "@monaco-editor/react";
 function CodeEditor({ defaultLanguage, defaultValue, onMount, onChange }) {
   return (
     <Editor
-      height="63vh"
+      height="448px"
       theme="vs-dark"
       defaultLanguage={defaultLanguage}
       defaultValue={defaultValue}

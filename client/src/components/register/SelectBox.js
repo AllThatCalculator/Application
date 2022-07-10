@@ -2,24 +2,23 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { StyledIcon } from "../atom-components/ButtonTemplate.js";
 import styles from "../styles.js";
+import { FlexRowLayout, FlexColumnLayout } from "../Layout";
+import { InputBox } from "./InputBox.js";
 
-// select 박스와 option 박스를 감싸는 스타일 정의
+/**
+ * select 박스와 option 박스를 감싸는 스타일 정의
+ */
 const Wrapper = styled.div`
-  align-items: center;
   position: relative;
   width: 100%;
 `;
 
-// select 박스 스타일 정의
-const StyledSelectBox = styled.button`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  border: none;
-  background: ${styles.styleColor.white300};
+/**
+ * select 박스 스타일 정의
+ */
+const StyledSelectBox = styled(FlexRowLayout)`
   color: ${styles.styleColor.blue900};
-  padding: 0px 8px 0px 0px;
+  padding-right: ${styles.styleLayout.basic200};
 
   border-right: ${(props) =>
     props.isLine ? `1px solid ${styles.styleColor.blue50}` : `0px`};
@@ -27,58 +26,39 @@ const StyledSelectBox = styled.button`
   cursor: pointer;
 `;
 
-// select 안 스타일 정의
-const StyledSelectText = styled.input`
-  pointer-events: none;
-  border: none;
-  width: 100%;
-  background: ${styles.styleColor.white300};
-  color: ${styles.styleColor.black};
-  ${styles.sytleText.text100};
-  ::placeholder {
-    color: ${styles.styleColor.gray50};
-  }
-  :focus {
-    outline: none;
-  }
-`;
-
-// option box 감싸는 스타일 정의
+/**
+ * option box 감싸는 스타일 정의
+ */
 const OptionWrapper = styled.div`
   display: ${(props) => (props.isActive ? `block` : `none`)};
-  padding: 3px 0px;
-  margin-top: 14px;
+  padding-top: ${styles.styleLayout.basic50};
+  margin-top: ${styles.styleLayout.basic900};
   width: 97%;
   position: absolute;
-  z-index: 2;
+  z-index: 9;
 `;
 
-// option box 스타일 정의
-const StyledOptionBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0px;
-
-  width: 100%;
-
+/**
+ * option box 스타일 정의
+ */
+const StyledOptionBox = styled(FlexColumnLayout)`
   background: ${styles.styleColor.white300};
   border: 1px solid ${styles.styleColor.blue50};
   ${styles.styleEffect.opacity300};
   border-radius: 7px;
 `;
 
-// option item 스타일 정의
+/**
+ * option item 스타일 정의
+ */
 const StyledOptionItem = styled.button`
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  padding: 8px 10px;
-  gap: 8px;
+  padding: ${styles.styleLayout.basic200} ${styles.styleLayout.basic700};
+  gap: ${styles.styleLayout.basic200};
   border: none;
   background: none;
-
-  width: 100%;
+  align-items: center;
 
   ${styles.sytleText.text100};
 
@@ -100,15 +80,23 @@ const StyledOptionItem = styled.button`
   cursor: pointer;
 `;
 
-// 선택된 옵션 아이템 스타일 정의
+/**
+ * 선택된 옵션 아이템 스타일 정의
+ */
 const StyledOptionSelect = styled.div`
-  ${styles.sytleText.buttonWhite};
   pointer-events: none;
+
+  ${(props) =>
+    props.item === props.value
+      ? `${styles.sytleText.buttonWhite}`
+      : `${styles.sytleText.text100}`};
 `;
 
-// 선택된 옵션 아이템의 아이콘 스타일 정의
+/**
+ * 선택된 옵션 아이템의 아이콘 스타일 정의
+ */
 const StyledIconSelect = styled.div`
-  width: 14px;
+  height: 14px;
   opacity: ${(props) => (props.item === props.value ? `1` : `0`)};
   pointer-events: none;
 `;
@@ -128,11 +116,9 @@ function Option(props) {
       <StyledIconSelect item={props.item} value={props.value}>
         <StyledIcon name="CheckLg" />
       </StyledIconSelect>
-      {props.item === props.value ? (
-        <StyledOptionSelect>{props.name}</StyledOptionSelect>
-      ) : (
-        <>{props.name}</>
-      )}
+      <StyledOptionSelect item={props.item} value={props.value}>
+        {props.name}
+      </StyledOptionSelect>
     </StyledOptionItem>
   );
 }
@@ -156,6 +142,7 @@ function DefaultSelectBox({
 }) {
   // option box 활성화 상태에 대한 변수
   const [isActive, setIsActive] = useState(false);
+
   // 현재 선택된 option item의 value 저장
   const [item, setItem] = useState(null);
 
@@ -168,8 +155,7 @@ function DefaultSelectBox({
 
   function onSelectItem(event) {
     onChange(event);
-    const targetValue = event.target.value;
-    setItem(targetValue);
+    setItem(event.target.value);
     setIsActive(false);
   }
 
@@ -190,11 +176,11 @@ function DefaultSelectBox({
   return (
     <Wrapper ref={modalRef}>
       <StyledSelectBox onClick={onActiveToggle} isLine={isLine}>
-        <StyledSelectText
+        <InputBox
           placeholder={placeholder}
           onChange={onChange}
           defaultValue={selected}
-          disabled
+          disabled={true}
         />
         <StyledIcon name="CaretDownFill" />
       </StyledSelectBox>

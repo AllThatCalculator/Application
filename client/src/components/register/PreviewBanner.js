@@ -1,38 +1,31 @@
 import styled from "styled-components";
 import BigTitle from "../atom-components/BigTitle";
 import BoxRecCalculator from "../atom-components/BoxRecCalculator";
+import { FlexColumnLayout } from "../Layout";
 import styles from "../styles";
 
-// 배너 미리보기 감싸는 가장 바깥 스타일 정의
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+/**
+ * 배너 미리보기 감싸는 가장 바깥 스타일 정의
+ */
+const Wrapper = styled(FlexColumnLayout)`
   height: 100%;
-  padding: 0px;
-  background: ${styles.styleColor.white300};
   gap: ${styles.styleLayout.basic900};
 `;
 
-// 배너 박스 스타일 정의
-const BannerBox = styled.div`
-  display: flex;
-  flex-direction: column;
+/**
+ * 배너 박스 스타일 정의
+ */
+const BannerBox = styled(FlexColumnLayout)`
   justify-content: center;
   align-items: center;
-  padding: 0px;
-  width: 100%;
   height: 100%;
-  background: ${styles.styleColor.white300};
 `;
 
-// 배너에 그림자 효과 주기 위한 스타일 정의
+/**
+ * 배너에 그림자 효과 주기 위한 스타일 정의
+ */
 const Banner = styled.div`
-  display: flex:
-  flex-direction: row;
-  align-items: flex-start;
   pointer-events: none;
-  background: none;
   ${styles.styleEffect.opacity100};
 `;
 

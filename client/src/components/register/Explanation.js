@@ -1,39 +1,30 @@
 import styled from "styled-components";
+import { FlexRowLayout } from "../Layout.js";
 import styles from "../styles.js";
 import { InputBox, InputBoxLine } from "./InputBox.js";
 import { SelectBox, SelectBoxLine } from "./SelectBox.js";
 import SmallTitle from "./SmallTitle.js";
 
-// 컴포넌트 비율 정하기 위한 스타일 정의
-const WrapperRatio = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+/**
+ * FlexRowLayout을 상속하는 비율 조정 컴포넌트
+ */
+const WrapperRatio = styled(FlexRowLayout)`
   gap: ${styles.styleLayout.basic700};
+  flex: ${(props) => `${props.ratio}`};
 `;
 
-// 비율이 1인 스타일 정의
-const WrapperRatio1 = styled(WrapperRatio)`
-  flex: 1;
-`;
-
-// 비율이 2.8인 스타일 정의
-const WrapperRatio2dot8 = styled(WrapperRatio)`
-  flex: 2.8;
-`;
-
-// 정보 입력 칸의 한 줄 컴포넌트 정의 (소제목 + 인풋칸 / 소제목 + select)
-const Explanation = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 0px 0px 14px;
+/**
+ * 정보 입력 칸의 한 줄 컴포넌트 정의 (소제목 + 인풋칸 / 소제목 + select)
+ */
+const Explanation = styled(FlexRowLayout)`
   width: 100%;
+  padding-bottom: ${styles.styleLayout.basic900};
   gap: ${styles.styleLayout.basic700};
-  background: ${styles.styleColor.white300};
 `;
 
-// Explanation 스타일에 밑줄 정의
+/**
+ * Explanation 스타일에 밑줄 정의
+ */
 const ExplanationLine = styled(Explanation)`
   border-bottom: 1px solid ${styles.styleColor.blue50};
 `;
@@ -54,16 +45,16 @@ function ExplanationInputLine({
 }) {
   return (
     <ExplanationLine>
-      <WrapperRatio1>
+      <WrapperRatio ratio="1">
         <SmallTitle content={explanation} />
-      </WrapperRatio1>
-      <WrapperRatio2dot8>
+      </WrapperRatio>
+      <WrapperRatio ratio="2.8">
         <InputBox
           placeholder={placeholder}
           defaultValue={defaultValue}
           onChange={onChange}
         />
-      </WrapperRatio2dot8>
+      </WrapperRatio>
     </ExplanationLine>
   );
 }
@@ -74,43 +65,43 @@ function ExplanationInputLine({
  * explanation: 입력 칸의 정보에 대한 설명
  * bigCategory: 대분류 select된 값
  * bigPlaceholder: 대분류 select 전 placeholder 값
- * OPTIONS_BIC_CATEGORY: 대분류 옵션
+ * bigCategoryOptions: 대분류 옵션
  * onBigChange: 대분류 select된 값 관리
  * smallCategory: 소분류 select된 값
  * smallPlaceholder: 소분류 selec 전 placeholder 값
- * OPTIONS_SMALL_CATEGORY: 소분류 옵션
+ * smallCategoryOptions: 소분류 옵션
  * onSmallChange: 소분류 select된 값 관리
  */
 function ExplanationCategory({
   explanation,
   bigCategory,
   bigPlaceholder,
-  OPTIONS_BIG_CATEGORY,
+  bigCategoryOptions,
   onBigChange,
   smallCategory,
   smallPlaceholder,
-  OPTIONS_SMALL_CATEGORY,
+  smallCategoryOptions,
   onSmallChange,
 }) {
   return (
     <Explanation>
-      <WrapperRatio1>
+      <WrapperRatio ratio="1">
         <SmallTitle content={explanation} />
-      </WrapperRatio1>
-      <WrapperRatio2dot8>
+      </WrapperRatio>
+      <WrapperRatio ratio="2.8">
         <SelectBoxLine
-          options={OPTIONS_BIG_CATEGORY}
+          options={bigCategoryOptions}
           placeholder={bigPlaceholder}
           selected={bigCategory}
           onChange={onBigChange}
         />
         <SelectBox
-          options={OPTIONS_SMALL_CATEGORY}
+          options={smallCategoryOptions}
           placeholder={smallPlaceholder}
           selected={smallCategory}
           onChange={onSmallChange}
         />
-      </WrapperRatio2dot8>
+      </WrapperRatio>
     </Explanation>
   );
 }
@@ -123,7 +114,7 @@ function ExplanationCategory({
  * writeDomain: 직접 입력한 도메인 값
  * selectDomain: select 박스에서 선택한 도메인 값
  * onChangeDomain: change 함수
- * OPTIONS_EMAIL_ADDRESS: 이메일 옵션
+ * emailAddressOptions: 이메일 옵션
  * onChangeSelect: change 함수
  */
 function ExplanationEmail({
@@ -132,15 +123,15 @@ function ExplanationEmail({
   writeDomain,
   selectDomain,
   onChangeDomain,
-  OPTIONS_EMAIL_ADDRESS,
+  emailAddressOptions,
   onChangeSelect,
 }) {
   return (
     <Explanation>
-      <WrapperRatio1>
+      <WrapperRatio ratio="1">
         <SmallTitle content="이메일" />
-      </WrapperRatio1>
-      <WrapperRatio2dot8>
+      </WrapperRatio>
+      <WrapperRatio ratio="2.8">
         <InputBox
           placeholder="주소"
           defaultValue={address}
@@ -154,12 +145,12 @@ function ExplanationEmail({
           disabled={selectDomain !== "직접 입력" ? true : false}
         />
         <SelectBox
-          options={OPTIONS_EMAIL_ADDRESS}
+          options={emailAddressOptions}
           placeholder="직접 입력"
           selected={selectDomain}
           onChange={onChangeSelect}
         />
-      </WrapperRatio2dot8>
+      </WrapperRatio>
     </Explanation>
   );
 }

@@ -1,8 +1,12 @@
 import styled from "styled-components";
+import { FlexColumnLayout } from "../Layout.js";
 import styles from "../styles.js";
 
-// 작은 글씨 제목에 대한 스타일 정의
-const StyledSmallTitle = styled.div`
+/**
+ * 작은 글씨 제목에 대한 스타일 정의
+ */
+const StyledSmallTitle = styled(FlexColumnLayout)`
+  justify-content: center;
   color: ${styles.styleColor.gray100};
   ${styles.sytleText.text100};
 `;

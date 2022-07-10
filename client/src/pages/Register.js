@@ -9,19 +9,16 @@ import {
   OPTIONS_EMAIL_ADDRESS,
   OPTIONS_SMALL_CATEGORY,
 } from "../components/register/OPTIONS";
+import { ContentLayout, White300Layout } from "../components/Layout";
 
-// 계산기 저작 배경 색
-const Positioner = styled.div`
-  background: ${styles.styleColor.white300};
-`;
-
-// 계산기 저작 배경 컴포넌트 사이즈 고정
-const Wrapper = styled.div`
+/**
+ * ContentLayout을 상속하는 RegisterLayout
+ * - flex와 gap, padding 설정을 새로 함
+ */
+const RegisterLayout = styled(ContentLayout)`
   display: flex;
   flex-direction: column;
-  margin: 0 auto;
   gap: ${styles.styleLayout.basic300};
-  ${styles.sizes.desktop};
   padding: ${styles.styleLayout.basic350};
 `;
 
@@ -152,23 +149,21 @@ function Register() {
 
   /**
    * HTML 코드 change 함수 (monaco editor)
-   * @param {*} event
    */
-  function htmlScriptChange(event) {
+  function htmlScriptChange() {
     setHtmlScript(editorRef.current.getValue());
   }
 
   /**
    * MARKDOWN 코드 change 함수 (monaco editor)
-   * @param {*} event
    */
-  function markdownChange(event) {
+  function markdownChange() {
     setMarkdown(editorRef.current.getValue());
   }
 
   return (
-    <Positioner>
-      <Wrapper>
+    <White300Layout>
+      <RegisterLayout>
         <WriteInform
           title={title}
           description={description}
@@ -204,8 +199,8 @@ function Register() {
           htmlScript={htmlScript}
           markdown={markdown}
         />
-      </Wrapper>
-    </Positioner>
+      </RegisterLayout>
+    </White300Layout>
   );
 }
 

@@ -9,40 +9,38 @@ import {
 } from "./Explanation";
 import { OPTIONS_BIG_CATEGORY, OPTIONS_EMAIL_ADDRESS } from "./OPTIONS";
 import BigTitle from "../atom-components/BigTitle";
+import { FlexColumnLayout, ResponsiveTabletLayout } from "../Layout";
 
-// 정보칸 + 배너 미리보기 감싸는 스타일 정의
-const WrapperInformBanner = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  padding: 0px 0px 38px;
-  height: 100%;
+/**
+ * 정보칸 + 배너 미리보기 감싸는 스타일 정의
+ */
+const WrapperInformBanner = styled(ResponsiveTabletLayout)`
+  padding-bottom: ${styles.styleLayout.basic1000};
   gap: ${styles.styleLayout.basic300};
   border-bottom: 1px solid ${styles.styleColor.blue50};
 `;
 
-// 정보칸 감싸는 스타일 정의
-const WrapperInform = styled.div`
-  display: flex;
-  flex-direction: column;
+/**
+ * 정보칸 감싸는 스타일 정의
+ */
+const WrapperInform = styled(FlexColumnLayout)`
   width: 713px;
   gap: ${styles.styleLayout.basic900};
 `;
 
-// 배너 미리보기 감싸는 스타일 정의
-const WrapperBanner = styled.div`
-  display: flex;
-  flex-direction: column;
+/**
+ * 배너 미리보기 감싸는 스타일 정의
+ */
+const WrapperBanner = styled(FlexColumnLayout)`
   align-self: stretch;
   width: 347px;
 `;
 
-// 입력 칸들 감싸는 박스 스타일 정의
-const InformBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 14px 14px 0px;
+/**
+ * 입력 칸들 감싸는 박스 스타일 정의
+ */
+const InformBox = styled(FlexColumnLayout)`
+  padding: ${styles.styleLayout.basic900} ${styles.styleLayout.basic900} 0px;
   gap: ${styles.styleLayout.basic900};
   border: 1px solid ${styles.styleColor.blue50};
   border-radius: 7px;
@@ -76,11 +74,11 @@ function WriteInform(props) {
             explanation="카테고리"
             bigCategory={props.bigCategory}
             bigPlaceholder="대분류"
-            OPTIONS_BIG_CATEGORY={OPTIONS_BIG_CATEGORY}
+            bigCategoryOptions={OPTIONS_BIG_CATEGORY}
             onBigChange={props.bigCategoryChange}
             smallCategory={props.smallCategory}
             smallPlaceholder="소분류"
-            OPTIONS_SMALL_CATEGORY={props.smallCategoryOption}
+            smallCategoryOptions={props.smallCategoryOption}
             onSmallChange={props.smallCategoryChange}
           />
         </InformBox>
@@ -92,7 +90,7 @@ function WriteInform(props) {
             writeDomain={props.writeDomain}
             selectDomain={props.selectDomain}
             onChangeDomain={props.domainChange}
-            OPTIONS_EMAIL_ADDRESS={OPTIONS_EMAIL_ADDRESS}
+            emailAddressOptions={OPTIONS_EMAIL_ADDRESS}
             onChangeSelect={props.domainSelectChange}
           />
         </InformBox>
