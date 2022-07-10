@@ -15,9 +15,7 @@ const Positioner = styled.div`
   height: 60px;
   padding: ${styles.styleLayout.basic600};
   z-index: 100;
-`;
-const ChangePositioner = styled(Positioner)`
-  background: ${styles.styleColor.blue100};
+  background: ${(props) => props.isChange && `${styles.styleColor.blue100}`};
 `;
 // 내용 정렬
 const WhiteBackground = styled.div`
@@ -56,26 +54,22 @@ function Contents() {
 function Header() {
   // 스크롤의 위치
   const [scrollPosition, setScrollPosition] = useState(0);
-  // 스크롤 위치 변화에 따라 scrollPosition 변화
+  // 색 변화 상태
+  const [isChange, setIsChange] = useState(false);
+  // 스크롤 위치 변화에 따라 'scrollPosition' 변화와 'isChange' 변화
   function updateScroll() {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
+    if (scrollPosition < 30) setIsChange(false);
+    else setIsChange(true);
   }
   // 스크롤 위치 감지
   useEffect(() => {
     window.addEventListener("scroll", updateScroll);
   });
   return (
-    <>
-      {scrollPosition < 30 ? (
-        <Positioner>
-          <Contents></Contents>
-        </Positioner>
-      ) : (
-        <ChangePositioner>
-          <Contents></Contents>
-        </ChangePositioner>
-      )}
-    </>
+    <Positioner isChange={isChange}>
+      <Contents />
+    </Positioner>
   );
 }
 
