@@ -10,6 +10,16 @@ const PositionerCenter = styled.div`
   justify-content: center;
 `;
 /**
+ * 가운데 정렬한 컴포넌트 반환
+ *
+ * @param {funtion} param0
+ * component : 가운데 정렬할 컴포넌트
+ *
+ */
+function RenderCenter({ component }) {
+  return <PositionerCenter>{component}</PositionerCenter>;
+}
+/**
  *
  * 추천 계산기 렌더하는 함수 (Recommend 내에서 처리하는 함수에요)
  *
@@ -78,22 +88,26 @@ function Recommend() {
   return (
     <>
       <FlexColumnLayout gap="15px">
-        <PositionerCenter>
-          <ResponsivePhoneLayout columnGap="20px" rowGap="20px">
-            <RenderCalculet
-              calculets={currentCalculets(calculets)}
-              loading={loading}
-            ></RenderCalculet>
-          </ResponsivePhoneLayout>
-        </PositionerCenter>
-        <PositionerCenter>
-          <Pagination
-            renderPerPage={KEY_PAGE}
-            renderTotal={calculets.length}
-            paginate={setCurrentPage}
-            currentPage={currentPage}
-          ></Pagination>
-        </PositionerCenter>
+        <RenderCenter
+          component={
+            <ResponsivePhoneLayout columnGap="20px" rowGap="20px">
+              <RenderCalculet
+                calculets={currentCalculets(calculets)}
+                loading={loading}
+              />
+            </ResponsivePhoneLayout>
+          }
+        />
+        <RenderCenter
+          component={
+            <Pagination
+              renderPerPage={KEY_PAGE}
+              renderTotal={calculets.length}
+              paginate={setCurrentPage}
+              currentPage={currentPage}
+            />
+          }
+        />
       </FlexColumnLayout>
     </>
   );
