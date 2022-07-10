@@ -72,8 +72,12 @@ function ExplanationInputLine({
  * 정보 입력 칸에서 밑줄이 없는 카테고리 칸 컴포넌트
  * @param {string, array, array, arrya, function}
  * explanation: 입력 칸의 정보에 대한 설명
+ * bigCategory: 대분류 select된 값
+ * bigPlaceholder: 대분류 select 전 placeholder 값
  * OPTIONS_BIC_CATEGORY: 대분류 옵션
  * onBigChange: 대분류 select된 값 관리
+ * smallCategory: 소분류 select된 값
+ * smallPlaceholder: 소분류 selec 전 placeholder 값
  * OPTIONS_SMALL_CATEGORY: 소분류 옵션
  * onSmallChange: 소분류 select된 값 관리
  */
@@ -116,10 +120,11 @@ function ExplanationCategory({
  * @param {string, function, string, function, array, function}
  * address: 주소
  * onChangeAddress: change 함수
- * domain: 직접 입력 도메인
+ * writeDomain: 직접 입력한 도메인 값
+ * selectDomain: select 박스에서 선택한 도메인 값
  * onChangeDomain: change 함수
  * OPTIONS_EMAIL_ADDRESS: 이메일 옵션
- * onChnageSelect: change 함수
+ * onChangeSelect: change 함수
  */
 function ExplanationEmail({
   address,
