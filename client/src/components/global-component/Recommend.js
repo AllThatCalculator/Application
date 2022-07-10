@@ -1,26 +1,14 @@
 import styled from "styled-components";
 import BoxRecCalculator from "../atom-components/BoxRecCalculator.js";
 import Pagination from "./Pagination.js";
-import styles from "../styles.js";
 import { useEffect, useState } from "react";
+import { FlexColumnLayout, ResponsivePhoneLayout } from "../Layout.js";
 
-// 기본 레이아웃
-const StyledDiv = styled.div`
+// 가운데 정렬
+const PositionerCenter = styled.div`
   display: flex;
-  align-items: center;
+  justify-content: center;
 `;
-// 추천 계산기 모듈 + 페이지 넘기는 버튼 감싼거
-const Positioner = styled(StyledDiv)`
-  flex-direction: column;
-  align-items: center;
-  gap: ${styles.styleLayout.basic300};
-`;
-// 추천 계산기 모듈 감싼거
-const Wrapper = styled(StyledDiv)`
-  ${styles.sizes.desktop};
-  justify-content: space-around;
-`;
-
 /**
  *
  * 추천 계산기 렌더하는 함수 (Recommend 내에서 처리하는 함수에요)
@@ -33,17 +21,15 @@ const Wrapper = styled(StyledDiv)`
 function RenderCalculet({ calculets, loading }) {
   return (
     <>
-      {loading && <Wrapper> loading... </Wrapper>}
-      <Wrapper>
-        {calculets.map((item) => (
-          <BoxRecCalculator
-            key={item.id}
-            name={item.title}
-            description={item.body}
-            profile="/img/ori.png"
-          />
-        ))}
-      </Wrapper>
+      {loading && <div> loading... </div>}
+      {calculets.map((item) => (
+        <BoxRecCalculator
+          key={item.id}
+          name={item.title}
+          description={item.body}
+          profile="/img/ori.png"
+        />
+      ))}
     </>
   );
 }
@@ -90,18 +76,26 @@ function Recommend() {
 
   // currentPage는 Pagination에서 onClick에 따라 네비됨
   return (
-    <Positioner className="Recommend">
-      <RenderCalculet
-        calculets={currentCalculets(calculets)}
-        loading={loading}
-      ></RenderCalculet>
-      <Pagination
-        renderPerPage={KEY_PAGE}
-        renderTotal={calculets.length}
-        paginate={setCurrentPage}
-        currentPage={currentPage}
-      ></Pagination>
-    </Positioner>
+    <>
+      <FlexColumnLayout gap="15px">
+        <PositionerCenter>
+          <ResponsivePhoneLayout columnGap="20px" rowGap="20px">
+            <RenderCalculet
+              calculets={currentCalculets(calculets)}
+              loading={loading}
+            ></RenderCalculet>
+          </ResponsivePhoneLayout>
+        </PositionerCenter>
+        <PositionerCenter>
+          <Pagination
+            renderPerPage={KEY_PAGE}
+            renderTotal={calculets.length}
+            paginate={setCurrentPage}
+            currentPage={currentPage}
+          ></Pagination>
+        </PositionerCenter>
+      </FlexColumnLayout>
+    </>
   );
 }
 
