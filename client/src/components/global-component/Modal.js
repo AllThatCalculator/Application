@@ -1,6 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import styles from "../styles";
 import { BtnSmallIcon } from "../atom-components/ButtonIcon";
+import { FlexRowLayout } from "../Layout";
 
 //스타일드 애니메이션
 const slideDown = keyframes`
@@ -16,12 +17,12 @@ to {
 const StyledSlideDown = styled.div`
   animation: ${slideDown} 1s;
 `;
-// 바깥 배경
+// 바깥 검정 배경
 const StyledBackground = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
-  z-index: 101;
+  z-index: 1;
 
   top: 0;
   left: 0;
@@ -37,11 +38,7 @@ const StyledCenter = styled.div`
   position: absolute;
   top: 125px;
 `;
-// 감쌈
-const Positioner = styled.div`
-  display: flex;
-`;
-// 모달 맨 뒷 창
+// 모달 Base
 const StyledBox = styled.div`
   ${styles.styleSize.modalCalculetInfo};
   background: ${styles.styleColor.blue30};
@@ -67,7 +64,7 @@ const StyledHeader = styled.div`
 
   ${styles.styleEffect.opacity100};
 `;
-// 모달 헤더 아래 감쌈
+// 모달 헤더 아랫부분 감쌈
 const PositionerUnder = styled.div`
   height: 100%;
 `;
@@ -83,7 +80,7 @@ function ModalNonFix({ onClick, contents }) {
   return (
     <>
       <StyledSlideDown>
-        <Positioner>
+        <FlexRowLayout>
           <StyledBox>
             <StyledHeader>
               <BtnSmallIcon
@@ -96,7 +93,7 @@ function ModalNonFix({ onClick, contents }) {
             </StyledHeader>
             <PositionerUnder>{contents}</PositionerUnder>
           </StyledBox>
-        </Positioner>
+        </FlexRowLayout>
       </StyledSlideDown>
     </>
   );
