@@ -3,47 +3,37 @@ import styled from "styled-components";
 import { StyledIcon, StyledProfileImgBig } from "../atom-components/BoxIcon";
 import StyledScrollbar from "../atom-components/StyledScrollbar";
 import styles from "../styles";
+import { FlexColumnLayout, FlexRowLayout } from "../Layout.js";
 
-// 가로 감쌈
-const Wrapper = styled.div`
+const Positioner = styled.div`
   display: flex;
-`;
-// 가로 갭 8
-const WrapperGap8 = styled(Wrapper)`
-  gap: ${styles.styleLayout.basic200};
-  text-align: center;
-`;
-// 가로 감쌈
-const Positioner = styled(Wrapper)`
   height: 100%;
 `;
-// 세로 감쌈
-const PositionerCol = styled.div`
+// 세로 갭 props.gap
+const PositionerColGap = styled.div`
   display: flex;
   flex-direction: column;
-`;
-// 세로 갭 3
-const PositionerColGap3 = styled(PositionerCol)`
-  gap: ${styles.styleLayout.basic50};
-`;
-// 세로 갭 20
-const PositionerColGap20 = styled(PositionerCol)`
-  gap: ${styles.styleLayout.basic300};
+  height: 100%;
   width: 100%;
+  gap: ${(props) => (props.gap ? `${props.gap}` : `0px`)};
 `;
-// 세로 갭 20 센터
-const PositionerColGap20Center = styled(PositionerColGap20)`
+// 세로 갭 센터 props.gap
+const PositionerColGapCenter = styled(PositionerColGap)`
   align-items: center;
 `;
-// 세로 갭 10
-const PositionerColGap10 = styled(PositionerCol)`
-  gap: ${styles.styleLayout.basic700};
+
+// 밑에 경계선
+const PositionerBorderUnder = styled.div`
+  border-bottom: ${styles.styleLayout.basic25} solid;
+  border-color: ${styles.styleColor.blue50};
+  padding-bottom: ${styles.styleLayout.basic950};
 `;
-// 세로 갭 10
-const PositionerColGap10Hei100 = styled(PositionerColGap10)`
-  height: 100%;
+// 밑에 경계선 + 가운데 정렬
+const PositionerUnderCenter = styled(PositionerBorderUnder)`
+  align-items: center;
 `;
-// 등록일 * 업데이트일
+
+// 등록일 * 업데이트일 로그 박스 패딩 18px
 const PositionerPad18 = styled(Positioner)`
   padding: ${styles.styleLayout.basic950};
   background: ${styles.styleColor.white300};
@@ -52,18 +42,7 @@ const PositionerPad18 = styled(Positioner)`
 
   overflow: auto;
 `;
-// 밑에 경계선 있게 감쌈
-const PositionerUnder = styled(PositionerColGap10)`
-  border-bottom: ${styles.styleLayout.basic25} solid;
-  border-color: ${styles.styleColor.blue50};
-  padding-bottom: ${styles.styleLayout.basic950};
-  width: 100%;
-`;
-// 밑에 경계선 있게 감쌈 + 가운데 정렬
-const PositionerUnderCenter = styled(PositionerUnder)`
-  align-items: center;
-`;
-// 프로필 & 누적 정보 감쌈
+// 프로필 & 누적 정보 박스
 const StyledBoxL = styled.div`
   flex-grow: 1;
   padding: ${styles.styleLayout.basic350};
@@ -73,7 +52,7 @@ const StyledBoxL = styled.div`
   border-color: ${styles.styleColor.blue50};
   border-bottom-left-radius: ${styles.styleLayout.basic700};
 `;
-// 계산기 이름 & 등록일 & 업데이트일 정보 감쌈
+// 계산기 이름 & 등록일 & 업데이트일 정보 박스
 const StyledBoxR = styled.div`
   flex-grow: 4;
   padding: ${styles.styleLayout.basic300} ${styles.styleLayout.basic900};
@@ -130,71 +109,73 @@ function IconBox({ icon, color }) {
 
 function InfoBox({ explain, contents, icon, color }) {
   return (
-    <PositionerColGap10>
+    <FlexColumnLayout gap="10px">
       <StyledFont50Blue300>{explain}</StyledFont50Blue300>
-      <WrapperGap8>
+      <FlexRowLayout gap="8px">
         {icon && <IconBox icon={icon} color={color} />}
         <StyledFont100>{contents}</StyledFont100>
-      </WrapperGap8>
-    </PositionerColGap10>
+      </FlexRowLayout>
+    </FlexColumnLayout>
   );
 }
 
 function UpdateBox({ explain, contents, icon, color }) {
   return (
-    <PositionerColGap10>
+    <FlexColumnLayout gap="10px">
       <StyledFont50Blue300>{explain}</StyledFont50Blue300>
       {contents.map((conts, index) => (
-        <PositionerColGap3 key={index}>
-          <WrapperGap8>
+        <FlexColumnLayout key={index} gap="3px">
+          <FlexRowLayout gap="8px">
             <IconBox icon={icon} color={color} />
             <StyledFont100>{conts[0]}</StyledFont100>
-          </WrapperGap8>
+          </FlexRowLayout>
           {conts[1].map((cont) => (
             <StyledFont50Indent>• {cont}</StyledFont50Indent>
           ))}
-        </PositionerColGap3>
+        </FlexColumnLayout>
       ))}
-    </PositionerColGap10>
+    </FlexColumnLayout>
   );
 }
 
 function LeftBox({ info }) {
   return (
-    <PositionerColGap20Center>
-      <PositionerCol>
-        <PositionerColGap20>
+    <PositionerColGapCenter>
+      <FlexColumnLayout>
+        <PositionerColGap gap="20px">
           <PositionerUnderCenter>
-            <StyledProfileImgBig src={info.profile_img} />
-            <StyledFont100>{info.contributor_id}</StyledFont100>
+            <PositionerColGapCenter gap="10px">
+              <StyledProfileImgBig src={info.profile_img} />
+              <StyledFont100>{info.contributor_id}</StyledFont100>
+            </PositionerColGapCenter>
           </PositionerUnderCenter>
           <InfoBox explain="누적 연산 수" contents={info.calculation_cnt} />
           <InfoBox explain="누적 사용자 수" contents={info.user_cnt} />
-        </PositionerColGap20>
-      </PositionerCol>
-    </PositionerColGap20Center>
+        </PositionerColGap>
+      </FlexColumnLayout>
+    </PositionerColGapCenter>
   );
 }
-function RightBox_log({ info }) {
+function RightBoxLog({ info }) {
   return (
     <PositionerPad18>
       <StyledScrollbar>
-        <PositionerColGap20>
-          <PositionerUnder>
+        <PositionerColGap gap="20px">
+          <PositionerBorderUnder>
             <InfoBox
               explain="등록일"
               contents={info.birthday}
               icon="Check2Circle"
               color="blue400"
             />
-          </PositionerUnder>
+          </PositionerBorderUnder>
           <UpdateBox
             explain="업데이트"
             contents={info.update_log}
             icon="Circle"
             color="green100"
           />
-        </PositionerColGap20>
+        </PositionerColGap>
       </StyledScrollbar>
     </PositionerPad18>
   );
@@ -226,17 +207,13 @@ function ModalCalculetInfo({ info }) {
 
       {/* 계산기 이름 / 대분류 & 소분류 / 등록일 / 업뎃로그 */}
       <StyledBoxR>
-        <PositionerColGap10Hei100>
-          <PositionerColGap10>
-            <StyledFont300>{info.title}</StyledFont300>
-            <Wrapper>
-              <StyledFont100Blue300>
-                {info.category_main} / {info.category_sub}
-              </StyledFont100Blue300>
-            </Wrapper>
-          </PositionerColGap10>
-          <RightBox_log info={info} />
-        </PositionerColGap10Hei100>
+        <PositionerColGap gap="10px">
+          <StyledFont300>{info.title}</StyledFont300>
+          <StyledFont100Blue300>
+            {info.category_main} / {info.category_sub}
+          </StyledFont100Blue300>
+          <RightBoxLog info={info} />
+        </PositionerColGap>
       </StyledBoxR>
     </Positioner>
   );
