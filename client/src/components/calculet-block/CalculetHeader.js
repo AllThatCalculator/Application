@@ -3,8 +3,7 @@ import styled from "styled-components";
 import { BoxIcon } from "../atom-components/BoxIcon";
 import { BtnSmallIcon, BtnStatisticsIcon } from "../atom-components/ButtonIcon";
 import { Modal } from "../global-component/Modal";
-
-import ModalCalculetInfo from "../global-component/ModalCalculetInfo";
+import ModalCalculetInfo from "../calculet-block/ModalCalculetInfo";
 import styles from "../styles";
 
 const CalculetName = styled.div`
