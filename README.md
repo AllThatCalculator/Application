@@ -4,24 +4,46 @@ AllThatCalculator Application
 
 # How to get started
 
-1. `git clone https://github.com/AllThatCalculator/application`
-2. `cd client`
-3. `npm i`
-4. `npm start`
+0. `git clone https://github.com/AllThatCalculator/application`
+
+### DB setting
+
+1. `mkdir application/database/data`
+
+### with Docker-compose
+
+2. `docker-compose up --build`
+
+### without Docker
+
+2. application/client | `npm install`
+3. application/client | `npm start`
+4. application/server | `npm install`
+5. application/server | `npx nodemon install`
+6. install MariaDB
 
 # File tree
 
 ```
 APPLICATION
-├─.github
-│  └─ISSUE_TEMPLATE
-├─client                // frontend
-│  ├─calculets             // 계산기 모듈 저장
-│  ├─node_modules
-│  ├─public
-│  └─src
-│      ├─components
-│      ├─css
-│      └─pages
-└─server                // backend
+├── client      // frontend
+│   ├── build
+│   │   ├── img
+│   │   └── static
+│   ├── public
+│   │   └── img
+│   └── src
+│       ├── calculets   // 계산기 모듈 저장
+│       ├── components
+│       ├── css
+│       └── pages
+├── database
+│   ├── conf.d
+│   ├── (data)  // 로컬에 저장되는 파일 목록
+│   └── initdb.d
+│       └── initial_data
+├── nginx
+└── server      // backend
+    ├── config
+    └── routes
 ```
