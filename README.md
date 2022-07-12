@@ -20,7 +20,7 @@ AllThatCalculator Application
 3. application/client | `npm start`
 4. application/server | `npm install`
 5. application/server | `npx nodemon install`
-6. install MariaDB
+6. install MariaDB and execute `database/initdb.d/create_table.sql` and `database/initdb.d/load_data.sql`
 
 # File tree
 
