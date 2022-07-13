@@ -63,7 +63,7 @@ function WriteCode(props) {
             defaultLanguage="html"
             defaultValue={props.htmlScript}
             onMount={onMount}
-            onChange={props.htmlScriptChange}
+            onChange={props.changeHtmlScript}
           />
         )}
         {item === "MARKDOWN" && (
@@ -71,7 +71,7 @@ function WriteCode(props) {
             defaultLanguage="markdown"
             defaultValue={props.markdown}
             onMount={onMount}
-            onChange={props.markdownChange}
+            onChange={props.changeMarkdown}
           />
         )}
         {item === "미리 보기" && (

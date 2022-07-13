@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { FlexRowLayout } from "../Layout.js";
 import styles from "../styles.js";
 import { InputBox, InputBoxLine } from "./InputBox.js";
-import { SelectBox, SelectBoxLine } from "./SelectBox.js";
+import SelectBox from "./SelectBox.js";
 import SmallTitle from "./SmallTitle.js";
 
 /**
@@ -66,22 +66,22 @@ function ExplanationInputLine({
  * bigCategory: 대분류 select된 값
  * bigPlaceholder: 대분류 select 전 placeholder 값
  * bigCategoryOptions: 대분류 옵션
- * onBigChange: 대분류 select된 값 관리
+ * onChangeBigCategory: 대분류 select된 값 관리
  * smallCategory: 소분류 select된 값
  * smallPlaceholder: 소분류 selec 전 placeholder 값
  * smallCategoryOptions: 소분류 옵션
- * onSmallChange: 소분류 select된 값 관리
+ * onChangeSmallCategory: 소분류 select된 값 관리
  */
 function ExplanationCategory({
   explanation,
   bigCategory,
   bigPlaceholder,
   bigCategoryOptions,
-  onBigChange,
+  onChangeBigCategory,
   smallCategory,
   smallPlaceholder,
   smallCategoryOptions,
-  onSmallChange,
+  onChangeSmallCategory,
 }) {
   return (
     <Explanation>
@@ -89,17 +89,19 @@ function ExplanationCategory({
         <SmallTitle content={explanation} />
       </WrapperRatio>
       <WrapperRatio ratio="2.8">
-        <SelectBoxLine
+        <SelectBox
           options={bigCategoryOptions}
           placeholder={bigPlaceholder}
           selected={bigCategory}
-          onChange={onBigChange}
+          onChange={onChangeBigCategory}
+          isLine={true}
         />
         <SelectBox
           options={smallCategoryOptions}
           placeholder={smallPlaceholder}
           selected={smallCategory}
-          onChange={onSmallChange}
+          onChange={onChangeSmallCategory}
+          isLine={false}
         />
       </WrapperRatio>
     </Explanation>
@@ -111,20 +113,20 @@ function ExplanationCategory({
  * @param {string, function, string, function, array, function}
  * address: 주소
  * onChangeAddress: change 함수
- * writeDomain: 직접 입력한 도메인 값
- * selectDomain: select 박스에서 선택한 도메인 값
+ * writedDomain: 직접 입력한 도메인 값
+ * selectedDomain: select 박스에서 선택한 도메인 값
  * onChangeDomain: change 함수
  * emailAddressOptions: 이메일 옵션
- * onChangeSelect: change 함수
+ * onChangeSelectedDomain: change 함수
  */
 function ExplanationEmail({
   address,
   onChangeAddress,
-  writeDomain,
-  selectDomain,
+  writedDomain,
+  selectedDomain,
   onChangeDomain,
   emailAddressOptions,
-  onChangeSelect,
+  onChangeSelectedDomain,
 }) {
   return (
     <Explanation>
@@ -140,15 +142,16 @@ function ExplanationEmail({
         <SmallTitle content="@" />
         <InputBoxLine
           placeholder="도메인"
-          defaultValue={writeDomain}
+          defaultValue={writedDomain}
           onChange={onChangeDomain}
-          disabled={selectDomain !== "직접 입력" ? true : false}
+          disabled={selectedDomain !== "직접 입력" ? true : false}
         />
         <SelectBox
           options={emailAddressOptions}
           placeholder="직접 입력"
-          selected={selectDomain}
-          onChange={onChangeSelect}
+          selected={selectedDomain}
+          onChange={onChangeSelectedDomain}
+          isLine={false}
         />
       </WrapperRatio>
     </Explanation>

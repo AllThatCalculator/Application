@@ -7,7 +7,7 @@ import {
   ExplanationEmail,
   ExplanationInputLine,
 } from "./Explanation";
-import { OPTIONS_BIG_CATEGORY, OPTIONS_EMAIL_ADDRESS } from "./OPTIONS";
+import { OPTIONS_BIG_CATEGORY, OPTIONS_EMAIL_ADDRESS } from "./Options";
 import BigTitle from "../atom-components/BigTitle";
 import { FlexColumnLayout, ResponsiveTabletLayout } from "../Layout";
 
@@ -62,36 +62,36 @@ function WriteInform(props) {
             explanation="계산기 이름"
             placeholder="ex. 사칙연산 계산기"
             defaultValue={props.title}
-            onChange={props.titleChange}
+            onChange={props.changeTitle}
           />
           <ExplanationInputLine
             explanation="계산기에 대한 간단한 설명"
             placeholder="ex. 사칙연산을 하는 계산기입니다."
             defaultValue={props.description}
-            onChange={props.descriptionChange}
+            onChange={props.changeDescription}
           />
           <ExplanationCategory
             explanation="카테고리"
             bigCategory={props.bigCategory}
             bigPlaceholder="대분류"
             bigCategoryOptions={OPTIONS_BIG_CATEGORY}
-            onBigChange={props.bigCategoryChange}
+            onChangeBigCategory={props.changeBigCategory}
             smallCategory={props.smallCategory}
             smallPlaceholder="소분류"
             smallCategoryOptions={props.smallCategoryOption}
-            onSmallChange={props.smallCategoryChange}
+            onChangeSmallCategory={props.changeSmallCategory}
           />
         </InformBox>
         <MiddleTitle content="제작자 정보" />
         <InformBox>
           <ExplanationEmail
             address={props.address}
-            onChangeAddress={props.addressChange}
-            writeDomain={props.writeDomain}
-            selectDomain={props.selectDomain}
-            onChangeDomain={props.domainChange}
+            onChangeAddress={props.changeAddress}
+            writedDomain={props.writedDomain}
+            selectedDomain={props.selectedDomain}
+            onChangeDomain={props.changeDomain}
             emailAddressOptions={OPTIONS_EMAIL_ADDRESS}
-            onChangeSelect={props.domainSelectChange}
+            onChangeSelectedDomain={props.changeSelectedDomain}
           />
         </InformBox>
       </WrapperInform>

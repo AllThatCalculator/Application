@@ -8,7 +8,7 @@ import {
   OPTIONS_BIG_CATEGORY,
   OPTIONS_EMAIL_ADDRESS,
   OPTIONS_SMALL_CATEGORY,
-} from "../components/register/OPTIONS";
+} from "../components/register/Options";
 import { ContentLayout, White300Layout } from "../components/Layout";
 
 /**
@@ -34,8 +34,8 @@ function Register() {
   // 대분류 종류에 맞는 소분류 옵션 배열
   const [smallCategoryOption, setSmallCategoryOption] = useState(null);
   const [address, setAddress] = useState("");
-  const [writeDomain, setWriteDomain] = useState("");
-  const [selectDomain, setSelectDomain] = useState("");
+  const [writedDomain, setWritedDomain] = useState("");
+  const [selectedDomain, setSelectedDomain] = useState("");
   const [domain, setDomain] = useState("");
   const [email, setEmail] = useState("");
 
@@ -46,13 +46,13 @@ function Register() {
   const [markdown, setMarkdown] = useState("### write detail!");
 
   // 바로 초기화하면 defaultValue로 설정해서인지 값이 안 바뀌어서 나중에 set하기 위해 useEffect 사용
-  useEffect(() => setSelectDomain("직접 입력"), []);
+  useEffect(() => setSelectedDomain("직접 입력"), []);
 
   /**
    * 계산기 제목 입력값 change 함수
    * @param {*} event
    */
-  function titleChange(event) {
+  function changeTitle(event) {
     setTitle(event.target.value);
   }
 
@@ -60,7 +60,7 @@ function Register() {
    * 계산기 한 줄 설명 change 함수
    * @param {*} event
    */
-  function descriptionChange(event) {
+  function changeDescription(event) {
     setDescription(event.target.value);
   }
 
@@ -70,7 +70,7 @@ function Register() {
    * - 해당하는 대분류에 속하는 소분류 옵션을 세팅
    * @param {*} event
    */
-  function bigCategoryChange(event) {
+  function changeBigCategory(event) {
     const targetValue = event.target.value;
     const option = OPTIONS_BIG_CATEGORY.filter((x) => x.value === targetValue);
     const smallOption = OPTIONS_SMALL_CATEGORY.filter(
@@ -90,7 +90,7 @@ function Register() {
    * - value에 먼저 접근한 후, value에 맞는 name을 찾아서 저장
    * @param {*} event
    */
-  function smallCategoryChange(event) {
+  function changeSmallCategory(event) {
     const targetValue = event.target.value;
     if (smallCategoryOption) {
       const option = smallCategoryOption.filter((x) => x.value === targetValue);
@@ -110,7 +110,7 @@ function Register() {
    * - email도 같이 세팅
    * @param {*} event
    */
-  function addressChange(event) {
+  function changeAddress(event) {
     setAddress(event.target.value);
     settingEmail(event.target.value, domain);
   }
@@ -120,9 +120,9 @@ function Register() {
    * - email도 같이 세팅
    * @param {*} event
    */
-  function domainChange(event) {
+  function changeDomain(event) {
     const targetValue = event.target.value;
-    setWriteDomain(targetValue);
+    setWritedDomain(targetValue);
     setDomain(targetValue);
     settingEmail(address, targetValue);
   }
@@ -133,16 +133,16 @@ function Register() {
    * - email도 같이 세팅
    * @param {*} event
    */
-  function domainSelectChange(event) {
+  function changeSelectedDomain(event) {
     const targetValue = event.target.value;
     const option = OPTIONS_EMAIL_ADDRESS.filter((x) => x.value === targetValue);
     const domainValue = option[0].name;
     if (domainValue === "직접 입력") {
-      setWriteDomain("");
+      setWritedDomain("");
     } else {
-      setWriteDomain(domainValue);
+      setWritedDomain(domainValue);
     }
-    setSelectDomain(domainValue);
+    setSelectedDomain(domainValue);
     setDomain(domainValue);
     settingEmail(address, domainValue);
   }
@@ -150,14 +150,14 @@ function Register() {
   /**
    * HTML 코드 change 함수 (monaco editor)
    */
-  function htmlScriptChange() {
+  function changeHtmlScript() {
     setHtmlScript(editorRef.current.getValue());
   }
 
   /**
    * MARKDOWN 코드 change 함수 (monaco editor)
    */
-  function markdownChange() {
+  function changeMarkdown() {
     setMarkdown(editorRef.current.getValue());
   }
 
@@ -171,24 +171,24 @@ function Register() {
           smallCategoryOption={smallCategoryOption}
           smallCategory={smallCategory}
           address={address}
-          writeDomain={writeDomain}
-          selectDomain={selectDomain}
+          writedDomain={writedDomain}
+          selectedDomain={selectedDomain}
           domain={domain}
           email={email}
-          titleChange={titleChange}
-          descriptionChange={descriptionChange}
-          bigCategoryChange={bigCategoryChange}
-          smallCategoryChange={smallCategoryChange}
-          addressChange={addressChange}
-          domainChange={domainChange}
-          domainSelectChange={domainSelectChange}
+          changeTitle={changeTitle}
+          changeDescription={changeDescription}
+          changeBigCategory={changeBigCategory}
+          changeSmallCategory={changeSmallCategory}
+          changeAddress={changeAddress}
+          changeDomain={changeDomain}
+          changeSelectedDomain={changeSelectedDomain}
         />
         <WriteCode
           editorRef={editorRef}
           htmlScript={htmlScript}
           markdown={markdown}
-          htmlScriptChange={htmlScriptChange}
-          markdownChange={markdownChange}
+          changeHtmlScript={changeHtmlScript}
+          changeMarkdown={changeMarkdown}
         />
         <UploadDoneBtn
           title={title}

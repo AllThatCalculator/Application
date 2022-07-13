@@ -133,13 +133,7 @@ function Option(props) {
  * isLine: select 박스의 오른쪽에 구분선이 있는지 없는지를 나타내는 변수
  * @returns
  */
-function DefaultSelectBox({
-  options,
-  placeholder,
-  selected,
-  onChange,
-  isLine,
-}) {
+function SelectBox({ options, placeholder, selected, onChange, isLine }) {
   // option box 활성화 상태에 대한 변수
   const [isActive, setIsActive] = useState(false);
 
@@ -164,6 +158,12 @@ function DefaultSelectBox({
       setIsActive(false);
     }
   }
+
+  useEffect(() => {
+    if (selected === null) {
+      setItem(null);
+    }
+  }, [selected]);
 
   useEffect(() => {
     document.addEventListener("mousedown", clickModalOutside);
@@ -202,44 +202,4 @@ function DefaultSelectBox({
   );
 }
 
-/**
- * 구분선이 없는 select 박스 컴포넌트
- * @param {array, string, string, function}
- * options: select 박스에 대한 option 리스트들
- * placeholder: select 박스 선택 전 보이는 회색 글씨에 대한 내용
- * selected: 선택된 option의 name 저장
- * onChange: 선택한 option이 바뀔 때 일어나는 함수
- */
-function SelectBox({ options, placeholder, selected, onChange }) {
-  return (
-    <DefaultSelectBox
-      options={options}
-      placeholder={placeholder}
-      selected={selected}
-      onChange={onChange}
-      isLine={false}
-    />
-  );
-}
-
-/**
- * 구분선이 있는 select 박스 컴포넌트
- * @param {array, string, string, function}
- * options: select 박스에 대한 option 리스트들
- * placeholder: select 박스 선택 전 보이는 회색 글씨에 대한 내용
- * selected: 선택된 option의 name 저장
- * onChange: 선택한 option이 바뀔 때 일어나는 함수
- */
-function SelectBoxLine({ options, placeholder, selected, onChange }) {
-  return (
-    <DefaultSelectBox
-      options={options}
-      placeholder={placeholder}
-      selected={selected}
-      onChange={onChange}
-      isLine={true}
-    />
-  );
-}
-
-export { SelectBox, SelectBoxLine };
+export default SelectBox;
