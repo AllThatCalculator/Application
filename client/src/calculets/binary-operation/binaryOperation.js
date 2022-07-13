@@ -4,62 +4,51 @@ const from = document.querySelector("#from");
 const to = document.querySelector("#to");
 
 /**
- * 2진수 -> 10진수
- * @param {string} input
+ * 2, 8, 16진수 -> 10진수
+ * @param {string, string}
+ * from: 바꿀 진수
+ * input: 입력 값
  */
-function binaryToDecimal(input) {
+function changeToDecimal(from, input) {
+  from = parseInt(from);
   input = parseInt(input);
   let p = 1;
   let output = 0;
   while (input) {
     const num = input % 10;
-    if (num > 1) {
+    if (num >= from) {
       return "식이 올바르지 않음.";
     }
     output += num * p;
-    p *= 2;
-    input = parseInt(input / 10);
+    p *= from;
+    input = Math.floor(input / 10);
   }
   return output;
 }
 
 /**
- * 10진수 -> 2진수
- * @param {string} input
+ * 10진수 -> 2, 8, 16진수
+ * @param {string, string}
+ * to: 바뀌는 진수
+ * input: 입력 값
  */
-function decimalToBinary(input) {
+function changeFromDecimal(to, input) {
+  to = parseInt(to);
   input = parseInt(input);
   let output = "";
   while (input > 0) {
-    output += input % 2;
-    input = parseInt(input / 2);
+    output += input % to;
+    input = Math.floor(input / to);
   }
   return output.split("").reverse().join("");
 }
 
 /**
- * 2진수 -> 16진수
- * @param {string} input
+ * 구현 해야 함.
+ * 2, 16 -> 8진수
+ * 8, 16 -> 2진수
+ * 2, 8 -> 16진수
  */
-function binaryToHexa(input) {}
-
-/**
- * 16진수 -> 2진수
- * @param {string} input
- */
-function hexaToBinary(input) {}
-
-/**
- * 10진수 -> 16진수
- * @param {string} input
- */
-function decimalToHexa(input) {}
-
-/**
- * 16진수 -> 10진수
- * @param {string} input
- */
-function hexaToDecimal(input) {}
 
 let _from = "";
 let _to = "";
@@ -75,18 +64,19 @@ to.addEventListener("change", onToChange);
 
 const btn = document.querySelector("#enter-button");
 function onClick() {
-  console.log(_from, _to);
-  if (_from === "from_binary" && _to === "to_decimal") {
-    output.value = binaryToDecimal(input.value).toString();
-  } else if (_from === "from_decimal" && _to === "to_binary") {
-    output.value = decimalToBinary(input.value).toString();
+  if (_to === "10") {
+    output.value = changeToDecimal(_from, input.value).toString();
+  } else if (_from === "10") {
+    output.value = changeFromDecimal(_to, input.value).toString();
   }
 }
 
 function onKeyEvent(event) {
-  if (event.key == "Enter") {
-    if (_from === "from_binary" && _to === "to_decimal") {
-      output.value = binaryToDecimal(input.value).toString();
+  if (event.key === "Enter") {
+    if (_to === "10") {
+      output.value = changeToDecimal(_from, input.value).toString();
+    } else if (_from === "10") {
+      output.value = changeFromDecimal(_to, input.value).toString();
     }
   }
 }
