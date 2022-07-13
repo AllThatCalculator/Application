@@ -10,17 +10,20 @@ AllThatCalculator Application
 
 1. `mkdir application/database/data`
 
+### install packages
+
+2. application/client | `npm install`
+3. application/server | `npm install`
+
 ### with Docker-compose
 
-2. `docker-compose up --build`
+4. `docker-compose up --build`
 
 ### without Docker
 
-2. application/client | `npm install`
-3. application/client | `npm start`
-4. application/server | `npm install`
-5. application/server | `npx nodemon install`
-6. install MariaDB and execute `database/initdb.d/create_table.sql` and `database/initdb.d/load_data.sql`
+5. application/client | `npm start`
+6. application/server | `npx nodemon main.js`
+7. install MariaDB and execute `database/initdb.d/create_table.sql` and `database/initdb.d/load_data.sql`
 
 # File tree
 
@@ -41,7 +44,7 @@ APPLICATION
 │   ├── conf.d
 │   ├── (data)  // 로컬에 저장되는 파일 목록
 │   └── initdb.d
-│       └── initial_data
+│       └── initial-data
 ├── nginx
 └── server      // backend
     ├── config
