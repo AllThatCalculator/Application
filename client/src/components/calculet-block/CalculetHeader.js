@@ -5,56 +5,49 @@ import { BtnSmallIcon, BtnStatisticsIcon } from "../atom-components/ButtonIcon";
 import { Modal } from "../global-component/Modal";
 import ModalCalculetInfo from "../calculet-block/ModalCalculetInfo";
 import styles from "../styles";
+import { FlexColumnLayout, FlexRowLayout } from "../Layout";
 
 const CalculetName = styled.div`
-  padding: 0;
   color: ${styles.styleColor.blue900};
   ${styles.sytleText.text300};
 `;
 
-const WrapperBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  ${styles.sytleText.text50}
+const WrapperBox = styled(FlexColumnLayout)`
+  ${styles.sytleText.text50};
 `;
 
-const WrapperLine = styled.div`
-  display: flex;
-  flex-direction: row;
+const WrapperLine = styled(FlexRowLayout)`
   justify-content: space-between;
 `;
 
-const WrapperGroup = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
+const WrapperGroup = styled(FlexRowLayout)`
   align-items: flex-end;
 `;
 
 const StyledHr = styled.div`
-  width: ${styles.sizes.desktop};
   height: 1px;
-  background-color: ${styles.styleColor.blue200};
+  background-color: ${styles.styleColor.blue50};
 `;
 
 function CalculetHeader({ title, contributor, statistics }) {
-  // 좋아요 관련 정보
-  // {int} number: 해당 계산기의 좋아요 수
-  // {boolean} liked: 현재 유저가 좋아요를 눌렀는지 여부
+  /**
+   * 좋아요 관련 정보
+   * {int} number: 해당 계산기의 좋아요 수
+   * {boolean} liked: 현재 유저가 좋아요를 눌렀는지 여부
+   */
   const [likeObj, setLikeObj] = useState({
     number: statistics.likeCnt,
     liked: statistics.liked,
   });
-  // 북마크 관련 정보
-  // {int} number: 해당 계산기의 북마크 수
-  // {boolean} bookmarked: 현재 유저가 북마크로 설정했는지 여부
+  /**
+   * 북마크 관련 정보
+   * {int} number: 해당 계산기의 북마크 수
+   * {boolean} bookmarked: 현재 유저가 북마크로 설정했는지 여부
+   */
   const [bookmarkObj, setBookmarkObj] = useState({
     number: statistics.bookmarkCnt,
     bookmarked: statistics.bookmarked,
   });
-
   /**
    * 좋아요 버튼 이벤트 함수
    * - 좋아요 수 변경, 아이콘 색 채움 여부 변경
@@ -85,21 +78,24 @@ function CalculetHeader({ title, contributor, statistics }) {
       }));
     }
   }
-
-  // {bool} modalOpen 계산기 정보 팝업창 불러오기 상태
+  /**
+   * {bool} modalOpen 계산기 정보 팝업창 불러오기 상태
+   */
   const [modalOpen, setModalOpen] = useState(false);
 
   /**
    * i 버튼 누르면 계산기 정보 팝업창 열림
    * -> 팝업창 X 누르면 팝업창 닫힘
    */
-  const onModalOpen = () => {
+  function onModalOpen() {
     setModalOpen(true);
-  };
-  const onModalClose = () => {
+  }
+  function onModalClose() {
     setModalOpen(false);
-  };
-  // 계산기 정보 팝업창에 들어갈 내용
+  }
+  /**
+   * 계산기 정보 팝업창에 들어갈 내용
+   */
   const contents = {
     profile_img: "/img/ori.png",
     contributor_id: "bsa0322",
@@ -110,12 +106,24 @@ function CalculetHeader({ title, contributor, statistics }) {
     category_sub: "계산",
     birthday: "2022.06.24",
     update_log: [
-      ["2022.06.26", ["버그수정", "내용 수정"]],
-      ["2022.06.28", []],
-      ["2022.06.29", ["오류 수정", "내용 수정", "asdfasdf"]],
-      ["2022.06.30", ["오류 수정", "내용 수정", "asdfasdf"]],
-      ["2022.07.09", ["오류 수정", "내용 수정", "asdfasdf"]],
-      ["2022.10.05", ["오류 수정", "내용 수정", "asdfasdf"]],
+      { update_date: "2022.06.26", message: ["버그수정", "내용 수정"] },
+      { update_date: "2022.06.28", message: [] },
+      {
+        update_date: "2022.06.29",
+        message: ["오류 수정", "내용 수정", "asdfasdf"],
+      },
+      {
+        update_date: "2022.06.30",
+        message: ["오류 수정", "내용 수정", "asdfasdf"],
+      },
+      {
+        update_date: "2022.07.09",
+        message: ["오류 수정", "내용 수정", "asdfasdf"],
+      },
+      {
+        update_date: "2022.10.05",
+        message: ["오류 수정", "내용 수정", "asdfasdf"],
+      },
     ],
   };
 
@@ -127,9 +135,9 @@ function CalculetHeader({ title, contributor, statistics }) {
           contents={<ModalCalculetInfo info={contents} />}
         />
       )}
-      <WrapperBox>
+      <WrapperBox gap="10px">
         <WrapperLine>
-          <WrapperGroup>
+          <WrapperGroup gap="10px">
             <CalculetName>{title}</CalculetName>
             <BtnSmallIcon
               text="info"
@@ -140,7 +148,7 @@ function CalculetHeader({ title, contributor, statistics }) {
           </WrapperGroup>
         </WrapperLine>
         <WrapperLine>
-          <WrapperGroup>
+          <WrapperGroup gap="10px">
             <BoxIcon
               text={contributor}
               icon="PeopleCircle"
@@ -149,7 +157,7 @@ function CalculetHeader({ title, contributor, statistics }) {
             <BoxIcon text="view" icon="EyeFill" number={statistics.viewCnt} />
           </WrapperGroup>
 
-          <WrapperGroup>
+          <WrapperGroup gap="10px">
             <BtnStatisticsIcon
               text="좋아요"
               icon="Heart"

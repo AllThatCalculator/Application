@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import styles from "../styles";
 import { BtnSmallIcon } from "../atom-components/ButtonIcon";
-import { FlexRowLayout } from "../Layout";
+import { FlexColumnLayout, FlexRowLayout } from "../Layout";
 
 //스타일드 애니메이션
 const slideDown = keyframes`
@@ -18,32 +18,28 @@ const StyledSlideDown = styled.div`
   animation: ${slideDown} 1s;
 `;
 // 바깥 검정 배경
-const StyledBackground = styled.div`
-  position: absolute;
+const StyledBackground = styled(FlexColumnLayout)`
+  position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 101;
-
-  top: 0;
+  top: 60px;
   left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   background: ${styles.styleColor.black50a};
+
+  z-index: 99;
 `;
 // 정가운데 위치
 const StyledCenter = styled.div`
   position: absolute;
-  top: 125px;
+  z-index: 99;
+  top: 110px;
 `;
 // 모달 Base
 const StyledBox = styled.div`
   ${styles.styleSize.modalCalculetInfo};
   background: ${styles.styleColor.blue30};
   padding-top: ${styles.styleLayout.basic1000};
-
   ${styles.styleBorder.basic200};
   ${styles.styleEffect.opacity300};
 `;
@@ -51,7 +47,7 @@ const StyledBox = styled.div`
 const StyledHeader = styled.div`
   display: flex;
   position: absolute;
-  top: 0%;
+  top: 0;
   width: 100%;
 
   justify-content: flex-end;
@@ -78,24 +74,20 @@ const PositionerUnder = styled.div`
  */
 function ModalNonFix({ onClick, contents }) {
   return (
-    <>
-      <StyledSlideDown>
-        <FlexRowLayout>
-          <StyledBox>
-            <StyledHeader>
-              <BtnSmallIcon
-                text="닫기"
-                icon="X"
-                color="blue"
-                onClick={onClick}
-                type="button"
-              />
-            </StyledHeader>
-            <PositionerUnder>{contents}</PositionerUnder>
-          </StyledBox>
-        </FlexRowLayout>
-      </StyledSlideDown>
-    </>
+    <StyledSlideDown>
+      <StyledBox>
+        <StyledHeader>
+          <BtnSmallIcon
+            text="닫기"
+            icon="X"
+            color="blue"
+            onClick={onClick}
+            type="button"
+          />
+        </StyledHeader>
+        <PositionerUnder>{contents}</PositionerUnder>
+      </StyledBox>
+    </StyledSlideDown>
   );
 }
 
