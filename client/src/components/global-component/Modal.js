@@ -100,13 +100,11 @@ function ModalNonFix({ onClick, contents }) {
  */
 function Modal({ onClick, contents }) {
   return (
-    <>
-      <StyledBackground>
-        <StyledCenter>
-          <ModalNonFix onClick={onClick} contents={contents} />
-        </StyledCenter>
-      </StyledBackground>
-    </>
+    <StyledBackground>
+      <StyledCenter>
+        <ModalNonFix onClick={onClick} contents={contents} />
+      </StyledCenter>
+    </StyledBackground>
   );
 }
 export { Modal, ModalNonFix };
