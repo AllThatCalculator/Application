@@ -1,13 +1,11 @@
 import styled from "styled-components";
 import styles from "../styles.js";
 import { BtnSmallIcon } from "../atom-components/ButtonIcon.js";
+import { FlexRowLayout } from "../Layout.js";
 
-// 네비 감싼거
-const Positioner = styled.div`
-  display: flex;
-  gap: ${styles.styleLayout.basic700};
-`;
-// 네비 버튼
+/**
+ * 네비 버튼
+ */
 const StyledButton = styled.button`
   ${styles.styleSize.small};
   width: 16px;
@@ -23,7 +21,9 @@ const StyledButton = styled.button`
     opacity: ${styles.styleColor.green200.opacity};
   }
 `;
-// 네비 버튼 활성화 됐을 때
+/**
+ * 네비 버튼 활성화 됐을 때
+ */
 const active = {
   background: `${styles.styleColor.green200.color}`,
   opacity: `${styles.styleColor.green200.opacity}`,
@@ -39,7 +39,7 @@ const active = {
  * currentPage : 현재 페이지
  *
  */
-const Pagination = ({ renderPerPage, renderTotal, paginate, currentPage }) => {
+function Pagination({ renderPerPage, renderTotal, paginate, currentPage }) {
   // 동그라미 개수(페이지 개수)
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(renderTotal / renderPerPage); i++) {
@@ -58,7 +58,7 @@ const Pagination = ({ renderPerPage, renderTotal, paginate, currentPage }) => {
   // 네비버튼 클릭하면, Recommend의 currentPage 상태값이 변경되고
   // Recommned에서 작성한 대로 배열 데이터 값이 분할되어 추천 계산기가 렌더됨
   return (
-    <Positioner className="Pagination">
+    <FlexRowLayout gap="10px">
       <BtnSmallIcon
         text="왼쪽페이지"
         icon="ChevronLeft"
@@ -76,7 +76,7 @@ const Pagination = ({ renderPerPage, renderTotal, paginate, currentPage }) => {
         icon="ChevronRight"
         onClick={() => nextPage()}
       />
-    </Positioner>
+    </FlexRowLayout>
   );
-};
+}
 export default Pagination;

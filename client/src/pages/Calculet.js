@@ -15,6 +15,12 @@ import CalculetHeader from "../components/calculet-block/CalculetHeader";
 // -> 백엔드 연결 이후에는 http request로 계산기 정보들과 함께 받음
 // eslint-disable-next-line
 import srcCode from "raw-loader!../calculets/arithmetic-operation/arithmeticOperation.html";
+import {
+  ContentLayout,
+  FlexColumnLayout,
+  FlexRowLayout,
+  TransparentLayout,
+} from "../components/Layout";
 
 // 계산기 블록 배경
 const Positioner = styled.div`
@@ -39,13 +45,15 @@ const BoxCalculetBottom = styled(BoxCalculet)`
   padding: ${styles.styleLayout.basic750};
   gap: ${styles.styleLayout.basic300};
 `;
-const Wrapper = styled.div`
-  display: flex;
-`;
+
 const WrapperCol = styled(BoxCalculet)`
   display: flex;
   flex-direction: column;
   gap: ${styles.styleLayout.basic700};
+`;
+// 패딩 적용
+const PositionerPadding = styled.div`
+  padding: ${(props) => props.padding};
 `;
 // 설명
 const Explain = styled.div`
@@ -148,17 +156,19 @@ function Calculet() {
         </BoxCalculetBottom>
       </PositionerBottom>
 
-      <WrapperCol>
-        <WrapperCol>
-          <TextWhite text="다른 계산기들도 있어요 🤗" />
-          <Wrapper>
-            <BtnWhite text="더보기" />
-          </Wrapper>
-        </WrapperCol>
-        <Wrapper>
-          <Recommend />
-        </Wrapper>
-      </WrapperCol>
+      <TransparentLayout>
+        <ContentLayout>
+          <PositionerPadding padding="20px 0px">
+            <FlexColumnLayout gap="20px">
+              <TextWhite text="다른 계산기들도 있어요 🤗" />
+              <FlexRowLayout>
+                <BtnWhite text="더보기" />
+              </FlexRowLayout>
+              <Recommend />
+            </FlexColumnLayout>
+          </PositionerPadding>
+        </ContentLayout>
+      </TransparentLayout>
     </>
   );
 }
