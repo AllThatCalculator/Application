@@ -117,7 +117,7 @@ const StyledBtnTrans = styled(StyledBtnGray)`
 function ButtonTemplate({ text, icon, onClick }) {
   return (
     <StyledBtnBlue id={text} onClick={onClick}>
-      {icon && <StyledIcon name={icon}></StyledIcon>}
+      {icon && <StyledIcon name={icon} />}
       <StyledFont100>{text}</StyledFont100>
     </StyledBtnBlue>
   );
@@ -134,7 +134,7 @@ function ButtonTemplate({ text, icon, onClick }) {
 function BtnWhite({ text, icon, onClick }) {
   return (
     <StyledBtnWhite id={text} onClick={onClick}>
-      {icon && <StyledIcon name={icon}></StyledIcon>}
+      {icon && <StyledIcon name={icon} />}
       <StyledFontButtonW>{text}</StyledFontButtonW>
     </StyledBtnWhite>
   );
@@ -153,7 +153,7 @@ function BtnWhite({ text, icon, onClick }) {
 function BtnBlue({ text, icon, onClick }) {
   return (
     <StyledBtnBlue id={text} onClick={onClick}>
-      {icon && <StyledIcon name={icon}></StyledIcon>}
+      {icon && <StyledIcon name={icon} />}
       <StyledFontButtonB>{text}</StyledFontButtonB>
     </StyledBtnBlue>
   );
@@ -170,13 +170,10 @@ function BtnBlue({ text, icon, onClick }) {
  *
  */
 function BtnGray({ text, isToggle, onClick }) {
+  const name = isToggle ? `CaretDownFill` : `CaretRightFill`;
   return (
     <StyledBtnGray id={text} onClick={onClick}>
-      {isToggle ? (
-        <StyledIcon name={`CaretDownFill`}></StyledIcon>
-      ) : (
-        <StyledIcon name={`CaretRightFill`}></StyledIcon>
-      )}
+      <StyledIcon name={name} />
       <StyledFont100>{text}</StyledFont100>
     </StyledBtnGray>
   );
@@ -194,13 +191,10 @@ function BtnGray({ text, isToggle, onClick }) {
  *
  */
 function BtnTransToggle({ text, isToggle, onClick }) {
+  const name = isToggle ? `CaretDownFill` : `CaretRightFill`;
   return (
     <StyledBtnTrans id={text} onClick={onClick}>
-      {isToggle ? (
-        <StyledIcon name={`CaretDownFill`}></StyledIcon>
-      ) : (
-        <StyledIcon name={`CaretRightFill`}></StyledIcon>
-      )}
+      <StyledIcon name={name} />
       <StyledFont100>{text}</StyledFont100>
     </StyledBtnTrans>
   );
@@ -218,7 +212,7 @@ function BtnTransToggle({ text, isToggle, onClick }) {
 function BtnTrans({ text, icon, onClick }) {
   return (
     <StyledBtnTrans id={text} onClick={onClick}>
-      {icon && <StyledIcon name={icon}></StyledIcon>}
+      {icon && <StyledIcon name={icon} />}
       <StyledFont100>{text}</StyledFont100>
     </StyledBtnTrans>
   );

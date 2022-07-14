@@ -4,7 +4,9 @@ import { BtnTrans, BtnTransToggle } from "../atom-components/ButtonTemplate";
 import { FlexColumnLayout } from "../Layout";
 import styles from "../styles";
 
-//스타일드 애니메이션
+/**
+ * 스타일드 애니메이션
+ */
 const slideIn = keyframes`
   from {
     margin-left: -100%;
@@ -44,7 +46,9 @@ const Positioner = styled.div`
 
   ${styles.styleEffect.opacity100};
 `;
-// indent만큼 들여쓰기
+/**
+ * indent만큼 들여쓰기
+ */
 const StyledIndent = styled.div`
   margin-left: ${(props) => props.indent}em;
 `;
@@ -61,7 +65,7 @@ const StyledIndent = styled.div`
  *
  */
 function CategoryBar({ contents, aniMode }) {
-  // 카테고리 내용
+  // < 카테고리 내용 >
   // 대분류 개수
   const categoryMainLength = contents.length;
   // toggle 상태를 useState 로 관리하기 위한 초기 toggle 세팅 (대분류와 소분류의 각 toggle 상태)
@@ -103,51 +107,47 @@ function CategoryBar({ contents, aniMode }) {
   }
 
   return (
-    <>
-      <StyledSlideAnimation aniMode={aniMode}>
-        <Positioner>
-          <FlexColumnLayout gap="3px">
-            {contents.map((main, index) => (
-              <>
-                <BtnTransToggle
-                  key={index}
-                  text={main.category_main}
-                  isToggle={categoryToggle[index].toggle}
-                  onClick={() => onToggleMain(index)}
-                />
-                {categoryToggle[index].toggle && (
-                  <StyledIndent indent={1.5}>
-                    {main.category_sub.map((sub, idx) => (
-                      <>
-                        <BtnTransToggle
-                          key={index}
-                          text={sub.name}
-                          isToggle={
-                            categoryToggle[index].sub_toggle[idx].toggle
-                          }
-                          onClick={() => onToggleSub(index, idx)}
-                        />
-                        {categoryToggle[index].sub_toggle[idx].toggle && (
-                          <StyledIndent indent={1.5}>
-                            {sub.calculets.map((calculet, i) => (
-                              <BtnTrans
-                                key={i}
-                                text={"• " + calculet}
-                                // onClick
-                              ></BtnTrans>
-                            ))}
-                          </StyledIndent>
-                        )}
-                      </>
-                    ))}
-                  </StyledIndent>
-                )}
-              </>
-            ))}
-          </FlexColumnLayout>
-        </Positioner>
-      </StyledSlideAnimation>
-    </>
+    <StyledSlideAnimation aniMode={aniMode}>
+      <Positioner>
+        <FlexColumnLayout gap="3px">
+          {contents.map((main, index) => (
+            <>
+              <BtnTransToggle
+                key={index}
+                text={main.category_main}
+                isToggle={categoryToggle[index].toggle}
+                onClick={() => onToggleMain(index)}
+              />
+              {categoryToggle[index].toggle && (
+                <StyledIndent indent={1.5}>
+                  {main.category_sub.map((sub, idx) => (
+                    <>
+                      <BtnTransToggle
+                        key={index}
+                        text={sub.name}
+                        isToggle={categoryToggle[index].sub_toggle[idx].toggle}
+                        onClick={() => onToggleSub(index, idx)}
+                      />
+                      {categoryToggle[index].sub_toggle[idx].toggle && (
+                        <StyledIndent indent={1.5}>
+                          {sub.calculets.map((calculet, i) => (
+                            <BtnTrans
+                              key={i}
+                              text={"• " + calculet}
+                              // onClick
+                            />
+                          ))}
+                        </StyledIndent>
+                      )}
+                    </>
+                  ))}
+                </StyledIndent>
+              )}
+            </>
+          ))}
+        </FlexColumnLayout>
+      </Positioner>
+    </StyledSlideAnimation>
   );
 }
 export default CategoryBar;
