@@ -17,8 +17,7 @@ import srcCode from "raw-loader!../calculets/arithmetic-operation/arithmeticOper
 
 // 계산기 블록 배경
 const Positioner = styled.div`
-  background: ${styles.styleColor.white200.color};
-  opacity: ${styles.styleColor.white200.opacity};
+  background: ${styles.styleColor.white300};
 `;
 // 계산기 등록 버튼 배경
 const PositionerBottom = styled.div`
