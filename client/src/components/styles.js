@@ -58,6 +58,7 @@ const styleSize = {
   buttonRecommend: `height: 118px; width: 280px;`,
   input: `width: 25em;`,
   modalCalculetInfo: `width: 529px; height: 550px;`,
+  category_desktop: `width: 253px;`,
 };
 const sytleText = {
   text400: `font-family: "S-CoreDream-4Regular";
