@@ -134,7 +134,7 @@ function CategoryBar({ contents, aniMode }) {
                             <BtnTrans
                               key={i}
                               text={"• " + calculet}
-                              // onClick
+                              // 버튼 이벤트 onClick 추가
                             />
                           ))}
                         </StyledIndent>
