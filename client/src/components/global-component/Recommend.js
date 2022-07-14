@@ -4,7 +4,9 @@ import Pagination from "./Pagination.js";
 import { useEffect, useState } from "react";
 import { FlexColumnLayout, ResponsivePhoneLayout } from "../Layout.js";
 
-// 가운데 정렬
+/**
+ * 가운데 정렬
+ */
 const PositionerCenter = styled.div`
   display: flex;
   justify-content: center;
@@ -86,30 +88,28 @@ function Recommend() {
 
   // currentPage는 Pagination에서 onClick에 따라 네비됨
   return (
-    <>
-      <FlexColumnLayout gap="15px">
-        <RenderCenter
-          component={
-            <ResponsivePhoneLayout columnGap="20px" rowGap="20px">
-              <RenderCalculet
-                calculets={currentCalculets(calculets)}
-                loading={loading}
-              />
-            </ResponsivePhoneLayout>
-          }
-        />
-        <RenderCenter
-          component={
-            <Pagination
-              renderPerPage={KEY_PAGE}
-              renderTotal={calculets.length}
-              paginate={setCurrentPage}
-              currentPage={currentPage}
+    <FlexColumnLayout gap="15px">
+      <RenderCenter
+        component={
+          <ResponsivePhoneLayout columnGap="20px" rowGap="20px">
+            <RenderCalculet
+              calculets={currentCalculets(calculets)}
+              loading={loading}
             />
-          }
-        />
-      </FlexColumnLayout>
-    </>
+          </ResponsivePhoneLayout>
+        }
+      />
+      <RenderCenter
+        component={
+          <Pagination
+            renderPerPage={KEY_PAGE}
+            renderTotal={calculets.length}
+            paginate={setCurrentPage}
+            currentPage={currentPage}
+          />
+        }
+      />
+    </FlexColumnLayout>
   );
 }
 

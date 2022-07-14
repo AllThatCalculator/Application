@@ -3,7 +3,9 @@ import styles from "../styles.js";
 import { BtnSmallIcon } from "../atom-components/ButtonIcon.js";
 import { FlexRowLayout } from "../Layout.js";
 
-// 네비 버튼
+/**
+ * 네비 버튼
+ */
 const StyledButton = styled.button`
   ${styles.styleSize.small};
   width: 16px;
@@ -19,7 +21,9 @@ const StyledButton = styled.button`
     opacity: ${styles.styleColor.green200.opacity};
   }
 `;
-// 네비 버튼 활성화 됐을 때
+/**
+ * 네비 버튼 활성화 됐을 때
+ */
 const active = {
   background: `${styles.styleColor.green200.color}`,
   opacity: `${styles.styleColor.green200.opacity}`,
@@ -35,7 +39,7 @@ const active = {
  * currentPage : 현재 페이지
  *
  */
-const Pagination = ({ renderPerPage, renderTotal, paginate, currentPage }) => {
+function Pagination({ renderPerPage, renderTotal, paginate, currentPage }) {
   // 동그라미 개수(페이지 개수)
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(renderTotal / renderPerPage); i++) {
@@ -74,5 +78,5 @@ const Pagination = ({ renderPerPage, renderTotal, paginate, currentPage }) => {
       />
     </FlexRowLayout>
   );
-};
+}
 export default Pagination;
