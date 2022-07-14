@@ -8,7 +8,7 @@ import {
   OPTIONS_BIG_CATEGORY,
   OPTIONS_EMAIL_ADDRESS,
   OPTIONS_SMALL_CATEGORY,
-} from "../components/register/Options";
+} from "../components/register/Option";
 import { ContentLayout, White300Layout } from "../components/Layout";
 
 /**

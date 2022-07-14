@@ -7,7 +7,7 @@ import {
   ExplanationEmail,
   ExplanationInputLine,
 } from "./Explanation";
-import { OPTIONS_BIG_CATEGORY, OPTIONS_EMAIL_ADDRESS } from "./Options";
+import { OPTIONS_BIG_CATEGORY, OPTIONS_EMAIL_ADDRESS } from "./Option";
 import BigTitle from "../atom-components/BigTitle";
 import { FlexColumnLayout, ResponsiveTabletLayout } from "../Layout";
 

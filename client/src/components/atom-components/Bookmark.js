@@ -27,8 +27,10 @@ const StyledLink = styled(Link)`
 function Bookmark({ info }) {
   return (
     <Positioner>
-      {info.map((conts) => (
-        <StyledLink to={("/calculet/:", conts.id)}>{conts.title}</StyledLink>
+      {info.map((conts, index) => (
+        <StyledLink to={"/calculet/" + conts.id} key={index}>
+          {conts.title}
+        </StyledLink>
       ))}
     </Positioner>
   );
