@@ -25,10 +25,23 @@ const StyledLink = styled(Link)`
  *
  */
 function Bookmark({ info }) {
+  function updateCalculetCount(calculetId) {
+    if (calculetId !== Number(localStorage.getItem("previewCalculet"))) {
+      console.log("update!", calculetId);
+      localStorage.setItem("previewCalculet", calculetId);
+      localStorage.setItem("continueCnt", 1);
+    } else {
+      console.log("continue");
+      const cnt = localStorage.getItem("continueCnt");
+      localStorage.setItem("continueCnt", Number(cnt) + 1);
+    }
+  }
+
   return (
     <Positioner>
       {info.map((conts, index) => (
         <StyledLink to={"/" + conts.id} key={index}>
+          onClick={() => updateCalculetCount(conts.id)}
           {conts.title}
         </StyledLink>
       ))}
