@@ -3,13 +3,14 @@ import Bookmark from "../atom-components/Bookmark";
 import styles from "../styles";
 
 const Positioner = styled.div`
-  position: absolute;
+  position: fixed;
   right: 0;
   top: 60px;
+  height: 100%;
   background: ${styles.styleColor.black50a};
   padding: ${styles.styleLayout.basic300};
-  height: 100%;
   max-width: 163px;
+  z-index: 101;
 `;
 /**
  *

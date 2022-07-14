@@ -29,12 +29,22 @@ const HeaderContents = styled.div`
   align-items: center;
   gap: ${styles.styleLayout.basic700};
 `;
-
-function Contents() {
+/**
+ *  * 헤더 contents
+ * -> 카테고리바, 로고, 검색창, 로그인 버튼
+ * @param {function} param0
+ * onIsOpen : 버튼 이벤트 (카테고리바 이벤트)
+ */
+function Contents({ onIsOpen }) {
   return (
     <WhiteBackground>
       <HeaderContents>
-        <BtnMiddleIcon text="메뉴" icon="List" color="white" />
+        <BtnMiddleIcon
+          text="메뉴"
+          icon="List"
+          color="white"
+          onClick={onIsOpen}
+        />
         <LogoHeader />
       </HeaderContents>
       <HeaderContents>
@@ -89,7 +99,7 @@ function Header() {
   // 스크롤 위치 변화에 따라 'scrollPosition' 변화와 'isChange' 변화
   function updateScroll() {
     setScrollPosition(window.scrollY || document.documentElement.scrollTop);
-    if (scrollPosition < 30) setIsChange(false);
+    if (scrollPosition < 10) setIsChange(false);
     else setIsChange(true);
   }
   // 스크롤 위치 감지
@@ -99,21 +109,7 @@ function Header() {
   return (
     <>
       <Positioner isChange={isChange}>
-        <WhiteBackground>
-          <HeaderContents>
-            <BtnMiddleIcon
-              text="메뉴"
-              icon="List"
-              color="white"
-              onClick={onIsOpen}
-            />
-            <LogoHeader />
-          </HeaderContents>
-          <HeaderContents>
-            <BoxSearchInput text="계산하고 싶은 것을 검색하세요." />
-            <BtnWhite text="로그인" icon="Person" />
-          </HeaderContents>
-        </WhiteBackground>
+        <Contents onIsOpen={onIsOpen} />
       </Positioner>
       <CategoryBar contents={contentsCategory} aniMode={aniMode}></CategoryBar>
     </>

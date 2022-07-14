@@ -3,7 +3,6 @@ import styled, { css, keyframes } from "styled-components";
 import { BtnTrans, BtnTransToggle } from "../atom-components/ButtonTemplate";
 import { FlexColumnLayout } from "../Layout";
 import styles from "../styles";
-
 /**
  * 스타일드 애니메이션
  */
@@ -23,7 +22,16 @@ const slideInOut = keyframes`
     margin-left: -100%;
   }
 `;
-const StyledSlideAnimation = styled.div`
+const Positioner = styled.div`
+  position: fixed;
+  top: 60px;
+  left: 0;
+  ${styles.styleSize.category_desktop};
+  background: ${styles.styleColor.white300};
+  padding: ${styles.styleLayout.basic300} ${styles.styleLayout.basic700};
+  height: 100%;
+  z-index: 101;
+  ${styles.styleEffect.opacity100};
   animation: ${(props) =>
     props.aniMode === true
       ? css`
@@ -34,17 +42,6 @@ const StyledSlideAnimation = styled.div`
         `};
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
-`;
-
-const Positioner = styled.div`
-  position: absolute;
-  ${styles.styleSize.category_desktop};
-  background: ${styles.styleColor.white300};
-  padding: ${styles.styleLayout.basic300} ${styles.styleLayout.basic700};
-  height: 100%;
-  z-index: 99;
-
-  ${styles.styleEffect.opacity100};
 `;
 /**
  * indent만큼 들여쓰기
@@ -82,7 +79,6 @@ function CategoryBar({ contents, aniMode }) {
     categoryToggleSet.push({ toggle: false, sub_toggle });
   }
   const [categoryToggle, setCategoryToggle] = useState(categoryToggleSet);
-
   // 대분류 toggle 값을 반전시키는 버튼 이벤트 함수
   function onToggleMain(main) {
     setCategoryToggle(
@@ -105,49 +101,46 @@ function CategoryBar({ contents, aniMode }) {
     );
     setCategoryToggle(newCategoryToggle);
   }
-
   return (
-    <StyledSlideAnimation aniMode={aniMode}>
-      <Positioner>
-        <FlexColumnLayout gap="3px">
-          {contents.map((main, index) => (
-            <>
-              <BtnTransToggle
-                key={index}
-                text={main.category_main}
-                isToggle={categoryToggle[index].toggle}
-                onClick={() => onToggleMain(index)}
-              />
-              {categoryToggle[index].toggle && (
-                <StyledIndent indent={1.5}>
-                  {main.category_sub.map((sub, idx) => (
-                    <>
-                      <BtnTransToggle
-                        key={index}
-                        text={sub.name}
-                        isToggle={categoryToggle[index].sub_toggle[idx].toggle}
-                        onClick={() => onToggleSub(index, idx)}
-                      />
-                      {categoryToggle[index].sub_toggle[idx].toggle && (
-                        <StyledIndent indent={1.5}>
-                          {sub.calculets.map((calculet, i) => (
-                            <BtnTrans
-                              key={i}
-                              text={"• " + calculet}
-                              // 버튼 이벤트 onClick 추가
-                            />
-                          ))}
-                        </StyledIndent>
-                      )}
-                    </>
-                  ))}
-                </StyledIndent>
-              )}
-            </>
-          ))}
-        </FlexColumnLayout>
-      </Positioner>
-    </StyledSlideAnimation>
+    <Positioner aniMode={aniMode}>
+      <FlexColumnLayout gap="3px">
+        {contents.map((main, index) => (
+          <>
+            <BtnTransToggle
+              key={index}
+              text={main.category_main}
+              isToggle={categoryToggle[index].toggle}
+              onClick={() => onToggleMain(index)}
+            />
+            {categoryToggle[index].toggle && (
+              <StyledIndent indent={1.5}>
+                {main.category_sub.map((sub, idx) => (
+                  <>
+                    <BtnTransToggle
+                      key={index}
+                      text={sub.name}
+                      isToggle={categoryToggle[index].sub_toggle[idx].toggle}
+                      onClick={() => onToggleSub(index, idx)}
+                    />
+                    {categoryToggle[index].sub_toggle[idx].toggle && (
+                      <StyledIndent indent={1.5}>
+                        {sub.calculets.map((calculet, i) => (
+                          <BtnTrans
+                            key={i}
+                            text={"• " + calculet}
+                            // 버튼 이벤트 onClick 추가
+                          />
+                        ))}
+                      </StyledIndent>
+                    )}
+                  </>
+                ))}
+              </StyledIndent>
+            )}
+          </>
+        ))}
+      </FlexColumnLayout>
+    </Positioner>
   );
 }
 export default CategoryBar;
