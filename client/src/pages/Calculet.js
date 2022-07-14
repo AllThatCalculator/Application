@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import CalculetBlock from "../components/calculet-block/CalculetBlock";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styles from "../components/styles";
 import {
   BtnWhite,
@@ -50,6 +51,11 @@ const WrapperCol = styled(BoxCalculet)`
 const Explain = styled.div`
   ${styles.sytleText.text200}
 `;
+// 링크
+const StyledLink = styled(Link)`
+  text-decoration-line: none;
+`;
+
 // 계산기 추천
 
 function Calculet() {
@@ -136,7 +142,9 @@ function Calculet() {
       <PositionerBottom>
         <BoxCalculetBottom>
           <Explain>자신만의 계산기를 만드세요!</Explain>
-          <BtnBlue text="계산기 등록" icon="Upload" />
+          <StyledLink to="/register">
+            <BtnBlue text="계산기 등록" icon="Upload" />
+          </StyledLink>
         </BoxCalculetBottom>
       </PositionerBottom>
 

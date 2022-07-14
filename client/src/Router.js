@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./pages/Header";
 import Calculet from "./pages/Calculet";
+import Register from "./pages/Register";
 import BookmarkBar from "./components/global-component/BookmarkBar";
 
 const AppRouter = () => {
@@ -9,6 +10,7 @@ const AppRouter = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Calculet />}></Route>
+        <Route path="/register" element={<Register />}></Route>
       </Routes>
       <BookmarkBar />
     </BrowserRouter>
