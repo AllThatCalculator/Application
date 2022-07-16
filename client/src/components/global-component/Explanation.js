@@ -4,7 +4,7 @@ import { FlexRowLayout } from "../Layout.js";
 import styles from "../styles.js";
 import { InputBox, InputBoxLine } from "./InputBox.js";
 import SelectBox from "./SelectBox.js";
-import { StyledIcon } from "../atom-components/ButtonTemplate.js";
+import { IconColorBox } from "../atom-components/BoxIcon.js";
 
 /**
  * FlexRowLayout을 상속하는 비율 조정 컴포넌트
@@ -44,6 +44,7 @@ function ExplanationInputBox({
   ratioLeft,
   ratioRight,
   icon,
+  iconColor,
   explanation,
   placeholder,
   defaultValue,
@@ -52,7 +53,7 @@ function ExplanationInputBox({
   return (
     <Explanation isLine={isLine}>
       <WrapperRatio ratio={ratioLeft}>
-        {icon && <StyledIcon name={icon} />}
+        {icon && iconColor && <IconColorBox icon={icon} color={iconColor} />}
         {explanation && <SmallTitle content={explanation} />}
       </WrapperRatio>
       <WrapperRatio ratio={ratioRight}>
@@ -85,13 +86,14 @@ function ExplanationSelectBox({
   ratioLeft,
   ratioRight,
   icon,
+  iconColor,
   explanation,
   categorys,
 }) {
   return (
     <Explanation isLine={isLine}>
       <WrapperRatio ratio={ratioLeft}>
-        {icon && <StyledIcon name={icon} />}
+        {icon && iconColor && <IconColorBox icon={icon} color={iconColor} />}
         {explanation && <SmallTitle content={explanation} />}
       </WrapperRatio>
       <WrapperRatio ratio={ratioRight}>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import styles from "../components/styles";
 import WriteCode from "../components/register/WriteCode";
-import WriteInform from "../components/register/WriteInform";
+import { WriteInform } from "../components/register/WriteInform";
 import UploadDoneBtn from "../components/register/UploadDoneBtn";
 import { useState, useRef, useEffect } from "react";
 import {

@@ -6,6 +6,7 @@ const sizes = {
 };
 const styleColor = {
   blue900: "#143578",
+  blue500: "#0969DA",
   blue400: "#6F8AC3",
   blue300: "#546EA4",
   blue200: "#9CB2DF",
@@ -66,6 +67,8 @@ font-size: 18px;`,
   text300: `font-family: "S-CoreDream-5Medium";
 font-size: 16px;`,
   text200: `font-family: "S-CoreDream-3Light";
+font-size: 14px;`,
+  text200b: `font-family: "S-CoreDream-4Regular";
 font-size: 14px;`,
   text100: `font-family: "S-CoreDream-3Light";
 font-size: 12px;`,
