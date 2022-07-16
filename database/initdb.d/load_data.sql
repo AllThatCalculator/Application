@@ -5,3 +5,4 @@ INSERT INTO user_login VALUES('atc', 'atc1886');
 INSERT INTO user_login VALUES('bsa0322', 'password');
 INSERT INTO calculet_info(title, src_code, manual, description, category_main, category_sub, contributor_id) VALUES('사칙연산 계산기',LOAD_FILE('/docker-entrypoint-initdb.d/initial-data/calculet/arithmeticOperation.html'),LOAD_FILE('/docker-entrypoint-initdb.d/initial-data/calculet/arithmeticOperation.md'),'사칙연산을 하는 계산기입니다.','수학','계산','bsa0322');
 INSERT INTO calculet_statistics VALUES(1, 1, 1, 1, 1);
+INSERT INTO user_calculet VALUES(true, true, 1, 'bsa0322');

@@ -91,53 +91,25 @@ function Calculet() {
   const [statistics, setStatistics] = useState(null);
 
   /**
-   * (임시) 계산기 정보 불러오는 함수
-   * -> 백엔드 도입하면 http request로 받아올 예정
+   * 백엔드에서 계산기 정보 불러오는 함수
    */
-  // function
-  function loadCalculetObj() {
-    fetch(require("../calculets/arithmetic-operation/arithmeticOperation.md"))
-      .then((res) => res.text())
-      .then((mdCode) => {
-        setCalculetObj({
-          title: "사칙연산 계산기",
-          id: 1,
-          srcCode: srcCode,
-          contributor: "bsa0322",
-          manual: mdCode,
-          description: "사칙연산 계산기입니다.",
-        });
-        setStatistics({
-          bookmarkCnt: 10,
-          bookmarked: false,
-          likeCnt: 5,
-          liked: false,
-          reportCnt: 1,
-          viewCnt: 100,
-          calculationCnt: 10,
-          userCnt: 10,
-        });
-      });
-  }
-
-  /**
-   * 백엔드를 통해 계산기 불러오는 임시
-   */
-  async function loadCalculetObjTemp() {
+  async function loadCalculetObj() {
     try {
-      await axios
-        .get("/calculet/1")
-        .then((response) => setCalculetObj(response.data));
-    } catch {
-      console.log("에러 발생");
+      await axios.get("/calculets/1").then((response) => {
+        // console.log(response.data);
+        setCalculetObj(response.data[0]);
+        setStatistics(response.data[1]);
+      });
+    } catch (error) {
+      console.log("error" + error);
     }
   }
 
   /**
-   * (임시) 계산기 객체 불러오기
+   * 계산기 객체 불러오기
    */
   useEffect(() => {
-    setTimeout(loadCalculetObjTemp, 1000);
+    setTimeout(loadCalculetObj, 1000);
   }, []);
 
   return (
@@ -146,8 +118,7 @@ function Calculet() {
         <WrapperCol>
           {calculetObj !== null ? (
             <>
-              {console.dir(calculetObj)}
-              {/* <CalculetHeader
+              <CalculetHeader
                 title={calculetObj.title}
                 contributor={calculetObj.contributor}
                 statistics={statistics}
@@ -155,7 +126,7 @@ function Calculet() {
               <CalculetBlock
                 srcCode={calculetObj.srcCode}
                 manual={calculetObj.manual}
-              /> */}
+              />
             </>
           ) : (
             <div></div> // 로딩화면
@@ -165,7 +136,7 @@ function Calculet() {
 
       <PositionerBottom>
         <BoxCalculetBottom>
-          <Explain>자신만의 계산기를 만드세요!adasasasd</Explain>
+          <Explain>자신만의 계산기를 만드세요!</Explain>
           <StyledLink to="/register">
             <BtnBlue text="계산기 등록" icon="Upload" />
           </StyledLink>
