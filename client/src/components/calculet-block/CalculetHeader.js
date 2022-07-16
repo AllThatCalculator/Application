@@ -29,7 +29,7 @@ const StyledHr = styled.div`
   background-color: ${styles.styleColor.blue50};
 `;
 
-function CalculetHeader({ title, contributor, statistics }) {
+function CalculetHeader({ title, contributor, contributorImgSrc, statistics }) {
   /**
    * 좋아요 관련 정보
    * {int} number: 해당 계산기의 좋아요 수
@@ -152,7 +152,7 @@ function CalculetHeader({ title, contributor, statistics }) {
             <BoxIcon
               text={contributor}
               icon="PeopleCircle"
-              profile="/img/ori.png"
+              profile={contributorImgSrc}
             />
             <BoxIcon text="view" icon="EyeFill" number={statistics.viewCnt} />
           </WrapperGroup>

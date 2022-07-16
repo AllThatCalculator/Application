@@ -90,6 +90,9 @@ function Calculet() {
   // },
   const [statistics, setStatistics] = useState(null);
 
+  // 계산기 저작자 프로필 이미지
+  const [contributorImgSrc, setContributorImgSrc] = useState(null);
+
   /**
    * 백엔드에서 계산기 정보 불러오는 함수
    */
@@ -99,6 +102,7 @@ function Calculet() {
         // console.log(response.data);
         setCalculetObj(response.data[0]);
         setStatistics(response.data[1]);
+        setContributorImgSrc(response.data[0].contributorImgSrc);
       });
     } catch (error) {
       console.log("error" + error);
@@ -121,6 +125,7 @@ function Calculet() {
               <CalculetHeader
                 title={calculetObj.title}
                 contributor={calculetObj.contributor}
+                contributorImgSrc={contributorImgSrc}
                 statistics={statistics}
               />
               <CalculetBlock
