@@ -8,8 +8,8 @@ services:
       dockerfile: Dockerfile
     env_file: .env
     volumes:
-      - ./client/:/client
       - /client/node_modules
+      - ./client/:/client
     ports:
       - 3000:3000
     networks:
@@ -24,8 +24,8 @@ services:
     ports:
       - 5000:5000
     volumes:
-      - ./server/:/server
       - /server/node_modules
+      - ./server/:/server
     networks:
       - app-tier
     restart: always

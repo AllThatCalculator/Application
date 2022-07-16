@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:16-alpine3.15
 
 WORKDIR /client
 COPY . .
@@ -6,7 +6,7 @@ COPY . .
 
 # ========개발용==========
 CMD ["npm", "start"]
-
+ENV CHOKIDAR_USEPOLLING=TRUE
 # ========배포용==========
 
 # COPY package.json ./
