@@ -22,6 +22,8 @@ import {
   TransparentLayout,
 } from "../components/Layout";
 
+import axios from "axios";
+
 // 계산기 블록 배경
 const Positioner = styled.div`
   background: ${styles.styleColor.white300};
@@ -119,10 +121,23 @@ function Calculet() {
   }
 
   /**
+   * 백엔드를 통해 계산기 불러오는 임시
+   */
+  async function loadCalculetObjTemp() {
+    try {
+      await axios
+        .get("/calculet/1")
+        .then((response) => setCalculetObj(response.data));
+    } catch {
+      console.log("에러 발생");
+    }
+  }
+
+  /**
    * (임시) 계산기 객체 불러오기
    */
   useEffect(() => {
-    setTimeout(loadCalculetObj, 1000);
+    setTimeout(loadCalculetObjTemp, 1000);
   }, []);
 
   return (
@@ -131,7 +146,8 @@ function Calculet() {
         <WrapperCol>
           {calculetObj !== null ? (
             <>
-              <CalculetHeader
+              {console.dir(calculetObj)}
+              {/* <CalculetHeader
                 title={calculetObj.title}
                 contributor={calculetObj.contributor}
                 statistics={statistics}
@@ -139,7 +155,7 @@ function Calculet() {
               <CalculetBlock
                 srcCode={calculetObj.srcCode}
                 manual={calculetObj.manual}
-              />
+              /> */}
             </>
           ) : (
             <div></div> // 로딩화면
@@ -149,7 +165,7 @@ function Calculet() {
 
       <PositionerBottom>
         <BoxCalculetBottom>
-          <Explain>자신만의 계산기를 만드세요!</Explain>
+          <Explain>자신만의 계산기를 만드세요!adasasasd</Explain>
           <StyledLink to="/register">
             <BtnBlue text="계산기 등록" icon="Upload" />
           </StyledLink>
