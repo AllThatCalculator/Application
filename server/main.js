@@ -69,6 +69,9 @@ app.get("/calculets/:id", (req, res) => {
   // res.send(`calculet ${req.params.id}`);
 });
 
+// 계산기 등록
+app.post("/calculets/", (req, res) => {});
+
 /**
  * 에러 처리 미들웨어
  */
