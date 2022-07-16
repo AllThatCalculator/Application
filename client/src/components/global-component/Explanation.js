@@ -4,6 +4,7 @@ import { FlexRowLayout } from "../Layout.js";
 import styles from "../styles.js";
 import { InputBox, InputBoxLine } from "./InputBox.js";
 import SelectBox from "./SelectBox.js";
+import { StyledIcon } from "../atom-components/ButtonTemplate.js";
 
 /**
  * FlexRowLayout을 상속하는 비율 조정 컴포넌트
@@ -32,6 +33,7 @@ const Explanation = styled(FlexRowLayout)`
  * isLine: 아래 밑줄 여부
  * ratioLeft: 왼쪽 컴포넌트 비율
  * ratioRight: 오른쪽 컴포넌트 비율
+ * icon: 아이콘
  * explanation: 입력 칸의 정보에 대한 설명
  * placeholder: 인풋 칸 초기값
  * defaultValue: 인풋값
@@ -41,6 +43,7 @@ function ExplanationInputBox({
   isLine,
   ratioLeft,
   ratioRight,
+  icon,
   explanation,
   placeholder,
   defaultValue,
@@ -49,7 +52,8 @@ function ExplanationInputBox({
   return (
     <Explanation isLine={isLine}>
       <WrapperRatio ratio={ratioLeft}>
-        <SmallTitle content={explanation} />
+        {icon && <StyledIcon name={icon} />}
+        {explanation && <SmallTitle content={explanation} />}
       </WrapperRatio>
       <WrapperRatio ratio={ratioRight}>
         <InputBox
@@ -80,13 +84,15 @@ function ExplanationSelectBox({
   isLine,
   ratioLeft,
   ratioRight,
+  icon,
   explanation,
   categorys,
 }) {
   return (
     <Explanation isLine={isLine}>
       <WrapperRatio ratio={ratioLeft}>
-        <SmallTitle content={explanation} />
+        {icon && <StyledIcon name={icon} />}
+        {explanation && <SmallTitle content={explanation} />}
       </WrapperRatio>
       <WrapperRatio ratio={ratioRight}>
         {categorys.map((category, index) => (
