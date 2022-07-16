@@ -2,14 +2,14 @@ import styled from "styled-components";
 import styles from "../styles";
 import PreviewBanner from "./PreviewBanner";
 import MiddleTitle from "./MiddleTitle";
-import {
-  ExplanationCategory,
-  ExplanationEmail,
-  ExplanationInputLine,
-} from "./Explanation";
 import { OPTIONS_BIG_CATEGORY, OPTIONS_EMAIL_ADDRESS } from "./Option";
 import BigTitle from "../atom-components/BigTitle";
 import { FlexColumnLayout, ResponsiveTabletLayout } from "../Layout";
+import {
+  ExplanationEmail,
+  ExplanationInputBox,
+  ExplanationSelectBox,
+} from "../global-component/Explanation";
 
 /**
  * 정보칸 + 배너 미리보기 감싸는 스타일 정의
@@ -52,39 +52,62 @@ const InformBox = styled(FlexColumnLayout)`
  * props: 계산기에 대한 정보 state들
  */
 function WriteInform(props) {
+  // 대분류, 소분류 SelectBox 필요한 정보들
+  const categorys = [
+    {
+      options: OPTIONS_BIG_CATEGORY,
+      placeholder: "대분류",
+      selected: props.bigCategory,
+      onChange: props.changeBigCategory,
+      isLine: true,
+    },
+    {
+      options: props.smallCategoryOption,
+      placeholder: "소분류",
+      selected: props.smallCategory,
+      onChange: props.changeSmallCategory,
+      isLine: false,
+    },
+  ];
+
   return (
     <WrapperInformBanner>
       <WrapperInform>
         <BigTitle content="정보 입력하기" />
         <MiddleTitle content="계산기 정보" />
         <InformBox>
-          <ExplanationInputLine
+          <ExplanationInputBox
+            isLine={true}
+            ratioLeft="1"
+            ratioRight="2.8"
             explanation="계산기 이름"
             placeholder="ex. 사칙연산 계산기"
             defaultValue={props.title}
             onChange={props.changeTitle}
           />
-          <ExplanationInputLine
+          <ExplanationInputBox
+            isLine={true}
+            ratioLeft="1"
+            ratioRight="2.8"
             explanation="계산기에 대한 간단한 설명"
             placeholder="ex. 사칙연산을 하는 계산기입니다."
             defaultValue={props.description}
             onChange={props.changeDescription}
           />
-          <ExplanationCategory
+          <ExplanationSelectBox
+            isLine={false}
+            ratioLeft="1"
+            ratioRight="2.8"
             explanation="카테고리"
-            bigCategory={props.bigCategory}
-            bigPlaceholder="대분류"
-            bigCategoryOptions={OPTIONS_BIG_CATEGORY}
-            onChangeBigCategory={props.changeBigCategory}
-            smallCategory={props.smallCategory}
-            smallPlaceholder="소분류"
-            smallCategoryOptions={props.smallCategoryOption}
-            onChangeSmallCategory={props.changeSmallCategory}
+            categorys={categorys}
           />
         </InformBox>
         <MiddleTitle content="제작자 정보" />
         <InformBox>
           <ExplanationEmail
+            isLine={false}
+            ratioLeft="1"
+            ratioRight="2.8"
             address={props.address}
             onChangeAddress={props.changeAddress}
             writedDomain={props.writedDomain}
