@@ -7,6 +7,7 @@ import { BtnWhite } from "../components/atom-components/ButtonTemplate";
 import CategoryBar from "../components/global-component/CategoryBar";
 import { useState } from "react";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 // 상단 고정
 const Positioner = styled.div`
@@ -32,10 +33,11 @@ const HeaderContents = styled.div`
 /**
  *  * 헤더 contents
  * -> 카테고리바, 로고, 검색창, 로그인 버튼
- * @param {function} param0
+ * @param {function, function} param0
  * onIsOpen : 버튼 이벤트 (카테고리바 이벤트)
+ * onLogin : 로그인 페이지로 이동 이벤트 (로그인 이벤트)
  */
-function Contents({ onIsOpen }) {
+function Contents({ onIsOpen, onLogin }) {
   return (
     <WhiteBackground>
       <HeaderContents>
@@ -49,7 +51,7 @@ function Contents({ onIsOpen }) {
       </HeaderContents>
       <HeaderContents>
         <BoxSearchInput text="계산하고 싶은 것을 검색하세요." />
-        <BtnWhite text="로그인" icon="Person" />
+        <BtnWhite text="로그인" icon="Person" onClick={onLogin} />
       </HeaderContents>
     </WhiteBackground>
   );
@@ -106,10 +108,17 @@ function Header() {
   useEffect(() => {
     window.addEventListener("scroll", updateScroll);
   });
+
+  /**
+   * 로그인 페이지로 이동 이벤트
+   */
+  function onLogin() {
+    window.location.href = "/login";
+  }
   return (
     <>
       <Positioner isChange={isChange}>
-        <Contents onIsOpen={onIsOpen} />
+        <Contents onIsOpen={onIsOpen} onLogin={onLogin} />
       </Positioner>
       <CategoryBar contents={contentsCategory} aniMode={aniMode}></CategoryBar>
     </>
