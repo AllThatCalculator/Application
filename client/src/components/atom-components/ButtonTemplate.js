@@ -15,6 +15,10 @@ const StyledFontButtonW = styled.div`
 const StyledFontButtonB = styled.div`
   ${styles.sytleText.buttonBlue}
 `;
+// Text200b
+const StyledFont200b = styled.div`
+  ${styles.sytleText.text200b}
+`;
 //========================================================
 // 스타일드 아이콘
 const StyledIcon = (props) => {
@@ -52,6 +56,7 @@ const StyledButton = styled.button`
   flex-direction: row;
   min-width: max-content;
   align-items: center;
+  justify-content: center;
   gap: ${styles.styleLayout.basic700};
 
   padding: ${styles.styleLayout.basic100};
@@ -101,6 +106,21 @@ const StyledBtnTrans = styled(StyledBtnGray)`
   &:hover {
     background: ${styles.styleColor.blue30};
   }
+`;
+// 남색 버튼
+const StyledBtnIndigo = styled(StyledButton)`
+  ${styles.styleEffect.opacity100};
+  background: ${styles.styleColor.blue900};
+  color: ${styles.styleColor.white300};
+  &:hover {
+    background-color: hsla(220, 77%, 23%, 100%);
+  }
+`;
+// 기본 디폴트 스타일 제거 버튼
+const StyledDefaultButton = styled(StyledButton)`
+  padding: ${styles.styleLayout.basic50};
+  background: transparent;
+  color: ${styles.styleColor.blue500};
 `;
 //========================================================
 
@@ -217,6 +237,38 @@ function BtnTrans({ text, icon, onClick }) {
     </StyledBtnTrans>
   );
 }
+/**
+ * 남색 버튼 반환하는 함수
+ *
+ * @param {string, string, function}
+ * text : 버튼에 들어갈 내용
+ * icon : 아이콘 넣기 -> 아이콘 이름 작성 || 아이콘 안 넣기 -> 인자 없음
+ * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ *
+ */
+function BtnIndigo({ text, icon, onClick }) {
+  return (
+    <StyledBtnIndigo id={text} onClick={onClick}>
+      {icon && <StyledIcon name={icon} />}
+      <StyledFont200b>{text}</StyledFont200b>
+    </StyledBtnIndigo>
+  );
+}
+/**
+ * 글씨만 있는 버튼 반환하는 함수
+ *
+ * @param {string, function}
+ * text : 버튼에 들어갈 내용
+ * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ *
+ */
+function BtnText({ text, onClick }) {
+  return (
+    <StyledDefaultButton id={text} onClick={onClick}>
+      <StyledFont100>{text}</StyledFont100>
+    </StyledDefaultButton>
+  );
+}
 export {
   StyledButton,
   StyledIcon,
@@ -226,4 +278,6 @@ export {
   BtnGray,
   BtnTransToggle,
   BtnTrans,
+  BtnIndigo,
+  BtnText,
 };

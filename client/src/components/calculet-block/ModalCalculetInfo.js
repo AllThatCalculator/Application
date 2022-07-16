@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { StyledIcon, StyledProfileImgBig } from "../atom-components/BoxIcon";
+import { IconColorBox, StyledProfileImgBig } from "../atom-components/BoxIcon";
 import StyledScrollbar from "../atom-components/StyledScrollbar";
 import styles from "../styles";
 import { FlexColumnLayout, FlexRowLayout } from "../Layout.js";
@@ -80,31 +80,7 @@ const StyledFont = styled.div`
 const StyledIndent = styled(StyledFont)`
   margin-left: 2.5em;
 `;
-/**
- * 아이콘 색 바꾸기
- * - blue400 || green100
- */
-const StyledColor = styled(FlexRowLayout)`
-  color: ${(props) =>
-    props.color === "blue400"
-      ? `${styles.styleColor.blue400}`
-      : `${styles.styleColor.green100}`};
-`;
-/**
- * 색을 입힌 아이콘
- *
- * @param {string, string} param0
- *
- * icon : 아이콘 이름
- * color : 아이콘 색
- */
-function IconBox({ icon, color }) {
-  return (
-    <StyledColor color={color}>
-      <StyledIcon name={icon} />
-    </StyledColor>
-  );
-}
+
 /**
  * 정보 이름 + 정보에 맞는 내용 반환
  * -> ex. 누적 연산 수 1,000,000
@@ -123,7 +99,7 @@ function InfoBox({ explain, contents, icon, color }) {
         {explain}
       </StyledFont>
       <FlexRowLayout gap="10px">
-        {icon && <IconBox icon={icon} color={color} />}
+        {icon && <IconColorBox icon={icon} color={color} />}
         <StyledFont font="font100">{contents}</StyledFont>
       </FlexRowLayout>
     </FlexColumnLayout>
@@ -149,7 +125,7 @@ function UpdateBox({ explain, contents, icon, color }) {
       {contents.map((conts, index) => (
         <FlexColumnLayout key={index} gap="3px">
           <FlexRowLayout gap="10px">
-            <IconBox icon={icon} color={color} />
+            <IconColorBox icon={icon} color={color} />
             <StyledFont font="font100">{conts.update_date}</StyledFont>
           </FlexRowLayout>
           {conts.message.map((cont, idx) => (

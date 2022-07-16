@@ -129,4 +129,4 @@ function WriteInform(props) {
   );
 }
 
-export default WriteInform;
+export { WriteInform, InformBox };
