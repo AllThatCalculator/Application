@@ -195,7 +195,7 @@ function Register() {
           description={description}
           bigCategory={bigCategory}
           smallCategory={smallCategory}
-          email={email}
+          email={address}
           htmlScript={htmlScript}
           markdown={markdown}
         />

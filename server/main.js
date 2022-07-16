@@ -1,9 +1,13 @@
 const express = require("express");
+const mariadb = require("./config/database");
+const bodyParser = require("body-parser");
+
 const app = express();
 
 const port = 5000;
 
-const mariadb = require("./config/database");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
   res.send("this is from backend server");
@@ -21,7 +25,7 @@ app.get("/calculets/:id", (req, res) => {
   const userCalculetQuery = `select liked, bookmarked from user_calculet where calculet_id=${req.params.id};`;
 
   // 제작자 사진
-  const userProfile = `select profile_img from user_info where email = (select email from calculet_info where id=${req.params.id});`;
+  const userProfile = `select profile_img from user_info where id = (select contributor_id from calculet_info where id=${req.params.id});`;
 
   mariadb.query(
     calculetQuery + statisticsQuery + userCalculetQuery + userProfile,
@@ -57,23 +61,26 @@ app.get("/calculets/:id", (req, res) => {
           description: calculetInfo.description,
         };
 
-        // 통계 객체로 묶기
-        const statistic = {
-          bookmarkCnt: statistics.bookmark_cnt,
-          bookmarked: userCalculet.bookmarked,
-          likeCnt: statistics.like_cnt,
-          liked: userCalculet.liked,
-          reportCnt: statistics.report_cnt,
-          viewCnt: statistics.view_cnt,
-        };
+        if (statistics) {
+          // 통계 객체로 묶기
+          const statistic = {
+            bookmarkCnt: statistics.bookmark_cnt,
+            bookmarked: userCalculet.bookmarked,
+            likeCnt: statistics.like_cnt,
+            liked: userCalculet.liked,
+            reportCnt: statistics.report_cnt,
+            viewCnt: statistics.view_cnt,
+          };
+          console.log(statistic);
 
-        console.log(statistic);
+          // 계산기 객체와 통계 객체 배열로 묶기
+          const result = [calculet, statistic];
 
-        // 계산기 객체와 통계 객체 배열로 묶기
-        const result = [calculet, statistic];
-
-        // 프론트엔드에 응답 보내기
-        res.send(result);
+          // 프론트엔드에 응답 보내기
+          res.send(result);
+        } else {
+          res.send([calculet]);
+        }
       } else {
         console.log(`error:${err}`);
         res.send(err);
@@ -84,7 +91,40 @@ app.get("/calculets/:id", (req, res) => {
 });
 
 // 계산기 등록
-app.post("/calculets/", (req, res) => {});
+app.post("/calculets", (req, res) => {
+  const sql =
+    "INSERT INTO calculet_info(title, src_code, manual, description, category_main, category_sub, contributor_id) VALUES(?,?,?,?,?,?,?);";
+
+  /**
+   * - 계산기 이름 `title`
+   * - 계산기 코드 `src_code`
+   * - 계산기 설명 마크다운 `manual`
+   * - 계산기 한 줄 설명 `description`
+   * - 카테고리 대분류 `category_main`
+   * - 카테고리 소분류 `category_sub`
+   * - 제작자 이메일 `contributor_email`
+   */
+  const calculet = [
+    req.body.title,
+    req.body.htmlScript,
+    req.body.markdown,
+    req.body.description,
+    req.body.bigCategory,
+    req.body.smallCategory,
+    req.body.email,
+  ];
+
+  console.log(calculet);
+
+  mariadb.query(sql, calculet, (err, rows, fields) => {
+    if (!err) {
+      res.send(rows);
+      console.log(rows);
+    } else {
+      console.log(err);
+    }
+  });
+});
 
 /**
  * 에러 처리 미들웨어
