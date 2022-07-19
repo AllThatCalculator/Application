@@ -4,6 +4,7 @@ import { StyledIcon } from "../atom-components/ButtonTemplate.js";
 import styles from "../styles.js";
 import { FlexRowLayout, FlexColumnLayout } from "../Layout";
 import { InputBox } from "./InputBox.js";
+import StyledScrollbar from "../atom-components/StyledScrollbar.js";
 
 /**
  * select 박스와 option 박스를 감싸는 스타일 정의
@@ -33,21 +34,32 @@ const OptionWrapper = styled.div`
   display: ${(props) => (props.isActive ? `block` : `none`)};
   padding-top: ${styles.styleLayout.basic50};
   margin-top: ${styles.styleLayout.basic900};
-  width: 97%;
+  min-width: 100%;
+  max-width: auto;
+  ${styles.styleEffect.opacity300};
+
   position: absolute;
   z-index: 9;
 `;
-
 /**
  * option box 스타일 정의
+ * option + scrollBar
  */
-const StyledOptionBox = styled(FlexColumnLayout)`
+const StyledOptionBox = styled(FlexRowLayout)`
   background: ${styles.styleColor.white300};
   border: 1px solid ${styles.styleColor.blue50};
-  ${styles.styleEffect.opacity300};
   border-radius: 7px;
-`;
 
+  max-height: 200px;
+  padding: 1px 1px 1px 0;
+  overflow: auto;
+`;
+/**
+ * option item box 스타일 정의
+ */
+const StyledOptionItemBox = styled(FlexColumnLayout)`
+  width: 100%;
+`;
 /**
  * option item 스타일 정의
  */
@@ -186,16 +198,20 @@ function SelectBox({ options, placeholder, selected, onChange, isLine }) {
       </StyledSelectBox>
       <OptionWrapper isActive={isActive}>
         <StyledOptionBox>
-          {options &&
-            options.map((option) => (
-              <Option
-                value={option.value}
-                name={option.name}
-                key={option.value}
-                item={item}
-                onClick={onSelectItem}
-              />
-            ))}
+          <StyledScrollbar>
+            <StyledOptionItemBox>
+              {options &&
+                options.map((option) => (
+                  <Option
+                    value={option.value}
+                    name={option.name}
+                    key={option.value}
+                    item={item}
+                    onClick={onSelectItem}
+                  />
+                ))}
+            </StyledOptionItemBox>
+          </StyledScrollbar>
         </StyledOptionBox>
       </OptionWrapper>
     </Wrapper>
