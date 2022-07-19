@@ -4,6 +4,7 @@ import Calculet from "./pages/Calculet";
 import Register from "./pages/Register";
 import BookmarkBar from "./components/global-component/BookmarkBar";
 import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 
 const AppRouter = () => {
   return (
@@ -13,6 +14,7 @@ const AppRouter = () => {
         <Route path="/" element={<Calculet />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signUp" element={<SignUp />} />
       </Routes>
       <BookmarkBar />
     </BrowserRouter>
