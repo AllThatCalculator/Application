@@ -54,26 +54,28 @@ router.get("/:id", (req, res) => {
         const calculetInfo = rows[0][0];
         const statistics = rows[1][0];
         let userCalculet = rows[2][0];
-        const contributorImg = rows[3][0];
-
-        // 소스 코드 buffer 형태를 string 으로 변환
-        const srcCode = bufferToString(calculetInfo.src_code);
-
-        // 마크다운 buffer 형태를 string 으로 변환
-        const manual = bufferToString(calculetInfo.manual);
-
-        // 제작자 이미지를 base64string 으로 변환 + src 생성
-        const contributorImgSrc = bufferToImageSrc(contributorImg.profile_img);
+        const contributor = rows[3][0];
 
         // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
-        userCalculet = {
-          bookmarked: false,
-          liked: false,
-        };
+        if (!userCalculet) {
+          userCalculet = {
+            bookmarked: false,
+            liked: false,
+          };
+        }
 
         // 계산기 객체로 묶기
         let calculet = null;
         if (calculetInfo) {
+          // 소스 코드 buffer 형태를 string 으로 변환
+          const srcCode = bufferToString(calculetInfo.src_code);
+
+          // 마크다운 buffer 형태를 string 으로 변환
+          const manual = bufferToString(calculetInfo.manual);
+
+          // 제작자 이미지를 base64string 으로 변환 + src 생성
+          const contributorImgSrc = bufferToImageSrc(contributor.profile_img);
+
           calculet = {
             id: calculetInfo.id,
             contributorImgSrc: contributorImgSrc,
@@ -98,11 +100,13 @@ router.get("/:id", (req, res) => {
           };
         }
 
-        // 계산기 객체와 통계 객체 배열로 묶기
-        const result = [calculet, statistic];
-
-        // 프론트엔드에 응답 보내기
-        res.send(result);
+        // 계산기 잘 불러왔는지 확인
+        if (calculet === null || statistic === null) {
+          res.status(404).send("calculet was not found");
+        } else {
+          const result = [calculet, statistic];
+          res.send(result);
+        }
       } else {
         console.log(`error:${err}`);
         res.send(err);
