@@ -113,7 +113,7 @@ const StyledBtnIndigo = styled(StyledButton)`
   background: ${styles.styleColor.blue900};
   color: ${styles.styleColor.white300};
   &:hover {
-    background-color: hsla(220, 77%, 23%, 100%);
+    background: ${styles.styleColor.blue950};
   }
 `;
 // 기본 디폴트 스타일 제거 버튼

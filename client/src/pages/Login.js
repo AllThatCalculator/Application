@@ -7,117 +7,56 @@ import {
   BtnIndigo,
   BtnText,
 } from "../components/atom-components/ButtonTemplate";
-import { ExplanationInputBox } from "../components/global-component/Explanation";
 import SmallTitle from "../components/global-component/SmallTitle";
 import {
+  ContentLayout,
   FlexColumnLayout,
   FlexRowLayout,
   White300Layout,
 } from "../components/Layout";
-import { InformBox } from "../components/register/WriteInform";
-
+import WriteInform from "../components/login.js/WriteInform";
 /**
  * 흰색 뒷 배경
  */
-const StyledWhite300Layout = styled(White300Layout)`
-  position: absolute;
+const StyledWhite300 = styled(White300Layout)`
+  position: fixed;
   top: 60px;
   bottom: 0;
-  display: flex;
-  justify-content: center;
-`;
-
-/**
- * 경계선 있는 박스 내용물을 가운데 정렬
- */
-const BoxBorderCenter = styled(BoxBorder)`
-  text-align: center;
+  z-index: -1;
 `;
 /**
  * 로그인 크기 346px
  * 윗부분에 패딩을 주기 위한 스타일 정의
  */
-const WrapperPad = styled(FlexColumnLayout)`
+const WrapperPad = styled(ContentLayout)`
+  flex-direction: column;
   width: 346px;
-  padding-top: 50px;
+  padding: 50px 0px;
+  gap: ${(props) => props.gap};
 `;
 /**
- * 비밀번호 찾기 정렬 스타일 정의
+ * 로그인하기 버튼 양쪽으로 꽉 차게 스타일 정의
+ */
+const WrapperStretch = styled(FlexColumnLayout)`
+  width: 100%;
+`;
+/**
+ * 비밀번호 찾기 버튼 정렬 스타일 정의
  */
 const WrapperFind = styled(FlexRowLayout)`
   justify-content: flex-end;
 `;
-/**
- * 가운데 정렬 스타일 정의
- */
-const WrapperCenter = styled(FlexRowLayout)`
-  justify-content: center;
-`;
-/**
- * 이메일, 비밀번호와 비밀번호 찾기 반환
- *
- * @param {string, string, funtion, funtion} param0
- * email: 입력된 이메일
- * password : 입력된 비밀번호
- * changeEmail : 이메일 입력 이벤트
- * changePassword : 비밀번호 입력 이벤트
- */
-function Inform({ email, password, changeEmail, changePassword }) {
-  return (
-    <>
-      <BoxTitle content="로그인" />
-      <FlexColumnLayout gap="5px">
-        <InformBox>
-          <ExplanationInputBox
-            isLine={true}
-            ratioLeft="1"
-            ratioRight="11"
-            icon="PersonFill"
-            iconColor="blue900"
-            placeholder="이메일"
-            defaultValue={email}
-            onChange={changeEmail}
-          />
-          <ExplanationInputBox
-            secureTextEntry={true}
-            isLine={false}
-            ratioLeft="1"
-            ratioRight="11"
-            icon="LockFill"
-            iconColor="blue900"
-            placeholder="비밀번호"
-            defaultValue={password}
-            onChange={changePassword}
-          />
-        </InformBox>
-        <WrapperFind>
-          <BtnText text="비밀번호 찾기" />
-        </WrapperFind>
-      </FlexColumnLayout>
-      <BtnIndigo text="로그인하기" />
-    </>
-  );
-}
+
 /**
  * 회원가입하기 안내문
  */
-function SignUp() {
+function Guide({ guide, lead }) {
   return (
-    <WrapperCenter gap="5px">
-      <SmallTitle content="계정이 없으신가요?" />
-      <BtnText text="회원가입하기" />
-    </WrapperCenter>
+    <FlexRowLayout gap="5px">
+      <SmallTitle content={guide} />
+      <BtnText text={lead} />
+    </FlexRowLayout>
   );
-}
-
-/**
- * 경계선 있는 박스에 감싸서 반환
- * @param {string, funtion} param0
- * gap : 갭
- * content : 감쌀 컴포넌트
- */
-function BoxBorderContent({ gap, content }) {
-  return <BoxBorderCenter gap={gap}>{content}</BoxBorderCenter>;
 }
 
 /**
@@ -142,25 +81,32 @@ function Login() {
     setPassword(event.target.value);
   }
   return (
-    <StyledWhite300Layout>
+    <>
+      <StyledWhite300 />
       <WrapperPad gap="20px">
         <StyledImg src={"/ATCLogoBlueImgText.png"} width="214px" />
-        <BoxBorderContent
-          gap="20px"
-          content={
-            <Inform
+        <BoxBorder gap="20px">
+          <BoxTitle content="로그인" />
+          <WrapperStretch gap="5px">
+            <WriteInform
               email={email}
-              changeEmail={changeEmail}
               password={password}
+              changeEmail={changeEmail}
               changePassword={changePassword}
-              // 비밀번호 찾기 onClick
-              // 로그인하기 onClick
             />
-          }
-        />
-        <BoxBorderContent content={<SignUp />} />
+            <WrapperFind>
+              <BtnText text="비밀번호 찾기" />
+            </WrapperFind>
+          </WrapperStretch>
+          <WrapperStretch>
+            <BtnIndigo text="로그인하기" />
+          </WrapperStretch>
+        </BoxBorder>
+        <BoxBorder>
+          <Guide guide="계정이 없으신가요?" lead="회원가입하기" />
+        </BoxBorder>
       </WrapperPad>
-    </StyledWhite300Layout>
+    </>
   );
 }
 export default Login;

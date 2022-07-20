@@ -5,6 +5,7 @@ const sizes = {
   phone: `width:360px`,
 };
 const styleColor = {
+  blue950: "#082868",
   blue900: "#143578",
   blue500: "#0969DA",
   blue400: "#6F8AC3",

@@ -75,15 +75,11 @@ function BoxIcon({ text, icon, number, profile }) {
 }
 /**
  * 아이콘 색 바꾸기
+ * props.color
  * - blue400 || blue900 || green100
  */
 const StyledColor = styled(FlexRowLayout)`
-  color: ${(props) =>
-    props.color === "blue400"
-      ? `${styles.styleColor.blue400}`
-      : props.color === "blue900"
-      ? `${styles.styleColor.blue900}`
-      : `${styles.styleColor.green100}`};
+  color: ${(props) => props.color};
 `;
 /**
  * 색을 입힌 아이콘
@@ -94,6 +90,7 @@ const StyledColor = styled(FlexRowLayout)`
  * color : 아이콘 색
  */
 function IconColorBox({ icon, color }) {
+  console.log(color);
   return (
     <StyledColor color={color}>
       <StyledIcon name={icon} />
