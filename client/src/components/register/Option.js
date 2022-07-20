@@ -1,5 +1,5 @@
 // 카테고리 대분류 옵션
-const OPTIONS_BIG_CATEGORY = [
+const OPTIONS_CATEGORY_MAIN = [
   { value: "math", name: "수학" },
   { value: "science", name: "과학-공학" },
   { value: "social", name: "경제-사회" },
@@ -8,7 +8,7 @@ const OPTIONS_BIG_CATEGORY = [
 ];
 
 // 카테고리 소분류 옵션
-const OPTIONS_SMALL_CATEGORY = [
+const OPTIONS_CATEGORY_SUB = [
   {
     big: "math",
     options: [
@@ -48,4 +48,4 @@ const OPTIONS_EMAIL_ADDRESS = [
   { value: "ewhain", name: "ewhain.net" },
 ];
 
-export { OPTIONS_BIG_CATEGORY, OPTIONS_SMALL_CATEGORY, OPTIONS_EMAIL_ADDRESS };
+export { OPTIONS_CATEGORY_MAIN, OPTIONS_CATEGORY_SUB, OPTIONS_EMAIL_ADDRESS };

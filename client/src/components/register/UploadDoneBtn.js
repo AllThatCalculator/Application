@@ -17,13 +17,6 @@ const Wrapper = styled(FlexColumnLayout)`
  * props: DB로 넘겨야 하는 계산기 관련 정보들
  */
 function UploadDoneBtn(props) {
-  /**
-   * (임시) console에 정보 찍는 함수
-   */
-  function onClick() {
-    console.log(props);
-  }
-
   async function registerCalculet() {
     try {
       await axios.post("/calculets/", props).then((response) => {

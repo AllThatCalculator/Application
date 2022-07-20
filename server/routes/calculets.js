@@ -123,11 +123,11 @@ router.post("/", (req, res) => {
    */
   const calculet = [
     req.body.title,
-    req.body.htmlScript,
-    req.body.markdown,
+    req.body.srcCode,
+    req.body.manual,
     req.body.description,
-    req.body.bigCategory,
-    req.body.smallCategory,
+    req.body.categoryMain,
+    req.body.categorySub,
     req.body.email,
   ];
 
