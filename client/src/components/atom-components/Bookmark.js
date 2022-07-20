@@ -28,7 +28,7 @@ function Bookmark({ info }) {
   return (
     <Positioner>
       {info.map((conts, index) => (
-        <StyledLink to={"/calculet/" + conts.id} key={index}>
+        <StyledLink to={"/" + conts.id} key={index}>
           {conts.title}
         </StyledLink>
       ))}

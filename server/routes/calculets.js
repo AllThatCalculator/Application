@@ -109,6 +109,7 @@ router.get("/:id", (req, res) => {
  * 계산기 등록하는 post 요청
  */
 router.post("/", (req, res) => {
+  // 계산기 정보 삽입문
   const sql =
     "INSERT INTO calculet_info(title, src_code, manual, description, category_main, category_sub, contributor_id) VALUES(?,?,?,?,?,?,?);";
 

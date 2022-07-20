@@ -196,7 +196,7 @@ function Register() {
           categoryMain={categoryMain}
           categorySub={categorySub}
           email={address}
-          srcCode={srcCode}
+          srcCode={srcCode + "<style>*{margin:0px;}</style>"}
           manual={manual}
         />
       </RegisterLayout>

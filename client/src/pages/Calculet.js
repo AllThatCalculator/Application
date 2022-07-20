@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import CalculetBlock from "../components/calculet-block/CalculetBlock";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styles from "../components/styles";
 import {
   BtnWhite,
@@ -93,12 +93,20 @@ function Calculet() {
   // 계산기 저작자 프로필 이미지
   const [contributorImgSrc, setContributorImgSrc] = useState(null);
 
+  // 현재 페이지에 로딩할 계산기 id
+  let { id } = useParams();
+
+  // id 없다면 초기화 (메인 페이지)
+  if (id === undefined) {
+    id = 1;
+  }
+
   /**
    * 백엔드에서 계산기 정보 불러오는 함수
    */
   async function loadCalculetObj() {
     try {
-      await axios.get("/calculets/1").then((response) => {
+      await axios.get(`/calculets/${id}`).then((response) => {
         // console.log(response.data);
         setCalculetObj(response.data[0]);
         setStatistics(response.data[1]);
@@ -114,7 +122,7 @@ function Calculet() {
    */
   useEffect(() => {
     setTimeout(loadCalculetObj, 1000);
-  }, []);
+  }, [id]);
 
   return (
     <>
