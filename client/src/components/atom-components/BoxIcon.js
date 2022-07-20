@@ -76,7 +76,7 @@ function BoxIcon({ text, icon, number, profile }) {
 /**
  * 아이콘 색 바꾸기
  * props.color
- * - blue400 || blue900 || green100
+ * -> {styles.styleColor.blue400}
  */
 const StyledColor = styled(FlexRowLayout)`
   color: ${(props) => props.color};
@@ -90,7 +90,6 @@ const StyledColor = styled(FlexRowLayout)`
  * color : 아이콘 색
  */
 function IconColorBox({ icon, color }) {
-  console.log(color);
   return (
     <StyledColor color={color}>
       <StyledIcon name={icon} />
