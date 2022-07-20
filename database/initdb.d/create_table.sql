@@ -51,3 +51,7 @@ ALTER TABLE calculet_statistics ADD CONSTRAINT FOREIGN KEY (calculet_id) REFEREN
 ALTER TABLE user_calculet ADD CONSTRAINT FOREIGN KEY (calculet_id) REFERENCES calculet_info(id);
 ALTER TABLE user_calculet ADD CONSTRAINT FOREIGN KEY (user_id) REFERENCES user_info(id);
 ALTER TABLE user_login ADD CONSTRAINT FOREIGN KEY (user_id) REFERENCES user_info(id);
+
+CREATE TRIGGER after_calculet_info_insert AFTER INSERT ON calculet_info 
+FOR EACH ROW
+INSERT INTO calculet_statistics(calculet_id) VALUES(new.id);

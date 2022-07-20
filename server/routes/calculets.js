@@ -53,7 +53,7 @@ router.get("/:id", (req, res) => {
       if (!err) {
         const calculetInfo = rows[0][0];
         const statistics = rows[1][0];
-        const userCalculet = rows[2][0];
+        let userCalculet = rows[2][0];
         const contributorImg = rows[3][0];
 
         // 소스 코드 buffer 형태를 string 으로 변환
@@ -64,6 +64,12 @@ router.get("/:id", (req, res) => {
 
         // 제작자 이미지를 base64string 으로 변환 + src 생성
         const contributorImgSrc = bufferToImageSrc(contributorImg.profile_img);
+
+        // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
+        userCalculet = {
+          bookmarked: false,
+          liked: false,
+        };
 
         // 계산기 객체로 묶기
         let calculet = null;
@@ -81,7 +87,7 @@ router.get("/:id", (req, res) => {
 
         // 통계 객체로 묶기
         let statistic = null;
-        if (statistics) {
+        if (statistics && userCalculet) {
           statistic = {
             bookmarkCnt: statistics.bookmark_cnt,
             bookmarked: userCalculet.bookmarked,
