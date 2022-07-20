@@ -205,14 +205,14 @@ function RightBoxLog({ info }) {
               explain="등록일"
               contents={info.birthday}
               icon="Check2Circle"
-              color="blue400"
+              color={styles.styleColor.blue400}
             />
           </PositionerBorderUnder>
           <UpdateBox
             explain="업데이트"
             contents={info.update_log}
             icon="Circle"
-            color="green100"
+            color={styles.styleColor.green100}
           />
         </PositionerColGap>
       </StyledScrollbar>

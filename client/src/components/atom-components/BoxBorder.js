@@ -11,5 +11,7 @@ const BoxBorder = styled(FlexColumnLayout)`
   padding: ${styles.styleLayout.basic300};
   border: 1px solid ${styles.styleColor.blue50};
   border-radius: 7px;
+
+  align-items: center;
 `;
 export { BoxBorder };
