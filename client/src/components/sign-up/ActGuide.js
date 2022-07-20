@@ -3,9 +3,13 @@ import SmallTitle from "../global-component/SmallTitle";
 import { FlexRowLayout } from "../Layout";
 
 /**
- * 가이드에 따라 리드
+ * 사용자가 특정 수행을 할 수 있도록 안내하는 컴포넌트
+ *
+ * @param {string, string} param0
+ * guide : 특정 수행 내용을 안내
+ * lead : 사용자가 할 특정 수행 내용
  */
-function Guide({ guide, lead }) {
+function ActGuide({ guide, lead }) {
   return (
     <FlexRowLayout gap="5px">
       <SmallTitle content={guide} />
@@ -13,4 +17,4 @@ function Guide({ guide, lead }) {
     </FlexRowLayout>
   );
 }
-export default Guide;
+export default ActGuide;

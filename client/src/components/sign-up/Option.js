@@ -8,15 +8,15 @@ const OPTIONS_SEX = [
 /**
  * 생년월일 옵션 - 년도 1930~2022
  */
-const OPTIONS_YEAR = optionsFillArray(1930, 2022);
+const OPTIONS_YEAR = fillOptionsList(1930, 2022);
 /**
  * 생년월일 옵션 - 월 1~12
  */
-const OPTIONS_MONTH = optionsFillArray(1, 12);
+const OPTIONS_MONTH = fillOptionsList(1, 12);
 /**
  * 생년월일 옵션 - 일 1~31
  */
-const OPTIONS_DATE = optionsFillArray(1, 31);
+const OPTIONS_DATE = fillOptionsList(1, 31);
 /**
  * start ~ end 만큼 연속된 값으로 옵션 채운 array 반환 함수
  *
@@ -24,7 +24,7 @@ const OPTIONS_DATE = optionsFillArray(1, 31);
  * start : 처음 숫자
  * end : 끝 숫자
  */
-function optionsFillArray(start, end) {
+function fillOptionsList(start, end) {
   const result = [];
   for (let i = start; i <= end; i++) {
     const num = i.toString();

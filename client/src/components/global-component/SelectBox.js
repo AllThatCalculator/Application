@@ -45,14 +45,13 @@ const OptionWrapper = styled.div`
  * option box 스타일 정의
  * option + scrollBar
  */
-const StyledOptionBox = styled(FlexRowLayout)`
+const StyledOptionBox = styled(StyledScrollbar)`
   background: ${styles.styleColor.white300};
   border: 1px solid ${styles.styleColor.blue50};
   border-radius: 7px;
 
   max-height: 200px;
   padding: 1px 1px 1px 0;
-  overflow: auto;
 `;
 /**
  * option item box 스타일 정의
@@ -198,20 +197,18 @@ function SelectBox({ options, placeholder, selected, onChange, isLine }) {
       </StyledSelectBox>
       <OptionWrapper isActive={isActive}>
         <StyledOptionBox>
-          <StyledScrollbar>
-            <StyledOptionItemBox>
-              {options &&
-                options.map((option) => (
-                  <Option
-                    value={option.value}
-                    name={option.name}
-                    key={option.value}
-                    item={item}
-                    onClick={onSelectItem}
-                  />
-                ))}
-            </StyledOptionItemBox>
-          </StyledScrollbar>
+          <StyledOptionItemBox>
+            {options &&
+              options.map((option) => (
+                <Option
+                  value={option.value}
+                  name={option.name}
+                  key={option.value}
+                  item={item}
+                  onClick={onSelectItem}
+                />
+              ))}
+          </StyledOptionItemBox>
         </StyledOptionBox>
       </OptionWrapper>
     </Wrapper>

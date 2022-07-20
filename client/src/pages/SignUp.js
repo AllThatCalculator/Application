@@ -19,7 +19,7 @@ import { OPTIONS_EMAIL_ADDRESS } from "../components/register/Option";
 import ProfileChange from "../components/sign-up/ProfileChange";
 import WriteInformFirst from "../components/sign-up/WriteInformFirst";
 import WriteInformSecond from "../components/sign-up/WriteInformSecond";
-import Guide from "../components/sign-up/Guide";
+import ActGuide from "../components/sign-up/ActGuide";
 /**
  * 흰색 뒷 배경
  */
@@ -261,7 +261,7 @@ function SignUp() {
           </WrapperStretch>
         </StyledBorder>
         <StyledBorder>
-          <Guide guide="이미 계정이 있으신가요?" lead="로그인하기" />
+          <ActGuide guide="이미 계정이 있으신가요?" lead="로그인하기" />
         </StyledBorder>
       </WrapperPad>
     </>
