@@ -35,10 +35,12 @@ const StyledInputLine = styled(StyledInput)`
  * defaultValue: 입력값
  * onChange: 입력값 가져오기 위한 함수
  * disabled: 입력칸 활성화 여부
+ * type : 입력값 노출 여부 타입 ("password"이면 노출 안 함)
  */
-function InputBox({ placeholder, defaultValue, onChange, disabled }) {
+function InputBox({ placeholder, defaultValue, onChange, disabled, type }) {
   return (
     <StyledInput
+      type={type}
       placeholder={placeholder}
       defaultValue={defaultValue}
       onChange={onChange}

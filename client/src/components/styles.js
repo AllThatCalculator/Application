@@ -33,6 +33,7 @@ const styleColor = {
   black25: { color: "#BEBEBE", opacity: 0.25 },
   gray100: "#5E5E5E",
   gray50: "#929292BF",
+  red500: "#DB0918",
 };
 const styleLayout = {
   basic25: "1px",

@@ -49,6 +49,7 @@ function ExplanationInputBox({
   placeholder,
   defaultValue,
   onChange,
+  type,
 }) {
   return (
     <Explanation isLine={isLine}>
@@ -58,6 +59,7 @@ function ExplanationInputBox({
       </WrapperRatio>
       <WrapperRatio ratio={ratioRight}>
         <InputBox
+          type={type}
           placeholder={placeholder}
           defaultValue={defaultValue}
           onChange={onChange}
