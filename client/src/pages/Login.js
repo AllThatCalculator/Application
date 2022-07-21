@@ -8,13 +8,15 @@ import {
   BtnText,
 } from "../components/atom-components/ButtonTemplate";
 import SmallTitle from "../components/global-component/SmallTitle";
+import WarningGuide from "../components/global-component/WarningGuide";
 import {
   ContentLayout,
   FlexColumnLayout,
   FlexRowLayout,
   White300Layout,
 } from "../components/Layout";
-import WriteInform from "../components/login.js/WriteInform";
+import { ACCOUNT } from "../components/login/Account";
+import WriteInform from "../components/login/WriteInform";
 /**
  * 흰색 뒷 배경
  */
@@ -48,9 +50,13 @@ const WrapperFind = styled(FlexRowLayout)`
 `;
 
 /**
- * 회원가입하기 안내문
+ * 사용자가 특정 수행을 할 수 있도록 안내하는 컴포넌트
+ *
+ * @param {string, string} param0
+ * guide : 특정 수행 내용을 안내
+ * lead : 사용자가 할 특정 수행 내용
  */
-function Guide({ guide, lead }) {
+function ActGuide({ guide, lead }) {
   return (
     <FlexRowLayout gap="5px">
       <SmallTitle content={guide} />
@@ -58,13 +64,13 @@ function Guide({ guide, lead }) {
     </FlexRowLayout>
   );
 }
-
 /**
  * 로그인 페이지
  */
 function Login() {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [pw, setPw] = useState("");
+  const [warning, setWarning] = useState("");
   /**
    * 이메일 change 함수
    * @param {*} event
@@ -74,12 +80,34 @@ function Login() {
   }
   /**
    * 비밀번호 change 함수
-   * -> 입력한 만큼 *로 표시
    * @param {*} event
    */
-  function changePassword(event) {
-    setPassword(event.target.value);
+  function changePw(event) {
+    setPw(event.target.value);
   }
+  /**
+   * 입력된 이메일과 비밀번호에 따른 경고 안내문 change & 로그인 통과
+   */
+  function onClickLogin() {
+    if (!email || !pw) {
+      setWarning("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
+    let flag = false;
+    for (let i = 0; i < ACCOUNT.length; i++) {
+      if (ACCOUNT[i].user_email === email) {
+        flag = true;
+        if (ACCOUNT[i].pw !== pw) {
+          setWarning("잘못된 비밀번호입니다.");
+          return;
+        } else {
+          console.log(email + " " + pw + "로그인 되었습니다.");
+        }
+      }
+    }
+    if (!flag) setWarning("계정을 찾을 수 없습니다.");
+  }
+
   return (
     <>
       <StyledWhite300 />
@@ -87,23 +115,24 @@ function Login() {
         <StyledImg src={"/ATCLogoBlueImgText.png"} width="214px" />
         <BoxBorder gap="20px">
           <BoxTitle content="로그인" />
-          <WrapperStretch gap="5px">
+          <WrapperStretch gap="10px">
             <WriteInform
               email={email}
-              password={password}
+              pw={pw}
               changeEmail={changeEmail}
-              changePassword={changePassword}
+              changePw={changePw}
             />
+            {warning && <WarningGuide content={warning} />}
             <WrapperFind>
               <BtnText text="비밀번호 찾기" />
             </WrapperFind>
           </WrapperStretch>
           <WrapperStretch>
-            <BtnIndigo text="로그인하기" />
+            <BtnIndigo text="로그인하기" onClick={onClickLogin} />
           </WrapperStretch>
         </BoxBorder>
         <BoxBorder>
-          <Guide guide="계정이 없으신가요?" lead="회원가입하기" />
+          <ActGuide guide="계정이 없으신가요?" lead="회원가입하기" />
         </BoxBorder>
       </WrapperPad>
     </>

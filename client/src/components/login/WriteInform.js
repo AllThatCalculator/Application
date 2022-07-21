@@ -7,9 +7,9 @@ import styles from "../styles";
  *
  * @param {string, string, funtion, funtion} param0
  * email: 입력된 이메일
- * password : 입력된 비밀번호
+ * pw : 입력된 비밀번호
  * changeEmail : 이메일 입력 이벤트
- * changePassword : 비밀번호 입력 이벤트
+ * changePw : 비밀번호 입력 이벤트
  */
 function WriteInform(props) {
   return (
@@ -25,6 +25,7 @@ function WriteInform(props) {
         onChange={props.changeEmail}
       />
       <ExplanationInputBox
+        type="password"
         secureTextEntry={true}
         isLine={false}
         ratioLeft="1"
@@ -32,8 +33,8 @@ function WriteInform(props) {
         icon="LockFill"
         iconColor={styles.styleColor.blue900}
         placeholder="비밀번호"
-        defaultValue={props.password}
-        onChange={props.changePassword}
+        defaultValue={props.pw}
+        onChange={props.changePw}
       />
     </InformBox>
   );
