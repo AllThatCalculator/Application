@@ -93,19 +93,12 @@ function Login() {
       setWarning("이메일과 비밀번호를 입력해주세요.");
       return;
     }
-    let flag = false;
-    for (let i = 0; i < ACCOUNT.length; i++) {
-      if (ACCOUNT[i].user_email === email) {
-        flag = true;
-        if (ACCOUNT[i].pw !== pw) {
-          setWarning("잘못된 비밀번호입니다.");
-          return;
-        } else {
-          console.log(email + " " + pw + "로그인 되었습니다.");
-        }
-      }
-    }
-    if (!flag) setWarning("계정을 찾을 수 없습니다.");
+    const resultAccount = ACCOUNT.filter((item) => item.user_email === email);
+    if (resultAccount.length) {
+      if (resultAccount[0].pw === pw)
+        console.log(email + " " + pw + "로그인 되었습니다.");
+      else setWarning("잘못된 비밀번호입니다.");
+    } else setWarning("계정을 찾을 수 없습니다.");
   }
 
   return (
