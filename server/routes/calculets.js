@@ -171,7 +171,7 @@ router.get("/:id", (req, res) => {
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/prev_calculet_info"
+ *                $ref: "#/components/schemas/postResult"
  *        400:
  *          description: 계산기 등록 요청 오류
  *          content:
@@ -197,10 +197,11 @@ router.post("/", (req, res) => {
     req.body.email,
   ];
 
-  mariadb.query(sql, calculet, (err, rows, fields) => {
+  mariadb.query(sql, calculet, (err, result, fields) => {
     if (!err) {
-      res.status(201).send(rows);
+      res.status(201).send({ location: `/calculets/${result.insertId}` });
     } else {
+      console.log(err);
       res.status(400).send({
         message:
           "request parameters was wrong. retry request after change parameters",

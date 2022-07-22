@@ -14,7 +14,7 @@ components:
         title:
           type: string
           description: 계산기 이름
-        src_code:
+        srcCode:
           type: string
           description: 계산기 코드
         manual:
@@ -23,15 +23,23 @@ components:
         description:
           type: string
           description: 계산기 한 줄 설명
-        category_main:
+        categoryMain:
           type: string
           description: 카테고리 대분류
-        category_sub:
+        categorySub:
           type: string
           description: 카테고리 소분류
-        contributor:
+        email:
           type: string
-          description: 계산기 제작자 아이디 (예전 스키마)
+          description: 계산기 제작자 이메일
+      example:
+        title: 테스트 계산기
+        srcCode: <html></html>
+        manual: "### markdown"
+        description: 계산기 한 줄 설명
+        categoryMain: 대분류
+        categorySub: 소분류
+        email: bsa0322
     calculet:
       type: object
       properties:
@@ -83,6 +91,12 @@ components:
         viewCnt:
           type: integer
           description: 누적 접속 수
+    postResult:
+      type: object
+      properties:
+        location:
+          type: string
+          description: 등록된 경로
     errorResult:
       type: object
       properties:
