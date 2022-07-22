@@ -1,4 +1,3 @@
-let now = new Date();
 /**
  * 성별 옵션 - 여, 남
  */
@@ -9,6 +8,7 @@ const OPTIONS_SEX = [
 /**
  * 생년월일 옵션 - 년도 (내림차순)
  */
+let now = new Date();
 const OPTIONS_YEAR = fillOptionsList(
   now.getFullYear() - 100,
   now.getFullYear()

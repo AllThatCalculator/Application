@@ -4,7 +4,23 @@ import {
 } from "../global-component/Explanation";
 import { OPTIONS_EMAIL_ADDRESS } from "../register/Option";
 import { InformBox } from "../register/WriteInform";
-
+/**
+ * 회원가입 1번째 정보입력창
+ *
+ * @param {string, string, string, string, string, string, funtion, funtion, funtion, funtion, funtion, funtion} props
+ * address : 주소
+ * writedDomain : 직접 입력한 도메인 값
+ * selectedDomain : select 박스에서 선택한 도메인 값
+ * userName : 닉네임
+ * pw : 비밀번호
+ * pwConfirmation : 비밀번호 확인
+ * changeAddress : 주소 change 함수
+ * changeDomain : 직접 입력한 도메인 값 change 함수
+ * changeSelectedDomain : select 박스에서 선택한 도메인 값 change 함수
+ * changeUserName : 닉네임 change 함수
+ * changePw : 비밀번호 change 함수
+ * changePwConfirmation : 비밀번호 확인 change 함수
+ */
 function WriteInformFirst(props) {
   return (
     <InformBox>

@@ -11,16 +11,21 @@ import {
 } from "./Option";
 
 /**
+ * 회원가입 2번째 정보입력창
  *
- *
- * @param {string, string, funtion, funtion} param0
- * 이메일 `email`
- * 닉네임 `userName`
- * 프로필 사진 `profileImg`
- * 자기소개 문구 `bio`
- * 성별 `sex`
- * 생년월일 `birthdate`-> year, month, date
- * 직업 `job`
+ * @param { string, string, string, string, string, funtion, funtion, funtion, funtion, funtion} param0
+ * sex : 성별
+ * year : 년도
+ * month : 월
+ * date : 일
+ * job : 직업
+ * bio : 자기소개 문구
+ * changeSex : 성별 change 함수
+ * changeYear : 년도 change 함수
+ * changeMonth : 월 change 함수
+ * changeDate : 일 change 함수
+ * changeJob : 직업 change 함수
+ * changeBio : 자기소개 문구 change 함수
  */
 function WriteInformSecond(props) {
   // 성별 SelectBox 필요한 정보들
