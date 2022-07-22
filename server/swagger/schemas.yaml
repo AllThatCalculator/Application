@@ -2,7 +2,7 @@
 
 components:
   schemas:
-    calculetInfo:
+    prev_calculet_info:
       type: object
       properties:
         id:
@@ -11,7 +11,7 @@ components:
         title:
           type: string
           description: 계산기 이름
-        srcCode:
+        src_code:
           type: string
           description: 계산기 코드
         manual:
@@ -20,13 +20,40 @@ components:
         description:
           type: string
           description: 계산기 한 줄 설명
-        categoryMain:
+        category_main:
           type: string
           description: 카테고리 대분류
-        categorySub:
+        category_sub:
           type: string
           description: 카테고리 소분류
-        contributorEmail:
+        contributor_id:
+          type: string
+          description: 계산기 제작자 ID
+    calculet_info:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 계산기 ID
+        title:
+          type: string
+          description: 계산기 이름
+        src_code:
+          type: string
+          description: 계산기 코드
+        manual:
+          type: string
+          description: 계산기 설명 마크다운
+        description:
+          type: string
+          description: 계산기 한 줄 설명
+        category_main:
+          type: string
+          description: 카테고리 대분류
+        category_sub:
+          type: string
+          description: 카테고리 소분류
+        contributor_email:
           type: string
           description: 계산기 제작자 이메일
         birthday:
@@ -35,7 +62,7 @@ components:
         blocked:
           type: boolean
           description: 계산기 차단 여부
-    calculetInfoTemp:
+    calculet_info_temp:
       type: object
       properties:
         id:
@@ -44,7 +71,7 @@ components:
         title:
           type: string
           description: 계산기 이름
-        srcCode:
+        src_code:
           type: string
           description: 계산기 코드
         manual:
@@ -53,13 +80,13 @@ components:
         description:
           type: string
           description: 계산기 한 줄 설명
-        categoryMain:
+        category_main:
           type: string
           description: 카테고리 대분류
-        categorySub:
+        category_sub:
           type: string
           description: 카테고리 소분류
-        contributorEmail:
+        contributor_email:
           type: string
           description: 계산기 제작자 이메일
         birthday:
@@ -68,55 +95,55 @@ components:
         updated:
           type: boolean
           description: 계산기 업데이트 여부 (0-첫 등록, 1-업데이트)
-    calculetUpdateLog:
+    calculet_update_log:
       type: object
       properties:
-        calculetId:
+        calculet_id:
           type: integer
           description: 계산기 ID
-        updateDate:
+        update_date:
           type: string
           description: 업데이트 날짜
         message:
           type: string
           description: 업데이트 메세지
-    calculetCount:
+    calculet_count:
       type: object
       properties:
-        calculetId:
+        calculet_id:
           type: integer
           description: 계산기 ID
-        viewCnt:
+        view_cnt:
           type: integer
           description: 누적 접속 수
-        calculationCnt:
+        calculation_cnt:
           type: integer
           description: 누적 연산 수
-        userCnt:
+        user_cnt:
           type: integer
           description: 누적 사용자 수
-    calculetStatistics:
+    calculet_statistics:
       type: object
       properties:
-        calculetId:
+        calculet_Id:
           type: integer
           description: 계산기 ID
-        likeCnt:
+        like_cnt:
           type: integer
           description: 좋아요 횟수
-        bookmarkCnt:
+        bookmark_cnt:
           type: integer
           description: 북마크 횟수
-        reportCnt:
+        report_cnt:
           type: integer
           description: 신고 횟수
-    userCalculet:
+    user_calculet:
       type: object
       properties:
-        calculetId:
+        calculet_id:
           type: integer
           description: 계산기 ID
-        userEmail:
+        user_email:
           type: string
           description: 사용자 이메일
         liked:
@@ -125,16 +152,16 @@ components:
         bookmarked:
           type: boolean
           description: 북마크 여부
-    userInfo:
+    user_info:
       type: object
       properties:
         email:
           type: string
           description: 사용자 이메일
-        userName:
+        user_name:
           type: string
           description: 닉네임
-        profileImg:
+        profile_img:
           type: string
           description: 프로필 사진 소스
         bio:

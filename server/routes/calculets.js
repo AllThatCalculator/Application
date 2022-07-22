@@ -171,7 +171,7 @@ router.get("/:id", (req, res) => {
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/calculetInfoTemp"
+ *                $ref: "#/components/schemas/prev_calculet_info"
  *        400:
  *          description: 계산기 등록 요청 오류
  *          content:
