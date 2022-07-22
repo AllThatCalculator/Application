@@ -30,30 +30,63 @@ function bufferToImageSrc(value) {
 }
 
 /**
- * 계산기 불러오는 get 요청
+ * @swagger
+ *  /calculets/{id}:
+ *    get:
+ *      tags: [calculets]
+ *      summary: 계산기 불러오기
+ *      description: id 번째 계산기를 DB에서 조회한 후 불러오기
+ *      parameters:
+ *        - in: path
+ *          type: string
+ *          required: true
+ *          name: id
+ *          description: 계산기 번호
+ *      responses:
+ *        200:
+ *          description: 계산기 불러오기 성공
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/getSpecificCalculet"
+ *        404:
+ *          description: 계산기를 찾지 못함
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/errorResult"
+ *        400:
+ *          description: 계산기 요청 오류
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/errorResult"
  */
 router.get("/:id", (req, res) => {
   // 계산기 정보 쿼리문
-  const calculetQuery = `select id, title, src_code, manual, description, contributor_id from calculet_info where id=${req.params.id};`;
+  const calculetInfoQuery = `select * from calculet_info where id=${req.params.id};`;
 
   // 계산기 통계 쿼리문
-  const statisticsQuery = `select bookmark_cnt, like_cnt, report_cnt, view_cnt from calculet_statistics where calculet_id=${req.params.id};`;
+  const calculetStatisticsQuery = `select bookmark_cnt, like_cnt, report_cnt, view_cnt from calculet_statistics where calculet_id=${req.params.id};`;
 
-  // (임시) 사용자-계산기 관련 정보(북마크 여부, 좋아요 어부) 쿼리문
+  // (임시) 사용자-계산기 관련 정보(북마크 여부, 좋아요 여부) 쿼리문
   // 아직 로그인 기능 없어서 버튼 누른 회원 정보 못 얻어오므로 사람 구분은 x
   const userCalculetQuery = `select liked, bookmarked from user_calculet where calculet_id=${req.params.id};`;
 
   // 제작자 사진
-  const contributorQuery = `select profile_img from user_info where id = (select contributor_id from calculet_info where id=${req.params.id});`;
+  const userInfoQuery = `select profile_img from user_info where id = (select contributor_id from calculet_info where id=${req.params.id});`;
 
   mariadb.query(
-    calculetQuery + statisticsQuery + userCalculetQuery + contributorQuery,
+    calculetInfoQuery +
+      calculetStatisticsQuery +
+      userCalculetQuery +
+      userInfoQuery,
     (err, rows, fields) => {
       if (!err) {
         const calculetInfo = rows[0][0];
-        const statistics = rows[1][0];
+        const calculetStatistics = rows[1][0];
         let userCalculet = rows[2][0];
-        const contributor = rows[3][0];
+        const userInfo = rows[3][0];
 
         // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
         if (!userCalculet) {
@@ -73,64 +106,87 @@ router.get("/:id", (req, res) => {
           const manual = bufferToString(calculetInfo.manual);
 
           // 제작자 이미지를 base64string 으로 변환 + src 생성
-          const contributorImgSrc = bufferToImageSrc(contributor.profile_img);
+          const contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
 
           calculet = {
             id: calculetInfo.id,
-            contributorImgSrc: contributorImgSrc,
             title: calculetInfo.title,
             srcCode: srcCode,
             manual: manual,
-            contributor: calculetInfo.contributor_id,
             description: calculetInfo.description,
+            categoryMain: calculetInfo.category_main,
+            categorySub: calculetInfo.category_sub,
+            contributor: calculetInfo.contributor_id,
+            contributorImgSrc: contributorImgSrc,
           };
         }
 
         // 통계 객체로 묶기
-        let statistic = null;
-        if (statistics && userCalculet) {
-          statistic = {
-            bookmarkCnt: statistics.bookmark_cnt,
+        let statistics = null;
+        if (calculetStatistics && userCalculet) {
+          statistics = {
+            bookmarkCnt: calculetStatistics.bookmark_cnt,
             bookmarked: userCalculet.bookmarked,
-            likeCnt: statistics.like_cnt,
+            likeCnt: calculetStatistics.like_cnt,
             liked: userCalculet.liked,
-            reportCnt: statistics.report_cnt,
-            viewCnt: statistics.view_cnt,
+            reportCnt: calculetStatistics.report_cnt,
+            viewCnt: calculetStatistics.view_cnt,
           };
         }
 
         // 계산기 잘 불러왔는지 확인
-        if (calculet === null || statistic === null) {
-          res.status(404).send("calculet was not found");
+        if (calculet === null || statistics === null) {
+          res.status(404).send({ message: "calculet was not found" });
         } else {
-          const result = [calculet, statistic];
+          const result = [calculet, statistics];
           res.send(result);
         }
       } else {
-        console.log(`error:${err}`);
-        res.send(err);
+        res.status(400).send({
+          message:
+            "request parameters was wrong. retry request after change parameters",
+        });
       }
     }
   );
 });
 
 /**
- * 계산기 등록하는 post 요청
+ * @swagger
+ *  /calculets/:
+ *    post:
+ *      tags: [calculets]
+ *      summary: 계산기 임시 등록
+ *      description: 계산기 등록 전, 보안 검사를 위해 임시 테이블에 등록한다
+ *      requestBody:
+ *        description: 계산기 정보
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/registerCalculetTemp"
+ *      responses:
+ *        201:
+ *          description: 계산기 등록 완료
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/calculetInfoTemp"
+ *        400:
+ *          description: 계산기 등록 요청 오류
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/errorResult"
  */
 router.post("/", (req, res) => {
-  // 계산기 정보 삽입문
+  /** (임시)
+   * 계산기 정보 삽입문
+   * (나중에 calculet_info_temp 테이블에 삽입하는 것으로 수정)
+   */
   const sql =
     "INSERT INTO calculet_info(title, src_code, manual, description, category_main, category_sub, contributor_id) VALUES(?,?,?,?,?,?,?);";
 
-  /**
-   * - 계산기 이름 `title`
-   * - 계산기 코드 `src_code`
-   * - 계산기 설명 마크다운 `manual`
-   * - 계산기 한 줄 설명 `description`
-   * - 카테고리 대분류 `category_main`
-   * - 카테고리 소분류 `category_sub`
-   * - 제작자 이메일 `contributor_email`
-   */
   const calculet = [
     req.body.title,
     req.body.srcCode,
@@ -143,10 +199,12 @@ router.post("/", (req, res) => {
 
   mariadb.query(sql, calculet, (err, rows, fields) => {
     if (!err) {
-      res.send(rows);
-      console.log(rows);
+      res.status(201).send(rows);
     } else {
-      console.log(err);
+      res.status(400).send({
+        message:
+          "request parameters was wrong. retry request after change parameters",
+      });
     }
   });
 });

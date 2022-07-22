@@ -1,0 +1,151 @@
+# ATC_DB schemas
+
+components:
+  schemas:
+    calculetInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 계산기 ID
+        title:
+          type: string
+          description: 계산기 이름
+        srcCode:
+          type: string
+          description: 계산기 코드
+        manual:
+          type: string
+          description: 계산기 설명 마크다운
+        description:
+          type: string
+          description: 계산기 한 줄 설명
+        categoryMain:
+          type: string
+          description: 카테고리 대분류
+        categorySub:
+          type: string
+          description: 카테고리 소분류
+        contributorEmail:
+          type: string
+          description: 계산기 제작자 이메일
+        birthday:
+          type: string
+          description: 계산기 등록일
+        blocked:
+          type: boolean
+          description: 계산기 차단 여부
+    calculetInfoTemp:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 계산기 ID
+        title:
+          type: string
+          description: 계산기 이름
+        srcCode:
+          type: string
+          description: 계산기 코드
+        manual:
+          type: string
+          description: 계산기 설명 마크다운
+        description:
+          type: string
+          description: 계산기 한 줄 설명
+        categoryMain:
+          type: string
+          description: 카테고리 대분류
+        categorySub:
+          type: string
+          description: 카테고리 소분류
+        contributorEmail:
+          type: string
+          description: 계산기 제작자 이메일
+        birthday:
+          type: string
+          description: 계산기 등록일
+        updated:
+          type: boolean
+          description: 계산기 업데이트 여부 (0-첫 등록, 1-업데이트)
+    calculetUpdateLog:
+      type: object
+      properties:
+        calculetId:
+          type: integer
+          description: 계산기 ID
+        updateDate:
+          type: string
+          description: 업데이트 날짜
+        message:
+          type: string
+          description: 업데이트 메세지
+    calculetCount:
+      type: object
+      properties:
+        calculetId:
+          type: integer
+          description: 계산기 ID
+        viewCnt:
+          type: integer
+          description: 누적 접속 수
+        calculationCnt:
+          type: integer
+          description: 누적 연산 수
+        userCnt:
+          type: integer
+          description: 누적 사용자 수
+    calculetStatistics:
+      type: object
+      properties:
+        calculetId:
+          type: integer
+          description: 계산기 ID
+        likeCnt:
+          type: integer
+          description: 좋아요 횟수
+        bookmarkCnt:
+          type: integer
+          description: 북마크 횟수
+        reportCnt:
+          type: integer
+          description: 신고 횟수
+    userCalculet:
+      type: object
+      properties:
+        calculetId:
+          type: integer
+          description: 계산기 ID
+        userEmail:
+          type: string
+          description: 사용자 이메일
+        liked:
+          type: boolean
+          description: 좋아요 여부
+        bookmarked:
+          type: boolean
+          description: 북마크 여부
+    userInfo:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 사용자 이메일
+        userName:
+          type: string
+          description: 닉네임
+        profileImg:
+          type: string
+          description: 프로필 사진 소스
+        bio:
+          type: string
+          description: 자기소개 문구
+        sex:
+          type: string
+          description: 성별 (F-여자, M-남자)
+        birthdate:
+          type: string
+          description: 생년월일
+        job:
+          type: string
+          description: 직업

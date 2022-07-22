@@ -1,0 +1,91 @@
+# Calculet API
+
+components:
+  schemas:
+    getSpecificCalculet:
+      type: array
+      items:
+        oneOf:
+          - $ref: "#components/schemas/calculet"
+          - $ref: "#components/schemas/statistics"
+    registerCalculetTemp:
+      type: object
+      properties:
+        title:
+          type: string
+          description: 계산기 이름
+        src_code:
+          type: string
+          description: 계산기 코드
+        manual:
+          type: string
+          description: 계산기 설명 마크다운
+        description:
+          type: string
+          description: 계산기 한 줄 설명
+        category_main:
+          type: string
+          description: 카테고리 대분류
+        category_sub:
+          type: string
+          description: 카테고리 소분류
+        contributor:
+          type: string
+          description: 계산기 제작자 아이디 (예전 스키마)
+    calculet:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 계산기 ID
+        title:
+          type: string
+          description: 계산기 이름
+        srcCode:
+          type: string
+          description: 계산기 코드
+        manual:
+          type: string
+          description: 계산기 설명 마크다운
+        description:
+          type: string
+          description: 계산기 한 줄 설명
+        categoryMain:
+          type: string
+          description: 카테고리 대분류
+        categorySub:
+          type: string
+          description: 카테고리 소분류
+        contributor:
+          type: string
+          description: 계산기 제작자 아이디 (예전 스키마)
+        contributorImgSrc:
+          type: string
+          description: 계산기 제작자 프로필 이미지 소스
+    statistics:
+      type: object
+      properties:
+        bookmarkCnt:
+          type: integer
+          description: 북마크 횟수
+        bookmarked:
+          type: boolean
+          description: 북마크 여부
+        likeCnt:
+          type: integer
+          description: 좋아요 횟수
+        liked:
+          type: integer
+          description: 좋아요 여부
+        reportCnt:
+          type: integer
+          description: 신고 횟수
+        viewCnt:
+          type: integer
+          description: 누적 접속 수
+    errorResult:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 에러 메세지
