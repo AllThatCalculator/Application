@@ -121,7 +121,7 @@ function Calculet() {
    * 계산기 객체 불러오기
    */
   useEffect(() => {
-    setTimeout(loadCalculetObj, 1000);
+    loadCalculetObj();
   }, [id]);
 
   return (
