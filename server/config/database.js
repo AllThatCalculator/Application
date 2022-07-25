@@ -8,6 +8,7 @@ const connection = mariadb.createConnection({
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
   charset: "utf8mb4",
+  multipleStatements: true,
 });
 
 module.exports = connection;
