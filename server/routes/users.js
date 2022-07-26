@@ -29,6 +29,7 @@ router.post("/", (req, res) => {
             req.body.id,
             req.body.email,
             req.body.userName,
+            req.body.profileImg,
             req.body.bio,
             req.body.sex,
             req.body.birthdate,
@@ -36,7 +37,7 @@ router.post("/", (req, res) => {
           ];
           const userLoginData = [req.body.id, pw];
 
-          const userInfoQuery = `INSERT INTO user_info(id,email,user_name,bio,sex,birthdate,job) VALUES(?,?,?,?,?,?,?);`;
+          const userInfoQuery = `INSERT INTO user_info VALUES(?,?,?,?,?,?,?,?);`;
           const userLoginQuery = `INSERT INTO user_login VALUES(?,?);`;
 
           const sql1 = mariadb.format(userInfoQuery, userInfoData);
