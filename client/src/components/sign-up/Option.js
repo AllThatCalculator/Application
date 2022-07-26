@@ -5,25 +5,23 @@ const OPTIONS_SEX = [
   { value: "F", name: "여자" },
   { value: "M", name: "남자" },
 ];
+
 /**
  * 생년월일 옵션 - 년도 (내림차순)
  */
-let now = new Date();
+const now = new Date();
 const OPTIONS_YEAR = fillOptionsList(
   now.getFullYear() - 100,
   now.getFullYear()
 ).reverse();
 /**
- * 생년월일 옵션 - 월 1~12
+ * 생년월일 옵션 - 월 01~12
  */
 const OPTIONS_MONTH = fillOptionsList(1, 12);
-/**
- * 생년월일 옵션 - 일 1~31
- */
-const OPTIONS_DATE = fillOptionsList(1, 31);
+
 /**
  * start ~ end 만큼 연속된 값으로 옵션 채운 array 반환 함수
- * 년도와 월 둘 다 (순서 상관 없이)에 따라서 일이 생김
+ * 년도와 월 (순서 상관 없이)에 따라서 SignUp에서 일수가 생김
  *
  * @param {int, int}
  * start : 처음 숫자
@@ -32,10 +30,12 @@ const OPTIONS_DATE = fillOptionsList(1, 31);
 function fillOptionsList(start, end) {
   const result = [];
   for (let i = start; i <= end; i++) {
-    const num = i.toString();
+    let num = "";
+    if (i < 10) num = "0";
+    num += i.toString();
     result.push({ value: "birthdate" + num, name: num });
   }
   return result;
 }
 
-export { OPTIONS_SEX, OPTIONS_YEAR, OPTIONS_MONTH, OPTIONS_DATE };
+export { OPTIONS_SEX, OPTIONS_YEAR, OPTIONS_MONTH, fillOptionsList };

@@ -3,12 +3,7 @@ import {
   ExplanationSelectBox,
 } from "../global-component/Explanation";
 import { InformBox } from "../register/WriteInform";
-import {
-  OPTIONS_SEX,
-  OPTIONS_YEAR,
-  OPTIONS_MONTH,
-  OPTIONS_DATE,
-} from "./Option";
+import { OPTIONS_SEX, OPTIONS_YEAR, OPTIONS_MONTH } from "./Option";
 
 /**
  * 회원가입 2번째 정보입력창
@@ -55,7 +50,7 @@ function WriteInformSecond(props) {
       isLine: true,
     },
     {
-      options: OPTIONS_DATE,
+      options: props.dates,
       placeholder: "일",
       selected: props.date,
       onChange: props.changeDate,

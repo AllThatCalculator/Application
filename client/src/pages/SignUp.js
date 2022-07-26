@@ -13,7 +13,7 @@ import {
   OPTIONS_SEX,
   OPTIONS_YEAR,
   OPTIONS_MONTH,
-  OPTIONS_DATE,
+  fillOptionsList,
 } from "../components/sign-up/Option";
 import { OPTIONS_EMAIL_ADDRESS } from "../components/register/Option";
 import ProfileChange from "../components/sign-up/ProfileChange";
@@ -51,7 +51,6 @@ const StyledBorder = styled(BoxBorder)`
 const WrapperStretch = styled(FlexColumnLayout)`
   width: 100%;
 `;
-
 /**
  * 회원가입 페이지
  */
@@ -59,13 +58,13 @@ function SignUp() {
   /**
    * 프로필 사진 profileImg
    *
-   * 이메일 email -> address, writedDomain, selectedDomain
+   * 이메일 email -> address, writtenDomain, selectedDomain
    * 닉네임 userName
    * 비밀번호 pw
    * 비밀번호 확인 pwConfirmation
    *
    * 성별 sex
-   * 생년월일 year, month, date
+   * 생년월일 birthdate -> year, month, date
    * 직업 job
    * 자기소개 문구 bio
    */
@@ -74,7 +73,7 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [domain, setDomain] = useState("");
   const [address, setAddress] = useState("");
-  const [writedDomain, setWritedDomain] = useState("");
+  const [writtenDomain, setwrittenDomain] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("");
   const [userName, setUserName] = useState("");
   const [pw, setPw] = useState("");
@@ -87,25 +86,34 @@ function SignUp() {
   const [date, setDate] = useState("");
   const [job, setJob] = useState("");
   const [bio, setBio] = useState("");
-  /**
-   * 비밀번호와 비밀번호 확인이 같은지
-   */
+  // 주의 문구: 비밀번호 & 비밀번호 확인 비교
   const [isWarning, setIsWarning] = useState(false);
+  // 년도와 월로 일수 구하기
+  const [dateEnd, setDateEnd] = useState(1);
+  const [dates, setDates] = useState(null);
 
   // 바로 초기화하면 defaultValue로 설정해서인지 값이 안 바뀌어서 나중에 set하기 위해 useEffect 사용
   useEffect(() => setSelectedDomain("직접 입력"), []);
-
+  // 선택되거나 입력된 도메인 갱신
+  useEffect(() => setDomain(writtenDomain), [writtenDomain]);
+  // 년도에 따른 월의 마지막 날 계산 & 일수 구하기 (년도와 월을 둘 다 선택해야 갱신)
+  useEffect(() => {
+    if (year && month) {
+      setDateEnd(Number(new Date(Number(year), Number(month), 0).getDate()));
+      setDates(fillOptionsList(1, dateEnd));
+    }
+  }, [year, month, dateEnd]);
   /**
    * 사용자가 선택한 옵션으로 세팅
    * 이메일 : address @ domain
    * 생년월일 : year - month - date
    */
-  useEffect(() => setDomain(writedDomain), [writedDomain]);
   useEffect(() => setEmail(address + "@" + domain), [address, domain]);
   useEffect(
     () => setBirthdate(year + "-" + month + "-" + date),
     [year, month, date]
   );
+
   /**
    * 저작자 이메일의 도메인 부분 change 함수 (select 박스)
    * - value에 먼저 접근한 후, value에 맞는 name을 찾아서 저장
@@ -116,16 +124,21 @@ function SignUp() {
     const option = OPTIONS_EMAIL_ADDRESS.filter((x) => x.value === targetValue);
     const domainValue = option[0].name;
     if (domainValue === "직접 입력") {
-      setWritedDomain("");
+      setwrittenDomain("");
     } else {
-      setWritedDomain(domainValue);
+      setwrittenDomain(domainValue);
     }
     setSelectedDomain(domainValue);
   }
+
   /**
    * 인자로 넘어온 정보에 대한 change 함수
+   * - 년도나 월은 선택하기만 해도 일수가 갱신되어야 하기 때문에, 화살표 함수에서 일수를 함께 초기화
    * - value에 먼저 접근한 후, value에 맞는 name을 찾아서 저장
    * @param {*} event
+   * event : 이벤트
+   * optionData : 옵션 데이터
+   * setData : change할 state
    */
   function changeData(event, optionData, setData) {
     const targetValue = event.target.value;
@@ -167,13 +180,13 @@ function SignUp() {
           />
           <WriteInformFirst
             address={address}
-            writedDomain={writedDomain}
+            writtenDomain={writtenDomain}
             selectedDomain={selectedDomain}
             userName={userName}
             pw={pw}
             pwConfirmation={pwConfirmation}
             changeAddress={(event) => setAddress(event.target.value)}
-            changeDomain={(event) => setWritedDomain(event.target.value)}
+            changeDomain={(event) => setwrittenDomain(event.target.value)}
             changeSelectedDomain={changeSelectedDomain}
             changeUserName={(event) => setUserName(event.target.value)}
             changePw={(event) => setPw(event.target.value)}
@@ -189,12 +202,19 @@ function SignUp() {
             year={year}
             month={month}
             date={date}
+            dates={dates}
             job={job}
             bio={bio}
             changeSex={(event) => changeData(event, OPTIONS_SEX, setSex)}
-            changeYear={(event) => changeData(event, OPTIONS_YEAR, setYear)}
-            changeMonth={(event) => changeData(event, OPTIONS_MONTH, setMonth)}
-            changeDate={(event) => changeData(event, OPTIONS_DATE, setDate)}
+            changeYear={(event) => {
+              changeData(event, OPTIONS_YEAR, setYear);
+              setDate(null);
+            }}
+            changeMonth={(event) => {
+              changeData(event, OPTIONS_MONTH, setMonth);
+              setDate(null);
+            }}
+            changeDate={(event) => changeData(event, dates, setDate)}
             changeJob={(event) => setJob(event.target.value)}
             changeBio={(event) => setBio(event.target.value)}
           />
