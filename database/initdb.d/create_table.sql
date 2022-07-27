@@ -6,7 +6,7 @@ CREATE TABLE calculet_info(
     description VARCHAR(100) NOT NULL,
     category_main VARCHAR(20) NOT NULL,
     category_sub VARCHAR(20) NOT NULL,
-    contributor_email VARCHAR(15) NOT NULL,
+    contributor_email VARCHAR(254) NOT NULL,
 	birthday DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	blocked BOOLEAN NOT NULL DEFAULT 0,
     PRIMARY KEY (id)
@@ -53,7 +53,7 @@ CREATE TABLE user_calculet(
     liked BOOLEAN,
 	bookmarked BOOLEAN,
 	calculet_id INT NOT NULL,
-	user_email VARCHAR(15) NOT NULL,
+	user_email VARCHAR(254) NOT NULL,
 	PRIMARY KEY (calculet_id, user_email)
 );
 
