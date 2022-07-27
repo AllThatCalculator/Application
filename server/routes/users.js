@@ -130,8 +130,20 @@ router.get("/me", async (req, res) => {
     const decoded = await jwt.verify(token, process.env.SECRET_KEY);
     res.status(200).send({ isMe: true, email: decoded.email });
   } catch {
-    console.log(err);
+    console.log("로그인 필요");
+    res.status(404).send({ isMe: false, message: "로그인 필요" });
   }
+});
+
+/**
+ * 로그아웃
+ */
+router.get("/logout", (req, res) => {
+  // 클라이언트 쿠키에 있는 토큰 지우기
+  res
+    .cookie("access_token", "")
+    .status(200)
+    .send({ success: true, message: "로그아웃 완료" });
 });
 
 module.exports = router;
