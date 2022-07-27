@@ -11,6 +11,7 @@ const saltRounds = 10;
  */
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
+router.use(cookieParser());
 
 /**
  * 회원 가입
@@ -104,7 +105,7 @@ router.post("/login", (req, res) => {
 
       // 토큰을 쿠키에 저장
       res
-        .cookie("access-token", token, {
+        .cookie("access_token", token, {
           maxAge: 1000 * 60 * 60,
           httpOnly: true,
         })
@@ -114,6 +115,23 @@ router.post("/login", (req, res) => {
       console.log(err);
     }
   });
+});
+
+/**
+ * 로그인한 사용자인지 인증 (인가)
+ */
+router.get("/me", async (req, res) => {
+  // 인증 처리하는 부분
+  // 클라이언트 쿠키에서 토큰 가져오기
+  const token = req.cookies.access_token;
+
+  // 토큰 검증
+  try {
+    const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+    res.status(200).send({ isMe: true, email: decoded.email });
+  } catch {
+    console.log(err);
+  }
 });
 
 module.exports = router;
