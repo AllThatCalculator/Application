@@ -15,6 +15,7 @@ function WriteInform(props) {
   return (
     <InformBox>
       <ExplanationInputBox
+        type="email"
         isLine={true}
         ratioLeft="1"
         ratioRight="11"
