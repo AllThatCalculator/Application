@@ -1,10 +1,20 @@
+import styled from "styled-components";
 import styles from "../styles";
 import { useState } from "react";
 import CalculetBlock from "../calculet-block/CalculetBlock";
 import { TabMenu } from "./TabMenu";
 import CodeEditor from "./CodeEditor";
 import BigTitle from "../atom-components/BigTitle";
-import { FlexColumnLayout } from "../Layout";
+import { FlexColumnLayout, FlexRowLayout } from "../Layout";
+import TagPannel from "./TagPannel";
+
+const WrapperSrcCode = styled.div`
+  width: 713px;
+`;
+
+const WrapperPannel = styled.div`
+  width: 347px;
+`;
 
 /**
  * 계산기 코드 작성 컴포넌트
@@ -59,12 +69,19 @@ function WriteCode(props) {
       <TabMenu tabs={writeCodeTab} />
       <>
         {item === "HTML" && (
-          <CodeEditor
-            defaultLanguage="html"
-            defaultValue={props.srcCode}
-            onMount={onMount}
-            onChange={props.changeSrcCode}
-          />
+          <FlexRowLayout gap="20px">
+            <WrapperSrcCode>
+              <CodeEditor
+                defaultLanguage="html"
+                defaultValue={props.htmlScript}
+                onMount={onMount}
+                onChange={props.changeHtmlScript}
+              />
+            </WrapperSrcCode>
+            <WrapperPannel>
+              <TagPannel />
+            </WrapperPannel>
+          </FlexRowLayout>
         )}
         {item === "MARKDOWN" && (
           <CodeEditor
