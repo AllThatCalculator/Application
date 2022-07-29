@@ -93,6 +93,9 @@ function Calculet() {
   // 계산기 저작자 프로필 이미지
   const [contributorImgSrc, setContributorImgSrc] = useState(null);
 
+  // (임시) 에러 처리 문구
+  const [errorText, setErrorText] = useState(null);
+
   // 현재 페이지에 로딩할 계산기 id
   let { id } = useParams();
 
@@ -112,13 +115,14 @@ function Calculet() {
         setContributorImgSrc(response.data.data[0].contributorImgSrc);
       });
     } catch (error) {
+      setCalculetObj(null);
       switch (error.response.status) {
         case 400:
         case 404:
-          console.log(error.response.data.message);
+          setErrorText(error.response.data.message);
           break;
         default:
-          console.log("서버에러");
+          setErrorText("서버가 잠시 중단되었습니다.");
           break;
       }
     }
@@ -149,7 +153,7 @@ function Calculet() {
               />
             </>
           ) : (
-            <div></div> // 로딩화면
+            <div>{errorText}</div> // 로딩화면
           )}
         </WrapperCol>
       </Positioner>
