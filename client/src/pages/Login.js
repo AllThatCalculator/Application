@@ -92,7 +92,6 @@ function Login() {
     };
     // 서버에 요청
     const request = loginUser(body);
-    console.log(request);
     request.then((res) => {
       // 로그인 실패
       if (!res.loginSuccess) setWarning(res.message);
