@@ -30,9 +30,7 @@ const OPTIONS_MONTH = fillOptionsList(1, 12);
 function fillOptionsList(start, end) {
   const result = [];
   for (let i = start; i <= end; i++) {
-    let num = "";
-    if (i < 10) num = "0";
-    num += i.toString();
+    const num = i.toString().padStart(2, "0");
     result.push({ value: "birthdate" + num, name: num });
   }
   return result;
