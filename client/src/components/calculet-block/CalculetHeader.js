@@ -6,6 +6,7 @@ import { Modal } from "../global-component/Modal";
 import ModalCalculetInfo from "../calculet-block/ModalCalculetInfo";
 import styles from "../styles";
 import { FlexColumnLayout, FlexRowLayout } from "../Layout";
+import { useEffect } from "react";
 
 const CalculetName = styled.div`
   color: ${styles.styleColor.blue900};
@@ -29,7 +30,7 @@ const StyledHr = styled.div`
   background-color: ${styles.styleColor.blue50};
 `;
 
-function CalculetHeader({ title, contributor, statistics }) {
+function CalculetHeader({ title, contributor, contributorImgSrc, statistics }) {
   /**
    * 좋아요 관련 정보
    * {int} number: 해당 계산기의 좋아요 수
@@ -48,6 +49,18 @@ function CalculetHeader({ title, contributor, statistics }) {
     number: statistics.bookmarkCnt,
     bookmarked: statistics.bookmarked,
   });
+
+  /**
+   * 확률 정보 바뀌면 좋아요 수와 북마크 수 다시 변경되도록
+   */
+  useEffect(() => {
+    setLikeObj({ number: statistics.likeCnt, liked: statistics.liked });
+    setBookmarkObj({
+      number: statistics.bookmarkCnt,
+      bookmarked: statistics.bookmarked,
+    });
+  }, [statistics]);
+
   /**
    * 좋아요 버튼 이벤트 함수
    * - 좋아요 수 변경, 아이콘 색 채움 여부 변경
@@ -152,7 +165,7 @@ function CalculetHeader({ title, contributor, statistics }) {
             <BoxIcon
               text={contributor}
               icon="PeopleCircle"
-              profile="/img/ori.png"
+              profile={contributorImgSrc}
             />
             <BoxIcon text="view" icon="EyeFill" number={statistics.viewCnt} />
           </WrapperGroup>

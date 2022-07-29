@@ -61,24 +61,24 @@ function WriteCode(props) {
         {item === "HTML" && (
           <CodeEditor
             defaultLanguage="html"
-            defaultValue={props.htmlScript}
+            defaultValue={props.srcCode}
             onMount={onMount}
-            onChange={props.changeHtmlScript}
+            onChange={props.changeSrcCode}
           />
         )}
         {item === "MARKDOWN" && (
           <CodeEditor
             defaultLanguage="markdown"
-            defaultValue={props.markdown}
+            defaultValue={props.manual}
             onMount={onMount}
-            onChange={props.changeMarkdown}
+            onChange={props.changeManual}
           />
         )}
         {item === "미리 보기" && (
           <>
             <CalculetBlock
-              srcCode={props.htmlScript + "<style>*{margin:0px;}</style>"}
-              manual={props.markdown}
+              srcCode={props.srcCode + "<style>*{margin:0px;}</style>"}
+              manual={props.manual}
             />
           </>
         )}

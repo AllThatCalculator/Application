@@ -2,7 +2,7 @@ import styled from "styled-components";
 import styles from "../styles";
 import PreviewBanner from "./PreviewBanner";
 import MiddleTitle from "./MiddleTitle";
-import { OPTIONS_BIG_CATEGORY, OPTIONS_EMAIL_ADDRESS } from "./Option";
+import { OPTIONS_CATEGORY_MAIN, OPTIONS_EMAIL_ADDRESS } from "./Option";
 import BigTitle from "../atom-components/BigTitle";
 import { FlexColumnLayout, ResponsiveTabletLayout } from "../Layout";
 import {
@@ -55,17 +55,17 @@ function WriteInform(props) {
   // 대분류, 소분류 SelectBox 필요한 정보들
   const categorys = [
     {
-      options: OPTIONS_BIG_CATEGORY,
+      options: OPTIONS_CATEGORY_MAIN,
       placeholder: "대분류",
-      selected: props.bigCategory,
-      onChange: props.changeBigCategory,
+      selected: props.categoryMain,
+      onChange: props.changeCategoryMain,
       isLine: true,
     },
     {
-      options: props.smallCategoryOption,
+      options: props.categorySubOption,
       placeholder: "소분류",
-      selected: props.smallCategory,
-      onChange: props.changeSmallCategory,
+      selected: props.categorySub,
+      onChange: props.changeCategorySub,
       isLine: false,
     },
   ];

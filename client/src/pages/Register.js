@@ -5,9 +5,9 @@ import { WriteInform } from "../components/register/WriteInform";
 import UploadDoneBtn from "../components/register/UploadDoneBtn";
 import { useState, useRef, useEffect } from "react";
 import {
-  OPTIONS_BIG_CATEGORY,
+  OPTIONS_CATEGORY_MAIN,
+  OPTIONS_CATEGORY_SUB,
   OPTIONS_EMAIL_ADDRESS,
-  OPTIONS_SMALL_CATEGORY,
 } from "../components/register/Option";
 import { ContentLayout, White300Layout } from "../components/Layout";
 
@@ -29,10 +29,10 @@ const RegisterLayout = styled(ContentLayout)`
 function Register() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [bigCategory, setBigCategory] = useState("");
-  const [smallCategory, setSmallCategory] = useState("");
+  const [categoryMain, setCategoryMain] = useState("");
+  const [categorySub, setCategorySub] = useState("");
   // 대분류 종류에 맞는 소분류 옵션 배열
-  const [smallCategoryOption, setSmallCategoryOption] = useState(null);
+  const [categorySubOption, setCategorySubOption] = useState(null);
   const [address, setAddress] = useState("");
   const [writedDomain, setWritedDomain] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("");
@@ -42,8 +42,8 @@ function Register() {
   // monaco editor의 값을 가져오기 위해 필요한 것
   const editorRef = useRef(null);
 
-  const [htmlScript, setHtmlScript] = useState("<!DOCTYPE html>");
-  const [markdown, setMarkdown] = useState("### write detail!");
+  const [srcCode, setSrcCode] = useState("<!DOCTYPE html>");
+  const [manual, setManual] = useState("### write detail!");
 
   // 바로 초기화하면 defaultValue로 설정해서인지 값이 안 바뀌어서 나중에 set하기 위해 useEffect 사용
   useEffect(() => setSelectedDomain("직접 입력"), []);
@@ -70,18 +70,18 @@ function Register() {
    * - 해당하는 대분류에 속하는 소분류 옵션을 세팅
    * @param {*} event
    */
-  function changeBigCategory(event) {
+  function changeCategoryMain(event) {
     const targetValue = event.target.value;
-    const option = OPTIONS_BIG_CATEGORY.filter((x) => x.value === targetValue);
-    const smallOption = OPTIONS_SMALL_CATEGORY.filter(
+    const option = OPTIONS_CATEGORY_MAIN.filter((x) => x.value === targetValue);
+    const smallOption = OPTIONS_CATEGORY_SUB.filter(
       (x) => x.big === option[0].value
     );
-    setBigCategory(option[0].name);
-    setSmallCategory(null);
+    setCategoryMain(option[0].name);
+    setCategorySub(null);
     if (smallOption.length) {
-      setSmallCategoryOption(smallOption[0].options);
+      setCategorySubOption(smallOption[0].options);
     } else {
-      setSmallCategoryOption(null);
+      setCategorySubOption(null);
     }
   }
 
@@ -90,11 +90,11 @@ function Register() {
    * - value에 먼저 접근한 후, value에 맞는 name을 찾아서 저장
    * @param {*} event
    */
-  function changeSmallCategory(event) {
+  function changeCategorySub(event) {
     const targetValue = event.target.value;
-    if (smallCategoryOption) {
-      const option = smallCategoryOption.filter((x) => x.value === targetValue);
-      setSmallCategory(option[0].name);
+    if (categorySubOption) {
+      const option = categorySubOption.filter((x) => x.value === targetValue);
+      setCategorySub(option[0].name);
     }
   }
 
@@ -150,15 +150,15 @@ function Register() {
   /**
    * HTML 코드 change 함수 (monaco editor)
    */
-  function changeHtmlScript() {
-    setHtmlScript(editorRef.current.getValue());
+  function changeSrcCode() {
+    setSrcCode(editorRef.current.getValue());
   }
 
   /**
    * MARKDOWN 코드 change 함수 (monaco editor)
    */
-  function changeMarkdown() {
-    setMarkdown(editorRef.current.getValue());
+  function changeManual() {
+    setManual(editorRef.current.getValue());
   }
 
   return (
@@ -167,9 +167,9 @@ function Register() {
         <WriteInform
           title={title}
           description={description}
-          bigCategory={bigCategory}
-          smallCategoryOption={smallCategoryOption}
-          smallCategory={smallCategory}
+          categoryMain={categoryMain}
+          categorySubOption={categorySubOption}
+          categorySub={categorySub}
           address={address}
           writedDomain={writedDomain}
           selectedDomain={selectedDomain}
@@ -177,27 +177,27 @@ function Register() {
           email={email}
           changeTitle={changeTitle}
           changeDescription={changeDescription}
-          changeBigCategory={changeBigCategory}
-          changeSmallCategory={changeSmallCategory}
+          changeCategoryMain={changeCategoryMain}
+          changeCategorySub={changeCategorySub}
           changeAddress={changeAddress}
           changeDomain={changeDomain}
           changeSelectedDomain={changeSelectedDomain}
         />
         <WriteCode
           editorRef={editorRef}
-          htmlScript={htmlScript}
-          markdown={markdown}
-          changeHtmlScript={changeHtmlScript}
-          changeMarkdown={changeMarkdown}
+          srcCode={srcCode}
+          manual={manual}
+          changeSrcCode={changeSrcCode}
+          changeManual={changeManual}
         />
         <UploadDoneBtn
           title={title}
           description={description}
-          bigCategory={bigCategory}
-          smallCategory={smallCategory}
-          email={email}
-          htmlScript={htmlScript}
-          markdown={markdown}
+          categoryMain={categoryMain}
+          categorySub={categorySub}
+          email={address}
+          srcCode={srcCode + "<style>*{margin:0px;}</style>"}
+          manual={manual}
         />
       </RegisterLayout>
     </White300Layout>

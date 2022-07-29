@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import CalculetBlock from "../components/calculet-block/CalculetBlock";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styles from "../components/styles";
 import {
   BtnWhite,
@@ -21,6 +21,8 @@ import {
   FlexRowLayout,
   TransparentLayout,
 } from "../components/Layout";
+
+import axios from "axios";
 
 // 계산기 블록 배경
 const Positioner = styled.div`
@@ -88,42 +90,39 @@ function Calculet() {
   // },
   const [statistics, setStatistics] = useState(null);
 
-  /**
-   * (임시) 계산기 정보 불러오는 함수
-   * -> 백엔드 도입하면 http request로 받아올 예정
-   */
-  // function
-  function loadCalculetObj() {
-    fetch(require("../calculets/arithmetic-operation/arithmeticOperation.md"))
-      .then((res) => res.text())
-      .then((mdCode) => {
-        setCalculetObj({
-          title: "사칙연산 계산기",
-          id: 1,
-          srcCode: srcCode,
-          contributor: "bsa0322",
-          manual: mdCode,
-          description: "사칙연산 계산기입니다.",
-        });
-        setStatistics({
-          bookmarkCnt: 10,
-          bookmarked: false,
-          likeCnt: 5,
-          liked: false,
-          reportCnt: 1,
-          viewCnt: 100,
-          calculationCnt: 10,
-          userCnt: 10,
-        });
-      });
+  // 계산기 저작자 프로필 이미지
+  const [contributorImgSrc, setContributorImgSrc] = useState(null);
+
+  // 현재 페이지에 로딩할 계산기 id
+  let { id } = useParams();
+
+  // id 없다면 초기화 (메인 페이지)
+  if (id === undefined) {
+    id = 1;
   }
 
   /**
-   * (임시) 계산기 객체 불러오기
+   * 백엔드에서 계산기 정보 불러오는 함수
+   */
+  async function loadCalculetObj() {
+    try {
+      await axios.get(`/calculets/${id}`).then((response) => {
+        // console.log(response.data);
+        setCalculetObj(response.data[0]);
+        setStatistics(response.data[1]);
+        setContributorImgSrc(response.data[0].contributorImgSrc);
+      });
+    } catch (error) {
+      console.log("error" + error);
+    }
+  }
+
+  /**
+   * 계산기 객체 불러오기
    */
   useEffect(() => {
-    setTimeout(loadCalculetObj, 1000);
-  }, []);
+    loadCalculetObj();
+  }, [id]);
 
   return (
     <>
@@ -134,6 +133,7 @@ function Calculet() {
               <CalculetHeader
                 title={calculetObj.title}
                 contributor={calculetObj.contributor}
+                contributorImgSrc={contributorImgSrc}
                 statistics={statistics}
               />
               <CalculetBlock

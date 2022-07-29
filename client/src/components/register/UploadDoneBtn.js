@@ -1,3 +1,4 @@
+import axios from "axios";
 import styled from "styled-components";
 import { BtnBlue } from "../atom-components/ButtonTemplate";
 import { FlexColumnLayout } from "../Layout";
@@ -16,16 +17,21 @@ const Wrapper = styled(FlexColumnLayout)`
  * props: DB로 넘겨야 하는 계산기 관련 정보들
  */
 function UploadDoneBtn(props) {
-  /**
-   * (임시) console에 정보 찍는 함수
-   */
-  function onClick() {
-    console.log(props);
+  async function registerCalculet() {
+    try {
+      await axios.post("/calculets/", props).then((response) => {
+        console.log("계산기 등록 완료!");
+        console.log(response.data);
+        console.log(props);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
     <Wrapper>
-      <BtnBlue text="계산기 등록" icon="Upload" onClick={onClick} />
+      <BtnBlue text="계산기 등록" icon="Upload" onClick={registerCalculet} />
     </Wrapper>
   );
 }
