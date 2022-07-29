@@ -40,6 +40,11 @@ const StyledProfileImgBig = styled.img`
   ${styles.styleSize.big};
   border-radius: 50%;
 `;
+// 둥근 사진
+const StyledCircleImg = styled.img`
+  width: ${(props) => props.width};
+  border-radius: 50%;
+`;
 /**
  * 사진 width x height
  */
@@ -96,4 +101,11 @@ function IconColorBox({ icon, color }) {
     </StyledColor>
   );
 }
-export { BoxIcon, StyledIcon, StyledProfileImgBig, IconColorBox, StyledImg };
+export {
+  BoxIcon,
+  StyledIcon,
+  StyledProfileImgBig,
+  IconColorBox,
+  StyledImg,
+  StyledCircleImg,
+};
