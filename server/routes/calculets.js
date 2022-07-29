@@ -67,26 +67,31 @@ router.get("/:id", (req, res) => {
   const calculetInfoQuery = `select * from calculet_info where id=${req.params.id};`;
 
   // 계산기 통계 쿼리문
-  const calculetStatisticsQuery = `select bookmark_cnt, like_cnt, report_cnt, view_cnt from calculet_statistics where calculet_id=${req.params.id};`;
+  const calculetStatisticsQuery = `select bookmark_cnt, like_cnt, report_cnt from calculet_statistics where calculet_id=${req.params.id};`;
+
+  // 계산기 누적 통계 쿼리문
+  const calculetCountQuery = `select view_cnt, calculation_cnt, user_cnt from calculet_count where calculet_id=${req.params.id};`;
 
   // (임시) 사용자-계산기 관련 정보(북마크 여부, 좋아요 여부) 쿼리문
   // 아직 로그인 기능 없어서 버튼 누른 회원 정보 못 얻어오므로 사람 구분은 x
   const userCalculetQuery = `select liked, bookmarked from user_calculet where calculet_id=${req.params.id};`;
 
   // 제작자 사진
-  const userInfoQuery = `select profile_img from user_info where id = (select contributor_id from calculet_info where id=${req.params.id});`;
+  const userInfoQuery = `select profile_img from user_info where email = (select contributor_email from calculet_info where id=${req.params.id});`;
 
   mariadb.query(
     calculetInfoQuery +
       calculetStatisticsQuery +
+      calculetCountQuery +
       userCalculetQuery +
       userInfoQuery,
     (err, rows, fields) => {
       if (!err) {
         const calculetInfo = rows[0][0];
         const calculetStatistics = rows[1][0];
-        let userCalculet = rows[2][0];
-        const userInfo = rows[3][0];
+        const calculetCount = rows[2][0];
+        let userCalculet = rows[3][0];
+        const userInfo = rows[4][0];
 
         // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
         if (!userCalculet) {
@@ -116,33 +121,38 @@ router.get("/:id", (req, res) => {
             description: calculetInfo.description,
             categoryMain: calculetInfo.category_main,
             categorySub: calculetInfo.category_sub,
-            contributor: calculetInfo.contributor_id,
+            contributor: calculetInfo.contributor_email,
             contributorImgSrc: contributorImgSrc,
           };
         }
 
         // 통계 객체로 묶기
         let statistics = null;
-        if (calculetStatistics && userCalculet) {
+        if (calculetStatistics && calculetCount && userCalculet) {
           statistics = {
             bookmarkCnt: calculetStatistics.bookmark_cnt,
             bookmarked: userCalculet.bookmarked,
             likeCnt: calculetStatistics.like_cnt,
             liked: userCalculet.liked,
             reportCnt: calculetStatistics.report_cnt,
-            viewCnt: calculetStatistics.view_cnt,
+            viewCnt: calculetCount.view_cnt,
           };
         }
 
         // 계산기 잘 불러왔는지 확인
         if (calculet === null || statistics === null) {
-          res.status(404).send({ message: "calculet was not found" });
+          res
+            .status(404)
+            .send({ success: false, message: "calculet was not found" });
         } else {
-          const result = [calculet, statistics];
-          res.send(result);
+          res.status(200).send({
+            success: true,
+            data: [calculet, statistics],
+          });
         }
       } else {
         res.status(400).send({
+          success: false,
           message:
             "request parameters was wrong. retry request after change parameters",
         });
@@ -180,12 +190,8 @@ router.get("/:id", (req, res) => {
  *                $ref: "#/components/schemas/errorResult"
  */
 router.post("/", (req, res) => {
-  /** (임시)
-   * 계산기 정보 삽입문
-   * (나중에 calculet_info_temp 테이블에 삽입하는 것으로 수정)
-   */
   const sql =
-    "INSERT INTO calculet_info(title, src_code, manual, description, category_main, category_sub, contributor_id) VALUES(?,?,?,?,?,?,?);";
+    "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main, category_sub, contributor_email) VALUES(?,?,?,?,?,?,?);";
 
   const calculet = [
     req.body.title,
@@ -199,10 +205,12 @@ router.post("/", (req, res) => {
 
   mariadb.query(sql, calculet, (err, result, fields) => {
     if (!err) {
-      res.status(201).send({ location: `/calculets/${result.insertId}` });
+      res
+        .status(201)
+        .send({ success: true, location: `/calculets/${result.insertId}` });
     } else {
-      console.log(err);
       res.status(400).send({
+        success: false,
         message:
           "request parameters was wrong. retry request after change parameters",
       });

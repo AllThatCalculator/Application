@@ -107,13 +107,20 @@ function Calculet() {
   async function loadCalculetObj() {
     try {
       await axios.get(`/calculets/${id}`).then((response) => {
-        // console.log(response.data);
-        setCalculetObj(response.data[0]);
-        setStatistics(response.data[1]);
-        setContributorImgSrc(response.data[0].contributorImgSrc);
+        setCalculetObj(response.data.data[0]);
+        setStatistics(response.data.data[1]);
+        setContributorImgSrc(response.data.data[0].contributorImgSrc);
       });
     } catch (error) {
-      console.log("error" + error);
+      switch (error.response.status) {
+        case 400:
+        case 404:
+          console.log(error.response.data.message);
+          break;
+        default:
+          console.log("서버에러");
+          break;
+      }
     }
   }
 

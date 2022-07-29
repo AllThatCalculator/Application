@@ -21,8 +21,6 @@ function UploadDoneBtn(props) {
     try {
       await axios.post("/calculets/", props).then((response) => {
         console.log("계산기 등록 완료!");
-        console.log(response.data);
-        console.log(props);
       });
     } catch (error) {
       console.log(error);
