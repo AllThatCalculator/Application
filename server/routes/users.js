@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const mariadb = require("../config/database");
 const cookieParser = require("cookie-parser");
 const router = express.Router();
+
+// bcrypt 암호화하기 위해 필요한 상수
 const saltRounds = 10;
 
 /**
@@ -23,6 +25,7 @@ router.post("/", (req, res) => {
     if (!err) {
       bcrypt.hash(pw, salt, function (err, hash) {
         if (!err) {
+          // 암호화된 비밀번호로 저장
           pw = hash;
 
           // 데이터 삽입
@@ -55,11 +58,13 @@ router.post("/", (req, res) => {
             }
           });
         } else {
-          console.log(err);
+          res
+            .status(403)
+            .send({ success: false, message: "비밀번호 암호화 실패" });
         }
       });
     } else {
-      console.log(err);
+      res.status(403).send({ success: false, message: "비밀번호 암호화 실패" });
     }
   });
 });
@@ -85,7 +90,6 @@ router.post("/login", (req, res) => {
 
       // 비밀번호 일치하는지 검사
       const isEqualPw = await bcrypt.compare(`${req.body.pw}`, userLogin.pw);
-      console.log(isEqualPw);
 
       // 일치하지 않으면
       if (!isEqualPw) {
@@ -112,7 +116,7 @@ router.post("/login", (req, res) => {
         .status(200)
         .send({ loginSuccess: true, userEmail: req.body.email });
     } else {
-      console.log(err);
+      res.status(403).send({ success: false, message: "계정 조회 실패" });
     }
   });
 });
@@ -130,7 +134,6 @@ router.get("/me", async (req, res) => {
     const decoded = await jwt.verify(token, process.env.SECRET_KEY);
     res.status(200).send({ isMe: true, email: decoded.email });
   } catch {
-    console.log("로그인 필요");
     res.status(404).send({ isMe: false, message: "로그인 필요" });
   }
 });
