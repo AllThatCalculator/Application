@@ -5,7 +5,9 @@ const sizes = {
   phone: `width:360px`,
 };
 const styleColor = {
+  blue950: "#082868",
   blue900: "#143578",
+  blue500: "#0969DA",
   blue400: "#6F8AC3",
   blue300: "#546EA4",
   blue200: "#9CB2DF",
@@ -31,6 +33,7 @@ const styleColor = {
   black25: { color: "#BEBEBE", opacity: 0.25 },
   gray100: "#5E5E5E",
   gray50: "#929292BF",
+  red500: "#DB0918",
 };
 const styleLayout = {
   basic25: "1px",
@@ -66,6 +69,8 @@ font-size: 18px;`,
   text300: `font-family: "S-CoreDream-5Medium";
 font-size: 16px;`,
   text200: `font-family: "S-CoreDream-3Light";
+font-size: 14px;`,
+  text200b: `font-family: "S-CoreDream-4Regular";
 font-size: 14px;`,
   text100: `font-family: "S-CoreDream-3Light";
 font-size: 12px;`,

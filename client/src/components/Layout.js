@@ -22,6 +22,9 @@ const HeaderLayout = styled.div`
  */
 const ContentLayout = styled.div`
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+
   @media (min-width: ${PHONE}) and (max-width: ${TABLET}) {
     ${styles.sizes.phone};
   }

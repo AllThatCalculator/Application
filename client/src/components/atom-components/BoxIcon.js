@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import { FlexRowLayout } from "../Layout";
 import styles from "../styles";
-import { Icons } from "./Icons";
+import { StyledIcon } from "./ButtonTemplate";
 //스타일드 기본 박스
 const StyledDiv = styled.div`
   display: flex;
@@ -15,23 +16,6 @@ const StyledDiv = styled.div`
   -khtml-user-select: none;
   user-select: none;
 `;
-// 스타일드 기본 아이콘
-const StyledIcon = (props) => {
-  return (
-    <svg
-      stroke="currentColor"
-      fill="currentColor"
-      strokeWidth="0"
-      xmlns="http://www.w3.org/2000/svg"
-      height={Icons[props.name].height}
-      width={Icons[props.name].width}
-      viewBox={Icons[props.name].viewBox}
-    >
-      <path d={Icons[props.name].path[0]} />
-      {Icons[props.name].path[1] && <path d={Icons[props.name].path[1]} />}
-    </svg>
-  );
-};
 //========================================================
 // 통계용 텍스트 - 버튼 이름
 const StyledNameText = styled.div`
@@ -57,6 +41,15 @@ const StyledProfileImgBig = styled.img`
   border-radius: 50%;
 `;
 /**
+ * 사진 width x height
+ */
+const StyledImg = styled.img`
+  display: flex;
+  align-self: center;
+  width: ${(props) => props.width};
+  height: ${(props) => props.heigth};
+`;
+/**
  *
  * 버튼이 아닌! 아이콘 + 정보 를 나타내는 컴포넌트 반환 함수
  *
@@ -80,4 +73,27 @@ function BoxIcon({ text, icon, number, profile }) {
     </StyledDiv>
   );
 }
-export { BoxIcon, StyledIcon, StyledProfileImgBig };
+/**
+ * 아이콘 색 바꾸기
+ * props.color
+ * -> {styles.styleColor.blue400}
+ */
+const StyledColor = styled(FlexRowLayout)`
+  color: ${(props) => props.color};
+`;
+/**
+ * 색을 입힌 아이콘
+ *
+ * @param {string, string} param0
+ *
+ * icon : 아이콘 이름
+ * color : 아이콘 색
+ */
+function IconColorBox({ icon, color }) {
+  return (
+    <StyledColor color={color}>
+      <StyledIcon name={icon} />
+    </StyledColor>
+  );
+}
+export { BoxIcon, StyledIcon, StyledProfileImgBig, IconColorBox, StyledImg };
