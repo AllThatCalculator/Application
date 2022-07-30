@@ -40,6 +40,7 @@ module.exports = {
   },
   refreshVerify: async (token, userEmail) => {
     // refresh token 검증
+    await redisClient.connect().catch(console.error);
     const getAsync = promisify(redisClient.get).bind(redisClient);
 
     try {

@@ -1,11 +1,11 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const { auth } = require("../../middleware/auth");
-const { signUp } = require("./signUp");
-const { login } = require("./login");
-const { me } = require("./me");
-const { logout } = require("./logout");
-const { refresh } = require("./refresh");
+const { auth } = require("../middleware/auth");
+const { signUp } = require("./users/signUp");
+const { login } = require("./users/login");
+const { me } = require("./users/me");
+const { logout } = require("./users/logout");
+const { refresh } = require("./users/refresh");
 
 const router = express.Router();
 

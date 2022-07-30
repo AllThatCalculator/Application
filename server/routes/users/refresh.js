@@ -11,7 +11,7 @@ exports.refresh = async (req, res) => {
     const accessResult = verify(accessToken);
 
     // access token 복호화하여 user 정보 가져오기
-    const decoded = jwt.decode(accessResult);
+    const decoded = jwt.decode(accessToken);
 
     // 디코딩 결과가 없으면 권한이 없음을 응답
     if (decoded === null) {

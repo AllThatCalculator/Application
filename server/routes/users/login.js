@@ -4,10 +4,10 @@ const mariadb = require("../../config/database");
 const redisClient = require("../../utils/redis");
 
 exports.login = async (req, res) => {
-  const { userEmail, pw } = req.body;
+  const { email, pw } = req.body;
 
   // 요청 이메일 DB에서 찾기
-  const sql = `select * from user_login where user_email='${userEmail}'`;
+  const sql = `select * from user_login where user_email='${email}'`;
 
   mariadb.query(sql, async (err, rows, fields) => {
     if (!err) {
@@ -32,11 +32,12 @@ exports.login = async (req, res) => {
         });
       }
       // 일치한다면 토큰 생성
-      const userInfo = { email: userEmail };
+      const userInfo = { email: email };
       const accessToken = sign(userInfo);
       const refreshToken = refresh();
 
       // 발급한 refresh token을 redis에 key: userInfo.email로 하여 저장
+      await redisClient.connect().catch(console.error);
       redisClient.set(userInfo.email, refreshToken);
 
       // 토큰 2개 모두 쿠키에 저장
@@ -48,7 +49,7 @@ exports.login = async (req, res) => {
           httpOnly: true,
         })
         .status(200)
-        .send({ loginSuccess: true, userEmail: userEmail });
+        .send({ loginSuccess: true, userEmail: email });
     } else {
       res.status(403).send({ loginSuccess: false, message: "계정 조회 실패" });
     }
