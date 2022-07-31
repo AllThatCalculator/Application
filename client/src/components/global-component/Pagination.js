@@ -22,12 +22,43 @@ const StyledButton = styled.button`
   }
 `;
 /**
+ * blue 네비 버튼
+ */
+const StyledButtonBlue = styled(StyledButton)`
+  background: ${styles.styleColor.blue30};
+  opacity: 1;
+  border: ${styles.styleColor.blue900} 0.5px solid;
+
+  cursor: pointer;
+  &:hover {
+    background: ${styles.styleColor.blue300};
+    opacity: 1;
+    ${styles.styleEffect.opacity100};
+    border-width: 1px;
+  }
+`;
+/**
  * 네비 버튼 활성화 됐을 때
  */
 const active = {
   background: `${styles.styleColor.green200.color}`,
   opacity: `${styles.styleColor.green200.opacity}`,
 };
+/**
+ * blue 네비 버튼 활성화 됐을 때
+ */
+const activeBlue = {
+  background: `${styles.styleColor.blue300}`,
+  filter: `drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.25))`,
+  "border-width": `1px`,
+};
+
+/**
+ * 가운데 정렬
+ */
+const Wrapper = styled(FlexRowLayout)`
+  justify-content: center;
+`;
 
 /**
  * 왼쪽, 오른쪽, 동그라미 네비버튼 눌러서 원하는 페이지 보이게 하는 네비게이션 바
@@ -37,9 +68,16 @@ const active = {
  * renderTotal : 계산기 전체 개수 (처음~끝 페이지)
  * paginate : onClick에 따라 현재 페이지를 네비할 함수 -> paginate에 의해 currentPage 바뀜
  * currentPage : 현재 페이지
+ * isBlue : 파란색 네이게이션 바인지 여부
  *
  */
-function Pagination({ renderPerPage, renderTotal, paginate, currentPage }) {
+function Pagination({
+  renderPerPage,
+  renderTotal,
+  paginate,
+  currentPage,
+  isBlue,
+}) {
   // 동그라미 개수(페이지 개수)
   const pageNumbers = [];
   for (let i = 1; i <= Math.ceil(renderTotal / renderPerPage); i++) {
@@ -58,25 +96,35 @@ function Pagination({ renderPerPage, renderTotal, paginate, currentPage }) {
   // 네비버튼 클릭하면, Recommend의 currentPage 상태값이 변경되고
   // Recommned에서 작성한 대로 배열 데이터 값이 분할되어 추천 계산기가 렌더됨
   return (
-    <FlexRowLayout gap="10px">
+    <Wrapper gap="10px">
       <BtnSmallIcon
         text="왼쪽페이지"
         icon="ChevronLeft"
+        color={isBlue && "blue"}
         onClick={() => prvPage()}
       />
-      {pageNumbers.map((number, index) => (
-        <StyledButton
-          style={index + 1 === currentPage ? active : null}
-          key={number}
-          onClick={() => paginate(number)}
-        />
-      ))}
+      {pageNumbers.map((number, index) =>
+        isBlue ? (
+          <StyledButtonBlue
+            style={index + 1 === currentPage ? activeBlue : null}
+            key={number}
+            onClick={() => paginate(number)}
+          />
+        ) : (
+          <StyledButton
+            style={index + 1 === currentPage ? active : null}
+            key={number}
+            onClick={() => paginate(number)}
+          />
+        )
+      )}
       <BtnSmallIcon
         text="오른쪽페이지"
         icon="ChevronRight"
+        color={isBlue && "blue"}
         onClick={() => nextPage()}
       />
-    </FlexRowLayout>
+    </Wrapper>
   );
 }
 export default Pagination;

@@ -15,11 +15,11 @@ import {
   ContentLayout,
   FlexColumnLayout,
   FlexRowLayout,
-  TransparentLayout,
 } from "../components/Layout";
 
 import axios from "axios";
 import updateCalculetCount from "../utils/UpdateCalculetCount";
+import { Font } from "../components/atom-components/StyledText";
 
 // 계산기 블록 배경
 const Positioner = styled.div`
@@ -50,19 +50,17 @@ const WrapperCol = styled(BoxCalculet)`
   flex-direction: column;
   gap: ${styles.styleLayout.basic700};
 `;
-// 패딩 적용
-const PositionerPadding = styled.div`
-  padding: ${(props) => props.padding};
-`;
-// 설명
-const Explain = styled.div`
-  ${styles.sytleText.text200}
-`;
 // 링크
 const StyledLink = styled(Link)`
   text-decoration-line: none;
 `;
-
+/**
+ * ContentLayout을 상속하는 계산기 추천 모듈 감쌈
+ * - padding을 새로 설정
+ */
+const Wrapper = styled(ContentLayout)`
+  padding: ${styles.styleLayout.basic350};
+`;
 // 계산기 추천
 
 function Calculet() {
@@ -180,26 +178,22 @@ function Calculet() {
 
       <PositionerBottom>
         <BoxCalculetBottom>
-          <Explain>자신만의 계산기를 만드세요!</Explain>
+          <Font font="text200">자신만의 계산기를 만드세요!</Font>
           <StyledLink to="/register">
             <BtnBlue text="계산기 등록" icon="Upload" />
           </StyledLink>
         </BoxCalculetBottom>
       </PositionerBottom>
 
-      <TransparentLayout>
-        <ContentLayout>
-          <PositionerPadding padding="20px 0px">
-            <FlexColumnLayout gap="20px">
-              <TextWhite text="다른 계산기들도 있어요 🤗" />
-              <FlexRowLayout>
-                <BtnWhite text="더보기" />
-              </FlexRowLayout>
-              <Recommend />
-            </FlexColumnLayout>
-          </PositionerPadding>
-        </ContentLayout>
-      </TransparentLayout>
+      <Wrapper>
+        <FlexColumnLayout gap="20px">
+          <TextWhite text="다른 계산기들도 있어요 🤗" />
+          <FlexRowLayout>
+            <BtnWhite text="더보기" />
+          </FlexRowLayout>
+          <Recommend />
+        </FlexColumnLayout>
+      </Wrapper>
     </>
   );
 }

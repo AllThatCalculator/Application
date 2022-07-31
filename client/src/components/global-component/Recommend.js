@@ -5,22 +5,12 @@ import { useEffect, useState } from "react";
 import { FlexColumnLayout, ResponsivePhoneLayout } from "../Layout.js";
 
 /**
- * 가운데 정렬
+ * 가운데 정렬 스타일 정의
  */
-const PositionerCenter = styled.div`
-  display: flex;
-  justify-content: center;
+const Wrapper = styled(FlexColumnLayout)`
+  align-items: center;
 `;
-/**
- * 가운데 정렬한 컴포넌트 반환
- *
- * @param {funtion} param0
- * component : 가운데 정렬할 컴포넌트
- *
- */
-function RenderCenter({ component }) {
-  return <PositionerCenter>{component}</PositionerCenter>;
-}
+
 /**
  *
  * 추천 계산기 렌더하는 함수 (Recommend 내에서 처리하는 함수에요)
@@ -88,28 +78,20 @@ function Recommend() {
 
   // currentPage는 Pagination에서 onClick에 따라 네비됨
   return (
-    <FlexColumnLayout gap="15px">
-      <RenderCenter
-        component={
-          <ResponsivePhoneLayout columnGap="20px" rowGap="20px">
-            <RenderCalculet
-              calculets={currentCalculets(calculets)}
-              loading={loading}
-            />
-          </ResponsivePhoneLayout>
-        }
+    <Wrapper gap="15px">
+      <ResponsivePhoneLayout columnGap="20px" rowGap="20px">
+        <RenderCalculet
+          calculets={currentCalculets(calculets)}
+          loading={loading}
+        />
+      </ResponsivePhoneLayout>
+      <Pagination
+        renderPerPage={KEY_PAGE}
+        renderTotal={calculets.length}
+        paginate={setCurrentPage}
+        currentPage={currentPage}
       />
-      <RenderCenter
-        component={
-          <Pagination
-            renderPerPage={KEY_PAGE}
-            renderTotal={calculets.length}
-            paginate={setCurrentPage}
-            currentPage={currentPage}
-          />
-        }
-      />
-    </FlexColumnLayout>
+    </Wrapper>
   );
 }
 
