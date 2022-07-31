@@ -9,11 +9,11 @@ import { FlexRowLayout } from "../Layout";
  * guide : 특정 수행 내용을 안내
  * lead : 사용자가 할 특정 수행 내용
  */
-function ActGuide({ guide, lead }) {
+function ActGuide({ guide, lead, onClick }) {
   return (
     <FlexRowLayout gap="5px">
       <SmallTitle content={guide} />
-      <BtnText text={lead} />
+      <BtnText type="button" text={lead} onClick={onClick} />
     </FlexRowLayout>
   );
 }

@@ -33,17 +33,23 @@ const StyledNumberText = styled(StyledNameText)`
 const StyledProfileImg = styled.img`
   ${styles.styleSize.small};
   border-radius: 50%;
+
+  -webkit-user-drag: none;
 `;
 // 프로필 큰 사진
 const StyledProfileImgBig = styled.img`
   background: ${styles.styleColor.blue900};
   ${styles.styleSize.big};
   border-radius: 50%;
+
+  -webkit-user-drag: none;
 `;
 // 둥근 사진
 const StyledCircleImg = styled.img`
   width: ${(props) => props.width};
   border-radius: 50%;
+
+  -webkit-user-drag: none;
 `;
 /**
  * 사진 width x height
@@ -53,6 +59,8 @@ const StyledImg = styled.img`
   align-self: center;
   width: ${(props) => props.width};
   height: ${(props) => props.heigth};
+
+  -webkit-user-drag: none;
 `;
 /**
  *

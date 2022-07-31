@@ -1,7 +1,16 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import styled from "styled-components";
 import { StyledCircleImg } from "../atom-components/BoxIcon";
 import { BtnText } from "../atom-components/ButtonTemplate";
 import { FlexColumnLayout, FlexRowLayout } from "../Layout";
+
+/**
+ * 가운데 정렬
+ */
+const Wrapper = styled(FlexColumnLayout)`
+  align-items: center;
+`;
+
 /**
  * 프로필 이미지 컴포넌트
  * 사진 변경 함수 포함
@@ -12,6 +21,10 @@ import { FlexColumnLayout, FlexRowLayout } from "../Layout";
  */
 function ProfileChange({ profileImg, setProfileImg }) {
   /**
+   * 사용자가 프로필 사진 변경했는지 여부
+   */
+  const [isUserImg, setIsUserImg] = useState(false);
+  /**
    * Ref를 사용해서 input태그 참조
    * -> 사진 번경 버튼 누르면, 사진 선택 가능
    */
@@ -19,6 +32,15 @@ function ProfileChange({ profileImg, setProfileImg }) {
   function changeImageSrc() {
     imageInput.current.click();
   }
+  /**
+   * 이미지 제거
+   * -> 기본이미지로 변경
+   */
+  function removeImage() {
+    setIsUserImg(false);
+    setProfileImg("/img/defaultProfile.png");
+  }
+
   /**
    * 이미지를 인코딩하여 이미지 state를 변경하는 함수
    *
@@ -40,6 +62,8 @@ function ProfileChange({ profileImg, setProfileImg }) {
    * fileBlob : 인코딩할 문자열 image src
    */
   function encodeFileToBase64(fileBlob) {
+    setIsUserImg(true);
+
     const reader = new FileReader();
     reader.readAsDataURL(fileBlob);
     return new Promise((resolve) => {
@@ -51,7 +75,8 @@ function ProfileChange({ profileImg, setProfileImg }) {
   }
   /**
    * 변경한 이미지 미리 보기
-   * -> 선택한 이미지로 프로필 사진 변경하는 함수
+   * -> 기본 이미지면, 이미지 추가
+   * -> 이미지 추가했으면, 이미지 변경 & 이미지 제거
    * @param {*} event
    *
    * event : 선택된 이미지를 참조하기 위한 event
@@ -61,9 +86,21 @@ function ProfileChange({ profileImg, setProfileImg }) {
   }
   return (
     <FlexRowLayout>
-      <FlexColumnLayout gap="10px">
+      <Wrapper gap="10px">
         <StyledCircleImg src={profileImg} width="64px" height="64px" />
-        <BtnText text="사진 변경" onClick={changeImageSrc} />
+        {!isUserImg ? (
+          <BtnText
+            text="이미지 추가"
+            icon="PencilFill"
+            onClick={changeImageSrc}
+          />
+        ) : (
+          <FlexRowLayout gap="10px">
+            <BtnText text="변경" icon="PencilFill" onClick={changeImageSrc} />
+            <BtnText text="제거" icon="Trash3Fill" onClick={removeImage} />
+          </FlexRowLayout>
+        )}
+
         <input
           type="file"
           accept="image/*"
@@ -71,7 +108,7 @@ function ProfileChange({ profileImg, setProfileImg }) {
           ref={imageInput}
           onChange={onChange}
         />
-      </FlexColumnLayout>
+      </Wrapper>
     </FlexRowLayout>
   );
 }

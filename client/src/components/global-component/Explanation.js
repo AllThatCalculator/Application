@@ -122,7 +122,7 @@ function ExplanationSelectBox({
  * ratioRight: 오른쪽 컴포넌트 비율
  * address: 주소
  * onChangeAddress: change 함수
- * writedDomain: 직접 입력한 도메인 값
+ * writtenDomain: 직접 입력한 도메인 값
  * selectedDomain: select 박스에서 선택한 도메인 값
  * onChangeDomain: change 함수
  * emailAddressOptions: 이메일 옵션
@@ -134,7 +134,7 @@ function ExplanationEmail({
   ratioRight,
   address,
   onChangeAddress,
-  writedDomain,
+  writtenDomain,
   selectedDomain,
   onChangeDomain,
   emailAddressOptions,
@@ -154,7 +154,7 @@ function ExplanationEmail({
         <SmallTitle content="@" />
         <InputBoxLine
           placeholder="도메인"
-          defaultValue={writedDomain}
+          defaultValue={writtenDomain}
           onChange={onChangeDomain}
           disabled={selectedDomain !== "직접 입력" ? true : false}
         />

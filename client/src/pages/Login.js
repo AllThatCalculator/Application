@@ -19,6 +19,7 @@ import WriteInform from "../components/login/WriteInform";
 import useInput from "../user-hooks/UseInput";
 import loginUser from "../components/user-actions/LoginUser";
 import { useNavigate } from "react-router-dom";
+import ActGuide from "../components/sign-up/ActGuide";
 /**
  * 흰색 뒷 배경
  */
@@ -51,21 +52,6 @@ const WrapperFind = styled(FlexRowLayout)`
   justify-content: flex-end;
 `;
 
-/**
- * 사용자가 특정 수행을 할 수 있도록 안내하는 컴포넌트
- *
- * @param {string, string} param0
- * guide : 특정 수행 내용을 안내
- * lead : 사용자가 할 특정 수행 내용
- */
-function ActGuide({ guide, lead }) {
-  return (
-    <FlexRowLayout gap="5px">
-      <SmallTitle content={guide} />
-      <BtnText text={lead} />
-    </FlexRowLayout>
-  );
-}
 /**
  * 로그인 페이지
  */
@@ -108,7 +94,12 @@ function Login() {
   function onFindPw() {
     //console.log("비밀번호 찾으러 가기");
   }
-
+  /**
+   * 회원 가입 하러 가기
+   */
+  function onSignUp() {
+    navigate("/sign-up");
+  }
   return (
     <>
       <StyledWhite300 />
@@ -135,7 +126,11 @@ function Login() {
           </BoxBorder>
         </form>
         <BoxBorder>
-          <ActGuide guide="계정이 없으신가요?" lead="회원가입하기" />
+          <ActGuide
+            guide="계정이 없으신가요?"
+            lead="회원가입하기"
+            onClick={onSignUp}
+          />
         </BoxBorder>
       </WrapperPad>
     </>
