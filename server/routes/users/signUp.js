@@ -27,7 +27,7 @@ exports.signUp = (req, res) => {
           const userLoginData = [req.body.email, pw];
 
           const userInfoQuery = `INSERT INTO user_info VALUES(?,?,?,?,?,?,?);`;
-          const userLoginQuery = `INSERT INTO user_login VALUES(?,?);`;
+          const userLoginQuery = `INSERT INTO user_login(user_email, pw) VALUES(?,?);`;
 
           const sql1 = mariadb.format(userInfoQuery, userInfoData);
           const sql2 = mariadb.format(userLoginQuery, userLoginData);

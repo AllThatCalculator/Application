@@ -60,6 +60,7 @@ CREATE TABLE user_calculet(
 CREATE TABLE user_login(
     user_email VARCHAR(254) NOT NULL,
 	pw VARCHAR(300) NOT NULL,
+    refresh_token VARCHAR(300),
 	PRIMARY KEY (user_email)
 );
 

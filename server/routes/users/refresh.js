@@ -58,7 +58,7 @@ exports.refresh = async (req, res) => {
     }
   } else {
     // 쿠키에 토큰 없는 경우
-    res.status(400).send({
+    res.status(403).send({
       success: false,
       message: "Access token and refresh token are need for refresh!",
     });

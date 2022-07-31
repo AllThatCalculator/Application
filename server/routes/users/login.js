@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs");
 const { sign, refresh } = require("../../utils/jwt");
 const mariadb = require("../../config/database");
-const redisClient = require("../../utils/redis");
 
 exports.login = async (req, res) => {
   const { email, pw } = req.body;
@@ -36,20 +35,26 @@ exports.login = async (req, res) => {
       const accessToken = sign(userInfo);
       const refreshToken = refresh();
 
-      // 발급한 refresh token을 redis에 key: userInfo.email로 하여 저장
-      await redisClient.connect().catch(console.error);
-      redisClient.set(userInfo.email, refreshToken);
-
-      // 토큰 2개 모두 쿠키에 저장
-      res
-        .cookie("access_token", accessToken, {
-          httpOnly: true,
-        })
-        .cookie("refresh_token", refreshToken, {
-          httpOnly: true,
-        })
-        .status(200)
-        .send({ loginSuccess: true, userEmail: email });
+      // 발급한 refresh token을 user_login의 refresh_token 부분에 update
+      const sql = `update user_login set refresh_token='${refreshToken}' where user_email='${email}'`;
+      mariadb.query(sql, (err, result, fields) => {
+        if (!err) {
+          // 토큰 2개 모두 쿠키에 저장
+          res
+            .cookie("access_token", accessToken, {
+              httpOnly: true,
+            })
+            .cookie("refresh_token", refreshToken, {
+              httpOnly: true,
+            })
+            .status(200)
+            .send({ loginSuccess: true, userEmail: email });
+        } else {
+          res
+            .status(400)
+            .send({ loginSuccess: false, message: "토큰 저장 실패" });
+        }
+      });
     } else {
       res.status(403).send({ loginSuccess: false, message: "계정 조회 실패" });
     }

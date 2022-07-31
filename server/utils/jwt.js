@@ -1,6 +1,5 @@
-const { promisify } = require("util");
 const jwt = require("jsonwebtoken");
-const redisClient = require("./redis");
+const mariadb = require("../config/database");
 const secret = process.env.SECRET_KEY;
 
 module.exports = {
@@ -11,7 +10,7 @@ module.exports = {
     };
     return jwt.sign(payload, secret, {
       algorithm: "HS256", // 암호화 알고리즘
-      expiresIn: "1h", // 유효기간
+      expiresIn: "1m", // 유효기간
     });
   },
   verify: (token) => {
@@ -40,23 +39,30 @@ module.exports = {
   },
   refreshVerify: async (token, userEmail) => {
     // refresh token 검증
-    await redisClient.connect().catch(console.error);
-    const getAsync = promisify(redisClient.get).bind(redisClient);
+    const sql = `select refresh_token from user_login where user_email='${userEmail}'`;
 
-    try {
-      const data = await getAsync(userEmail); // refresh token 가져오기
-      if (token === data) {
-        try {
-          jwt.verify(token, secret);
-          return true;
-        } catch (err) {
+    mariadb.query(sql, (err, rows, fields) => {
+      if (!err) {
+        // refresh token 가져오기
+        const data = rows[0].refresh_token;
+
+        if (data !== null) {
+          if (token === data) {
+            try {
+              jwt.verify(token, secret);
+              return true;
+            } catch (err) {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        } else {
           return false;
         }
       } else {
         return false;
       }
-    } catch (err) {
-      return false;
-    }
+    });
   },
 };
