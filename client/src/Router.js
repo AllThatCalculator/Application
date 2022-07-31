@@ -14,7 +14,9 @@ import {
   SEARCH,
 } from "./components/PageUrls";
 
+import Auth from "./hoc/auth";
 const AppRouter = () => {
+  const AuthRegister = Auth(Register, true);
   return (
     <BrowserRouter>
       <Header />
