@@ -13,7 +13,7 @@ exports.login = async (req, res) => {
       // 계정이 없는 경우
       if (rows.length === 0) {
         return res.status(404).send({
-          loginSuccess: false,
+          success: false,
           message: "계정을 찾을 수 없습니다.",
         });
       }
@@ -26,7 +26,7 @@ exports.login = async (req, res) => {
       // 일치하지 않으면
       if (!isEqualPw) {
         return res.status(401).send({
-          loginSuccess: false,
+          success: false,
           message: "잘못된 비밀번호입니다.",
         });
       }
@@ -48,15 +48,13 @@ exports.login = async (req, res) => {
               httpOnly: true,
             })
             .status(200)
-            .send({ loginSuccess: true, userEmail: email });
+            .send({ success: true, data: { userEmail: email } });
         } else {
-          res
-            .status(400)
-            .send({ loginSuccess: false, message: "토큰 저장 실패" });
+          res.status(400).send({ success: false, message: "토큰 저장 실패" });
         }
       });
     } else {
-      res.status(403).send({ loginSuccess: false, message: "계정 조회 실패" });
+      res.status(403).send({ success: false, message: "계정 조회 실패" });
     }
   });
 };

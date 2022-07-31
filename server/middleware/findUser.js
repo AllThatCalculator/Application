@@ -20,6 +20,7 @@ exports.findUser = (req, res, next) => {
       }
     } else {
       return res.status(400).send({
+        success: false,
         message:
           "request parameters was wrong. retry request after change parameters",
         err,

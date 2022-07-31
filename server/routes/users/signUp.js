@@ -34,9 +34,13 @@ exports.signUp = (req, res) => {
 
           mariadb.query(sql1 + sql2, (err, result, fields) => {
             if (!err) {
-              res.status(201).send({ location: `/users/${req.body.email}` });
+              res.status(201).send({
+                success: true,
+                data: { location: `/users/${req.body.email}` },
+              });
             } else {
               res.status(400).send({
+                success: false,
                 message:
                   "request parameters was wrong. retry request after change parameters",
                 err,
