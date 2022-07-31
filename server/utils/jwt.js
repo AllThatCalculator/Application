@@ -10,7 +10,7 @@ module.exports = {
     };
     return jwt.sign(payload, secret, {
       algorithm: "HS256", // 암호화 알고리즘
-      expiresIn: "1m", // 유효기간
+      expiresIn: "1h", // 유효기간
     });
   },
   verify: (token) => {
