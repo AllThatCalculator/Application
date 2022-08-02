@@ -6,7 +6,7 @@ import { TabMenu } from "./TabMenu";
 import CodeEditor from "./CodeEditor";
 import BigTitle from "../atom-components/BigTitle";
 import { FlexColumnLayout, FlexRowLayout } from "../Layout";
-import TagPannel from "./TagPannel";
+import { CustomPanel } from "./CustomPanel";
 
 const WrapperSrcCode = styled.div`
   width: 713px;
@@ -73,13 +73,13 @@ function WriteCode(props) {
             <WrapperSrcCode>
               <CodeEditor
                 defaultLanguage="html"
-                defaultValue={props.htmlScript}
+                defaultValue={props.srcCode}
                 onMount={onMount}
-                onChange={props.changeHtmlScript}
+                onChange={props.changeSrcCode}
               />
             </WrapperSrcCode>
             <WrapperPannel>
-              <TagPannel />
+              <CustomPanel />
             </WrapperPannel>
           </FlexRowLayout>
         )}

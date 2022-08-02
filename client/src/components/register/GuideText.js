@@ -1,8 +1,8 @@
 import styled from "styled-components";
+import { FlexRowLayout } from "../Layout";
 import styles from "../styles";
 
-const StyledGuideText = styled.div`
-  display: flex;
+const StyledGuideText = styled(FlexRowLayout)`
   align-items: flex-start;
   padding: ${styles.styleLayout.basic700};
   color: ${styles.styleColor.gray100};
