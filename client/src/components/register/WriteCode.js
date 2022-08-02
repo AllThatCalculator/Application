@@ -7,6 +7,7 @@ import CodeEditor from "./CodeEditor";
 import BigTitle from "../atom-components/BigTitle";
 import { FlexColumnLayout, FlexRowLayout } from "../Layout";
 import { CustomPanel } from "./CustomPanel";
+import calculetCss from "../../css/calculet.css";
 
 const WrapperSrcCode = styled.div`
   width: 713px;
@@ -94,7 +95,9 @@ function WriteCode(props) {
         {item === "미리 보기" && (
           <>
             <CalculetBlock
-              srcCode={props.srcCode + "<style>*{margin:0px;}</style>"}
+              srcCode={
+                props.srcCode + `<style>*{margin:0px;}${calculetCss}</style>`
+              }
               manual={props.manual}
             />
           </>

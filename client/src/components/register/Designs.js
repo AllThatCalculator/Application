@@ -18,7 +18,7 @@ const Save = [
     direction: "row",
     isLine: true,
     text: "Save",
-    code: "<button class=”atc-calculet-save”>\n   저장하기\n</button>",
+    code: '<button class="atc-calculet-save">\n   저장하기\n</button>',
   },
 ];
 

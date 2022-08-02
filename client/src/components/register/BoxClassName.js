@@ -87,6 +87,7 @@ function OneBoxClassName({
   async function handleCopyClipBoard() {
     try {
       await navigator.clipboard.writeText(classNameRef.current.innerText);
+      console.log("복사 성공");
     } catch (error) {
       console.log("복사 실패");
     }
@@ -95,7 +96,7 @@ function OneBoxClassName({
   return (
     <Wrapper direction={direction} isLine={isLine}>
       <TextWrapper>{text}</TextWrapper>
-      {existDesign && <div className={className} />}
+      {existDesign && <div className={className}>예시</div>}
       <ClassNameWrapper>
         {className && <div ref={classNameRef}>{className}</div>}
         {code && <div ref={classNameRef}>{code}</div>}
