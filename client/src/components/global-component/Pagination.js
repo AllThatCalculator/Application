@@ -101,7 +101,7 @@ function Pagination({
         text="왼쪽페이지"
         icon="ChevronLeft"
         color={isBlue && "blue"}
-        onClick={() => prvPage()}
+        onClick={prvPage}
       />
       {pageNumbers.map((number, index) =>
         isBlue ? (
@@ -122,7 +122,7 @@ function Pagination({
         text="오른쪽페이지"
         icon="ChevronRight"
         color={isBlue && "blue"}
-        onClick={() => nextPage()}
+        onClick={nextPage}
       />
     </Wrapper>
   );

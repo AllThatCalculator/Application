@@ -7,7 +7,7 @@ import { Font } from "./StyledText";
 const StyledBigLink = styled(Link)`
   text-decoration: none;
   :hover {
-    text-decoration: underline;
+    text-decoration: underline ${styles.styleColor.blue500};
   }
 `;
 
@@ -19,7 +19,6 @@ const StyledBigLink = styled(Link)`
  * content : link 할 내용
  */
 export default function BigLink({ key, to, content }) {
-  console.log(content);
   return (
     <StyledBigLink key={key} to={to}>
       <Font font="text300" color={styles.styleColor.blue500}>

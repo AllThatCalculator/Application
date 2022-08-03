@@ -3,14 +3,14 @@ import CalculetBlock from "../components/calculet-block/CalculetBlock";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import styles from "../components/styles";
-import {
-  BtnWhite,
-  BtnBlue,
-} from "../components/atom-components/ButtonTemplate";
-import TextWhite from "../components/atom-components/TextWhite";
-import Recommend from "../components/global-component/Recommend";
+import { BtnBlue } from "../components/atom-components/ButtonTemplate";
 import CalculetHeader from "../components/calculet-block/CalculetHeader";
 
+// (임시) html 파일 string으로 읽어오기 위해 사용
+// -> 백엔드 연결 이후에는 http request로 계산기 정보들과 함께 받음
+// eslint-disable-next-line
+import srcCode from "raw-loader!../calculets/arithmetic-operation/arithmeticOperation.html";
+import { ContentLayout } from "../components/Layout";
 import {
   ContentLayout,
   FlexColumnLayout,
@@ -20,6 +20,7 @@ import {
 import axios from "axios";
 import updateCalculetCount from "../utils/UpdateCalculetCount";
 import { Font } from "../components/atom-components/StyledText";
+import FooterRecommend from "../components/global-component/FooterRecommend";
 
 // 계산기 블록 배경
 const Positioner = styled.div`
@@ -185,15 +186,7 @@ function Calculet() {
         </BoxCalculetBottom>
       </PositionerBottom>
 
-      <Wrapper>
-        <FlexColumnLayout gap="20px">
-          <TextWhite text="다른 계산기들도 있어요 🤗" />
-          <FlexRowLayout>
-            <BtnWhite text="더보기" />
-          </FlexRowLayout>
-          <Recommend />
-        </FlexColumnLayout>
-      </Wrapper>
+      <FooterRecommend />
     </>
   );
 }
