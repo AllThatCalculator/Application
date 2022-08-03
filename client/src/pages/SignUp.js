@@ -55,7 +55,7 @@ const WrapperStretch = styled(FlexColumnLayout)`
  */
 function SignUp() {
   /**
-   * 프로필 사진 profileImg
+   * 프로필 사진 profileImg - type : Blob
    *
    * 이메일 email -> address, writtenDomain, selectedDomain
    * 닉네임 userName
@@ -70,7 +70,6 @@ function SignUp() {
   const [profileImg, setProfileImg] = useState("/img/defaultProfile.png");
 
   const address = useInput("");
-  const [email, setEmail] = useState("");
   const [domain, setDomain] = useState("");
   const [writtenDomain, setwrittenDomain] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("");
@@ -80,15 +79,14 @@ function SignUp() {
   const pwConfirmation = useInput("");
 
   const [sex, setSex] = useState("");
-  const [sexValue, setSexValue] = useState("");
 
-  const [birthdate, setBirthdate] = useState("");
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
   const [date, setDate] = useState("");
 
   const job = useInput("");
   const bio = useInput("");
+
   // 주의 문구 여부: 비밀번호 & 비밀번호 확인 비교
   const [isWarningPw, setIsWarningPw] = useState(false);
   // 주의 문구 여부: 다 입력되었는지 여부 & 요청 정보 오류
@@ -103,6 +101,7 @@ function SignUp() {
 
   // 바로 초기화하면 defaultValue로 설정해서인지 값이 안 바뀌어서 나중에 set하기 위해 useEffect 사용
   useEffect(() => setSelectedDomain("직접 입력"), []);
+
   // 선택되거나 입력된 도메인 갱신
   useEffect(() => setDomain(writtenDomain), [writtenDomain]);
 
@@ -113,29 +112,13 @@ function SignUp() {
       setDates(fillOptionsList(1, dateEnd));
     }
   }, [year, month, dateEnd]);
-  /**
-   * 사용자가 선택한 옵션으로 세팅
-   * 이메일 : address @ domain
-   * 생년월일 : year - month - date
-   */
-  useEffect(
-    () => setEmail(address.value + "@" + domain),
-    [address.value, domain]
-  );
-  useEffect(
-    () => setBirthdate(year + "-" + month + "-" + date),
-    [year, month, date]
-  );
+
   // 비밀번호 & 비밀번호 확인
   useEffect(() => {
     if (pw.value !== pwConfirmation.value) {
       setIsWarningPw(true);
     } else setIsWarningPw(false);
   }, [pw.value, pwConfirmation.value]);
-  // 성별 DB로 보내줄 때 value 처리
-  useEffect(() => {
-    sex === "여자" ? setSexValue("F") : setSexValue("M");
-  }, [sex]);
 
   /**
    * 저작자 이메일의 도메인 부분 change 함수 (select 박스)
@@ -194,17 +177,23 @@ function SignUp() {
       return;
     } else setWarningAll("");
 
+    // DB 데이터 타입에 맞게 처리
+    const sexDb = sex === "여자" ? "F" : "M";
+    const emailDb = address.value + "@" + domain;
+    const birthdateDb = year + "-" + month + "-" + date;
+
     // 서버에 보낼 정보 => body
     let body = {
-      email: email,
+      email: emailDb,
       userName: userName.value,
       profileImg: profileImg,
       bio: bio.value,
-      sex: sexValue,
-      birthdate: birthdate,
+      sex: sexDb,
+      birthdate: birthdateDb,
       pw: pw.value,
       job: job.value,
     };
+
     // 서버에 요청
     const request = signUpUser(body);
     request.then((res) => {
