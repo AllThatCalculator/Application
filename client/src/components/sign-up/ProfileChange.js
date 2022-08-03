@@ -65,17 +65,19 @@ function ProfileChange({ profileImg, setProfileImg }) {
    *
    * @param {Blob}
    *
-   * fileBlob : 인코딩할 문자열 image src
+   * fileBlob : 인코딩할 File
    */
   function encodeFileToBase64(fileBlob) {
     setIsUserImg(true);
-    setProfileImg(fileBlob);
 
     const reader = new FileReader();
     reader.readAsDataURL(fileBlob);
     return new Promise((resolve) => {
       reader.onload = () => {
+        // 미리보기를 위한 갱신
         setUserImg(reader.result);
+        // DB 에 BLOB으로 넘겨주기 위해 base64 Decode 갱신
+        setProfileImg(Buffer.from(reader.result, "base64").toString());
         resolve();
       };
     });
