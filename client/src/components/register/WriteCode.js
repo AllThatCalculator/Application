@@ -5,7 +5,11 @@ import CalculetBlock from "../calculet-block/CalculetBlock";
 import { TabMenu } from "./TabMenu";
 import CodeEditor from "./CodeEditor";
 import BigTitle from "../atom-components/BigTitle";
-import { FlexColumnLayout, FlexRowLayout } from "../Layout";
+import {
+  FlexColumnLayout,
+  FlexRowLayout,
+  ResponsiveTabletLayout,
+} from "../Layout";
 import { CustomPanel } from "./CustomPanel";
 import CalculetCss from "./CalculetCssString";
 
@@ -76,7 +80,7 @@ function WriteCode(props) {
       <TabMenu tabs={writeCodeTab} />
       <FlexRowLayout>
         {item === "HTML" && (
-          <FlexRowLayout gap="20px">
+          <ResponsiveTabletLayout rowGap="20px" columnGap="20px">
             <WrapperSrcCode>
               <CodeEditor
                 defaultLanguage="html"
@@ -88,7 +92,7 @@ function WriteCode(props) {
             <WrapperPannel>
               <CustomPanel />
             </WrapperPannel>
-          </FlexRowLayout>
+          </ResponsiveTabletLayout>
         )}
         {item === "MARKDOWN" && (
           <WrapperManual>
