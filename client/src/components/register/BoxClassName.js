@@ -87,10 +87,7 @@ function OneBoxClassName({
   async function handleCopyClipBoard() {
     try {
       await navigator.clipboard.writeText(classNameRef.current.innerText);
-      console.log("복사 성공");
-    } catch (error) {
-      console.log("복사 실패");
-    }
+    } catch (error) {}
   }
 
   return (

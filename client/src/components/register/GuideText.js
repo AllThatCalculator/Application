@@ -10,6 +10,11 @@ const StyledGuideText = styled(FlexRowLayout)`
   white-space: pre-line;
 `;
 
+/**
+ * 디자인 패널의 역할과 사용법을 가이드하는 텍스트 컴포넌트
+ * @param {string}
+ * content: 가이드 텍스트
+ */
 function GuideText({ content }) {
   return <StyledGuideText>{content}</StyledGuideText>;
 }

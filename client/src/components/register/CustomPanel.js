@@ -13,6 +13,9 @@ const Wrapper = styled(FlexColumnLayout)`
   width: 100%;
 `;
 
+/**
+ * 스크롤 있는 패널 스타일 정의
+ */
 const ScrollWrapper = styled(StyledScrollbar)`
   height: 300px;
 `;
