@@ -8,12 +8,10 @@ components:
         success:
           type: boolean
           description: 성공 여부
-        data:
-          type: array
-          items:
-            oneOf:
-              - $ref: "#components/schemas/calculet"
-              - $ref: "#components/schemas/statistics"
+        calculet:
+          $ref: "#components/schemas/calculet"
+        statistics:
+          $ref: "#components/schemas/statistics"
     registerCalculetTemp:
       type: object
       properties:

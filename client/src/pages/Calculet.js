@@ -110,9 +110,9 @@ function Calculet() {
   async function loadCalculetObj() {
     try {
       await axios.get(`/calculets/${id}`).then((response) => {
-        setCalculetObj(response.data.data[0]);
-        setStatistics(response.data.data[1]);
-        setContributorImgSrc(response.data.data[0].contributorImgSrc);
+        setCalculetObj(response.data.calculet);
+        setStatistics(response.data.statistics);
+        setContributorImgSrc(response.data.calculet.contributorImgSrc);
       });
     } catch (error) {
       setCalculetObj(null);

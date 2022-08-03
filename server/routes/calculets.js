@@ -147,7 +147,8 @@ router.get("/:id", (req, res) => {
         } else {
           res.status(200).send({
             success: true,
-            data: [calculet, statistics],
+            calculet: calculet,
+            statistics: statistics,
           });
         }
       } else {

@@ -2,6 +2,7 @@ import axios from "axios";
 import styled from "styled-components";
 import { BtnBlue } from "../atom-components/ButtonTemplate";
 import { FlexColumnLayout } from "../Layout";
+import { useNavigate } from "react-router-dom";
 
 /**
  * 가장 바깥 스타일 정의
@@ -17,13 +18,16 @@ const Wrapper = styled(FlexColumnLayout)`
  * props: DB로 넘겨야 하는 계산기 관련 정보들
  */
 function UploadDoneBtn(props) {
+  const navigate = useNavigate();
+
   async function registerCalculet() {
     try {
       await axios.post("/calculets/", props).then((response) => {
-        console.log("계산기 등록 완료!");
+        // 안내 팝업창
+        navigate("/");
       });
     } catch (error) {
-      console.log(error);
+      // 실패 팝업 처리
     }
   }
 
