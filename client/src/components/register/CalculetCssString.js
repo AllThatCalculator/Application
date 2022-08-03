@@ -76,7 +76,6 @@ const CalculetCss = `
   padding: 10px 12px;
   gap: 10px;
 
-  width: 51px;
   height: 37px;
 
   font-family: "S-CoreDream-5Medium";
@@ -85,6 +84,8 @@ const CalculetCss = `
 
   /* white300 */
 
+  outline-style: none;
+  border: none;
   background: #ffffff;
 
   /* opacity100 */
