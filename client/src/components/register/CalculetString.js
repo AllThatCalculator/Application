@@ -160,4 +160,4 @@ const CalculetCss = `
 }
 `;
 
-export default CalculetCss;
+export { CalculetCss };

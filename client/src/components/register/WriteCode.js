@@ -11,7 +11,7 @@ import {
   ResponsiveTabletLayout,
 } from "../Layout";
 import { CustomPanel } from "./CustomPanel";
-import CalculetCss from "./CalculetCssString";
+import { CalculetCss } from "./CalculetString";
 
 const WrapperSrcCode = styled.div`
   width: 713px;

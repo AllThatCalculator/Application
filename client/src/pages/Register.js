@@ -10,7 +10,7 @@ import {
   OPTIONS_EMAIL_ADDRESS,
 } from "../components/register/Option";
 import { ContentLayout, White300Layout } from "../components/Layout";
-import CalculetCss from "../components/register/CalculetCssString";
+import { CalculetCss } from "../components/register/CalculetString";
 
 /**
  * ContentLayout을 상속하는 RegisterLayout
