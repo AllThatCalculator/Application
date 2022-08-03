@@ -1,12 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const mariadb = require("../config/database");
+const { auth } = require("../middleware/auth");
+const cookieParser = require("cookie-parser");
 
 /**
  * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
  */
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
+router.use(cookieParser());
 
 /**
  * buffer 데이터를 string 형태로 바꿔주는 함수
@@ -190,7 +193,7 @@ router.get("/:id", (req, res) => {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.post("/", (req, res) => {
+router.post("/", auth, (req, res) => {
   const sql =
     "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main, category_sub, contributor_email) VALUES(?,?,?,?,?,?,?);";
 

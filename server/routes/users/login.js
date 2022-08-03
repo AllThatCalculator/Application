@@ -48,7 +48,7 @@ exports.login = async (req, res) => {
               httpOnly: true,
             })
             .status(200)
-            .send({ success: true, data: { userEmail: email } });
+            .send({ success: true, userEmail: email });
         } else {
           res.status(400).send({ success: false, message: "토큰 저장 실패" });
         }

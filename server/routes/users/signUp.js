@@ -36,7 +36,7 @@ exports.signUp = (req, res) => {
             if (!err) {
               res.status(201).send({
                 success: true,
-                data: { location: `/users/${req.body.email}` },
+                location: `/users/${req.body.email}`,
               });
             } else {
               res.status(400).send({
