@@ -54,10 +54,9 @@ const CalculetCss = `
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   border-radius: 7px;
   padding: 8px;
-  width: 100%;
   height: 30px;
   font-family: "S-CoreDream-4Regular";
-  font-size: 18px;
+  font-size: 14px;
   color: #ffffff;
   justify-content: center;
   align-items: center;

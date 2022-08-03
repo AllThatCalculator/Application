@@ -11,6 +11,12 @@ import CalculetCss from "./CalculetCssString";
 
 const WrapperSrcCode = styled.div`
   width: 713px;
+  height: 100%;
+`;
+
+const WrapperManual = styled.div`
+  width: 100%;
+  height: 486px;
 `;
 
 const WrapperPannel = styled.div`
@@ -68,7 +74,7 @@ function WriteCode(props) {
     <FlexColumnLayout gap={styles.styleLayout.basic900}>
       <BigTitle content="계산기 코드 입력하기" />
       <TabMenu tabs={writeCodeTab} />
-      <>
+      <FlexRowLayout>
         {item === "HTML" && (
           <FlexRowLayout gap="20px">
             <WrapperSrcCode>
@@ -85,12 +91,14 @@ function WriteCode(props) {
           </FlexRowLayout>
         )}
         {item === "MARKDOWN" && (
-          <CodeEditor
-            defaultLanguage="markdown"
-            defaultValue={props.manual}
-            onMount={onMount}
-            onChange={props.changeManual}
-          />
+          <WrapperManual>
+            <CodeEditor
+              defaultLanguage="markdown"
+              defaultValue={props.manual}
+              onMount={onMount}
+              onChange={props.changeManual}
+            />
+          </WrapperManual>
         )}
         {item === "미리 보기" && (
           <>
@@ -100,7 +108,7 @@ function WriteCode(props) {
             />
           </>
         )}
-      </>
+      </FlexRowLayout>
     </FlexColumnLayout>
   );
 }
