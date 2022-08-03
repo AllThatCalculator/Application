@@ -5,17 +5,18 @@ import Register from "./pages/Register";
 import BookmarkBar from "./components/global-component/BookmarkBar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import { CALCULET, LOGIN, REGISTER, SIGN_UP } from "./components/PageUrls";
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/" element={<Calculet />} />
-        <Route path="/:id" element={<Calculet />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/sign-up" element={<SignUp />} />
+        <Route path={CALCULET} element={<Calculet />} />
+        <Route path={CALCULET + "/:id"} element={<Calculet />} />
+        <Route path={REGISTER} element={<Register />} />
+        <Route path={LOGIN} element={<Login />} />
+        <Route path={SIGN_UP} element={<SignUp />} />
       </Routes>
       <BookmarkBar />
     </BrowserRouter>

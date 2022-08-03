@@ -1,13 +1,18 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { React } from "react";
+import { CALCULET } from "../PageUrls.js";
 import styles from "../styles.js";
-const StyledDiv = styled.div`
+const StyledButton = styled.button`
   display: flex;
+  min-width: max-content;
+  background: transparent;
   color: ${styles.styleColor.white300};
   ${styles.sytleText.LogoTitle}
+
+  border: none;
   ${styles.styleEffect.opacity200};
-  min-width: max-content;
-  align-items: center;
+
+  cursor: pointer;
 
   -ms-user-select: none;
   -moz-user-select: -moz-none;
@@ -18,12 +23,14 @@ const StyledDiv = styled.div`
 /**
  *
  * 헤더에 놓을 로고를 반환하는 함수
+ * -> 클릭 시, 홈페이지로 이동
  */
-function LogoHeader() {
+export default function LogoHeader() {
+  const navigate = useNavigate();
+
   return (
-    <>
-      <StyledDiv>All That Calculator</StyledDiv>
-    </>
+    <StyledButton onClick={() => navigate(CALCULET)}>
+      All That Calculator
+    </StyledButton>
   );
 }
-export default LogoHeader;
