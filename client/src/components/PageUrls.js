@@ -3,7 +3,7 @@
  */
 
 // 계산기 상세
-const CALCULET = "/calculet";
+const CALCULET = "/";
 
 // 계산기 목록
 const CALCULET_LIST = "/calculet-list";
