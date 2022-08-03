@@ -3,11 +3,15 @@
 components:
   schemas:
     getSpecificCalculet:
-      type: array
-      items:
-        oneOf:
-          - $ref: "#components/schemas/calculet"
-          - $ref: "#components/schemas/statistics"
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+        calculet:
+          $ref: "#components/schemas/calculet"
+        statistics:
+          $ref: "#components/schemas/statistics"
     registerCalculetTemp:
       type: object
       properties:
@@ -39,7 +43,7 @@ components:
         description: 계산기 한 줄 설명
         categoryMain: 대분류
         categorySub: 소분류
-        email: bsa0322
+        email: bsa0322@ewhain.net
     calculet:
       type: object
       properties:
@@ -66,7 +70,7 @@ components:
           description: 카테고리 소분류
         contributor:
           type: string
-          description: 계산기 제작자 아이디 (예전 스키마)
+          description: 계산기 제작자 이메일
         contributorImgSrc:
           type: string
           description: 계산기 제작자 프로필 이미지 소스
@@ -94,12 +98,18 @@ components:
     postResult:
       type: object
       properties:
+        success:
+          type: boolean
+          description: 성공 여부
         location:
           type: string
           description: 등록된 경로
     errorResult:
       type: object
       properties:
+        success:
+          type: boolean
+          description: 성공 여부
         message:
           type: string
           description: 에러 메세지

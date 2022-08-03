@@ -83,6 +83,13 @@ ALTER TABLE calculet_statistics ADD CONSTRAINT FOREIGN KEY (calculet_id) REFEREN
 ALTER TABLE user_calculet ADD CONSTRAINT FOREIGN KEY (calculet_id) REFERENCES calculet_info(id);
 ALTER TABLE user_calculet ADD CONSTRAINT FOREIGN KEY (user_email) REFERENCES user_info(email);
 ALTER TABLE user_login ADD CONSTRAINT FOREIGN KEY (user_email) REFERENCES user_info(email);
-CREATE TRIGGER after_calculet_info_insert AFTER INSERT ON calculet_info 
+
+--caculet_info에 insert하면 calculet_statistics도 insert되는 트래거
+CREATE TRIGGER calculet_statistics_insert AFTER INSERT ON calculet_info 
 FOR EACH ROW
 INSERT INTO calculet_statistics(calculet_id) VALUES(new.id);
+
+--caculet_info에 insert하면 calculet_count도 insert되는 트래거
+CREATE TRIGGER calculet_count_insert AFTER INSERT ON calculet_info 
+FOR EACH ROW
+INSERT INTO calculet_count(calculet_id) VALUES(new.id);

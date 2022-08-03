@@ -171,7 +171,7 @@ function SelectBox({ options, placeholder, selected, onChange, isLine }) {
   }
 
   useEffect(() => {
-    if (selected === null) {
+    if (!selected) {
       setItem(null);
     }
   }, [selected]);

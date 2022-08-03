@@ -93,6 +93,9 @@ function Calculet() {
   // 계산기 저작자 프로필 이미지
   const [contributorImgSrc, setContributorImgSrc] = useState(null);
 
+  // (임시) 에러 처리 문구
+  const [errorText, setErrorText] = useState(null);
+
   // 현재 페이지에 로딩할 계산기 id
   let { id } = useParams();
 
@@ -107,13 +110,21 @@ function Calculet() {
   async function loadCalculetObj() {
     try {
       await axios.get(`/calculets/${id}`).then((response) => {
-        // console.log(response.data);
-        setCalculetObj(response.data[0]);
-        setStatistics(response.data[1]);
-        setContributorImgSrc(response.data[0].contributorImgSrc);
+        setCalculetObj(response.data.calculet);
+        setStatistics(response.data.statistics);
+        setContributorImgSrc(response.data.calculet.contributorImgSrc);
       });
     } catch (error) {
-      console.log("error" + error);
+      setCalculetObj(null);
+      switch (error.response.status) {
+        case 400:
+        case 404:
+          setErrorText(error.response.data.message);
+          break;
+        default:
+          setErrorText("서버가 잠시 중단되었습니다.");
+          break;
+      }
     }
   }
 
@@ -142,7 +153,7 @@ function Calculet() {
               />
             </>
           ) : (
-            <div></div> // 로딩화면
+            <div>{errorText}</div> // 로딩화면
           )}
         </WrapperCol>
       </Positioner>

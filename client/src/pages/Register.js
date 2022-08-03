@@ -77,7 +77,7 @@ function Register() {
       (x) => x.big === option[0].value
     );
     setCategoryMain(option[0].name);
-    setCategorySub(null);
+    setCategorySub("");
     if (smallOption.length) {
       setCategorySubOption(smallOption[0].options);
     } else {
@@ -195,7 +195,7 @@ function Register() {
           description={description}
           categoryMain={categoryMain}
           categorySub={categorySub}
-          email={address}
+          email={email}
           srcCode={srcCode + "<style>*{margin:0px;}</style>"}
           manual={manual}
         />
