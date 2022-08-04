@@ -70,14 +70,14 @@ function Search() {
   // 현재 페이지 네비
   const [currentPage, setCurrentPage] = useState(1);
 
-  // 검색된 계산기 정보 가져오고 로딩 품
-  // 우선, 검색 결과로 관련된 계산기 더미 가져옴.
-  // useEffect(() => {
-  //   setLoading(true);
-  //   const response = CALCULET;
-  //   setCalculets(response.slice(0, KEY_MAX));
-  //   setLoading(false);
-  // }, []);
+  // (임시) 검색된 계산기 정보 가져오고 로딩 품.
+  // 검색 결과로 관련된 계산기 더미 가져옴.
+  useEffect(() => {
+    setLoading(true);
+    const response = CALCULET;
+    setCalculets(response.slice(0, KEY_MAX));
+    setLoading(false);
+  }, []);
 
   // 예를 들어/ 한 페이지당 3 일 때, 2 페이지 네비버튼을 누르면, 4~6 번째 계산기가 렌더
   const indexOfLast = currentPage * KEY_PAGE;
