@@ -14,6 +14,7 @@ import { ContentLayout } from "../components/Layout";
 
 import axios from "axios";
 import updateCalculetCount from "../utils/UpdateCalculetCount";
+import RecordCalculetHistory from "../components/calculet-block/RecordCalculetHistory";
 import { Font } from "../components/atom-components/StyledText";
 import FooterRecommend from "../components/global-component/FooterRecommend";
 
@@ -165,6 +166,8 @@ function Calculet() {
                 srcCode={calculetObj.srcCode}
                 manual={calculetObj.manual}
               />
+              {/* 유저 이메일은 /user/me 요청 보내서 이메일 얻어올까나? (고민) */}
+              <RecordCalculetHistory calculetId={id} />
             </>
           ) : (
             <div>{errorText}</div> // 로딩화면
