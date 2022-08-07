@@ -55,7 +55,7 @@ function CustomPanel() {
   return (
     <>
       <DefaultCustomPanel guide={Guides["InputOutput"]} designs={InputOutput} />
-      <DefaultCustomPanel guide={Guides["Save"]} designs={Save} />
+      {/* <DefaultCustomPanel guide={Guides["Save"]} designs={Save} /> */}
       <ScrollCustomPanel guide={Guides["Design"]} designs={Design} />
     </>
   );

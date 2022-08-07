@@ -88,6 +88,9 @@ function Calculet() {
   // (임시) 에러 처리 문구
   const [errorText, setErrorText] = useState(null);
 
+  // 현재 사용자 이메일
+  const [userEmail, setUserEmail] = useState(null);
+
   // 현재 페이지에 로딩할 계산기 id
   let { id } = useParams();
 
@@ -143,11 +146,23 @@ function Calculet() {
   }
 
   /**
+   * 백엔드에서 사용자 정보 불러오는 함수
+   */
+  async function loadUserEmail() {
+    try {
+      await axios.get(`/users/me`).then((response) => {
+        setUserEmail(response.data.userEmail);
+      });
+    } catch (error) {}
+  }
+
+  /**
    * 계산기 객체 불러오기
    */
   useEffect(() => {
     loadCalculetObj();
     updateCalculetCount(id);
+    loadUserEmail();
   }, [id]);
 
   return (
@@ -165,9 +180,9 @@ function Calculet() {
               <CalculetBlock
                 srcCode={calculetObj.srcCode}
                 manual={calculetObj.manual}
+                calculetId={id}
+                userEmail={userEmail}
               />
-              {/* 유저 이메일은 /user/me 요청 보내서 이메일 얻어올까나? (고민) */}
-              <RecordCalculetHistory calculetId={id} />
             </>
           ) : (
             <div>{errorText}</div> // 로딩화면

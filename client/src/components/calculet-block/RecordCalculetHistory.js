@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ApproachIframeTag from "../../utils/ApproachIframeTag";
-import { BtnText } from "../atom-components/ButtonTemplate";
+import { BtnIndigo } from "../atom-components/ButtonTemplate";
 
 function RecordCalculetHistory({ calculetId, userEmail }) {
+  // 페이지 넘기기 위해 필요한 것
   const navigate = useNavigate();
 
   /**
@@ -66,7 +67,7 @@ function RecordCalculetHistory({ calculetId, userEmail }) {
     recordCalculetHistory(data);
   }
 
-  return <BtnText text="저장하기" onClick={onClickRecordBtn} />;
+  return <BtnIndigo text="계산내역 저장" onClick={onClickRecordBtn} />;
 }
 
 export default RecordCalculetHistory;

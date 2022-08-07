@@ -14,7 +14,7 @@ const Wrapper = styled.div`
  * @param {string} manual - 계산기 설명 마크다운
  * @returns
  */
-function CalculetBlock({ srcCode, manual }) {
+function CalculetBlock({ srcCode, manual, calculetId, userEmail }) {
   /**
    * 받아온 html을 넣는 iframe의 크기를 원본 html 크기 맞게 조절하는 함수
    * @param {event object} e
@@ -34,7 +34,11 @@ function CalculetBlock({ srcCode, manual }) {
         scrolling="no"
         title="calculet"
       />
-      <CalculetManual content={manual} />
+      <CalculetManual
+        content={manual}
+        calculetId={calculetId}
+        userEmail={userEmail}
+      />
     </Wrapper>
   );
 }
