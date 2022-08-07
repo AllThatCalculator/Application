@@ -198,7 +198,7 @@ router.get("/:id", (req, res) => {
  */
 router.post("/", auth, (req, res) => {
   const sql =
-    "INSERT INTO calculet_info(title, src_code, manual, description, category_main, category_sub, contributor_email) VALUES(?,?,?,?,?,?,?);";
+    "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main, category_sub, contributor_email) VALUES(?,?,?,?,?,?,?);";
 
   const calculet = [
     req.body.title,
