@@ -20,6 +20,10 @@ import ProfileChange from "../components/sign-up/ProfileChange";
 import WriteInformFirst from "../components/sign-up/WriteInformFirst";
 import WriteInformSecond from "../components/sign-up/WriteInformSecond";
 import ActGuide from "../components/sign-up/ActGuide";
+import WarningGuide from "../components/global-component/WarningGuide";
+import useInput from "../user-hooks/UseInput";
+import signUpUser from "../components/user-actions/SignUpUser";
+import { useNavigate } from "react-router-dom";
 /**
  * 흰색 뒷 배경
  */
@@ -40,23 +44,18 @@ const WrapperPad = styled(ContentLayout)`
   gap: ${(props) => props.gap};
 `;
 /**
- * 경계선 박스 내 가운데 정렬 스타일 정의
- */
-const StyledBorder = styled(BoxBorder)`
-  align-items: center;
-`;
-/**
- * 가입하기 버튼 양쪽으로 꽉 차게 스타일 정의
+ * 양쪽으로 꽉 차게 스타일 정의
  */
 const WrapperStretch = styled(FlexColumnLayout)`
   width: 100%;
 `;
+
 /**
  * 회원가입 페이지
  */
 function SignUp() {
   /**
-   * 프로필 사진 profileImg
+   * 프로필 사진 profileImg - type : Blob
    *
    * 이메일 email -> address, writtenDomain, selectedDomain
    * 닉네임 userName
@@ -70,32 +69,42 @@ function SignUp() {
    */
   const [profileImg, setProfileImg] = useState("/img/defaultProfile.png");
 
-  const [email, setEmail] = useState("");
+  const address = useInput("");
   const [domain, setDomain] = useState("");
-  const [address, setAddress] = useState("");
   const [writtenDomain, setwrittenDomain] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("");
-  const [userName, setUserName] = useState("");
-  const [pw, setPw] = useState("");
-  const [pwConfirmation, setPwConfirmation] = useState("");
+
+  const userName = useInput("");
+  const pw = useInput("");
+  const pwConfirmation = useInput("");
 
   const [sex, setSex] = useState("");
-  const [birthdate, setBirthdate] = useState("");
+
   const [year, setYear] = useState("");
   const [month, setMonth] = useState("");
   const [date, setDate] = useState("");
-  const [job, setJob] = useState("");
-  const [bio, setBio] = useState("");
-  // 주의 문구: 비밀번호 & 비밀번호 확인 비교
-  const [isWarning, setIsWarning] = useState(false);
+
+  const job = useInput("");
+  const bio = useInput("");
+
+  // 주의 문구 여부: 비밀번호 & 비밀번호 확인 비교
+  const [isWarningPw, setIsWarningPw] = useState(false);
+  // 주의 문구 여부: 다 입력되었는지 여부 & 요청 정보 오류
+  const [warningAll, setWarningAll] = useState("");
+
   // 년도와 월로 일수 구하기
   const [dateEnd, setDateEnd] = useState(1);
   const [dates, setDates] = useState(null);
 
+  // 라우터 역할 네이게이션
+  const navigate = useNavigate();
+
   // 바로 초기화하면 defaultValue로 설정해서인지 값이 안 바뀌어서 나중에 set하기 위해 useEffect 사용
   useEffect(() => setSelectedDomain("직접 입력"), []);
+
   // 선택되거나 입력된 도메인 갱신
   useEffect(() => setDomain(writtenDomain), [writtenDomain]);
+
   // 년도에 따른 월의 마지막 날 계산 & 일수 구하기 (년도와 월을 둘 다 선택해야 갱신)
   useEffect(() => {
     if (year && month) {
@@ -103,16 +112,13 @@ function SignUp() {
       setDates(fillOptionsList(1, dateEnd));
     }
   }, [year, month, dateEnd]);
-  /**
-   * 사용자가 선택한 옵션으로 세팅
-   * 이메일 : address @ domain
-   * 생년월일 : year - month - date
-   */
-  useEffect(() => setEmail(address + "@" + domain), [address, domain]);
-  useEffect(
-    () => setBirthdate(year + "-" + month + "-" + date),
-    [year, month, date]
-  );
+
+  // 비밀번호 & 비밀번호 확인
+  useEffect(() => {
+    if (pw.value !== pwConfirmation.value) {
+      setIsWarningPw(true);
+    } else setIsWarningPw(false);
+  }, [pw.value, pwConfirmation.value]);
 
   /**
    * 저작자 이메일의 도메인 부분 change 함수 (select 박스)
@@ -133,7 +139,6 @@ function SignUp() {
 
   /**
    * 인자로 넘어온 정보에 대한 change 함수
-   * - 년도나 월은 선택하기만 해도 일수가 갱신되어야 하기 때문에, 화살표 함수에서 일수를 함께 초기화
    * - value에 먼저 접근한 후, value에 맞는 name을 찾아서 저장
    * @param {*} event
    * event : 이벤트
@@ -147,84 +152,120 @@ function SignUp() {
   }
 
   /**
-   * 입력된 비밀번호와 비밀번호 확인에 따른 경고 안내문 & 회원가입 성공
+   * 폼 제출
+   * - 입력된 비밀번호와 비밀번호 확인에 따른 경고 안내문 & 회원가입 성공
    */
-  // setIsWarning(true)되면 <ActGuide> 생기는데, 이건 임시에요!!
-  // 로그인에서 경고 안내문 컴포넌트 만들었으니까
-  // 로그인 머지 후에 수정하겠습니다!
-  function onClickSignUp() {
-    if (pw !== pwConfirmation) setIsWarning(true);
-    else {
-      setIsWarning(false);
-      console.log({
-        email: email,
-        userName: userName,
-        pw: pw,
-        sex: sex,
-        birthdate: birthdate,
-        job: job,
-        bio: bio,
-      });
-    }
+  function onSubmitHandler(event) {
+    event.preventDefault();
+    // 비밀번호 & 비밀번호 확인 비교
+    if (isWarningPw) return;
+    // 다 입력했는지 확인
+    if (
+      !address.value ||
+      !domain ||
+      !userName.value ||
+      !pw.value ||
+      !pwConfirmation.value ||
+      !sex ||
+      !year ||
+      !month ||
+      !date ||
+      !job.value ||
+      !bio.value
+    ) {
+      setWarningAll("모든 사항을 입력해 주세요.");
+      return;
+    } else setWarningAll("");
+
+    // DB 데이터 타입에 맞게 처리
+    const sexDb = sex === "여자" ? "F" : "M";
+    const emailDb = address.value + "@" + domain;
+    const birthdateDb = year + "-" + month + "-" + date;
+
+    // 서버에 보낼 정보 => body
+    let body = {
+      email: emailDb,
+      userName: userName.value,
+      profileImg: profileImg,
+      bio: bio.value,
+      sex: sexDb,
+      birthdate: birthdateDb,
+      pw: pw.value,
+      job: job.value,
+    };
+
+    // 서버에 요청
+    const request = signUpUser(body);
+    request.then((res) => {
+      // 회원 가입 실패
+      if (res.message) setWarningAll("올바른 정보를 입력해 주세요.");
+      // 회원 가입 성공
+      else if (res.location) navigate("/login");
+    });
   }
   return (
     <>
       <StyledWhite300 />
       <WrapperPad gap="20px">
         <StyledImg src={"/ATCLogoBlueImgText.png"} width="214px" />
-        <StyledBorder gap="20px">
+        <BoxBorder gap="20px">
           <BoxTitle content="회원가입" />
           <ProfileChange
             profileImg={profileImg}
             setProfileImg={setProfileImg}
           />
-          <WriteInformFirst
-            address={address}
-            writtenDomain={writtenDomain}
-            selectedDomain={selectedDomain}
-            userName={userName}
-            pw={pw}
-            pwConfirmation={pwConfirmation}
-            changeAddress={(event) => setAddress(event.target.value)}
-            changeDomain={(event) => setwrittenDomain(event.target.value)}
-            changeSelectedDomain={changeSelectedDomain}
-            changeUserName={(event) => setUserName(event.target.value)}
-            changePw={(event) => setPw(event.target.value)}
-            changePwConfirmation={(event) =>
-              setPwConfirmation(event.target.value)
-            }
-          />
-          {isWarning && (
-            <ActGuide guide="비밀번호가 다릅니다." lead="로그인하기" />
-          )}
-          <WriteInformSecond
-            sex={sex}
-            year={year}
-            month={month}
-            date={date}
-            dates={dates}
-            job={job}
-            bio={bio}
-            changeSex={(event) => changeData(event, OPTIONS_SEX, setSex)}
-            changeYear={(event) => {
-              changeData(event, OPTIONS_YEAR, setYear);
-              setDate(null);
-            }}
-            changeMonth={(event) => {
-              changeData(event, OPTIONS_MONTH, setMonth);
-              setDate(null);
-            }}
-            changeDate={(event) => changeData(event, dates, setDate)}
-            changeJob={(event) => setJob(event.target.value)}
-            changeBio={(event) => setBio(event.target.value)}
-          />
-          <WrapperStretch>
-            <BtnIndigo text="가입하기" onClick={onClickSignUp} />
+          <WrapperStretch gap="10px">
+            <WriteInformFirst
+              address={address.value}
+              writtenDomain={writtenDomain}
+              selectedDomain={selectedDomain}
+              userName={userName.value}
+              pw={pw.value}
+              pwConfirmation={pwConfirmation.value}
+              changeAddress={address.onChange}
+              changeDomain={(event) => setwrittenDomain(event.target.value)}
+              changeSelectedDomain={changeSelectedDomain}
+              changeUserName={userName.onChange}
+              changePw={pw.onChange}
+              changePwConfirmation={pwConfirmation.onChange}
+            />
+            {isWarningPw && <WarningGuide content="비밀번호가 다릅니다." />}
           </WrapperStretch>
-        </StyledBorder>
-        <StyledBorder>
-          <ActGuide guide="이미 계정이 있으신가요?" lead="로그인하기" />
-        </StyledBorder>
+          <WrapperStretch gap="10px">
+            <WriteInformSecond
+              sex={sex}
+              year={year}
+              month={month}
+              date={date}
+              dates={dates}
+              job={job.value}
+              bio={bio.value}
+              changeSex={(event) => changeData(event, OPTIONS_SEX, setSex)}
+              changeYear={(event) => {
+                changeData(event, OPTIONS_YEAR, setYear);
+                setDate(null);
+              }}
+              changeMonth={(event) => {
+                changeData(event, OPTIONS_MONTH, setMonth);
+                setDate(null);
+              }}
+              changeDate={(event) => changeData(event, dates, setDate)}
+              changeJob={job.onChange}
+              changeBio={bio.onChange}
+            />
+            {warningAll && <WarningGuide content="모든 사항을 입력해주세요." />}
+          </WrapperStretch>
+          <WrapperStretch>
+            <BtnIndigo text="가입하기" onClick={onSubmitHandler} />
+          </WrapperStretch>
+        </BoxBorder>
+        <BoxBorder>
+          <ActGuide
+            guide="이미 계정이 있으신가요?"
+            lead="로그인하기"
+            onClick={() => navigate("/login")}
+          />
+        </BoxBorder>
       </WrapperPad>
     </>
   );

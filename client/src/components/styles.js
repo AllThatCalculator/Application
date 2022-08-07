@@ -38,6 +38,7 @@ const styleColor = {
 const styleLayout = {
   basic25: "1px",
   basic50: "3px",
+  basic75: "5px",
   basic100: "10px 14px",
   basic200: "8px",
   basic300: "20px",

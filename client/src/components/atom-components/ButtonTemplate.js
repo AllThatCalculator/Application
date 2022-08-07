@@ -121,6 +121,7 @@ const StyledDefaultButton = styled(StyledButton)`
   padding: ${styles.styleLayout.basic50};
   background: transparent;
   color: ${styles.styleColor.blue500};
+  gap: ${styles.styleLayout.basic75};
 `;
 //========================================================
 
@@ -262,9 +263,10 @@ function BtnIndigo({ text, icon, onClick }) {
  * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
  *
  */
-function BtnText({ text, onClick }) {
+function BtnText({ text, icon, onClick }) {
   return (
     <StyledDefaultButton id={text} onClick={onClick}>
+      {icon && <StyledIcon name={icon} />}
       <StyledFont100>{text}</StyledFont100>
     </StyledDefaultButton>
   );

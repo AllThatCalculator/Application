@@ -9,7 +9,7 @@ import { InformBox } from "../register/WriteInform";
  *
  * @param {string, string, string, string, string, string, funtion, funtion, funtion, funtion, funtion, funtion} props
  * address : 주소
- * writedDomain : 직접 입력한 도메인 값
+ * writtenDomain : 직접 입력한 도메인 값
  * selectedDomain : select 박스에서 선택한 도메인 값
  * userName : 닉네임
  * pw : 비밀번호
@@ -30,7 +30,7 @@ function WriteInformFirst(props) {
         ratioRight="3.5"
         address={props.address}
         onChangeAddress={props.changeAddress}
-        writedDomain={props.writedDomain}
+        writtenDomain={props.writtenDomain}
         selectedDomain={props.selectedDomain}
         onChangeDomain={props.changeDomain}
         emailAddressOptions={OPTIONS_EMAIL_ADDRESS}
@@ -46,6 +46,7 @@ function WriteInformFirst(props) {
         onChange={props.changeUserName}
       />
       <ExplanationInputBox
+        type="password"
         isLine={true}
         ratioLeft="1"
         ratioRight="3.5"
@@ -55,6 +56,7 @@ function WriteInformFirst(props) {
         onChange={props.changePw}
       />
       <ExplanationInputBox
+        type="password"
         isLine={false}
         ratioLeft="1"
         ratioRight="3.5"
