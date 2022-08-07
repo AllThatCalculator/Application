@@ -1,11 +1,39 @@
 import axios from "axios";
+import { useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ApproachIframeTag from "../../utils/ApproachIframeTag";
 import { BtnIndigo } from "../atom-components/ButtonTemplate";
 
-function RecordCalculetHistory({ calculetId, userEmail }) {
-  // 페이지 넘기기 위해 필요한 것
+/**
+ * 계산 이력 저장 버튼 컴포넌트
+ * - 저장하기 버튼 누르면 먼저 iframe에 접근해서 값을 가져온 후, /record POST 요청으로 계산 이력 저장
+ * @param {string} calculetId 계산기 번호
+ */
+function RecordCalculetHistory({ calculetId }) {
+  // 페이지 넘기기 위해 필요한 navigate
   const navigate = useNavigate();
+
+  // 현재 로그인한 사용자 이메일
+  const [userEmail, setUserEmail] = useState(null);
+
+  /**
+   * 백엔드에서 사용자 정보 불러오는 함수
+   */
+  async function loadUserEmail() {
+    try {
+      await axios.get(`/users/me`).then((response) => {
+        setUserEmail(response.data.userEmail);
+      });
+    } catch (error) {}
+  }
+
+  /**
+   * 현재 로그인한 사용자 계정 가져오기
+   */
+  useEffect(() => {
+    loadUserEmail();
+  }, []);
 
   /**
    * 이력 저장 백엔드로 요청
@@ -15,8 +43,6 @@ function RecordCalculetHistory({ calculetId, userEmail }) {
       await axios.post("/record", data);
     } catch (error) {
       switch (error.response.status) {
-        case 400:
-          console.dir(error.response.data);
         case 401:
           navigate("/login");
         default:
@@ -27,8 +53,7 @@ function RecordCalculetHistory({ calculetId, userEmail }) {
 
   /**
    * 태그 리스트 내의 값에 접근해서 object로 가공시키는 함수
-   * @param {nodelist}
-   * data: 태그 리스트
+   * @param {nodelist} data 태그 리스트
    * @returns object
    */
   function makeObject(data) {
@@ -42,7 +67,7 @@ function RecordCalculetHistory({ calculetId, userEmail }) {
   }
 
   /**
-   * 저장하기 버튼 클릭 시 함수
+   * 저장하기 버튼 클릭 시 input, output 정보 object로 가공하고 서버에 보낼 데이터 가공 및 요청 보내는 함수
    */
   function onClickRecordBtn() {
     const inputTag = ApproachIframeTag("atc-calculet-input");
@@ -51,16 +76,13 @@ function RecordCalculetHistory({ calculetId, userEmail }) {
     const inputObj = makeObject(inputTag);
     const outputObj = makeObject(outputTag);
 
-    // 잘 출력되는거 확인!! ^-^
-    // console.dir(inputObj);
-    // console.dir(outputObj);
-
     // 오브젝트 최종 합치기
+    // (임시) userId -> userEmail로 변경 해야함!
     const data = {
       userId: userEmail,
       calculetId: calculetId,
-      input: inputObj,
-      output: outputObj,
+      inputObj: inputObj,
+      outputObj: outputObj,
     };
 
     // 만들어진 오브젝트들로 /record 에 POST 요청

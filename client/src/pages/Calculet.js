@@ -13,7 +13,10 @@ import srcCode from "raw-loader!../calculets/arithmetic-operation/arithmeticOper
 import { ContentLayout } from "../components/Layout";
 
 import axios from "axios";
-import updateCalculetCount from "../utils/UpdateCalculetCount";
+import {
+  updateCalculetCount,
+  loadOftenUsedCalculet,
+} from "../utils/OftenUsedCalculet";
 import RecordCalculetHistory from "../components/calculet-block/RecordCalculetHistory";
 import { Font } from "../components/atom-components/StyledText";
 import FooterRecommend from "../components/global-component/FooterRecommend";
@@ -88,37 +91,12 @@ function Calculet() {
   // (임시) 에러 처리 문구
   const [errorText, setErrorText] = useState(null);
 
-  // 현재 사용자 이메일
-  const [userEmail, setUserEmail] = useState(null);
-
   // 현재 페이지에 로딩할 계산기 id
   let { id } = useParams();
 
   // id 없다면 메인 페이지이므로 자주 쓰는 계산기 불러오기
   if (id === undefined) {
-    // 자주 쓰는 계산기의 선정 기준
-    const STANDARD_CNT = 3;
-
-    // 연속 횟수
-    const continueCnt = localStorage.getItem("continueCnt");
-
-    // 이전 계산기
-    const previousCalculet = localStorage.getItem("previousCalculet");
-
-    // 만약 이전 계산기의 연속 횟수가 기준에 도달했다면 자주 쓰는 계산기 값 변경
-    if (Number(continueCnt) === STANDARD_CNT) {
-      localStorage.setItem("oftenCalculet", previousCalculet);
-    }
-
-    // 만약 자주 쓰는 계산기가 비어있다면 초기화
-    if (localStorage.getItem("oftenCalculet") === null) {
-      localStorage.setItem("oftenCalculet", 1);
-      localStorage.setItem("previousCalculet", 1);
-      localStorage.setItem("continueCnt", 1);
-    }
-
-    // 자주 쓰는 계산기 가져오기
-    id = localStorage.getItem("oftenCalculet");
+    id = loadOftenUsedCalculet();
   }
 
   /**
@@ -146,23 +124,11 @@ function Calculet() {
   }
 
   /**
-   * 백엔드에서 사용자 정보 불러오는 함수
-   */
-  async function loadUserEmail() {
-    try {
-      await axios.get(`/users/me`).then((response) => {
-        setUserEmail(response.data.userEmail);
-      });
-    } catch (error) {}
-  }
-
-  /**
    * 계산기 객체 불러오기
    */
   useEffect(() => {
     loadCalculetObj();
     updateCalculetCount(id);
-    loadUserEmail();
   }, [id]);
 
   return (
@@ -181,7 +147,6 @@ function Calculet() {
                 srcCode={calculetObj.srcCode}
                 manual={calculetObj.manual}
                 calculetId={id}
-                userEmail={userEmail}
               />
             </>
           ) : (

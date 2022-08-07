@@ -61,8 +61,9 @@ const MarkdownWrapper = styled.div`
 /**
  * 계산기 설명서(매뉴얼)를 볼 것인지 선택하는 토글 버튼과 설명문을 포함하는 컴포넌트
  * @param {string} content 마크다운 문법으로 이루어진 string
+ * @param {string} calculetId 계산기 번호
  */
-function CalculetManual({ content, calculetId, userEmail }) {
+function CalculetManual({ content, calculetId }) {
   // 설명서를 펼칠지 여부를 저장하는 state
   const [visibility, setVisibility] = useState(false);
 
@@ -78,10 +79,7 @@ function CalculetManual({ content, calculetId, userEmail }) {
       <div>
         <WrapperButton>
           <BtnGray text="자세히" isToggle={visibility} onClick={toggle} />
-          <RecordCalculetHistory
-            calculetId={calculetId}
-            userEmail={userEmail}
-          />
+          <RecordCalculetHistory calculetId={calculetId} />
         </WrapperButton>
         {visibility && (
           <>
