@@ -14,6 +14,7 @@ import { CustomPanel } from "./CustomPanel";
 
 const WrapperSrcCode = styled.div`
   width: 713px;
+  min-height: 486px;
   height: 100%;
 `;
 
