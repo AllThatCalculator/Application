@@ -4,6 +4,10 @@ const mariadb = require("../config/database");
 const { auth } = require("../middleware/auth");
 const cookieParser = require("cookie-parser");
 const { category } = require("./calculets/category");
+const {
+  bufferToString,
+  bufferToImageSrc,
+} = require("../utils/bufferConverter");
 
 /**
  * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
@@ -11,27 +15,6 @@ const { category } = require("./calculets/category");
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 router.use(cookieParser());
-
-/**
- * buffer 데이터를 string 형태로 바꿔주는 함수
- * @param {buffer}
- * value: buffer 상태 데이터
- * @returns
- */
-function bufferToString(value) {
-  return Buffer.from(value).toString();
-}
-
-/**
- * buffer 데이터(이미지)를 base64String으로 인코딩해서 src 생성하는 함수
- * @param {buffer}
- * value: buffer 상태 데이터 (이미지)
- * @returns
- */
-function bufferToImageSrc(value) {
-  const base64String = Buffer.from(value).toString("base64");
-  return `data:image/png;base64,${base64String}`;
-}
 
 /**
  * @swagger

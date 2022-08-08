@@ -105,10 +105,7 @@ function WriteCode(props) {
           </WrapperManual>
         )}
         {item === "미리 보기" && (
-          <CalculetBlock
-            srcCode={props.srcCode + `<style>${CalculetCss}</style>`}
-            manual={props.manual}
-          />
+          <CalculetBlock srcCode={props.previewSrcCode} manual={props.manual} />
         )}
       </FlexRowLayout>
     </FlexColumnLayout>

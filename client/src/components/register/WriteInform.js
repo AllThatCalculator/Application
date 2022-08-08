@@ -102,7 +102,7 @@ function WriteInform(props) {
             categorys={categorys}
           />
         </InformBox>
-        <MiddleTitle content="제작자 정보" />
+        {/* <MiddleTitle content="제작자 정보" />
         <InformBox>
           <ExplanationEmail
             isLine={false}
@@ -116,11 +116,11 @@ function WriteInform(props) {
             emailAddressOptions={OPTIONS_EMAIL_ADDRESS}
             onChangeSelectedDomain={props.changeSelectedDomain}
           />
-        </InformBox>
+        </InformBox> */}
       </WrapperInform>
       <WrapperBanner>
         <PreviewBanner
-          profile="/img/ori.png"
+          profile={props.profileImg}
           title={props.title}
           description={props.description}
         />

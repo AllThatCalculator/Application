@@ -11,6 +11,7 @@ import {
 } from "../components/register/Option";
 import { ContentLayout, White300Layout } from "../components/Layout";
 import { CalculetCss } from "../components/register/CalculetString";
+import axios from "axios";
 
 /**
  * ContentLayout을 상속하는 RegisterLayout
@@ -46,8 +47,16 @@ function Register() {
   const [srcCode, setSrcCode] = useState("<!DOCTYPE html>");
   const [manual, setManual] = useState("### write detail!");
 
+  const [finalSrcCode, setFinalSrcCode] = useState(null);
+
   // 바로 초기화하면 defaultValue로 설정해서인지 값이 안 바뀌어서 나중에 set하기 위해 useEffect 사용
   useEffect(() => setSelectedDomain("직접 입력"), []);
+
+  // 사용자가 입력한 srcCode에 우리 코드 붙이기
+  useEffect(
+    () => setFinalSrcCode(`<style>${CalculetCss}</style>` + srcCode),
+    [srcCode]
+  );
 
   /**
    * 계산기 제목 입력값 change 함수
@@ -162,31 +171,69 @@ function Register() {
     setManual(editorRef.current.getValue());
   }
 
+  // 유저 정보
+  const [userInfo, setUserInfo] = useState(null);
+
+  /**
+   * 사용자 정보 서버에 요청
+   */
+  async function loadUserInfo(userEmail) {
+    try {
+      await axios.get(`/users/${userEmail}`).then((response) => {
+        setUserInfo(response.data.userInfo);
+      });
+    } catch (error) {}
+  }
+
+  /**
+   * 백엔드에서 사용자 정보 불러오는 함수
+   */
+  async function loadUserEmail() {
+    try {
+      await axios.get(`/users/me`).then((response) => {
+        loadUserInfo(response.data.userEmail);
+      });
+    } catch (error) {}
+  }
+
+  /**
+   * 현재 로그인한 사용자 계정 가져오기
+   */
+  useEffect(() => {
+    loadUserEmail();
+  }, []);
+
   return (
     <White300Layout>
       <RegisterLayout>
-        <WriteInform
-          title={title}
-          description={description}
-          categoryMain={categoryMain}
-          categorySubOption={categorySubOption}
-          categorySub={categorySub}
-          address={address}
-          writedDomain={writedDomain}
-          selectedDomain={selectedDomain}
-          domain={domain}
-          email={email}
-          changeTitle={changeTitle}
-          changeDescription={changeDescription}
-          changeCategoryMain={changeCategoryMain}
-          changeCategorySub={changeCategorySub}
-          changeAddress={changeAddress}
-          changeDomain={changeDomain}
-          changeSelectedDomain={changeSelectedDomain}
-        />
+        {userInfo !== null ? (
+          <WriteInform
+            title={title}
+            description={description}
+            categoryMain={categoryMain}
+            categorySubOption={categorySubOption}
+            categorySub={categorySub}
+            address={address}
+            writedDomain={writedDomain}
+            selectedDomain={selectedDomain}
+            domain={domain}
+            email={email}
+            profileImg={userInfo.profileImg}
+            changeTitle={changeTitle}
+            changeDescription={changeDescription}
+            changeCategoryMain={changeCategoryMain}
+            changeCategorySub={changeCategorySub}
+            changeAddress={changeAddress}
+            changeDomain={changeDomain}
+            changeSelectedDomain={changeSelectedDomain}
+          />
+        ) : (
+          <></>
+        )}
         <WriteCode
           editorRef={editorRef}
           srcCode={srcCode}
+          previewSrcCode={finalSrcCode}
           manual={manual}
           changeSrcCode={changeSrcCode}
           changeManual={changeManual}
@@ -197,7 +244,7 @@ function Register() {
           categoryMain={categoryMain}
           categorySub={categorySub}
           email={email}
-          srcCode={srcCode + `<style>${CalculetCss}</style>`}
+          srcCode={finalSrcCode}
           manual={manual}
         />
       </RegisterLayout>
