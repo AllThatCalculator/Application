@@ -2,11 +2,10 @@ import styled from "styled-components";
 import styles from "../styles";
 import PreviewBanner from "./PreviewBanner";
 import MiddleTitle from "./MiddleTitle";
-import { OPTIONS_CATEGORY_MAIN, OPTIONS_EMAIL_ADDRESS } from "./Option";
+import { OPTIONS_CATEGORY_MAIN } from "./Option";
 import BigTitle from "../atom-components/BigTitle";
 import { FlexColumnLayout, ResponsiveTabletLayout } from "../Layout";
 import {
-  ExplanationEmail,
   ExplanationInputBox,
   ExplanationSelectBox,
 } from "../global-component/Explanation";

@@ -11,7 +11,6 @@ import {
   ResponsiveTabletLayout,
 } from "../Layout";
 import { CustomPanel } from "./CustomPanel";
-import { CalculetCss } from "./CalculetString";
 
 const WrapperSrcCode = styled.div`
   width: 713px;
@@ -66,14 +65,6 @@ function WriteCode(props) {
     },
   ];
 
-  /**
-   * 모나코 에디터 값 관리하는 mount 함수
-   * @param {*} editor
-   */
-  function onMount(editor) {
-    props.editorRef.current = editor;
-  }
-
   return (
     <FlexColumnLayout gap={styles.styleLayout.basic900}>
       <BigTitle content="계산기 코드 입력하기" />
@@ -85,8 +76,7 @@ function WriteCode(props) {
               <CodeEditor
                 defaultLanguage="html"
                 defaultValue={props.srcCode}
-                onMount={onMount}
-                onChange={props.changeSrcCode}
+                setData={props.setSrcCode}
               />
             </WrapperSrcCode>
             <WrapperPannel>
@@ -99,8 +89,7 @@ function WriteCode(props) {
             <CodeEditor
               defaultLanguage="markdown"
               defaultValue={props.manual}
-              onMount={onMount}
-              onChange={props.changeManual}
+              setData={props.setManual}
             />
           </WrapperManual>
         )}
