@@ -101,11 +101,19 @@ const StyledBtnGray = styled(StyledButton)`
 `;
 // 투명 버튼(형식은 회색버튼)
 const StyledBtnTrans = styled(StyledBtnGray)`
+  flex-direction: ${(props) => props.dire && "column"};
+  color: ${(props) => props.dire && `${styles.styleColor.gray100}`};
   justify-content: ${(props) => !props.isCenter && `flex-start`};
   background: transparent;
   width: 100%;
+
+  ${styles.sytleText.text100};
   &:hover {
     background: ${styles.styleColor.blue30};
+  }
+  &:focus {
+    background: ${styles.styleColor.blue30};
+    ${styles.sytleText.buttonWhite};
   }
 `;
 // 남색 버튼
@@ -231,12 +239,16 @@ function BtnTransToggle({ text, isToggle, onClick, isCenter = true }) {
  * icon : 아이콘 넣기 -> 아이콘 이름 작성 || 아이콘 안 넣기 -> 인자 없음
  * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
  * isCenter : content가 버튼에서 가운데 정렬인지 (기본값 true 이니까, 가운데 정렬 안 할 때만 false로)
+ * dire : 방향 (true : column)
+ *
  */
 function BtnTrans({ text, icon, onClick, isCenter = true }) {
+function BtnTrans({ text, icon, onClick, dire = false }) {
   return (
     <StyledBtnTrans id={text} onClick={onClick} isCenter={isCenter}>
+    <StyledBtnTrans id={text} onClick={onClick} dire={dire}>
       {icon && <StyledIcon name={icon} />}
-      <StyledFont100>{text}</StyledFont100>
+      {text}
     </StyledBtnTrans>
   );
 }
