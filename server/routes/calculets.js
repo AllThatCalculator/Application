@@ -4,6 +4,7 @@ const mariadb = require("../config/database");
 const { auth } = require("../middleware/auth");
 const cookieParser = require("cookie-parser");
 const { category } = require("./calculets/category");
+const { DateTimeToString } = require("../utils/StringConverter");
 
 /**
  * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
@@ -214,12 +215,16 @@ router.get("/:id", (req, res) => {
   // 제작자 사진
   const userInfoQuery = `select profile_img from user_info where email = (select contributor_email from calculet_info where id=${req.params.id});`;
 
+  // 계산기 업데이트 로그
+  const calculetUpdateLogQuery = `select update_date, message from calculet_update_log where calculet_id=${req.params.id}`;
+
   mariadb.query(
     calculetInfoQuery +
       calculetStatisticsQuery +
       calculetCountQuery +
       userCalculetQuery +
-      userInfoQuery,
+      userInfoQuery +
+      calculetUpdateLogQuery,
     (err, rows, fields) => {
       if (!err) {
         const calculetInfo = rows[0][0];
@@ -227,6 +232,7 @@ router.get("/:id", (req, res) => {
         const calculetCount = rows[2][0];
         let userCalculet = rows[3][0];
         const userInfo = rows[4][0];
+        const calculetUpdateLog = rows[5];
 
         // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
         if (!userCalculet) {
@@ -274,8 +280,55 @@ router.get("/:id", (req, res) => {
           };
         }
 
+        // 계산기 정보 팝업에 들어가는 부분 객체로 묶기
+        let calculetInfoPopup = null;
+        let updateLog = [];
+        if (calculetUpdateLog.length > 0) {
+          let previous = DateTimeToString(calculetUpdateLog[0].update_date);
+          let message = [calculetUpdateLog[0].message];
+          // 날짜 같은 계산기 메세지 묶기
+          for (let i = 1; i < calculetUpdateLog.length; i++) {
+            const cur = DateTimeToString(calculetUpdateLog[i].update_date);
+            if (previous === cur) {
+              message.push(calculetUpdateLog[i].message);
+            } else {
+              previous = cur;
+              message = [calculetUpdateLog[i].message];
+              updateLog.push({
+                updateDate: previous,
+                message: message,
+              });
+            }
+          }
+          updateLog.push({
+            updateDate: previous,
+            message: message,
+          });
+        }
+
+        if (calculetInfo && calculetCount) {
+          // 제작자 이미지를 base64string 으로 변환 + src 생성
+          const contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
+
+          calculetInfoPopup = {
+            profileImg: contributorImgSrc,
+            contributorEmail: calculetInfo.contributor_email,
+            calculationCnt: calculetCount.calculation_cnt,
+            userCnt: calculetCount.user_cnt,
+            title: calculetInfo.title,
+            categoryMain: calculetInfo.category_main,
+            categorySub: calculetInfo.category_sub,
+            birthday: DateTimeToString(calculetInfo.birthday),
+            updateLog: updateLog,
+          };
+        }
+
         // 계산기 잘 불러왔는지 확인
-        if (calculet === null || statistics === null) {
+        if (
+          calculet === null ||
+          statistics === null ||
+          calculetInfoPopup === null
+        ) {
           res
             .status(404)
             .send({ success: false, message: "calculet was not found" });
@@ -284,6 +337,7 @@ router.get("/:id", (req, res) => {
             success: true,
             calculet: calculet,
             statistics: statistics,
+            info: calculetInfoPopup,
           });
         }
       } else {

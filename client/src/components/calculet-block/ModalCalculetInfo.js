@@ -126,7 +126,7 @@ function UpdateBox({ explain, contents, icon, color }) {
         <FlexColumnLayout key={index} gap="3px">
           <FlexRowLayout gap="10px">
             <IconColorBox icon={icon} color={color} />
-            <StyledFont font="font100">{conts.update_date}</StyledFont>
+            <StyledFont font="font100">{conts.updateDate}</StyledFont>
           </FlexRowLayout>
           {conts.message.map((cont, idx) => (
             <StyledIndent font="font50" key={idx}>
@@ -155,11 +155,11 @@ function LeftBox({ info }) {
     <PositionerColGapCenter>
       <FlexColumnLayout gap="20px">
         <PositionerUnderCenter gap="10px">
-          <StyledProfileImgBig src={info.profile_img} />
-          <StyledFont font="font100">{info.contributor_id}</StyledFont>
+          <StyledProfileImgBig src={info.profileImg} />
+          <StyledFont font="font100">{info.contributorEmail}</StyledFont>
         </PositionerUnderCenter>
-        <InfoBox explain="누적 연산 수" contents={info.calculation_cnt} />
-        <InfoBox explain="누적 사용자 수" contents={info.user_cnt} />
+        <InfoBox explain="누적 연산 수" contents={info.calculationCnt} />
+        <InfoBox explain="누적 사용자 수" contents={info.userCnt} />
       </FlexColumnLayout>
     </PositionerColGapCenter>
   );
@@ -180,7 +180,7 @@ function RightBoxTitle({ info }) {
     <>
       <StyledFont font="font300">{info.title}</StyledFont>
       <StyledFont font="font100" color="blue300">
-        {info.category_main} / {info.category_sub}
+        {info.categoryMain} / {info.categorySub}
       </StyledFont>
     </>
   );
@@ -210,7 +210,7 @@ function RightBoxLog({ info }) {
           </PositionerBorderUnder>
           <UpdateBox
             explain="업데이트"
-            contents={info.update_log}
+            contents={info.updateLog}
             icon="Circle"
             color={styles.styleColor.green100}
           />
