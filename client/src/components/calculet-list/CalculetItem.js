@@ -20,8 +20,8 @@ const StyledCalculetItem = styled.button`
   background: transparent;
 
   ${styles.styleBorder.basic100};
-  padding: ${styles.styleLayout.basic350};
-  padding-right: ${styles.styleLayout.basic700};
+  padding: ${styles.styleLayout.basic300} ${styles.styleLayout.basic700}
+    ${styles.styleLayout.basic300} 0;
 
   ${styles.sytleText.text100};
 
