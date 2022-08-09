@@ -38,7 +38,7 @@ router.get("/me", auth, me);
 router.get("/logout", logout);
 
 /**
- * refresh token을 통해 access token 재발급하는 모듈
+ * refresh token을 통해 access token 재발급하는 모듈 (현재는 쓰고 있지 않음)
  */
 router.get("/refresh", refresh);
 
