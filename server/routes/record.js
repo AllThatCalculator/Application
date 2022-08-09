@@ -42,7 +42,7 @@ router.use(express.json());
 router.post("/", auth, (req, res) => {
   // 새로운 기록 객체 생성
   const newRecord = new Record({
-    userEmail: req.body.userEmail,
+    userEmail: req.email,
     calculetId: req.body.calculetId,
     inputObj: req.body.inputObj,
     outputObj: req.body.outputObj,
@@ -52,7 +52,9 @@ router.post("/", auth, (req, res) => {
   newRecord
     .save()
     .then(() => {
-      res.status(201).send();
+      res
+        .status(201)
+        .send({ message: "calculet registration request completed." });
     })
     .catch(() => res.status(400).send({ message: "Failed to save record." }));
 });
