@@ -12,7 +12,7 @@ import AuthUser from "../components/user-actions/AuthUser";
  * -> true : 로그인한 유저만 출입이 가능한 페이지
  * -> false : 로그인한 유저는 출입 불가능한 페이지
  */
-export default function (SpecificComponent, option) {
+function Auth(SpecificComponent, option) {
   function AuthenticationCheck() {
     const navigate = useNavigate();
 
@@ -34,3 +34,4 @@ export default function (SpecificComponent, option) {
   }
   return AuthenticationCheck;
 }
+export default Auth;

@@ -23,7 +23,7 @@ const AppRouter = () => {
       <Routes>
         <Route path={CALCULET} element={<Calculet />} />
         <Route path={CALCULET + "/:id"} element={<Calculet />} />
-        <Route path={REGISTER} element={<Register />} />
+        <Route path={REGISTER} element={<AuthRegister />} />
         <Route path={LOGIN} element={<Login />} />
         <Route path={SIGN_UP} element={<SignUp />} />
         <Route path={SEARCH} element={<Search />} />

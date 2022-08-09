@@ -5,7 +5,7 @@ import axios from "axios";
  * @param {object}
  * dataToSubmit : 서버에 보낼 정보
  */
-export default async function loginUser(dataToSubmit = {}) {
+async function loginUser(dataToSubmit = {}) {
   let data;
   try {
     await axios.post(`/users/login`, dataToSubmit).then((response) => {
@@ -21,3 +21,4 @@ export default async function loginUser(dataToSubmit = {}) {
     }
   }
 }
+export default loginUser;
