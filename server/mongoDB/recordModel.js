@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 // 스키마 생성
 const RecordSchema = new mongoose.Schema(
   {
-    userId: String,
+    userEmail: String,
     calculetId: Number,
     inputObj: mongoose.Schema.Types.Mixed,
     outputObj: mongoose.Schema.Types.Mixed,

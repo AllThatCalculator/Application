@@ -7,6 +7,7 @@ components:
       properties:
         userId:
           type: string
+          format: email
           description: 유저 아이디
         calculetId:
           type: int
@@ -24,7 +25,8 @@ components:
         outputObj: { result: 3 }
     getRecord:
       type: array
-      items: "#components/schemas/record"
+      items:
+        - $ref: "#components/schemas/record"
 
     record:
       type: object
@@ -36,7 +38,8 @@ components:
           type: object
           description: 계산기 출력값
         createdAt:
-          type: timestamp
+          type: string
+          format: date-time
           description: 기록된 시간
       example:
         inputObj: { value1: 1, value2: 2 }

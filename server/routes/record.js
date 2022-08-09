@@ -43,7 +43,7 @@ router.post("/", (req, res) => {
 
   // 새로운 기록 객체 생성
   const newRecord = new Record({
-    userId: req.body.userId,
+    userEmail: req.body.userEmail,
     calculetId: req.body.calculetId,
     inputObj: req.body.inputObj,
     outputObj: req.body.outputObj,
@@ -59,17 +59,17 @@ router.post("/", (req, res) => {
 });
 /**
  * @swagger
- *  /record/{userId}{calculetId}:
+ *  /record/{userEmail}{calculetId}:
  *    get:
  *      tags: [record]
  *      summary: 계산 이력 불러오기
- *      description: userId의 calculetId 사용 이력을 불러오기
+ *      description: userEmail의 calculetId 사용 이력을 불러오기
  *      parameters:
  *        - in: path
- *          name: userId
+ *          name: userEmail
  *          type: string
  *          required: true
- *          description: 유저 아이디
+ *          description: 유저 이메일
  *        - in: path
  *          name: calculetId
  *          type: int
@@ -98,7 +98,10 @@ router.post("/", (req, res) => {
 router.get("/", (req, res) => {
   // 유저 데이터 유효성 확인 및 계산기 아이디 유효성 확인 (구현 예정)
   //res.status(401).send("Login error")
-  Record.find({ userId: req.query.userId, calculetId: req.query.calculetId })
+  Record.find({
+    userEmail: req.query.userEmail,
+    calculetId: req.query.calculetId,
+  })
     .then((recordList) => {
       // 데이터 가공
       recordList = recordList.map((row) => {
@@ -112,7 +115,7 @@ router.get("/", (req, res) => {
 
       // 최신순 정렬
       recordList.sort((a, b) => a.createdAt < b.createdAt);
-      res.status(200).send({ data: recordList });
+      res.status(200).send({ recordList });
     })
     .catch(() => {
       res.status(400).send({
