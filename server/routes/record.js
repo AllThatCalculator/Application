@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Record = require("../mongoDB/recordModel");
+const { auth } = require("../middleware/auth");
 
 /**
  * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
@@ -38,9 +39,7 @@ router.use(express.json());
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.post("/", (req, res) => {
-  // 유저 데이터 유효성 확인 및 계산기 아이디 유효성 확인 (구현 예정)
-
+router.post("/", auth, (req, res) => {
   // 새로운 기록 객체 생성
   const newRecord = new Record({
     userEmail: req.body.userEmail,
@@ -59,17 +58,12 @@ router.post("/", (req, res) => {
 });
 /**
  * @swagger
- *  /record/{userEmail}{calculetId}:
+ *  /record/{calculetId}:
  *    get:
  *      tags: [record]
  *      summary: 계산 이력 불러오기
  *      description: userEmail의 calculetId 사용 이력을 불러오기
  *      parameters:
- *        - in: path
- *          name: userEmail
- *          type: string
- *          required: true
- *          description: 유저 이메일
  *        - in: path
  *          name: calculetId
  *          type: int
@@ -95,11 +89,10 @@ router.post("/", (req, res) => {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.get("/", (req, res) => {
-  // 유저 데이터 유효성 확인 및 계산기 아이디 유효성 확인 (구현 예정)
-  //res.status(401).send("Login error")
+router.get("/", auth, (req, res) => {
+  // 해당 이력 검색
   Record.find({
-    userEmail: req.query.userEmail,
+    userEmail: req.email,
     calculetId: req.query.calculetId,
   })
     .then((recordList) => {
