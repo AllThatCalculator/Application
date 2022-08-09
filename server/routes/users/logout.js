@@ -22,7 +22,7 @@ exports.logout = (req, res) => {
   mariadb.query(sql, (err, result, fields) => {
     if (!err) {
       // 로그아웃 완료
-      return res.status(200).redirect("/");
+      res.status(200).send({ success: true, message: "로그아웃 성공" });
     } else {
       res.status(400).send({ success: false, message: "로그아웃 실패" });
     }
