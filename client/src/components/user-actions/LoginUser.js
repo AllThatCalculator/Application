@@ -15,6 +15,7 @@ async function loginUser(dataToSubmit = {}) {
   } catch (error) {
     switch (error.response.status) {
       case 400:
+      case 401:
       case 403:
       case 404:
         return error.response.data;

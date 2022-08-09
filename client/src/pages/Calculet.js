@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import CalculetBlock from "../components/calculet-block/CalculetBlock";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styles from "../components/styles";
 import { BtnBlue } from "../components/atom-components/ButtonTemplate";
 import CalculetHeader from "../components/calculet-block/CalculetHeader";
@@ -10,12 +10,11 @@ import CalculetHeader from "../components/calculet-block/CalculetHeader";
 // -> 백엔드 연결 이후에는 http request로 계산기 정보들과 함께 받음
 // eslint-disable-next-line
 import srcCode from "raw-loader!../calculets/arithmetic-operation/arithmeticOperation.html";
-import { ContentLayout } from "../components/Layout";
-
 import axios from "axios";
 import updateCalculetCount from "../utils/UpdateCalculetCount";
 import { Font } from "../components/atom-components/StyledText";
 import FooterRecommend from "../components/global-component/FooterRecommend";
+import URL from "../components/PageUrls";
 
 // 계산기 블록 배경
 const Positioner = styled.div`
@@ -46,20 +45,8 @@ const WrapperCol = styled(BoxCalculet)`
   flex-direction: column;
   gap: ${styles.styleLayout.basic700};
 `;
-// 링크
-const StyledLink = styled(Link)`
-  text-decoration-line: none;
-`;
-/**
- * ContentLayout을 상속하는 계산기 추천 모듈 감쌈
- * - padding을 새로 설정
- */
-const Wrapper = styled(ContentLayout)`
-  padding: ${styles.styleLayout.basic350};
-`;
-// 계산기 추천
-
 function Calculet() {
+  const navigate = useNavigate();
   // 계산기 객체
   // {object} calculetObj 계산기 객체
   //         {string} title: "사칙연산 계산기", - 계산기 이름
@@ -171,16 +158,16 @@ function Calculet() {
           )}
         </WrapperCol>
       </Positioner>
-
       <PositionerBottom>
         <BoxCalculetBottom>
           <Font font="text200">자신만의 계산기를 만드세요!</Font>
-          <StyledLink to="/register">
-            <BtnBlue text="계산기 등록" icon="Upload" />
-          </StyledLink>
+          <BtnBlue
+            text="계산기 등록"
+            icon="Upload"
+            onClick={() => navigate(URL.REGISTER)}
+          />
         </BoxCalculetBottom>
       </PositionerBottom>
-
       <FooterRecommend />
     </>
   );

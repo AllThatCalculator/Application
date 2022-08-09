@@ -13,8 +13,10 @@ async function AuthUser() {
     return data;
   } catch (error) {
     switch (error.response.status) {
-      case 404:
+      case 401:
         return error.response.data;
+        break;
+      case 404:
         break;
     }
   }

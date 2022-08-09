@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { CALCULET } from "../PageUrls.js";
+import URL from "../PageUrls.js";
 import styles from "../styles.js";
 const StyledButton = styled.button`
   display: flex;
@@ -29,7 +29,7 @@ export default function LogoHeader() {
   const navigate = useNavigate();
 
   return (
-    <StyledButton onClick={() => navigate(CALCULET)}>
+    <StyledButton onClick={() => navigate(URL.CALCULET)}>
       All That Calculator
     </StyledButton>
   );
