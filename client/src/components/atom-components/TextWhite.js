@@ -15,10 +15,6 @@ const StyledDiv = styled.div`
  *
  */
 function TextWhite({ text }) {
-  return (
-    <>
-      <StyledDiv>{text}</StyledDiv>
-    </>
-  );
+  return <StyledDiv>{text}</StyledDiv>;
 }
 export default TextWhite;

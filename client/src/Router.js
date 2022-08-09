@@ -5,7 +5,13 @@ import Register from "./pages/Register";
 import BookmarkBar from "./components/global-component/BookmarkBar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
-import { CALCULET, LOGIN, REGISTER, SIGN_UP } from "./components/PageUrls";
+import {
+  CALCULET,
+  LOGIN,
+  REGISTER,
+  SIGN_UP,
+  SEARCH,
+} from "./components/PageUrls";
 
 const AppRouter = () => {
   return (
@@ -17,6 +23,7 @@ const AppRouter = () => {
         <Route path={REGISTER} element={<Register />} />
         <Route path={LOGIN} element={<Login />} />
         <Route path={SIGN_UP} element={<SignUp />} />
+        <Route path={SEARCH} element={<Search />} />
       </Routes>
       <BookmarkBar />
     </BrowserRouter>
