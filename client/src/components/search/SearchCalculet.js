@@ -38,6 +38,7 @@ function SearchCalculet(props) {
     <StyledLine>
       <WrapperRatio ratio="5">
         <CalculetDesc
+          id={props.id}
           title={props.title}
           description={props.description}
           categoryMain={props.categoryMain}

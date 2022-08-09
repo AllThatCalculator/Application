@@ -11,11 +11,6 @@ import CalculetHeader from "../components/calculet-block/CalculetHeader";
 // eslint-disable-next-line
 import srcCode from "raw-loader!../calculets/arithmetic-operation/arithmeticOperation.html";
 import { ContentLayout } from "../components/Layout";
-import {
-  ContentLayout,
-  FlexColumnLayout,
-  FlexRowLayout,
-} from "../components/Layout";
 
 import axios from "axios";
 import updateCalculetCount from "../utils/UpdateCalculetCount";
