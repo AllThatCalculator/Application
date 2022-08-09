@@ -1,0 +1,53 @@
+# record API
+
+components:
+  schemas:
+    saveRecord:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: email
+          description: 유저 아이디
+        calculetId:
+          type: int
+          description: 계산기 번호
+        inputObj:
+          type: object
+          description: 계산기 입력값
+        outputObj:
+          type: object
+          description: 계산기 출력값
+      example:
+        userId: "bsa0322 - 임시"
+        calculetId: 1
+        inputObj: { value1: 1, value2: 2 }
+        outputObj: { result: 3 }
+    getRecord:
+      type: array
+      items:
+        - $ref: "#components/schemas/record"
+
+    record:
+      type: object
+      properties:
+        inputObj:
+          type: object
+          description: 계산기 입력값
+        outputObj:
+          type: object
+          description: 계산기 출력값
+        createdAt:
+          type: string
+          format: date-time
+          description: 기록된 시간
+      example:
+        inputObj: { value1: 1, value2: 2 }
+        outputObj: { result: 3 }
+        createdAt: "2022-08-02T20:14:54.530Z"
+    errorResult:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 에러 메세지

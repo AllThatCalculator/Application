@@ -2,6 +2,7 @@ version: "3"
 
 services:
   frontend:
+    container_name: frontend
     stdin_open: true
     build:
       context: ./client
@@ -15,8 +16,12 @@ services:
     networks:
       - app-tier
     tty: true
+    restart: always
+    depends_on:
+      - backend
 
   backend:
+    container_name: backend
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -29,18 +34,35 @@ services:
     networks:
       - app-tier
     restart: always
+    depends_on:
+      - mariadb
+      - mongodb
 
   mariadb:
+    container_name: mariadb
     image: mariadb:10
     ports:
       - 3306:3306
     volumes:
-      - ./database/conf.d:/etc/mysql/conf.d
-      - ./database/data:/var/lib/mysql
-      - ./database/initdb.d:/docker-entrypoint-initdb.d
+      - ./database/mariaDB/conf.d:/etc/mysql/conf.d
+      - ./database/mariaDB/data:/var/lib/mysql
+      - ./database/mariaDB/initdb.d:/docker-entrypoint-initdb.d:ro
     env_file: .env
     environment:
       TZ: Asia/Seoul
+    networks:
+      - app-tier
+    restart: always
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:5.0.9
+    ports:
+      - 27017:27017
+    env_file: .env
+    volumes:
+      - ./database/mongoDB/data:/data/db
+      - ./database/mongoDB/initdb.d:/docker-entrypoint-initdb.d:ro
     networks:
       - app-tier
     restart: always
