@@ -12,6 +12,14 @@ components:
           $ref: "#components/schemas/calculet"
         statistics:
           $ref: "#components/schemas/statistics"
+    getCalculetLists:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+        calculetLists:
+          $ref: "#components/schemas/calculetLists"
     registerCalculetTemp:
       type: object
       properties:
@@ -95,6 +103,10 @@ components:
         viewCnt:
           type: integer
           description: 누적 접속 수
+    calculetLists:
+      type: array
+      items:
+        type: object
     postResult:
       type: object
       properties:
