@@ -87,8 +87,8 @@ function SignUp() {
   const job = useInput("");
   const bio = useInput("");
 
-  // 주의 문구 여부: 비밀번호 & 비밀번호 확인 비교
-  const [isWarningPw, setIsWarningPw] = useState(false);
+  // 주의 문구 여부 : 비밀번호 유효성 검사 / 비밀번호 & 비밀번호 확인 비교
+  const [warningPw, setWarningPw] = useState("");
   // 주의 문구 여부: 다 입력되었는지 여부 & 요청 정보 오류
   const [warningAll, setWarningAll] = useState("");
 
@@ -113,11 +113,23 @@ function SignUp() {
     }
   }, [year, month, dateEnd]);
 
-  // 비밀번호 & 비밀번호 확인
+  // 비밀번호 유효성 검사 (10자 이상, 알파벳과 특수문자 포함)
+  // 비밀번호 & 비밀번호 확인 같은지 검사
   useEffect(() => {
+    // 비밀번호 최소 10자, 하나의 문자, 하나의 숫자, 하나의 특수 문자 정규식
+    const specialLetter =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{10,}$/g;
+    if (!specialLetter.test(pw.value)) {
+      if (pw.value.length > 0) {
+        setWarningPw(
+          "최소 10자 이상, 숫자와 알파벳과 특수문자를 포함해 주세요."
+        );
+        return;
+      } else setWarningPw("");
+    }
     if (pw.value !== pwConfirmation.value) {
-      setIsWarningPw(true);
-    } else setIsWarningPw(false);
+      setWarningPw("비밀번호와 비밀번호 확인이 다릅니다.");
+    } else setWarningPw("");
   }, [pw.value, pwConfirmation.value]);
 
   /**
@@ -158,7 +170,7 @@ function SignUp() {
   function onSubmitHandler(event) {
     event.preventDefault();
     // 비밀번호 & 비밀번호 확인 비교
-    if (isWarningPw) return;
+    if (warningPw) return;
     // 다 입력했는지 확인
     if (
       !address.value ||
@@ -207,7 +219,7 @@ function SignUp() {
     <>
       <StyledWhite300 />
       <WrapperPad gap="20px">
-        <StyledImg src={"/ATCLogoBlueImgText.png"} width="214px" />
+        <StyledImg src="/ATCLogoBlueImgText.png" width="214px" />
         <BoxBorder gap="20px">
           <BoxTitle content="회원가입" />
           <ProfileChange
@@ -229,7 +241,7 @@ function SignUp() {
               changePw={pw.onChange}
               changePwConfirmation={pwConfirmation.onChange}
             />
-            {isWarningPw && <WarningGuide content="비밀번호가 다릅니다." />}
+            {warningPw && <WarningGuide content={warningPw} />}
           </WrapperStretch>
           <WrapperStretch gap="10px">
             <WriteInformSecond
@@ -253,7 +265,7 @@ function SignUp() {
               changeJob={job.onChange}
               changeBio={bio.onChange}
             />
-            {warningAll && <WarningGuide content="모든 사항을 입력해주세요." />}
+            {warningAll && <WarningGuide content={warningAll} />}
           </WrapperStretch>
           <WrapperStretch>
             <BtnIndigo text="가입하기" onClick={onSubmitHandler} />
