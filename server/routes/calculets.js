@@ -62,79 +62,94 @@ function bufferToImageSrc(value) {
 router.get("/", (req, res) => {
   // 계산기 정보 리스트 얻는 쿼리문
   // order by를 통해 카테고리별로 묶음
-  const calculetInfoQuery = `select category_main, category_sub, id, title from calculet_info order by category_main, category_sub`;
+  const calculetInfoQuery = `select category_main_id, category_sub_id, id, title from calculet_info order by category_main_id, category_sub_id;`;
 
-  mariadb.query(calculetInfoQuery, (err, rows, fields) => {
-    if (!err) {
-      const calculetInfo = rows;
+  // 카테고리 대분류 리스트 얻어오기
+  const categoryMainQuery = `select main from category_main;`;
 
-      // (임시) 카테고리 대분류
-      const CATEGORY_MAIN = ["수학", "과학-공학", "경제-사회", "일상", "기타"];
+  // 카테고리 소분류 리스트 얻어오기
+  const categorySubQuery = `select sub from category_sub;`;
 
-      // 계산기 리스트 잘 불러왔다면 -> 카테고리 순서에 맞게 객체로 감싸기
-      const calculetLists = [];
-      if (calculetInfo) {
-        for (let i = 0; i < CATEGORY_MAIN.length; i++) {
-          const categoryMain = CATEGORY_MAIN[i];
-          const mainItems = [];
-          let subItems = [];
-          let previous = null;
-          for (let j = 0; j < calculetInfo.length; j++) {
-            const main = calculetInfo[j].category_main;
-            const sub = calculetInfo[j].category_sub;
-            const id = calculetInfo[j].id;
-            const title = calculetInfo[j].title;
+  mariadb.query(
+    calculetInfoQuery + categoryMainQuery + categorySubQuery,
+    (err, rows, fields) => {
+      if (!err) {
+        const calculetInfo = rows[0];
+        const categoryMain = rows[1];
+        const categorySub = rows[2];
 
-            // 현재 탐색하는 대분류 벗어났다면 종료
-            if (previous && main !== categoryMain) {
-              break;
-            }
+        // 계산기 리스트 잘 불러왔다면 -> 카테고리 순서에 맞게 객체로 감싸기
+        const calculetLists = [];
+        if (calculetInfo) {
+          let previousMain =
+            categoryMain[calculetInfo[0].category_main_id - 1].main;
+          let previousSub =
+            categorySub[calculetInfo[0].category_sub_id - 1].sub;
+          let mainItems = [];
+          let subItems = [
+            { id: calculetInfo[0].id, title: calculetInfo[0].title },
+          ];
+          for (let i = 1; i < calculetInfo.length; i++) {
+            const main =
+              categoryMain[calculetInfo[i].category_main_id - 1].main;
+            const sub = categorySub[calculetInfo[i].category_sub_id - 1].sub;
+            const content = {
+              id: calculetInfo[i].id,
+              title: calculetInfo[i].title,
+            };
 
             // 대분류 같은거끼리 묶였다면
-            if (previous) {
-              if (previous === sub) {
-                subItems.push({ id: id, title: title });
+            if (previousMain === main) {
+              if (previousSub === sub) {
+                subItems.push(content);
               } else {
-                mainItems.push({ categorySub: previous, subItems: subItems });
-                previous = sub;
-                subItems = [{ id: id, title: title }];
+                mainItems.push({
+                  categorySub: previousSub,
+                  subItems: subItems,
+                });
+                previousSub = sub;
+                subItems = [content];
               }
-              continue;
-            }
-
-            if (main === categoryMain) {
-              previous = sub;
-              subItems.push({ id: id, title: title });
+            } else {
+              // 대분류 다르다면
+              calculetLists.push({
+                categoryMain: previousMain,
+                mainItems: mainItems,
+              });
+              previousMain = main;
+              previousSub = sub;
+              subItems = [content];
+              mainItems = [];
             }
           }
-          mainItems.push({ categorySub: previous, subItems: subItems });
-
+          mainItems.push({ categorySub: previousSub, subItems: subItems });
           calculetLists.push({
-            categoryMain: categoryMain,
+            categoryMain: previousMain,
             mainItems: mainItems,
           });
         }
-      }
 
-      // 계산기 리스트 잘 불러왔는지 확인
-      if (calculetLists.length === 0) {
-        res
-          .status(404)
-          .send({ success: false, message: "calculet was not found" });
+        // 계산기 리스트 잘 불러왔는지 확인
+        if (calculetLists.length === 0) {
+          res
+            .status(404)
+            .send({ success: false, message: "calculet was not found" });
+        } else {
+          res.status(200).send({
+            success: true,
+            calculetLists: calculetLists,
+          });
+        }
       } else {
-        res.status(200).send({
-          success: true,
-          calculetLists: calculetLists,
+        res.status(400).send({
+          success: false,
+          message:
+            "request parameters was wrong. retry request after change parameters",
+          err,
         });
       }
-    } else {
-      res.status(400).send({
-        success: false,
-        message:
-          "request parameters was wrong. retry request after change parameters",
-      });
     }
-  });
+  );
 });
 
 /**
@@ -300,7 +315,7 @@ router.get("/:id", (req, res) => {
  */
 router.post("/", auth, (req, res) => {
   const sql =
-    "INSERT INTO calculet_info(title, src_code, manual, description, category_main, category_sub, contributor_email) VALUES(?,?,?,?,?,?,?);";
+    "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main, category_sub, contributor_email) VALUES(?,?,?,?,?,?,?);";
 
   const calculet = [
     req.body.title,
