@@ -1,11 +1,24 @@
+CREATE TABLE category_main(
+    id INT AUTO_INCREMENT,
+	main VARCHAR(20) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE category_sub(
+    id INT AUTO_INCREMENT,
+	sub VARCHAR(20) NOT NULL,
+	main_id INT NOT NULL,
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE calculet_info(
     id INT AUTO_INCREMENT,
 	title VARCHAR(100) NOT NULL,
     src_code BLOB NOT NULL,
     manual BLOB NOT NULL,
     description VARCHAR(100) NOT NULL,
-    category_main VARCHAR(20) NOT NULL,
-    category_sub VARCHAR(20) NOT NULL,
+    category_main_id INT NOT NULL,
+    category_sub_id INT NOT NULL,
     contributor_email VARCHAR(254) NOT NULL,
 	birthday DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	blocked BOOLEAN NOT NULL DEFAULT 0,
@@ -18,8 +31,8 @@ CREATE TABLE calculet_info_temp(
     src_code BLOB NOT NULL,
     manual BLOB NOT NULL,
     description VARCHAR(100) NOT NULL,
-    category_main VARCHAR(20) NOT NULL,
-    category_sub VARCHAR(20) NOT NULL,
+    category_main_id INT NOT NULL,
+    category_sub_id INT NOT NULL,
     contributor_email VARCHAR(254) NOT NULL,
 	birthday DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated BOOLEAN NOT NULL DEFAULT 0,
@@ -75,14 +88,27 @@ CREATE TABLE user_info(
 	PRIMARY KEY (email)
 );
 
+ALTER TABLE category_main AUTO_INCREMENT = 1;
+ALTER TABLE category_sub AUTO_INCREMENT = 1;
 ALTER TABLE calculet_info AUTO_INCREMENT = 1;
+
+ALTER TABLE category_sub ADD CONSTRAINT FOREIGN KEY (main_id) REFERENCES category_main(id);
+
 ALTER TABLE calculet_info ADD CONSTRAINT FOREIGN KEY (contributor_email) REFERENCES user_info(email);
+ALTER TABLE calculet_info ADD CONSTRAINT FOREIGN KEY (category_main_id) REFERENCES category_main(id);
+ALTER TABLE calculet_info ADD CONSTRAINT FOREIGN KEY (category_sub_id) REFERENCES category_sub(id);
+
 ALTER TABLE calculet_info_temp ADD CONSTRAINT FOREIGN KEY (contributor_email) REFERENCES user_info(email);
+ALTER TABLE calculet_info_temp ADD CONSTRAINT FOREIGN KEY (category_main_id) REFERENCES category_main(id);
+ALTER TABLE calculet_info_temp ADD CONSTRAINT FOREIGN KEY (category_sub_id) REFERENCES category_sub(id);
+
 ALTER TABLE calculet_update_log ADD CONSTRAINT FOREIGN KEY (calculet_id) REFERENCES calculet_info(id);
 ALTER TABLE calculet_count ADD CONSTRAINT FOREIGN KEY (calculet_id) REFERENCES calculet_info(id);
 ALTER TABLE calculet_statistics ADD CONSTRAINT FOREIGN KEY (calculet_id) REFERENCES calculet_info(id);
+
 ALTER TABLE user_calculet ADD CONSTRAINT FOREIGN KEY (calculet_id) REFERENCES calculet_info(id);
 ALTER TABLE user_calculet ADD CONSTRAINT FOREIGN KEY (user_email) REFERENCES user_info(email);
+
 ALTER TABLE user_login ADD CONSTRAINT FOREIGN KEY (user_email) REFERENCES user_info(email);
 
 --caculet_info에 insert하면 calculet_statistics도 insert되는 트래거
