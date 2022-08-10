@@ -35,12 +35,12 @@ components:
         description:
           type: string
           description: 계산기 한 줄 설명
-        categoryMain:
-          type: string
-          description: 카테고리 대분류
-        categorySub:
-          type: string
-          description: 카테고리 소분류
+        categoryMainId:
+          type: integer
+          description: 카테고리 대분류 ID
+        categorySubId:
+          type: integer
+          description: 카테고리 소분류 ID
         email:
           type: string
           description: 계산기 제작자 이메일
@@ -49,8 +49,8 @@ components:
         srcCode: <html></html>
         manual: "### markdown"
         description: 계산기 한 줄 설명
-        categoryMain: 대분류
-        categorySub: 소분류
+        categoryMain: 1
+        categorySub: 2
         email: bsa0322@ewhain.net
     calculet:
       type: object

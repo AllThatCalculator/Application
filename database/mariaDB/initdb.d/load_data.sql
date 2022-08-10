@@ -7,7 +7,7 @@ INSERT INTO category_main(main) VALUES('수학');
 INSERT INTO category_main(main) VALUES('과학-공학');
 INSERT INTO category_main(main) VALUES('경제-사회');
 INSERT INTO category_main(main) VALUES('일상');
-INSERT INTO category_main(main) VALUES('운동');
+INSERT INTO category_main(main) VALUES('기타');
 
 INSERT INTO category_sub(sub, main_id) VALUES('계산',1);
 INSERT INTO category_sub(sub, main_id) VALUES('통계',1);

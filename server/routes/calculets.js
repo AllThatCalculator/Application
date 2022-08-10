@@ -83,8 +83,10 @@ router.get("/", (req, res) => {
         if (calculetInfo) {
           let previousMain =
             categoryMain[calculetInfo[0].category_main_id - 1].main;
-          let previousSub =
-            categorySub[calculetInfo[0].category_sub_id - 1].sub;
+          let previousSub = null;
+          if (calculetInfo[0].category_sub_id !== null) {
+            previousSub = categorySub[calculetInfo[0].category_sub_id - 1].sub;
+          }
           let mainItems = [];
           let subItems = [
             { id: calculetInfo[0].id, title: calculetInfo[0].title },
@@ -92,7 +94,10 @@ router.get("/", (req, res) => {
           for (let i = 1; i < calculetInfo.length; i++) {
             const main =
               categoryMain[calculetInfo[i].category_main_id - 1].main;
-            const sub = categorySub[calculetInfo[i].category_sub_id - 1].sub;
+            let sub = null;
+            if (calculetInfo[i].category_sub_id !== null) {
+              sub = categorySub[calculetInfo[i].category_sub_id - 1].sub;
+            }
             const content = {
               id: calculetInfo[i].id,
               title: calculetInfo[i].title,
@@ -112,6 +117,7 @@ router.get("/", (req, res) => {
               }
             } else {
               // 대분류 다르다면
+              mainItems.push({ categorySub: previousSub, subItems: subItems });
               calculetLists.push({
                 categoryMain: previousMain,
                 mainItems: mainItems,
@@ -279,6 +285,7 @@ router.get("/:id", (req, res) => {
           success: false,
           message:
             "request parameters was wrong. retry request after change parameters",
+          err,
         });
       }
     }
@@ -315,15 +322,15 @@ router.get("/:id", (req, res) => {
  */
 router.post("/", auth, (req, res) => {
   const sql =
-    "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main, category_sub, contributor_email) VALUES(?,?,?,?,?,?,?);";
+    "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main_id, category_sub_id, contributor_email) VALUES(?,?,?,?,?,?,?);";
 
   const calculet = [
     req.body.title,
     req.body.srcCode,
     req.body.manual,
     req.body.description,
-    req.body.categoryMain,
-    req.body.categorySub,
+    req.body.categoryMainId,
+    req.body.categorySubId,
     req.body.email,
   ];
 
@@ -337,6 +344,7 @@ router.post("/", auth, (req, res) => {
         success: false,
         message:
           "request parameters was wrong. retry request after change parameters",
+        err,
       });
     }
   });
