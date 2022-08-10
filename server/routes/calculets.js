@@ -3,6 +3,7 @@ const router = express.Router();
 const mariadb = require("../config/database");
 const { auth } = require("../middleware/auth");
 const cookieParser = require("cookie-parser");
+const { category } = require("./calculets/category");
 
 /**
  * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
@@ -157,6 +158,11 @@ router.get("/", (req, res) => {
     }
   );
 });
+
+/**
+ * DB에 저장된 카테고리를 불러오는 API
+ */
+router.get("/category", category);
 
 /**
  * @swagger
