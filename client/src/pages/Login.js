@@ -81,7 +81,7 @@ function Login() {
     request.then((res) => {
       // 로그인 실패
       if (!res.success) setWarning(res.message);
-      // 로그인 성공 (새로고침해야 로그아웃 버튼으로 바뀜)
+      // 로그인 성공
       else {
         window.location.replace(URL.CALCULET);
       }
