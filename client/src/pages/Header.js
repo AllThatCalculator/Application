@@ -7,7 +7,7 @@ import { BtnWhite } from "../components/atom-components/ButtonTemplate";
 import CategoryBar from "../components/global-component/CategoryBar";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import calculetsUser from "../components/user-actions/calculetsUser";
 
 // 상단 고정
 const Positioner = styled.div`
@@ -67,44 +67,17 @@ function Header() {
   // 카테고리바 열 때 slideIn, 닫을 때 slideInOut 으로 작동할 수 있도록 animation의 mode를 제어하는 state
   const [aniMode, setAniMode] = useState(false);
 
-  // 카테고리 바에 들어갈 계산기 대분류 & 소분류 정보
-  const contentsCategory = [
-    {
-      categoryMain: "수학",
-      categorySub: [
-        {
-          name: "계산",
-          calculets: [
-            { id: 1, title: "사칙연산" },
-            { id: 102, title: "변수" },
-            { id: 133, title: "함수" },
-            { id: 141, title: "미적분 계산기" },
-          ],
-        },
-        { name: "통계", calculets: [] },
-        {
-          name: "기하",
-          calculets: [
-            { id: 155, title: "각도" },
-            { id: 161, title: "외심내심" },
-          ],
-        },
-      ],
-    },
-    {
-      categoryMain: "과학-공학",
-      categorySub: [
-        {
-          name: "과학",
-          calculets: [
-            { id: 171, title: "단위 변환기" },
-            { id: 201, title: "물리 계산기" },
-          ],
-        },
-        { name: "공학", calculets: [{ id: 221, title: "진법 계산기" }] },
-      ],
-    },
-  ];
+  /**
+   * 카테고리바 정보 (대분류, 소분류에 따른 계산기) 서버에서 불러오기
+   * 페이지 렌더시 한 번만
+   */
+  const [contentsCategory, setContentsCategory] = useState(null);
+  useEffect(() => {
+    calculetsUser().then((res) => {
+      // 카테고리바 정보 불러오기 성공
+      if (res.success) setContentsCategory(res.calculetLists);
+    });
+  }, []);
 
   // 스크롤의 위치
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -130,18 +103,15 @@ function Header() {
   return (
     <>
       <Positioner isChange={isChange}>
-        <Contents
-          onIsOpen={() => {
-            setAniMode(!aniMode);
-          }}
-          onLogin={onLogin}
-        />
+        <Contents onIsOpen={() => setAniMode(!aniMode)} onLogin={onLogin} />
       </Positioner>
-      <CategoryBar
-        contents={contentsCategory}
-        aniMode={aniMode}
-        setAniMode={setAniMode}
-      ></CategoryBar>
+      {contentsCategory && (
+        <CategoryBar
+          contents={contentsCategory}
+          aniMode={aniMode}
+          setAniMode={setAniMode}
+        />
+      )}
     </>
   );
 }
