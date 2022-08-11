@@ -106,6 +106,10 @@ function CategoryBar({ contents, aniMode, setAniMode }) {
       !categoryToggle[mainIndex].subToggle[subIndex].toggle;
     setCategoryToggle(newCategoryToggle);
   }
+  /**
+   * 계산기 바로가기 생성하는 함수
+   * @param {object} calculet 계산기 id, title 포함하는 객체
+   */
   function handleLeaf(calculet) {
     return (
       <BtnTrans
@@ -119,6 +123,13 @@ function CategoryBar({ contents, aniMode, setAniMode }) {
       />
     );
   }
+  /**
+   * 계산기를 소분류로 묶어서 반환하는 함수
+   * @param {object} sub - 소분류 객체
+   * @param {number} subIndex - 소분류 인덱스
+   * @param {number} mainIndex - 대분류 인덱스
+   * @param {boolean} toggle - 열려있는지 여부
+   */
   function handleSub(sub, subIndex, mainIndex, toggle) {
     return (
       <div key={sub.categorySub}>
@@ -136,6 +147,12 @@ function CategoryBar({ contents, aniMode, setAniMode }) {
       </div>
     );
   }
+  /**
+   * 계산기를 대분류로 묶어서 반환하는 함수
+   * @param {object} main - 대분류 객체
+   * @param {number} mainIndex - 소분류 인덱스
+   * @param {boolean} toggle - 열려있는지 여부
+   */
   function handleMain(main, mainIndex, toggle) {
     return (
       <div key={main.categoryMain}>
