@@ -66,6 +66,7 @@ services:
     networks:
       - app-tier
     restart: always
+    command: mongod -quiet
 
 networks:
   app-tier:

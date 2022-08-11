@@ -8,8 +8,8 @@ services:
       context: ./client
       dockerfile: Dockerfile.prod
     volumes:
-      - ./client/:/client
       - /client/node_modules
+      - ./client/:/client
     env_file: .env
     ports:
       - 8080:8080
@@ -65,6 +65,7 @@ services:
     networks:
       - app-tier
     restart: always
+    command: mongod -quiet
 
 networks:
   app-tier:
