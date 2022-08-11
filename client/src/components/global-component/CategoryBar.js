@@ -83,14 +83,14 @@ function CategoryBar({ contents, aniMode, setAniMode }) {
   const categoryToggleSet = [];
   for (let i = 0; i < categoryMainLength; i++) {
     // 소분류 개수
-    const categorySubLength = contents[i].categorySub.length;
-    const sub_toggle = [];
+    const categorySubLength = contents[i].mainItems.length;
+    const subToggle = [];
     for (let j = 0; j < categorySubLength; j++) {
       // 소분류 toggle 상태
-      sub_toggle.push({ toggle: false });
+      subToggle.push({ toggle: false });
     }
     // 대분류 toggle + 소분류 toggle
-    categoryToggleSet.push({ toggle: false, sub_toggle });
+    categoryToggleSet.push({ toggle: false, subToggle });
   }
   const [categoryToggle, setCategoryToggle] = useState(categoryToggleSet);
   // 대분류 toggle 값을 반전시키는 버튼 이벤트 함수
@@ -107,7 +107,7 @@ function CategoryBar({ contents, aniMode, setAniMode }) {
       main === index
         ? {
             ...mainTog,
-            sub_toggle: mainTog.sub_toggle.map((subTog, idx) =>
+            subToggle: mainTog.subToggle.map((subTog, idx) =>
               sub === idx ? { ...subTog, toggle: !subTog.toggle } : subTog
             ),
           }
@@ -129,18 +129,18 @@ function CategoryBar({ contents, aniMode, setAniMode }) {
             />
             {categoryToggle[index].toggle && (
               <StyledIndent indent={1.5}>
-                {main.categorySub.map((sub, idx) => (
+                {main.mainItems.map((sub, idx) => (
                   <>
                     <BtnTransToggle
-                      key={sub.name}
-                      text={sub.name}
-                      isToggle={categoryToggle[index].sub_toggle[idx].toggle}
+                      key={sub.categorySub}
+                      text={sub.categorySub}
+                      isToggle={categoryToggle[index].subToggle[idx].toggle}
                       isCenter={false}
                       onClick={() => onToggleSub(index, idx)}
                     />
-                    {categoryToggle[index].sub_toggle[idx].toggle && (
+                    {categoryToggle[index].subToggle[idx].toggle && (
                       <StyledIndent indent={1.5}>
-                        {sub.calculets.map((calculet) => (
+                        {sub.subItems.map((calculet) => (
                           <BtnTrans
                             key={calculet.id}
                             text={"• " + calculet.title}
