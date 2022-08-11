@@ -94,73 +94,81 @@ function CategoryBar({ contents, aniMode, setAniMode }) {
   }
   const [categoryToggle, setCategoryToggle] = useState(categoryToggleSet);
   // 대분류 toggle 값을 반전시키는 버튼 이벤트 함수
-  function onToggleMain(main) {
-    setCategoryToggle(
-      categoryToggle.map((mainTog, index) =>
-        main === index ? { ...mainTog, toggle: !mainTog.toggle } : mainTog
-      )
-    );
+  function onToggleMain(mainIndex) {
+    const newCategoryToggle = [...categoryToggle];
+    newCategoryToggle[mainIndex].toggle = !categoryToggle[mainIndex].toggle;
+    setCategoryToggle(newCategoryToggle);
   }
   // 소분류 toggle 값을 반전시키는 버튼 이벤트 함수
-  function onToggleSub(main, sub) {
-    const newCategoryToggle = categoryToggle.map((mainTog, index) =>
-      main === index
-        ? {
-            ...mainTog,
-            subToggle: mainTog.subToggle.map((subTog, idx) =>
-              sub === idx ? { ...subTog, toggle: !subTog.toggle } : subTog
-            ),
-          }
-        : mainTog
-    );
+  function onToggleSub(mainIndex, subIndex) {
+    const newCategoryToggle = [...categoryToggle];
+    newCategoryToggle[mainIndex].subToggle[subIndex].toggle =
+      !categoryToggle[mainIndex].subToggle[subIndex].toggle;
     setCategoryToggle(newCategoryToggle);
+  }
+  function handleLeaf(calculet) {
+    return (
+      <BtnTrans
+        key={calculet.id}
+        text={"• " + calculet.title}
+        isCenter={false}
+        onClick={() => {
+          navigate(CALCULET + calculet.id);
+          setAniMode(false);
+        }}
+      />
+    );
+  }
+  function handleSub(sub, subIndex, mainIndex, toggle) {
+    return (
+      <div key={sub.categorySub}>
+        <BtnTransToggle
+          text={sub.categorySub}
+          isToggle={toggle}
+          isCenter={false}
+          onClick={() => onToggleSub(mainIndex, subIndex)}
+        />
+        {toggle && (
+          <StyledIndent indent={1.5}>
+            {sub.subItems.map(handleLeaf)}
+          </StyledIndent>
+        )}
+      </div>
+    );
+  }
+  function handleMain(main, mainIndex, toggle) {
+    return (
+      <div key={main.categoryMain}>
+        <BtnTransToggle
+          text={main.categoryMain}
+          isToggle={toggle}
+          isCenter={false}
+          onClick={() => onToggleMain(mainIndex)}
+        />
+        {toggle && (
+          <StyledIndent indent={1.5}>
+            {main.mainItems.map((sub, subIndex) =>
+              handleSub(
+                sub,
+                subIndex,
+                mainIndex,
+                categoryToggle[mainIndex].subToggle[subIndex].toggle
+              )
+            )}
+          </StyledIndent>
+        )}
+      </div>
+    );
   }
   return (
     <Positioner aniMode={aniMode}>
       <FlexColumnLayout gap="3px">
-        {contents.map((main, index) => (
-          <>
-            <BtnTransToggle
-              key={main.categoryMain}
-              text={main.categoryMain}
-              isToggle={categoryToggle[index].toggle}
-              isCenter={false}
-              onClick={() => onToggleMain(index)}
-            />
-            {categoryToggle[index].toggle && (
-              <StyledIndent indent={1.5}>
-                {main.mainItems.map((sub, idx) => (
-                  <>
-                    <BtnTransToggle
-                      key={sub.categorySub}
-                      text={sub.categorySub}
-                      isToggle={categoryToggle[index].subToggle[idx].toggle}
-                      isCenter={false}
-                      onClick={() => onToggleSub(index, idx)}
-                    />
-                    {categoryToggle[index].subToggle[idx].toggle && (
-                      <StyledIndent indent={1.5}>
-                        {sub.subItems.map((calculet) => (
-                          <BtnTrans
-                            key={calculet.id}
-                            text={"• " + calculet.title}
-                            isCenter={false}
-                            onClick={() => {
-                              navigate(CALCULET + calculet.id);
-                              setAniMode(false);
-                            }}
-                          />
-                        ))}
-                      </StyledIndent>
-                    )}
-                  </>
-                ))}
-              </StyledIndent>
-            )}
-          </>
-        ))}
+        {contents.map((main, mainIndex) =>
+          handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
+        )}
       </FlexColumnLayout>
     </Positioner>
   );
 }
+
 export default CategoryBar;
