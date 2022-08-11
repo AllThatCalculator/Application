@@ -101,6 +101,7 @@ const StyledBtnGray = styled(StyledButton)`
 `;
 // 투명 버튼(형식은 회색버튼)
 const StyledBtnTrans = styled(StyledBtnGray)`
+  justify-content: ${(props) => !props.isCenter && `flex-start`};
   background: transparent;
   width: 100%;
   &:hover {
@@ -209,12 +210,13 @@ function BtnGray({ text, isToggle, onClick }) {
  * text : 버튼에 들어갈 내용
  * isToggle : 버튼이 눌러져 있는지 상태 (토글 되어져 있는지 상태)
  * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ * isCenter : content가 버튼에서 가운데 정렬인지 (기본값 true 이니까, 가운데 정렬 안 할 때만 false로)
  *
  */
-function BtnTransToggle({ text, isToggle, onClick }) {
+function BtnTransToggle({ text, isToggle, onClick, isCenter = true }) {
   const name = isToggle ? `CaretDownFill` : `CaretRightFill`;
   return (
-    <StyledBtnTrans id={text} onClick={onClick}>
+    <StyledBtnTrans id={text} onClick={onClick} isCenter={isCenter}>
       <StyledIcon name={name} />
       <StyledFont100>{text}</StyledFont100>
     </StyledBtnTrans>
@@ -228,11 +230,11 @@ function BtnTransToggle({ text, isToggle, onClick }) {
  * text : 버튼에 들어갈 내용
  * icon : 아이콘 넣기 -> 아이콘 이름 작성 || 아이콘 안 넣기 -> 인자 없음
  * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
- *
+ * isCenter : content가 버튼에서 가운데 정렬인지 (기본값 true 이니까, 가운데 정렬 안 할 때만 false로)
  */
-function BtnTrans({ text, icon, onClick }) {
+function BtnTrans({ text, icon, onClick, isCenter = true }) {
   return (
-    <StyledBtnTrans id={text} onClick={onClick}>
+    <StyledBtnTrans id={text} onClick={onClick} isCenter={isCenter}>
       {icon && <StyledIcon name={icon} />}
       <StyledFont100>{text}</StyledFont100>
     </StyledBtnTrans>

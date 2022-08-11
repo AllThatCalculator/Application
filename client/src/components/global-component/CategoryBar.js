@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 import { BtnTrans, BtnTransToggle } from "../atom-components/ButtonTemplate";
-import { FlexColumnLayout } from "../Layout";
+import { DESKTOP, FlexColumnLayout, PHONE, TABLET } from "../Layout";
+import { CALCULET } from "../PageUrls";
 import styles from "../styles";
 /**
  * 스타일드 애니메이션
@@ -26,7 +28,17 @@ const Positioner = styled.div`
   position: fixed;
   top: 60px;
   left: 0;
-  ${styles.styleSize.category_desktop};
+
+  @media (min-width: ${PHONE}) and (max-width: ${TABLET}) {
+    ${styles.styleSize.categoryPhone};
+  }
+  @media (min-width: ${TABLET}) and (max-width: ${DESKTOP}) {
+    ${styles.styleSize.categoryTablet};
+  }
+  @media screen and (min-width: ${DESKTOP}) {
+    ${styles.styleSize.categoryDesktop};
+  }
+
   background: ${styles.styleColor.white300};
   padding: ${styles.styleLayout.basic300} ${styles.styleLayout.basic700};
   height: 100%;
@@ -43,6 +55,7 @@ const Positioner = styled.div`
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
 `;
+
 /**
  * indent만큼 들여쓰기
  */
@@ -55,13 +68,14 @@ const StyledIndent = styled.div`
  * @param {object, boolean} param0
  *
  * contents : <배열> 카테고리 바에 들어갈 내용
- * -> category_main : 대분류
- * -> category_sub : <배열> 소분류, 계산기들
+ * -> categoryMain : 대분류
+ * -> categorySub : <배열> 소분류, 계산기들
  *    -> name: 소분류 이름, calculets: 계산기들
  * aniMode : 카테고리바 열 때 slideIn, 닫을 때 slideInOut 으로 작동할 수 있도록 animation의 mode를 제어하는 state
- *
+ * setAniMode : aniMode 관리 함수
  */
-function CategoryBar({ contents, aniMode }) {
+function CategoryBar({ contents, aniMode, setAniMode }) {
+  const navigate = useNavigate();
   // < 카테고리 내용 >
   // 대분류 개수
   const categoryMainLength = contents.length;
@@ -69,7 +83,7 @@ function CategoryBar({ contents, aniMode }) {
   const categoryToggleSet = [];
   for (let i = 0; i < categoryMainLength; i++) {
     // 소분류 개수
-    const categorySubLength = contents[i].category_sub.length;
+    const categorySubLength = contents[i].categorySub.length;
     const sub_toggle = [];
     for (let j = 0; j < categorySubLength; j++) {
       // 소분류 toggle 상태
@@ -107,28 +121,34 @@ function CategoryBar({ contents, aniMode }) {
         {contents.map((main, index) => (
           <>
             <BtnTransToggle
-              key={index}
-              text={main.category_main}
+              key={main.categoryMain}
+              text={main.categoryMain}
               isToggle={categoryToggle[index].toggle}
+              isCenter={false}
               onClick={() => onToggleMain(index)}
             />
             {categoryToggle[index].toggle && (
               <StyledIndent indent={1.5}>
-                {main.category_sub.map((sub, idx) => (
+                {main.categorySub.map((sub, idx) => (
                   <>
                     <BtnTransToggle
-                      key={index}
+                      key={sub.name}
                       text={sub.name}
                       isToggle={categoryToggle[index].sub_toggle[idx].toggle}
+                      isCenter={false}
                       onClick={() => onToggleSub(index, idx)}
                     />
                     {categoryToggle[index].sub_toggle[idx].toggle && (
                       <StyledIndent indent={1.5}>
-                        {sub.calculets.map((calculet, i) => (
+                        {sub.calculets.map((calculet) => (
                           <BtnTrans
-                            key={i}
-                            text={"• " + calculet}
-                            // 버튼 이벤트 onClick 추가
+                            key={calculet.id}
+                            text={"• " + calculet.title}
+                            isCenter={false}
+                            onClick={() => {
+                              navigate(CALCULET + calculet.id);
+                              setAniMode(false);
+                            }}
                           />
                         ))}
                       </StyledIndent>

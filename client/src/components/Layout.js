@@ -106,6 +106,9 @@ const FlexColumnLayout = styled.div`
 `;
 
 export {
+  DESKTOP,
+  TABLET,
+  PHONE,
   HeaderLayout,
   ContentLayout,
   TransparentLayout,
