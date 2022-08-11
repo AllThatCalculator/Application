@@ -66,10 +66,10 @@ router.get("/", (req, res) => {
   const calculetInfoQuery = `select category_main_id, category_sub_id, id, title from calculet_info order by category_main_id, category_sub_id;`;
 
   // 카테고리 대분류 리스트 얻어오기
-  const categoryMainQuery = `select main from category_main;`;
+  const categoryMainQuery = `select * from category_main;`;
 
   // 카테고리 소분류 리스트 얻어오기
-  const categorySubQuery = `select sub from category_sub;`;
+  const categorySubQuery = `select * from category_sub;`;
 
   mariadb.query(
     calculetInfoQuery + categoryMainQuery + categorySubQuery,
@@ -79,61 +79,49 @@ router.get("/", (req, res) => {
         const categoryMain = rows[1];
         const categorySub = rows[2];
 
-        // 계산기 리스트 잘 불러왔다면 -> 카테고리 순서에 맞게 객체로 감싸기
+        // 계산기 리스트 잘 불러왔다면
         const calculetLists = [];
         if (calculetInfo) {
-          let previousMain =
-            categoryMain[calculetInfo[0].category_main_id - 1].main;
-          let previousSub = null;
-          if (calculetInfo[0].category_sub_id !== null) {
-            previousSub = categorySub[calculetInfo[0].category_sub_id - 1].sub;
+          // 카테고리 분류에 맞게 틀 만들기
+          // 대분류
+          for (let i = 0; i < categoryMain.length; i++) {
+            calculetLists.push({
+              categoryMain: categoryMain[i].main,
+              mainItems: [{ categorySub: null, subItems: [] }],
+            });
           }
-          let mainItems = [];
-          let subItems = [
-            { id: calculetInfo[0].id, title: calculetInfo[0].title },
-          ];
-          for (let i = 1; i < calculetInfo.length; i++) {
-            const main =
-              categoryMain[calculetInfo[i].category_main_id - 1].main;
+
+          // 소분류
+          for (let i = 0; i < categorySub.length; i++) {
+            const mainId = categorySub[i].main_id - 1;
+            const sub = categorySub[i].sub;
+            calculetLists[mainId].mainItems.push({
+              categorySub: sub,
+              subItems: [],
+            });
+          }
+
+          // 계산기 전체 목록들 카테고리에 맞게 분류
+          for (let i = 0; i < calculetInfo.length; i++) {
+            const mainId = calculetInfo[i].category_main_id - 1;
             let sub = null;
-            if (calculetInfo[i].category_sub_id !== null) {
+            if (calculetInfo[i].category_sub_id) {
               sub = categorySub[calculetInfo[i].category_sub_id - 1].sub;
             }
-            const content = {
-              id: calculetInfo[i].id,
-              title: calculetInfo[i].title,
-            };
-
-            // 대분류 같은거끼리 묶였다면
-            if (previousMain === main) {
-              if (previousSub === sub) {
-                subItems.push(content);
-              } else {
-                mainItems.push({
-                  categorySub: previousSub,
-                  subItems: subItems,
+            const id = calculetInfo[i].id;
+            const title = calculetInfo[i].title;
+            const mainItems = calculetLists[mainId].mainItems;
+            for (let j = 0; j < mainItems.length; j++) {
+              if (sub === mainItems[j].categorySub) {
+                calculetLists[mainId].mainItems[j].subItems.push({
+                  id: id,
+                  title: title,
                 });
-                previousSub = sub;
-                subItems = [content];
+                break;
               }
-            } else {
-              // 대분류 다르다면
-              mainItems.push({ categorySub: previousSub, subItems: subItems });
-              calculetLists.push({
-                categoryMain: previousMain,
-                mainItems: mainItems,
-              });
-              previousMain = main;
-              previousSub = sub;
-              subItems = [content];
-              mainItems = [];
             }
           }
-          mainItems.push({ categorySub: previousSub, subItems: subItems });
-          calculetLists.push({
-            categoryMain: previousMain,
-            mainItems: mainItems,
-          });
+          console.log(calculetLists);
         }
 
         // 계산기 리스트 잘 불러왔는지 확인
