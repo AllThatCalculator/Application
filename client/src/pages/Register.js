@@ -4,10 +4,6 @@ import WriteCode from "../components/register/WriteCode";
 import { WriteInform } from "../components/register/WriteInform";
 import UploadDoneBtn from "../components/register/UploadDoneBtn";
 import { useState, useEffect } from "react";
-import {
-  OPTIONS_CATEGORY_MAIN,
-  OPTIONS_CATEGORY_SUB,
-} from "../components/register/Option";
 import { ContentLayout, White300Layout } from "../components/Layout";
 import { CalculetCss } from "../components/register/CalculetString";
 import axios from "axios";
@@ -35,10 +31,19 @@ function Register() {
   const title = useInput("");
   const description = useInput("");
 
+  // 대분류 옵션
+  const [mainOption, setMainOption] = useState(null);
+
+  // 소분류 옵션
+  const [subOption, setSubOption] = useState(null);
+
   const [categoryMain, setCategoryMain] = useState("");
   const [categorySub, setCategorySub] = useState("");
   // 대분류 종류에 맞는 소분류 옵션 배열
   const [categorySubOption, setCategorySubOption] = useState(null);
+
+  const [categoryMainId, setCategoryMainId] = useState(null);
+  const [categorySubId, setCategorySubId] = useState(null);
 
   const [srcCode, setSrcCode] = useState("<!DOCTYPE html>");
   const [manual, setManual] = useState("### write detail!");
@@ -59,15 +64,18 @@ function Register() {
    * @param {*} event
    */
   function changeCategoryMain(event) {
-    const targetValue = event.target.value;
-    const option = OPTIONS_CATEGORY_MAIN.filter((x) => x.value === targetValue);
-    const smallOption = OPTIONS_CATEGORY_SUB.filter(
-      (x) => x.big === option[0].value
-    );
-    setCategoryMain(option[0].name);
-    setCategorySub("");
-    if (smallOption.length) {
-      setCategorySubOption(smallOption[0].options);
+    // 대분류 타겟 value 값
+    const targetValue = Number(event.target.value);
+    // 대분류 옵션 네임
+    const main = mainOption[targetValue - 1].name;
+    // 소분류 옵션 리스트
+    const subOptionList = subOption[targetValue];
+
+    setCategoryMain(main);
+    setCategoryMainId(targetValue);
+    setCategorySub(null);
+    if (subOptionList.length) {
+      setCategorySubOption(subOptionList);
     } else {
       setCategorySubOption(null);
     }
@@ -79,10 +87,11 @@ function Register() {
    * @param {*} event
    */
   function changeCategorySub(event) {
-    const targetValue = event.target.value;
+    const targetValue = Number(event.target.value);
     if (categorySubOption) {
       const option = categorySubOption.filter((x) => x.value === targetValue);
       setCategorySub(option[0].name);
+      setCategorySubId(targetValue);
     }
   }
 
@@ -115,11 +124,38 @@ function Register() {
     }
   }
 
+  async function loadCategory() {
+    try {
+      await axios.get(`/calculets/category`).then((response) => {
+        const mainOptionList = [];
+        let subOptionList = [[]];
+        const main = response.data.categoryMain;
+        const sub = response.data.categorySub;
+
+        for (let i = 0; i < main.length; i++) {
+          mainOptionList.push({ value: main[i].id, name: main[i].main });
+          subOptionList[i + 1] = new Array();
+        }
+
+        for (let i = 0; i < sub.length; i++) {
+          subOptionList[sub[i].main_id].push({
+            value: sub[i].id,
+            name: sub[i].sub,
+          });
+        }
+
+        setMainOption(mainOptionList);
+        setSubOption(subOptionList);
+      });
+    } catch (error) {}
+  }
+
   /**
    * 현재 로그인한 사용자 계정 가져오기
    */
   useEffect(() => {
     loadUserEmail();
+    loadCategory();
   }, []);
 
   return (
@@ -129,6 +165,7 @@ function Register() {
           <WriteInform
             title={title.value}
             description={description.value}
+            mainOption={mainOption}
             categoryMain={categoryMain}
             categorySubOption={categorySubOption}
             categorySub={categorySub}
@@ -152,8 +189,8 @@ function Register() {
           <UploadDoneBtn
             title={title.value}
             description={description.value}
-            categoryMain={categoryMain}
-            categorySub={categorySub}
+            categoryMainId={categoryMainId}
+            categorySubId={categorySubId}
             email={userInfo.email}
             srcCode={finalSrcCode}
             manual={manual}

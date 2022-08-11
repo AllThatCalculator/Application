@@ -26,7 +26,7 @@ function UploadDoneBtn(props) {
   const [warningMsg, setWarningMsg] = useState(null);
 
   function checkBeforeUpload() {
-    if (!props.title || !props.description || !props.categoryMain) {
+    if (!props.title || !props.description || !props.categoryMainId) {
       setWarningMsg("모든 사항을 입력해주세요.");
       return false;
     } else {
