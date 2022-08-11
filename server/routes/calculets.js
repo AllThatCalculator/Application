@@ -216,7 +216,13 @@ router.get("/:id", (req, res) => {
   const userInfoQuery = `select profile_img from user_info where email = (select contributor_email from calculet_info where id=${req.params.id});`;
 
   // 계산기 업데이트 로그
-  const calculetUpdateLogQuery = `select update_date, message from calculet_update_log where calculet_id=${req.params.id}`;
+  const calculetUpdateLogQuery = `select update_date, message from calculet_update_log where calculet_id=${req.params.id};`;
+
+  // 카테고리 대분류
+  const categoryMainQuery = `select * from category_main;`;
+
+  // 카테고리 소분류
+  const categorySubQuery = `select * from category_sub;`;
 
   mariadb.query(
     calculetInfoQuery +
@@ -224,7 +230,9 @@ router.get("/:id", (req, res) => {
       calculetCountQuery +
       userCalculetQuery +
       userInfoQuery +
-      calculetUpdateLogQuery,
+      calculetUpdateLogQuery +
+      categoryMainQuery +
+      categorySubQuery,
     (err, rows, fields) => {
       if (!err) {
         const calculetInfo = rows[0][0];
@@ -233,6 +241,8 @@ router.get("/:id", (req, res) => {
         let userCalculet = rows[3][0];
         const userInfo = rows[4][0];
         const calculetUpdateLog = rows[5];
+        const categoryMain = rows[6];
+        const categorySub = rows[7];
 
         // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
         if (!userCalculet) {
@@ -260,8 +270,8 @@ router.get("/:id", (req, res) => {
             srcCode: srcCode,
             manual: manual,
             description: calculetInfo.description,
-            categoryMain: calculetInfo.category_main,
-            categorySub: calculetInfo.category_sub,
+            categoryMain: categoryMain[calculetInfo.category_main_id - 1].main,
+            categorySub: categorySub[calculetInfo.category_sub_id - 1].sub,
             contributor: calculetInfo.contributor_email,
             contributorImgSrc: contributorImgSrc,
           };
@@ -316,8 +326,8 @@ router.get("/:id", (req, res) => {
             calculationCnt: calculetCount.calculation_cnt,
             userCnt: calculetCount.user_cnt,
             title: calculetInfo.title,
-            categoryMain: calculetInfo.category_main,
-            categorySub: calculetInfo.category_sub,
+            categoryMain: categoryMain[calculetInfo.category_main_id - 1].main,
+            categorySub: categorySub[calculetInfo.category_sub_id - 1].sub,
             birthday: DateTimeToString(calculetInfo.birthday),
             updateLog: updateLog,
           };
