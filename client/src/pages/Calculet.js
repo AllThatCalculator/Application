@@ -122,7 +122,8 @@ function Calculet() {
    */
   async function loadCalculetObj() {
     try {
-      await axios.get(`/calculets/${id}`).then((response) => {
+      // await axios.get("/api/search?q=sdf").then(console.log);
+      await axios.get(`/api/calculets/${id}`).then((response) => {
         setCalculetObj(response.data.calculet);
         setStatistics(response.data.statistics);
         setContributorImgSrc(response.data.calculet.contributorImgSrc);

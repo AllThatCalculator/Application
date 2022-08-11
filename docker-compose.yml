@@ -44,7 +44,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./database/mariaDB/conf.d:/etc/mysql/conf.d
+      - ./database/mariaDB/conf.d:/etc/mysql/conf.d:ro
       - ./database/mariaDB/data:/var/lib/mysql
       - ./database/mariaDB/initdb.d:/docker-entrypoint-initdb.d:ro
     env_file: .env
