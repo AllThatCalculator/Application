@@ -20,10 +20,22 @@ const StyledFont200b = styled.div`
   ${styles.sytleText.text200b}
 `;
 //========================================================
-// 스타일드 아이콘
-const StyledIcon = (props) => {
+/**
+ * 아이콘 상하좌우 각도 변환을 위한 StyledSvg
+ * 현재는, Y축 중심으로 회전
+ */
+const StyledSvg = styled.svg`
+  transform: rotateY(${(props) => (props.degree ? props.degree : 0)}deg);
+`;
+/**
+ * 스타일드 아이콘
+ * @param {*} props
+ * -> name : 아이콘 이름
+ * -> degree : 회전할 각도
+ */
+function StyledIcon(props) {
   return (
-    <svg
+    <StyledSvg
       stroke="currentColor"
       fill="currentColor"
       strokeWidth="0"
@@ -31,13 +43,20 @@ const StyledIcon = (props) => {
       height={Icons[props.name].height}
       width={Icons[props.name].width}
       viewBox={Icons[props.name].viewBox}
+      degree={props.degree}
     >
       {Icons[props.name].path.map((d, i) => {
         return <path d={d} key={i} />;
       })}
-    </svg>
+    </StyledSvg>
   );
-};
+}
+/**
+ * 버튼 내에서 아이콘 눌렀을 때, 버튼 전체로 접근하는 게 아니라 아이콘에만 접근되는 것을 막음.
+ */
+const StyledNoneIcon = styled.div`
+  pointer-events: none;
+`;
 //========================================================
 //스타일드 애니메이션
 const transform = keyframes`
@@ -101,8 +120,18 @@ const StyledBtnGray = styled(StyledButton)`
 `;
 // 투명 버튼(형식은 회색버튼)
 const StyledBtnTrans = styled(StyledBtnGray)`
-  background: transparent;
+  flex-direction: ${(props) => props.direction && "column"};
+  color: ${(props) => props.direction && `${styles.styleColor.gray100}`};
+  justify-content: ${(props) => !props.isCenter && `flex-start`};
+  background: ${(props) =>
+    props.isActive ? `${styles.styleColor.blue30}` : `transparent`};
+  ${(props) =>
+    props.isActive
+      ? `${styles.sytleText.buttonWhite}`
+      : `${styles.sytleText.text100}`};
+
   width: 100%;
+  white-space: pre;
   &:hover {
     background: ${styles.styleColor.blue30};
   }
@@ -209,12 +238,13 @@ function BtnGray({ text, isToggle, onClick }) {
  * text : 버튼에 들어갈 내용
  * isToggle : 버튼이 눌러져 있는지 상태 (토글 되어져 있는지 상태)
  * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ * isCenter : content가 버튼에서 가운데 정렬인지 (기본값 true 이니까, 가운데 정렬 안 할 때만 false로)
  *
  */
-function BtnTransToggle({ text, isToggle, onClick }) {
+function BtnTransToggle({ text, isToggle, onClick, isCenter = true }) {
   const name = isToggle ? `CaretDownFill` : `CaretRightFill`;
   return (
-    <StyledBtnTrans id={text} onClick={onClick}>
+    <StyledBtnTrans id={text} onClick={onClick} isCenter={isCenter}>
       <StyledIcon name={name} />
       <StyledFont100>{text}</StyledFont100>
     </StyledBtnTrans>
@@ -226,15 +256,38 @@ function BtnTransToggle({ text, isToggle, onClick }) {
  *
  * @param {string, string, function}
  * text : 버튼에 들어갈 내용
+ * id : 버튼의 id (기본값 text)
  * icon : 아이콘 넣기 -> 아이콘 이름 작성 || 아이콘 안 넣기 -> 인자 없음
  * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
+ * isCenter : content가 버튼에서 가운데 정렬인지 (기본값 true 이니까, 가운데 정렬 안 할 때만 false로)
+ * direction : 방향 (true : column) (기본값 false 이니까, 방향 바꿀 때만 true로)
+ * isActive : click 되었는지 (true : 누름, false : 안 누름) (기본값 false)
  *
  */
-function BtnTrans({ text, icon, onClick }) {
+function BtnTrans({
+  text,
+  id = text,
+  icon,
+  onClick,
+  isCenter = true,
+  direction = false,
+  isActive = false,
+  degree = 0,
+}) {
   return (
-    <StyledBtnTrans id={text} onClick={onClick}>
-      {icon && <StyledIcon name={icon} />}
-      <StyledFont100>{text}</StyledFont100>
+    <StyledBtnTrans
+      id={id}
+      onClick={onClick}
+      isCenter={isCenter}
+      direction={direction}
+      isActive={isActive}
+    >
+      {icon && (
+        <StyledNoneIcon>
+          <StyledIcon name={icon} degree={degree} />
+        </StyledNoneIcon>
+      )}
+      {text}
     </StyledBtnTrans>
   );
 }

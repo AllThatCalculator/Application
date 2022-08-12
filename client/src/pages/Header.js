@@ -7,7 +7,7 @@ import { BtnWhite } from "../components/atom-components/ButtonTemplate";
 import CategoryBar from "../components/global-component/CategoryBar";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import calculetsUser from "../components/user-actions/calculetsUser";
 
 // 상단 고정
 const Positioner = styled.div`
@@ -67,32 +67,17 @@ function Header() {
   // 카테고리바 열 때 slideIn, 닫을 때 slideInOut 으로 작동할 수 있도록 animation의 mode를 제어하는 state
   const [aniMode, setAniMode] = useState(false);
 
-  // aniMod 값을 반전시키는 버튼 이벤트 함수
-  function onIsOpen() {
-    setAniMode(!aniMode);
-  }
-
-  // 카테고리 바에 들어갈 계산기 대분류 & 소분류 정보
-  const contentsCategory = [
-    {
-      category_main: "수학",
-      category_sub: [
-        {
-          name: "계산",
-          calculets: ["사칙연산", "변수", "함수", "미적분 계산기"],
-        },
-        { name: "통계", calculets: [] },
-        { name: "기하", calculets: ["각도", "외심내심"] },
-      ],
-    },
-    {
-      category_main: "과학-공학",
-      category_sub: [
-        { name: "과학", calculets: ["단위 변환기", "물리 계산기"] },
-        { name: "공학", calculets: ["진법 계산기"] },
-      ],
-    },
-  ];
+  /**
+   * 카테고리바 정보 (대분류, 소분류에 따른 계산기) 서버에서 불러오기
+   * 페이지 렌더시 한 번만
+   */
+  const [contentsCategory, setContentsCategory] = useState(null);
+  useEffect(() => {
+    calculetsUser().then((res) => {
+      // 카테고리바 정보 불러오기 성공
+      if (res.success) setContentsCategory(res.calculetLists);
+    });
+  }, []);
 
   // 스크롤의 위치
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -118,9 +103,15 @@ function Header() {
   return (
     <>
       <Positioner isChange={isChange}>
-        <Contents onIsOpen={onIsOpen} onLogin={onLogin} />
+        <Contents onIsOpen={() => setAniMode(!aniMode)} onLogin={onLogin} />
       </Positioner>
-      <CategoryBar contents={contentsCategory} aniMode={aniMode}></CategoryBar>
+      {contentsCategory && (
+        <CategoryBar
+          contents={contentsCategory}
+          aniMode={aniMode}
+          setAniMode={setAniMode}
+        />
+      )}
     </>
   );
 }

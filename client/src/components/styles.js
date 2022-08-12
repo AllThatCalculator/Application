@@ -62,25 +62,29 @@ const styleSize = {
   buttonRecommend: `height: 118px; width: 280px;`,
   input: `width: 25em;`,
   modalCalculetInfo: `width: 529px; height: 550px;`,
-  category_desktop: `width: 253px;`,
+  categoryDesktop: `width: 253px;`,
+  categoryTablet: `width: 276px;`,
+  categoryPhone: `width: 208px;`,
 };
 const sytleText = {
   text400: `font-family: "S-CoreDream-4Regular";
-font-size: 18px;`,
+font-size: 20px;`,
   text300: `font-family: "S-CoreDream-5Medium";
-font-size: 16px;`,
+font-size: 18px;`,
+  text250b: `font-family: "S-CoreDream-5Medium";
+font-size: 17px;`,
   text200: `font-family: "S-CoreDream-3Light";
-font-size: 14px;`,
+font-size: 16px;`,
   text200b: `font-family: "S-CoreDream-4Regular";
-font-size: 14px;`,
+font-size: 16px;`,
   text100: `font-family: "S-CoreDream-3Light";
-font-size: 12px;`,
-  text50: `font-family: "S-CoreDream-3Light";
-font-size: 9px;`,
-  buttonWhite: `font-family: "S-CoreDream-5Medium";
-font-size: 12px;`,
-  buttonBlue: `font-family: "S-CoreDream-6Bold";
 font-size: 14px;`,
+  text50: `font-family: "S-CoreDream-3Light";
+font-size: 12px;`,
+  buttonWhite: `font-family: "S-CoreDream-5Medium";
+font-size: 14px;`,
+  buttonBlue: `font-family: "S-CoreDream-6Bold";
+font-size: 16px;`,
   LogoTitle: `font-family: "S-CoreDream-7ExtraBold";
 font-size: 24px;`,
 };
