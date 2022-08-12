@@ -4,66 +4,83 @@ import styles from "../styles";
 import CalculetItem from "./CalculetItem";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import React from "react";
+import React, { useEffect } from "react";
+import { CALCULET } from "../PageUrls";
 
 const Wrapper = styled(FlexRowLayout)`
   flex-wrap: wrap;
 `;
 /**
  * 대분류1, 소분류*, 계산기* 목록들을 나열하여 반환하는 컴포넌트
- * - 대분류
- *    - 소분류 o
- *      - 계산기 o
- *      - 계산기 x
- *    - 소분류 x
- *      - 계산기 o
- * @param {object} item 대분류, 소분류에 따른 계산기들
- * @param {object} math 대분류 수학 Ref, Ref로 스크롤 이동하는 함수
- * @param {object} science 대분류 과학-공학 Ref, Ref로 스크롤 이동하는 함수
- * @param {object} economy 대분류 경제-사회 Ref, Ref로 스크롤 이동하는 함수
- * @param {object} daily 대분류 일상 Ref, Ref로 스크롤 이동하는 함수
- * @param {object} etc 대분류 기타 Ref, Ref로 스크롤 이동하는 함수
+ * @param {object} item 나열할 대분류, 소분류, 계산기 정보
+ * @param {*} contentsShortcut 바로가기 버튼에 대한 정보 (ref 참조 위함)
+ * @param {*} setIsActive 바로가기 버튼 활성화 함수
+ * @param {*} scrollPosition 현재 스크롤 Y 위치
  */
-function CalculetItemList({ item, math, science, economy, daily, etc }) {
+function CalculetItemList({
+  item,
+  contentsShortcut,
+  setIsActive,
+  scrollPosition,
+}) {
   const navigate = useNavigate();
 
   /**
-   * 각 대분류의 Ref
+   * 각 바로가기 버튼에 맞는 대분류의 위치 얻기
+   * @param {int} index 바로가기 버튼의 index
    */
-  const elementRef = [
-    math.element,
-    science.element,
-    economy.element,
-    daily.element,
-    etc.element,
-  ];
+  function locationRef(index) {
+    return Math.round(
+      contentsShortcut[index].itemRef.element.current.getBoundingClientRect()
+        .top +
+        window.pageYOffset -
+        80
+    );
+  }
+  /**
+   * Ref의 위치와 스크롤 Y 위치를 비교하여, 스크롤 Y 에 따라 바로가기 버튼 활성화
+   * @param {int} index 바로가기 버튼의 index
+   */
+  function checkScroll(index) {
+    const scrollY = Math.round(scrollPosition);
+    return (
+      scrollY >= locationRef(index) &&
+      contentsShortcut[index] &&
+      scrollY < locationRef(index + 1)
+    );
+  }
+  useEffect(() => {
+    [0, 1, 2, 3, 4].map((index) => {
+      if (checkScroll(index)) setIsActive(index);
+    });
+  }, [scrollPosition]);
 
   return (
     <FlexColumnLayout gap="56px">
       {item.map((main, index) => (
         <FlexColumnLayout gap="28px">
           <Heading
-            key={main.category_main}
-            ref={elementRef[index]}
-            content={main.category_main}
+            key={main.categoryMain}
+            ref={contentsShortcut[index].itemRef.element}
+            content={main.categoryMain}
             h={1}
             color={styles.styleColor.blue900}
           />
-          {main.main_items.length ? (
-            main.main_items.map((sub) => (
+          {main.mainItems.length ? (
+            main.mainItems.map((sub) => (
               <FlexColumnLayout>
                 <Heading
-                  key={sub.category_sub}
-                  content={sub.category_sub}
+                  key={sub.categorySub}
+                  content={sub.categorySub}
                   h={2}
                   isLine={true}
                 />
                 <Wrapper>
-                  {sub.sub_items.length ? (
-                    sub.sub_items.map((calculet) => (
+                  {sub.subItems.length ? (
+                    sub.subItems.map((calculet) => (
                       <CalculetItem
                         content={calculet.title}
-                        onClick={() => navigate("/:" + calculet.id)}
+                        onClick={() => navigate(CALCULET + calculet.id)}
                       />
                     ))
                   ) : (

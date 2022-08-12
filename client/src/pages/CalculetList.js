@@ -13,6 +13,15 @@ import CalculetItemList from "../components/calculet-list/CalculetItemList";
 import { CALCULETS } from "../components/calculet-list/Calculets";
 import Shortcut from "../components/calculet-list/Shortcut";
 import UseMoveScroll from "../user-hooks/UseMoveScroll";
+import { useEffect } from "react";
+import { useState } from "react";
+import calculetsUser from "../components/user-actions/calculetsUser";
+
+const BTN_MATH = "수학";
+const BTN_SCIENCE = "과학"; // + "<br />" + "공학";
+const BTN_ECONOMY = "경제"; // + "<br />" + "사회";
+const BTN_DAILY = "일상";
+const BTN_ETC = "기타";
 
 /**
  * 흰색 뒷 배경
@@ -67,6 +76,75 @@ function CalculetList() {
   const daily = UseMoveScroll();
   const etc = UseMoveScroll();
 
+  /**
+   * 대분류 수학 Ref, Ref로 스크롤 이동하는 함수
+   */
+  const contentsShortcut = [
+    {
+      text: BTN_MATH,
+      icon: "PlusSlashMinus",
+      itemRef: math,
+    },
+    {
+      text: BTN_SCIENCE,
+      icon: "Lightbulb",
+      itemRef: science,
+    },
+    {
+      text: BTN_ECONOMY,
+      icon: "People",
+      itemRef: economy,
+    },
+    {
+      text: BTN_DAILY,
+      icon: "CalendarWeek",
+      itemRef: daily,
+    },
+    {
+      text: BTN_ETC,
+      icon: "ThreeDots",
+      itemRef: etc,
+    },
+  ];
+
+  /**
+   * 계산기 전체 목록 정보 (대분류, 소분류에 따른 계산기) 서버에서 불러오기
+   * 페이지 렌더시 한 번만
+   */
+  const [contentsCalculetList, setContentsCalculetList] = useState(null);
+  useEffect(() => {
+    calculetsUser().then((res) => {
+      // 전체 목록 정보 불러오기 성공
+      if (res.success) setContentsCalculetList(res.calculetLists);
+    });
+  }, []);
+
+  /**
+   * 스크롤 위치
+   */
+  const [scrollPosition, setScrollPosition] = useState(0);
+  /**
+   * 스크롤 위치 변화에 따라 'scrollPosition' 변화
+   */
+  function updateScroll() {
+    setScrollPosition(window.pageYOffset);
+  }
+  /**
+   * 스크롤 위치 감지
+   * 이벤트 등록 후, clean up 을 위해 return 에서 이벤트 제거
+   */
+  useEffect(() => {
+    window.addEventListener("scroll", updateScroll);
+    return () => {
+      window.removeEventListener("scroll", updateScroll);
+    };
+  }, []);
+
+  /**
+   * 스크롤 위치 Y 에 따른 활성화할 바로가기 버튼 (index로 접근)
+   */
+  const [isActive, setIsActive] = useState(0);
+
   return (
     <>
       <StyledWhite300 />
@@ -74,24 +152,22 @@ function CalculetList() {
         <Wrapper phone="56px" tablet="78px" desktop="72px">
           <WrapperFix>
             <Shortcut
-              math={math}
-              science={science}
-              economy={economy}
-              daily={daily}
-              etc={etc}
+              contentsShortcut={contentsShortcut}
+              isActive={isActive}
+              setIsActive={setIsActive}
             />
           </WrapperFix>
         </Wrapper>
         <Wrapper phone="284px" tablet="669px" desktop="988px" gap="28px">
           <BigTitle content="계산기 전체 목록" />
-          <CalculetItemList
-            item={CALCULETS}
-            math={math}
-            science={science}
-            economy={economy}
-            daily={daily}
-            etc={etc}
-          />
+          {contentsCalculetList && (
+            <CalculetItemList
+              item={CALCULETS}
+              contentsShortcut={contentsShortcut}
+              setIsActive={setIsActive}
+              scrollPosition={scrollPosition}
+            />
+          )}
         </Wrapper>
       </CalculetListLayout>
     </>

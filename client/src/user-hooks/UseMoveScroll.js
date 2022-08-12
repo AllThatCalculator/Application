@@ -10,7 +10,7 @@ function UseMoveScroll() {
   const element = useRef(null);
   function onMoveToElement() {
     const location = element.current.offsetTop;
-    window.scrollTo({ top: location - 80, behavior: "smooth" });
+    window.scroll({ top: location - 80, behavior: "instant" });
   }
   return { element, onMoveToElement };
 }

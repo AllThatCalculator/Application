@@ -38,6 +38,12 @@ const StyledIcon = (props) => {
     </svg>
   );
 };
+/**
+ * 버튼 내에서 아이콘 눌렀을 때, 버튼 전체로 접근하는 게 아니라 아이콘에만 접근되는 것을 막음.
+ */
+const StyledNoneIcon = styled.div`
+  pointer-events: none;
+`;
 //========================================================
 //스타일드 애니메이션
 const transform = keyframes`
@@ -104,16 +110,16 @@ const StyledBtnTrans = styled(StyledBtnGray)`
   flex-direction: ${(props) => props.dire && "column"};
   color: ${(props) => props.dire && `${styles.styleColor.gray100}`};
   justify-content: ${(props) => !props.isCenter && `flex-start`};
-  background: transparent;
-  width: 100%;
+  background: ${(props) =>
+    props.isActive ? `${styles.styleColor.blue30}` : `transparent`};
+  ${(props) =>
+    props.isActive
+      ? `${styles.sytleText.buttonWhite}`
+      : `${styles.sytleText.text100}`};
 
-  ${styles.sytleText.text100};
+  width: 100%;
   &:hover {
     background: ${styles.styleColor.blue30};
-  }
-  &:focus {
-    background: ${styles.styleColor.blue30};
-    ${styles.sytleText.buttonWhite};
   }
 `;
 // 남색 버튼
@@ -236,18 +242,37 @@ function BtnTransToggle({ text, isToggle, onClick, isCenter = true }) {
  *
  * @param {string, string, function}
  * text : 버튼에 들어갈 내용
+ * id : 버튼의 id (기본값 text)
  * icon : 아이콘 넣기 -> 아이콘 이름 작성 || 아이콘 안 넣기 -> 인자 없음
  * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
  * isCenter : content가 버튼에서 가운데 정렬인지 (기본값 true 이니까, 가운데 정렬 안 할 때만 false로)
- * dire : 방향 (true : column)
+ * dire : 방향 (true : column) (기본값 false 이니까, 방향 바꿀 때만 true로)
+ * isActive : click 되었는지 (true : 누름, false : 안 누름) (기본값 false)
  *
  */
-function BtnTrans({ text, icon, onClick, isCenter = true }) {
-function BtnTrans({ text, icon, onClick, dire = false }) {
+
+function BtnTrans({
+  text,
+  id = text,
+  icon,
+  onClick,
+  isCenter = true,
+  dire = false,
+  isActive = false,
+}) {
   return (
-    <StyledBtnTrans id={text} onClick={onClick} isCenter={isCenter}>
-    <StyledBtnTrans id={text} onClick={onClick} dire={dire}>
-      {icon && <StyledIcon name={icon} />}
+    <StyledBtnTrans
+      id={id}
+      onClick={onClick}
+      isCenter={isCenter}
+      dire={dire}
+      isActive={isActive}
+    >
+      {icon && (
+        <StyledNoneIcon>
+          <StyledIcon name={icon} />
+        </StyledNoneIcon>
+      )}
       {text}
     </StyledBtnTrans>
   );

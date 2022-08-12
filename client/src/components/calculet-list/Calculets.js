@@ -8,11 +8,11 @@ const ETC = "기타";
 /**계산기 전체 목록 계산기 더미 */
 const CALCULETS = [
   {
-    category_main: MATH,
-    main_items: [
+    categoryMain: MATH,
+    mainItems: [
       {
-        category_sub: "계산",
-        sub_items: [
+        categorySub: "계산",
+        subItems: [
           {
             id: 1,
             title: "사칙 연산",
@@ -32,12 +32,12 @@ const CALCULETS = [
         ],
       },
       {
-        category_sub: "통계",
-        sub_items: [],
+        categorySub: "통계",
+        subItems: [],
       },
       {
-        category_sub: "기하",
-        sub_items: [
+        categorySub: "기하",
+        subItems: [
           {
             id: 5,
             title: "각도",
@@ -51,11 +51,11 @@ const CALCULETS = [
     ],
   },
   {
-    category_main: SCIENCE,
-    main_items: [
+    categoryMain: SCIENCE,
+    mainItems: [
       {
-        category_sub: "과학",
-        sub_items: [
+        categorySub: "과학",
+        subItems: [
           {
             id: 7,
             title: "단위 변환기",
@@ -67,8 +67,8 @@ const CALCULETS = [
         ],
       },
       {
-        category_sub: "공학",
-        sub_items: [
+        categorySub: "공학",
+        subItems: [
           {
             id: 9,
             title: "단위 변환기",
@@ -82,11 +82,11 @@ const CALCULETS = [
     ],
   },
   {
-    category_main: ECONOMY,
-    main_items: [
+    categoryMain: ECONOMY,
+    mainItems: [
       {
-        category_sub: "경제",
-        sub_items: [
+        categorySub: "경제",
+        subItems: [
           {
             id: 11,
             title: "적금 계산기",
@@ -102,17 +102,17 @@ const CALCULETS = [
         ],
       },
       {
-        category_sub: "사회",
-        sub_items: [],
+        categorySub: "사회",
+        subItems: [],
       },
     ],
   },
   {
-    category_main: DAILY,
-    main_items: [
+    categoryMain: DAILY,
+    mainItems: [
       {
-        category_sub: "시간 & 날짜",
-        sub_items: [
+        categorySub: "시간 & 날짜",
+        subItems: [
           {
             id: 14,
             title: "D-Day 계산기",
@@ -132,8 +132,8 @@ const CALCULETS = [
         ],
       },
       {
-        category_sub: "운동",
-        sub_items: [
+        categorySub: "운동",
+        subItems: [
           {
             id: 14,
             title: "운동량 계산기",
@@ -143,8 +143,8 @@ const CALCULETS = [
     ],
   },
   {
-    category_main: ETC,
-    main_items: [],
+    categoryMain: ETC,
+    mainItems: [],
   },
 ];
 export { MATH, SCIENCE, ECONOMY, DAILY, ETC, CALCULETS };
