@@ -128,7 +128,7 @@ function SignUp() {
       } else setWarningPw("");
     }
     if (pw.value !== pwConfirmation.value) {
-      setWarningPw("비밀번호와 비밀번호 확인이 다릅니다.");
+      setWarningPw("비밀번호가 일치하지 않습니다.");
     } else setWarningPw("");
   }, [pw.value, pwConfirmation.value]);
 
