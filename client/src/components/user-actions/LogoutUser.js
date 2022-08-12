@@ -1,14 +1,12 @@
 import axios from "axios";
 
 /**
- * 회원 가입 - 서버에 요청
- * @param {object}
- * dataToSubmit : 서버에 보낼 정보
+ * 로그아웃 - 서버에 요청
  */
-async function signUpUser(dataToSubmit = {}) {
+async function LogoutUser() {
   let data;
   try {
-    await axios.post(`/users/`, dataToSubmit).then((response) => {
+    await axios.get("/users/logout").then((response) => {
       data = response.data;
     });
     return data;
@@ -17,9 +15,9 @@ async function signUpUser(dataToSubmit = {}) {
       case 400:
         return error.response.data;
         break;
-      case 403:
+      case 404:
         break;
     }
   }
 }
-export default signUpUser;
+export default LogoutUser;

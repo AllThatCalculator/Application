@@ -7,7 +7,6 @@ import {
   BtnIndigo,
   BtnText,
 } from "../components/atom-components/ButtonTemplate";
-import SmallTitle from "../components/global-component/SmallTitle";
 import WarningGuide from "../components/global-component/WarningGuide";
 import {
   ContentLayout,
@@ -20,6 +19,7 @@ import useInput from "../user-hooks/UseInput";
 import loginUser from "../components/user-actions/LoginUser";
 import { useNavigate } from "react-router-dom";
 import ActGuide from "../components/sign-up/ActGuide";
+import URL from "../components/PageUrls";
 /**
  * 흰색 뒷 배경
  */
@@ -80,10 +80,10 @@ function Login() {
     const request = loginUser(body);
     request.then((res) => {
       // 로그인 실패
-      if (!res.loginSuccess) setWarning(res.message);
+      if (!res.success) setWarning(res.message);
       // 로그인 성공
       else {
-        navigate("/");
+        window.location.replace(URL.CALCULET);
       }
     });
   }
@@ -93,12 +93,6 @@ function Login() {
    */
   function onFindPw() {
     //console.log("비밀번호 찾으러 가기");
-  }
-  /**
-   * 회원 가입 하러 가기
-   */
-  function onSignUp() {
-    navigate("/sign-up");
   }
   return (
     <>
@@ -129,7 +123,7 @@ function Login() {
           <ActGuide
             guide="계정이 없으신가요?"
             lead="회원가입하기"
-            onClick={onSignUp}
+            onClick={() => navigate(URL.SIGN_UP)}
           />
         </BoxBorder>
       </WrapperPad>

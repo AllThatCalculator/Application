@@ -7,7 +7,12 @@ import { BtnWhite } from "../components/atom-components/ButtonTemplate";
 import CategoryBar from "../components/global-component/CategoryBar";
 import { useState } from "react";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { FlexRowLayout } from "../components/Layout";
+import { CategoryItems } from "../components/header/CategoryItems";
+import { useNavigate } from "react-router-dom";
+import AuthUser from "../components/user-actions/AuthUser";
+import URL from "../components/PageUrls";
+import LogoutUser from "../components/user-actions/LogoutUser";
 
 // 상단 고정
 const Positioner = styled.div`
@@ -20,24 +25,35 @@ const Positioner = styled.div`
   background: ${(props) => props.isChange && `${styles.styleColor.blue100}`};
 `;
 // 내용 정렬
-const WhiteBackground = styled.div`
-  display: flex;
+const WhiteBackground = styled(FlexRowLayout)`
   justify-content: space-between;
   gap: ${styles.styleLayout.basic700};
 `;
-const HeaderContents = styled.div`
-  display: flex;
+const HeaderContents = styled(FlexRowLayout)`
   align-items: center;
   gap: ${styles.styleLayout.basic700};
 `;
 /**
- *  * 헤더 contents
- * -> 카테고리바, 로고, 검색창, 로그인 버튼
- * @param {function, function} param0
- * onIsOpen : 버튼 이벤트 (카테고리바 이벤트)
- * onLogin : 로그인 페이지로 이동 이벤트 (로그인 이벤트)
+ * 헤더에 있는 컴포넌트들
+ * -> 카테고리바, 로고, 검색창, 로그인/아웃 버튼
+ * @param {function} onIsOpen 버튼 이벤트 (카테고리바 버튼 이벤트)
+ * @param {function} onLogin 로그인 페이지로 이동 이벤트 (로그인 버튼 이벤트)
+ * @param {function} onLogout 로그아웃 이벤트 (로그아웃 버튼 이벤트)
  */
-function Contents({ onIsOpen, onLogin }) {
+function Contents({ onIsOpen, onLogin, onLogout }) {
+  /**
+   * 페이지 새로고침 되자마자 로그인 상태 확인하여 로그인/아웃 버튼 렌더
+   */
+  const [logBtn, setLogBtn] = useState(null);
+  useEffect(onHandlerLogin, []);
+
+  function onHandlerLogin() {
+    AuthUser().then((res) => {
+      !res.success
+        ? setLogBtn(<BtnWhite text="로그인" icon="Person" onClick={onLogin} />)
+        : setLogBtn(<BtnWhite text="로그아웃" onClick={onLogout} />);
+    });
+  }
   return (
     <WhiteBackground>
       <HeaderContents>
@@ -51,7 +67,7 @@ function Contents({ onIsOpen, onLogin }) {
       </HeaderContents>
       <HeaderContents>
         <BoxSearchInput text="계산하고 싶은 것을 검색하세요." />
-        <BtnWhite text="로그인" icon="Person" onClick={onLogin} />
+        {logBtn}
       </HeaderContents>
     </WhiteBackground>
   );
@@ -64,35 +80,12 @@ function Contents({ onIsOpen, onLogin }) {
  *
  */
 function Header() {
-  // 카테고리바 열 때 slideIn, 닫을 때 slideInOut 으로 작동할 수 있도록 animation의 mode를 제어하는 state
+  const navigate = useNavigate();
+  /**
+   * 카테고리바 animation의 mode 제어 state
+   * true : 열 때 slideIn / false : 닫을 때 slideInOut
+   */
   const [aniMode, setAniMode] = useState(false);
-
-  // aniMod 값을 반전시키는 버튼 이벤트 함수
-  function onIsOpen() {
-    setAniMode(!aniMode);
-  }
-
-  // 카테고리 바에 들어갈 계산기 대분류 & 소분류 정보
-  const contentsCategory = [
-    {
-      category_main: "수학",
-      category_sub: [
-        {
-          name: "계산",
-          calculets: ["사칙연산", "변수", "함수", "미적분 계산기"],
-        },
-        { name: "통계", calculets: [] },
-        { name: "기하", calculets: ["각도", "외심내심"] },
-      ],
-    },
-    {
-      category_main: "과학-공학",
-      category_sub: [
-        { name: "과학", calculets: ["단위 변환기", "물리 계산기"] },
-        { name: "공학", calculets: ["진법 계산기"] },
-      ],
-    },
-  ];
 
   // 스크롤의 위치
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -110,17 +103,30 @@ function Header() {
   });
 
   /**
-   * 로그인 페이지로 이동 이벤트
+   * 로그아웃
    */
-  function onLogin() {
-    window.location.href = "/login";
+  function onHandlerLogout(event) {
+    event.preventDefault();
+
+    // 서버에 요청
+    LogoutUser().then((res) => {
+      // 로그아웃 성공
+      if (res.success) {
+        window.location.replace(URL.CALCULET);
+      }
+    });
   }
+
   return (
     <>
       <Positioner isChange={isChange}>
-        <Contents onIsOpen={onIsOpen} onLogin={onLogin} />
+        <Contents
+          onIsOpen={() => setAniMode(!aniMode)}
+          onLogin={() => navigate(URL.LOGIN)}
+          onLogout={onHandlerLogout}
+        />
       </Positioner>
-      <CategoryBar contents={contentsCategory} aniMode={aniMode}></CategoryBar>
+      <CategoryBar contents={CategoryItems} aniMode={aniMode}></CategoryBar>
     </>
   );
 }

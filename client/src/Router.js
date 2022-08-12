@@ -6,25 +6,24 @@ import BookmarkBar from "./components/global-component/BookmarkBar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Search from "./pages/Search";
-import {
-  CALCULET,
-  LOGIN,
-  REGISTER,
-  SIGN_UP,
-  SEARCH,
-} from "./components/PageUrls";
+import URL from "./components/PageUrls";
+import Auth from "./hoc/auth";
 
 const AppRouter = () => {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path={CALCULET} element={<Calculet />} />
-        <Route path={CALCULET + "/:id"} element={<Calculet />} />
-        <Route path={REGISTER} element={<Register />} />
-        <Route path={LOGIN} element={<Login />} />
-        <Route path={SIGN_UP} element={<SignUp />} />
-        <Route path={SEARCH} element={<Search />} />
+        <Route path={URL.CALCULET} element={<Calculet />}>
+          <Route path=":id" element={<Calculet />} />
+        </Route>
+        <Route
+          path={URL.REGISTER}
+          element={<Auth authComponent={<Register />} />}
+        />
+        <Route path={URL.LOGIN} element={<Login />} />
+        <Route path={URL.SIGN_UP} element={<SignUp />} />
+        <Route path={URL.SEARCH} element={<Search />} />
       </Routes>
       <BookmarkBar />
     </BrowserRouter>

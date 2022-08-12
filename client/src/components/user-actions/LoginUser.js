@@ -5,7 +5,7 @@ import axios from "axios";
  * @param {object}
  * dataToSubmit : 서버에 보낼 정보
  */
-export default async function loginUser(dataToSubmit = {}) {
+async function loginUser(dataToSubmit = {}) {
   let data;
   try {
     await axios.post(`/users/login`, dataToSubmit).then((response) => {
@@ -15,9 +15,11 @@ export default async function loginUser(dataToSubmit = {}) {
   } catch (error) {
     switch (error.response.status) {
       case 400:
+      case 401:
       case 403:
       case 404:
         return error.response.data;
     }
   }
 }
+export default loginUser;
