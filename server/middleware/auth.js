@@ -2,11 +2,13 @@ const { verify } = require("../utils/jwt");
 const { refresh } = require("../utils/refresh");
 
 exports.auth = (req, res, next) => {
-  let token = null;
-  try {
-    // 클라이언트 쿠키에서 토큰 가져오기
-    token = req.cookies.access_token;
-  } catch (err) {}
+  // access token, refresh token 둘 중 하나라도 없다면 바로 401 응답
+  if (!req.cookies.access_token || !req.cookies.refresh_token) {
+    return res.status(401).send({ success: false });
+  }
+
+  // 클라이언트 쿠키에서 토큰 가져오기
+  const token = req.cookies.access_token;
 
   // 토큰 복호화해서 유저 이메일 얻기
   const result = verify(token);
