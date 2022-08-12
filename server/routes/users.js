@@ -1,5 +1,4 @@
 const express = require("express");
-const cookieParser = require("cookie-parser");
 const { auth } = require("../middleware/auth");
 const { findUser } = require("../middleware/findUser");
 const { signUp } = require("./users/signUp");
@@ -9,13 +8,6 @@ const { logout } = require("./users/logout");
 const { refresh } = require("./users/refresh");
 
 const router = express.Router();
-
-/**
- * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
- */
-router.use(express.urlencoded({ extended: true }));
-router.use(express.json());
-router.use(cookieParser());
 
 /**
  * 회원 가입

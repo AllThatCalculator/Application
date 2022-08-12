@@ -4,6 +4,7 @@ const calculets = require("./routes/calculets");
 const users = require("./routes/users");
 const record = require("./routes/record");
 const { swaggerUi, specs } = require("./swagger");
+const cookieParser = require("cookie-parser");
 const app = express();
 
 require("dotenv").config();
@@ -20,6 +21,17 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
+
+/**
+ * 쿠키 파싱
+ */
+app.use(cookieParser());
+
+/**
+ * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
+ */
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 /**
  * API 문서 path 등록하기

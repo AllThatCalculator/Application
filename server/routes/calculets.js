@@ -2,14 +2,6 @@ const express = require("express");
 const router = express.Router();
 const mariadb = require("../config/database");
 const { auth } = require("../middleware/auth");
-const cookieParser = require("cookie-parser");
-
-/**
- * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
- */
-router.use(express.urlencoded({ extended: true }));
-router.use(express.json());
-router.use(cookieParser());
 
 /**
  * buffer 데이터를 string 형태로 바꿔주는 함수
