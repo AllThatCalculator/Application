@@ -26,7 +26,7 @@ const StyledHeading = styled(FlexRowLayout)`
  * @param {object} props 인자
  * @param {*} ref 컴포넌트 참조 (참조할 때만 기입)
  * -> content: 내용
- * -> h : 폰트 스타일
+ * -> h : 제목 요소 (h1, h2 ...) (h1 쓰려면, 1 을 인자로 주기)
  * -> color : 색 (기본값 black)
  * -> isLine : 아래 구분선 여부 (있을 때만 true 기입)
  * id : 제목 id (기본값 : 내용)
