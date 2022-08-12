@@ -26,7 +26,6 @@ function Shortcut({ contentsShortcut, isActive, setIsActive }) {
     setIsActive(parseInt(event.target.id));
     currentRef.onMoveToElement();
   }
-
   return (
     <Wrapper gap="14px">
       <Heading
@@ -44,6 +43,7 @@ function Shortcut({ contentsShortcut, isActive, setIsActive }) {
           isActive={index === isActive ? true : false}
           onClick={(event) => onClickShortcut(event, cont.itemRef)}
           direction={true}
+          degree={cont.degree ? cont.degree : 0}
         />
       ))}
     </Wrapper>

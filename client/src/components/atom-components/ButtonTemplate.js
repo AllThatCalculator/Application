@@ -20,10 +20,22 @@ const StyledFont200b = styled.div`
   ${styles.sytleText.text200b}
 `;
 //========================================================
-// 스타일드 아이콘
-const StyledIcon = (props) => {
+/**
+ * 아이콘 상하좌우 각도 변환을 위한 StyledSvg
+ * 현재는, Y축 중심으로 회전
+ */
+const StyledSvg = styled.svg`
+  transform: rotateY(${(props) => (props.degree ? props.degree : 0)}deg);
+`;
+/**
+ * 스타일드 아이콘
+ * @param {*} props
+ * -> name : 아이콘 이름
+ * -> degree : 회전할 각도
+ */
+function StyledIcon(props) {
   return (
-    <svg
+    <StyledSvg
       stroke="currentColor"
       fill="currentColor"
       strokeWidth="0"
@@ -31,13 +43,14 @@ const StyledIcon = (props) => {
       height={Icons[props.name].height}
       width={Icons[props.name].width}
       viewBox={Icons[props.name].viewBox}
+      degree={props.degree}
     >
       {Icons[props.name].path.map((d, i) => {
         return <path d={d} key={i} />;
       })}
-    </svg>
+    </StyledSvg>
   );
-};
+}
 /**
  * 버튼 내에서 아이콘 눌렀을 때, 버튼 전체로 접근하는 게 아니라 아이콘에만 접근되는 것을 막음.
  */
@@ -118,6 +131,7 @@ const StyledBtnTrans = styled(StyledBtnGray)`
       : `${styles.sytleText.text100}`};
 
   width: 100%;
+  white-space: pre;
   &:hover {
     background: ${styles.styleColor.blue30};
   }
@@ -250,7 +264,6 @@ function BtnTransToggle({ text, isToggle, onClick, isCenter = true }) {
  * isActive : click 되었는지 (true : 누름, false : 안 누름) (기본값 false)
  *
  */
-
 function BtnTrans({
   text,
   id = text,
@@ -259,6 +272,7 @@ function BtnTrans({
   isCenter = true,
   direction = false,
   isActive = false,
+  degree = 0,
 }) {
   return (
     <StyledBtnTrans
@@ -270,7 +284,7 @@ function BtnTrans({
     >
       {icon && (
         <StyledNoneIcon>
-          <StyledIcon name={icon} />
+          <StyledIcon name={icon} degree={degree} />
         </StyledNoneIcon>
       )}
       {text}

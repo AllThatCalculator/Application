@@ -17,9 +17,13 @@ import { useEffect } from "react";
 import { useState } from "react";
 import calculetsUser from "../components/user-actions/calculetsUser";
 
+const BTN_CONVERSION = `단위
+변환기`;
 const BTN_MATH = "수학";
-const BTN_SCIENCE = "과학"; // + "<br />" + "공학";
-const BTN_ECONOMY = "경제"; // + "<br />" + "사회";
+const BTN_SCIENCE = `과학
+공학`;
+const BTN_ECONOMY = `경제
+사회`;
 const BTN_DAILY = "일상";
 const BTN_ETC = "기타";
 
@@ -70,6 +74,7 @@ function CalculetList() {
   /**
    * 바로가기를 위한 ref
    */
+  const conversion = UseMoveScroll();
   const math = UseMoveScroll();
   const science = UseMoveScroll();
   const economy = UseMoveScroll();
@@ -80,6 +85,12 @@ function CalculetList() {
    * 대분류 수학 Ref, Ref로 스크롤 이동하는 함수
    */
   const contentsShortcut = [
+    {
+      text: BTN_CONVERSION,
+      icon: "ArrowDownUp",
+      itemRef: conversion,
+      degree: 180,
+    },
     {
       text: BTN_MATH,
       icon: "PlusSlashMinus",

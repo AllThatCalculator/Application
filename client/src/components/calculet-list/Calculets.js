@@ -1,4 +1,5 @@
 /** 대분류 */
+const CONVERSION = "단위변환기";
 const MATH = "수학";
 const SCIENCE = "과학-공학";
 const ECONOMY = "경제-사회";
@@ -7,6 +8,49 @@ const ETC = "기타";
 
 /**계산기 전체 목록 계산기 더미 */
 const CALCULETS = [
+  {
+    categoryMain: CONVERSION,
+    mainItems: [
+      {
+        categorySub: "계산",
+        subItems: [
+          {
+            id: 1,
+            title: "사칙 연산",
+          },
+          {
+            id: 2,
+            title: "변수",
+          },
+          {
+            id: 3,
+            title: "함수",
+          },
+          {
+            id: 4,
+            title: "미적분 계산기",
+          },
+        ],
+      },
+      {
+        categorySub: "통계",
+        subItems: [],
+      },
+      {
+        categorySub: "기하",
+        subItems: [
+          {
+            id: 5,
+            title: "각도",
+          },
+          {
+            id: 6,
+            title: "외심 내심",
+          },
+        ],
+      },
+    ],
+  },
   {
     categoryMain: MATH,
     mainItems: [
