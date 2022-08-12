@@ -2,7 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 import { BtnTrans, BtnTransToggle } from "../atom-components/ButtonTemplate";
-import { DESKTOP, FlexColumnLayout, PHONE, TABLET } from "../Layout";
+import StyledScrollbar from "../atom-components/StyledScrollbar";
+import {
+  DESKTOP,
+  FlexColumnLayout,
+  FlexRowLayout,
+  PHONE,
+  TABLET,
+} from "../Layout";
 import { CALCULET } from "../PageUrls";
 import styles from "../styles";
 /**
@@ -24,10 +31,13 @@ const slideInOut = keyframes`
     margin-left: -100%;
   }
 `;
-const Positioner = styled.div`
+/**
+ * 카테고리바 위치 고정 & 반응형 너비
+ */
+const Positioner = styled(FlexRowLayout)`
   position: fixed;
-  top: 60px;
-  left: 0;
+  top: 60;
+  height: 100%;
 
   @media (min-width: ${PHONE}) and (max-width: ${TABLET}) {
     ${styles.styleSize.categoryPhone};
@@ -41,11 +51,11 @@ const Positioner = styled.div`
 
   background: ${styles.styleColor.white300};
   padding: ${styles.styleLayout.basic300} ${styles.styleLayout.basic700};
-  height: 100%;
+
   z-index: 101;
   ${styles.styleEffect.opacity100};
   animation: ${(props) =>
-    props.aniMode === true
+    props.isActive === true
       ? css`
           ${slideIn}
         `
@@ -56,6 +66,12 @@ const Positioner = styled.div`
   animation-fill-mode: forwards;
 `;
 
+/**
+ * 카테고리바 내의 계산기들 묶은 box 스타일 정의
+ */
+const StyledCategoryBox = styled(FlexRowLayout)`
+  width: 100%;
+`;
 /**
  * indent만큼 들여쓰기
  */
@@ -71,10 +87,10 @@ const StyledIndent = styled.div`
  * -> categoryMain : 대분류
  * -> categorySub : <배열> 소분류, 계산기들
  *    -> name: 소분류 이름, calculets: 계산기들
- * aniMode : 카테고리바 열 때 slideIn, 닫을 때 slideInOut 으로 작동할 수 있도록 animation의 mode를 제어하는 state
- * setAniMode : aniMode 관리 함수
+ * isActive : 카테고리바 열 때 slideIn, 닫을 때 slideInOut 으로 작동할 수 있도록 animation의 mode를 제어하는 state
+ * setIsActive : isActive 관리 함수
  */
-function CategoryBar({ contents, aniMode, setAniMode }) {
+function CategoryBar({ contents, isActive, setIsActive }) {
   const navigate = useNavigate();
   // < 카테고리 내용 >
   // 대분류 개수
@@ -94,73 +110,104 @@ function CategoryBar({ contents, aniMode, setAniMode }) {
   }
   const [categoryToggle, setCategoryToggle] = useState(categoryToggleSet);
   // 대분류 toggle 값을 반전시키는 버튼 이벤트 함수
-  function onToggleMain(main) {
-    setCategoryToggle(
-      categoryToggle.map((mainTog, index) =>
-        main === index ? { ...mainTog, toggle: !mainTog.toggle } : mainTog
-      )
-    );
-  }
-  // 소분류 toggle 값을 반전시키는 버튼 이벤트 함수
-  function onToggleSub(main, sub) {
-    const newCategoryToggle = categoryToggle.map((mainTog, index) =>
-      main === index
-        ? {
-            ...mainTog,
-            subToggle: mainTog.subToggle.map((subTog, idx) =>
-              sub === idx ? { ...subTog, toggle: !subTog.toggle } : subTog
-            ),
-          }
-        : mainTog
-    );
+  function onToggleMain(mainIndex) {
+    const newCategoryToggle = [...categoryToggle];
+    newCategoryToggle[mainIndex].toggle = !categoryToggle[mainIndex].toggle;
     setCategoryToggle(newCategoryToggle);
   }
-  return (
-    <Positioner aniMode={aniMode}>
-      <FlexColumnLayout gap="3px">
-        {contents.map((main, index) => (
-          <>
-            <BtnTransToggle
-              key={main.categoryMain}
-              text={main.categoryMain}
-              isToggle={categoryToggle[index].toggle}
-              isCenter={false}
-              onClick={() => onToggleMain(index)}
-            />
-            {categoryToggle[index].toggle && (
-              <StyledIndent indent={1.5}>
-                {main.mainItems.map((sub, idx) => (
-                  <>
-                    <BtnTransToggle
-                      key={sub.categorySub}
-                      text={sub.categorySub}
-                      isToggle={categoryToggle[index].subToggle[idx].toggle}
-                      isCenter={false}
-                      onClick={() => onToggleSub(index, idx)}
-                    />
-                    {categoryToggle[index].subToggle[idx].toggle && (
-                      <StyledIndent indent={1.5}>
-                        {sub.subItems.map((calculet) => (
-                          <BtnTrans
-                            key={calculet.id}
-                            text={"• " + calculet.title}
-                            isCenter={false}
-                            onClick={() => {
-                              navigate(CALCULET + calculet.id);
-                              setAniMode(false);
-                            }}
-                          />
-                        ))}
-                      </StyledIndent>
-                    )}
-                  </>
-                ))}
-              </StyledIndent>
+  // 소분류 toggle 값을 반전시키는 버튼 이벤트 함수
+  function onToggleSub(mainIndex, subIndex) {
+    const newCategoryToggle = [...categoryToggle];
+    newCategoryToggle[mainIndex].subToggle[subIndex].toggle =
+      !categoryToggle[mainIndex].subToggle[subIndex].toggle;
+    setCategoryToggle(newCategoryToggle);
+  }
+  /**
+   * 계산기 바로가기 생성하는 함수
+   * @param {object} calculet 계산기 id, title 포함하는 객체
+   */
+  function handleLeaf(calculet) {
+    return (
+      <BtnTrans
+        key={calculet.id}
+        text={"• " + calculet.title}
+        isCenter={false}
+        onClick={() => {
+          navigate(CALCULET + calculet.id);
+          setIsActive(false);
+        }}
+      />
+    );
+  }
+  /**
+   * 계산기를 소분류로 묶어서 반환하는 함수
+   * @param {object} sub - 소분류 객체
+   * @param {number} subIndex - 소분류 인덱스
+   * @param {number} mainIndex - 대분류 인덱스
+   * @param {boolean} toggle - 열려있는지 여부
+   */
+  function handleSub(sub, subIndex, mainIndex, toggle) {
+    return (
+      <div key={sub.categorySub}>
+        {sub.categorySub !== null && (
+          <BtnTransToggle
+            text={sub.categorySub}
+            isToggle={toggle}
+            isCenter={false}
+            onClick={() => onToggleSub(mainIndex, subIndex)}
+          />
+        )}
+        {toggle && (
+          <StyledIndent indent={1.5}>
+            {sub.subItems.map(handleLeaf)}
+          </StyledIndent>
+        )}
+      </div>
+    );
+  }
+  /**
+   * 계산기를 대분류로 묶어서 반환하는 함수
+   * @param {object} main - 대분류 객체
+   * @param {number} mainIndex - 소분류 인덱스
+   * @param {boolean} toggle - 열려있는지 여부
+   */
+  function handleMain(main, mainIndex, toggle) {
+    return (
+      <div key={main.categoryMain}>
+        <BtnTransToggle
+          text={main.categoryMain}
+          isToggle={toggle}
+          isCenter={false}
+          onClick={() => onToggleMain(mainIndex)}
+        />
+        {toggle && (
+          <StyledIndent indent={1.5}>
+            {main.mainItems.map((sub, subIndex) =>
+              handleSub(
+                sub,
+                subIndex,
+                mainIndex,
+                categoryToggle[mainIndex].subToggle[subIndex].toggle
+              )
             )}
-          </>
-        ))}
-      </FlexColumnLayout>
+          </StyledIndent>
+        )}
+      </div>
+    );
+  }
+  return (
+    <Positioner isActive={isActive}>
+      <StyledCategoryBox>
+        <StyledScrollbar>
+          <FlexColumnLayout gap="3px">
+            {contents.map((main, mainIndex) =>
+              handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
+            )}
+          </FlexColumnLayout>
+        </StyledScrollbar>
+      </StyledCategoryBox>
     </Positioner>
   );
 }
+
 export default CategoryBar;
