@@ -2,7 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { css, keyframes } from "styled-components";
 import { BtnTrans, BtnTransToggle } from "../atom-components/ButtonTemplate";
-import { DESKTOP, FlexColumnLayout, PHONE, TABLET } from "../Layout";
+import StyledScrollbar from "../atom-components/StyledScrollbar";
+import {
+  DESKTOP,
+  FlexColumnLayout,
+  FlexRowLayout,
+  PHONE,
+  TABLET,
+} from "../Layout";
 import { CALCULET } from "../PageUrls";
 import styles from "../styles";
 /**
@@ -24,10 +31,13 @@ const slideInOut = keyframes`
     margin-left: -100%;
   }
 `;
-const Positioner = styled.div`
+/**
+ * 카테고리바 위치 고정 & 반응형 너비
+ */
+const Positioner = styled(FlexRowLayout)`
   position: fixed;
-  top: 60px;
-  left: 0;
+  top: 60;
+  height: 100%;
 
   @media (min-width: ${PHONE}) and (max-width: ${TABLET}) {
     ${styles.styleSize.categoryPhone};
@@ -41,7 +51,7 @@ const Positioner = styled.div`
 
   background: ${styles.styleColor.white300};
   padding: ${styles.styleLayout.basic300} ${styles.styleLayout.basic700};
-  height: 100%;
+
   z-index: 101;
   ${styles.styleEffect.opacity100};
   animation: ${(props) =>
@@ -55,7 +65,12 @@ const Positioner = styled.div`
   animation-duration: 0.4s;
   animation-fill-mode: forwards;
 `;
-
+/**
+ * 카테고리바 내의 계산기들 묶은 box 스타일 정의
+ */
+const StyledCategoryBox = styled(FlexRowLayout)`
+  width: 100%;
+`;
 /**
  * indent만큼 들여쓰기
  */
@@ -133,12 +148,14 @@ function CategoryBar({ contents, isActive, setIsActive }) {
   function handleSub(sub, subIndex, mainIndex, toggle) {
     return (
       <div key={sub.categorySub}>
-        <BtnTransToggle
-          text={sub.categorySub}
-          isToggle={toggle}
-          isCenter={false}
-          onClick={() => onToggleSub(mainIndex, subIndex)}
-        />
+        {sub.categorySub !== null && (
+          <BtnTransToggle
+            text={sub.categorySub}
+            isToggle={toggle}
+            isCenter={false}
+            onClick={() => onToggleSub(mainIndex, subIndex)}
+          />
+        )}
         {toggle && (
           <StyledIndent indent={1.5}>
             {sub.subItems.map(handleLeaf)}
@@ -179,11 +196,15 @@ function CategoryBar({ contents, isActive, setIsActive }) {
   }
   return (
     <Positioner isActive={isActive}>
-      <FlexColumnLayout gap="3px">
-        {contents.map((main, mainIndex) =>
-          handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
-        )}
-      </FlexColumnLayout>
+      <StyledCategoryBox>
+        <StyledScrollbar>
+          <FlexColumnLayout gap="3px">
+            {contents.map((main, mainIndex) =>
+              handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
+            )}
+          </FlexColumnLayout>
+        </StyledScrollbar>
+      </StyledCategoryBox>
     </Positioner>
   );
 }
