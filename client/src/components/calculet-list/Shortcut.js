@@ -43,7 +43,7 @@ function Shortcut({ contentsShortcut, isActive, setIsActive }) {
           icon={cont.icon}
           isActive={index === isActive ? true : false}
           onClick={(event) => onClickShortcut(event, cont.itemRef)}
-          dire={true}
+          direction={true}
         />
       ))}
     </Wrapper>

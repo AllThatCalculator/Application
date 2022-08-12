@@ -107,8 +107,8 @@ const StyledBtnGray = styled(StyledButton)`
 `;
 // 투명 버튼(형식은 회색버튼)
 const StyledBtnTrans = styled(StyledBtnGray)`
-  flex-direction: ${(props) => props.dire && "column"};
-  color: ${(props) => props.dire && `${styles.styleColor.gray100}`};
+  flex-direction: ${(props) => props.direction && "column"};
+  color: ${(props) => props.direction && `${styles.styleColor.gray100}`};
   justify-content: ${(props) => !props.isCenter && `flex-start`};
   background: ${(props) =>
     props.isActive ? `${styles.styleColor.blue30}` : `transparent`};
@@ -246,7 +246,7 @@ function BtnTransToggle({ text, isToggle, onClick, isCenter = true }) {
  * icon : 아이콘 넣기 -> 아이콘 이름 작성 || 아이콘 안 넣기 -> 인자 없음
  * onClick : 해당 버튼 눌렀을 때 일어나는 이벤트
  * isCenter : content가 버튼에서 가운데 정렬인지 (기본값 true 이니까, 가운데 정렬 안 할 때만 false로)
- * dire : 방향 (true : column) (기본값 false 이니까, 방향 바꿀 때만 true로)
+ * direction : 방향 (true : column) (기본값 false 이니까, 방향 바꿀 때만 true로)
  * isActive : click 되었는지 (true : 누름, false : 안 누름) (기본값 false)
  *
  */
@@ -257,7 +257,7 @@ function BtnTrans({
   icon,
   onClick,
   isCenter = true,
-  dire = false,
+  direction = false,
   isActive = false,
 }) {
   return (
@@ -265,7 +265,7 @@ function BtnTrans({
       id={id}
       onClick={onClick}
       isCenter={isCenter}
-      dire={dire}
+      direction={direction}
       isActive={isActive}
     >
       {icon && (

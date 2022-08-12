@@ -162,7 +162,7 @@ function CalculetList() {
           <BigTitle content="계산기 전체 목록" />
           {contentsCalculetList && (
             <CalculetItemList
-              item={CALCULETS}
+              item={contentsCalculetList}
               contentsShortcut={contentsShortcut}
               setIsActive={setIsActive}
               scrollPosition={scrollPosition}
