@@ -83,7 +83,7 @@ router.get("/", async (req, res) => {
     // 대분류 만큼 dictionary 초기화
     for (let i = 0; i < categoryMain.length; i++) {
       calculetLists.push({
-        calculetMain: categoryMain[i].main,
+        categoryMain: categoryMain[i].main,
         mainItems: [],
       });
     }
@@ -93,7 +93,7 @@ router.get("/", async (req, res) => {
       try {
         const [rows] = await mariadb.query(sql);
         calculetLists[mainId].mainItems.push({
-          calculetSub: sub,
+          categorySub: sub,
           subItems: rows,
         });
       } catch (error) {
@@ -180,7 +180,7 @@ router.get("/category", category);
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   // 계산기 정보 쿼리문
   const calculetInfoQuery = `select * from calculet_info where id=${req.params.id};`;
 
@@ -196,89 +196,87 @@ router.get("/:id", (req, res) => {
 
   // 제작자 사진
   const userInfoQuery = `select profile_img from user_info where email = (select contributor_email from calculet_info where id=${req.params.id});`;
+  try {
+    const rows = await mariadb.query(
+      calculetInfoQuery +
+        calculetStatisticsQuery +
+        calculetCountQuery +
+        userCalculetQuery +
+        userInfoQuery
+    );
+    const calculetInfo = rows[0][0][0];
+    const calculetStatistics = rows[0][1][0];
+    const calculetCount = rows[0][2][0];
+    let userCalculet = rows[0][3][0];
+    const userInfo = rows[0][4][0];
 
-  mariadb.query(
-    calculetInfoQuery +
-      calculetStatisticsQuery +
-      calculetCountQuery +
-      userCalculetQuery +
-      userInfoQuery,
-    (err, rows, fields) => {
-      if (!err) {
-        const calculetInfo = rows[0][0];
-        const calculetStatistics = rows[1][0];
-        const calculetCount = rows[2][0];
-        let userCalculet = rows[3][0];
-        const userInfo = rows[4][0];
-
-        // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
-        if (!userCalculet) {
-          userCalculet = {
-            bookmarked: false,
-            liked: false,
-          };
-        }
-
-        // 계산기 객체로 묶기
-        let calculet = null;
-        if (calculetInfo) {
-          // 소스 코드 buffer 형태를 string 으로 변환
-          const srcCode = bufferToString(calculetInfo.src_code);
-
-          // 마크다운 buffer 형태를 string 으로 변환
-          const manual = bufferToString(calculetInfo.manual);
-
-          // 제작자 이미지를 base64string 으로 변환 + src 생성
-          const contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
-
-          calculet = {
-            id: calculetInfo.id,
-            title: calculetInfo.title,
-            srcCode: srcCode,
-            manual: manual,
-            description: calculetInfo.description,
-            categoryMain: calculetInfo.category_main,
-            categorySub: calculetInfo.category_sub,
-            contributor: calculetInfo.contributor_email,
-            contributorImgSrc: contributorImgSrc,
-          };
-        }
-
-        // 통계 객체로 묶기
-        let statistics = null;
-        if (calculetStatistics && calculetCount && userCalculet) {
-          statistics = {
-            bookmarkCnt: calculetStatistics.bookmark_cnt,
-            bookmarked: userCalculet.bookmarked,
-            likeCnt: calculetStatistics.like_cnt,
-            liked: userCalculet.liked,
-            reportCnt: calculetStatistics.report_cnt,
-            viewCnt: calculetCount.view_cnt,
-          };
-        }
-
-        // 계산기 잘 불러왔는지 확인
-        if (calculet === null || statistics === null) {
-          res
-            .status(404)
-            .send({ success: false, message: "calculet was not found" });
-        } else {
-          res.status(200).send({
-            success: true,
-            calculet: calculet,
-            statistics: statistics,
-          });
-        }
-      } else {
-        res.status(400).send({
-          success: false,
-          message:
-            "request parameters was wrong. retry request after change parameters",
-          err,
-        });
-      }
+    // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
+    if (!userCalculet) {
+      userCalculet = {
+        bookmarked: false,
+        liked: false,
+      };
     }
-  );
+
+    // 계산기 객체로 묶기
+    let calculet = null;
+    if (calculetInfo) {
+      // 소스 코드 buffer 형태를 string 으로 변환
+      const srcCode = bufferToString(calculetInfo.src_code);
+
+      // 마크다운 buffer 형태를 string 으로 변환
+      const manual = bufferToString(calculetInfo.manual);
+
+      // 제작자 이미지를 base64string 으로 변환 + src 생성
+      const contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
+
+      calculet = {
+        id: calculetInfo.id,
+        title: calculetInfo.title,
+        srcCode: srcCode,
+        manual: manual,
+        description: calculetInfo.description,
+        categoryMain: calculetInfo.category_main,
+        categorySub: calculetInfo.category_sub,
+        contributor: calculetInfo.contributor_email,
+        contributorImgSrc: contributorImgSrc,
+      };
+    }
+
+    // 통계 객체로 묶기
+    let statistics = null;
+    if (calculetStatistics && calculetCount && userCalculet) {
+      statistics = {
+        bookmarkCnt: calculetStatistics.bookmark_cnt,
+        bookmarked: userCalculet.bookmarked,
+        likeCnt: calculetStatistics.like_cnt,
+        liked: userCalculet.liked,
+        reportCnt: calculetStatistics.report_cnt,
+        viewCnt: calculetCount.view_cnt,
+      };
+    }
+
+    // 계산기 잘 불러왔는지 확인
+    if (calculet === null || statistics === null) {
+      res
+        .status(404)
+        .send({ success: false, message: "calculet was not found" });
+    } else {
+      res.status(200).send({
+        success: true,
+        calculet: calculet,
+        statistics: statistics,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).send({
+      success: false,
+      message:
+        "request parameters was wrong. retry request after change parameters",
+      err,
+    });
+  }
 });
 
 /**

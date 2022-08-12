@@ -5,11 +5,13 @@ import Register from "./pages/Register";
 import BookmarkBar from "./components/global-component/BookmarkBar";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Search from "./pages/Search";
 import {
   CALCULET,
   CALCULET_LIST,
   LOGIN,
   REGISTER,
+  SEARCH,
   SIGN_UP,
 } from "./components/PageUrls";
 import CalculetList from "./pages/CalculetList";
