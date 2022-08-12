@@ -128,13 +128,21 @@ function Register() {
 
       for (let i = 0; i < main.length; i++) {
         mainOptionList.push({ value: main[i].id, name: main[i].main });
-        subOptionList[i + 1] = [];
+        subOptionList[i + 1] = [{ value: sub[0].id, name: sub[0].name }];
       }
 
-      for (let i = 0; i < sub.length; i++) {
+      for (let i = 0; i < sub.length - 1; i++) {
         subOptionList[sub[i].main_id].push({
           value: sub[i].id,
           name: sub[i].sub,
+        });
+      }
+
+      // 대분류마다 기타 소분류 추가
+      for (let i = 0; i < main.length; i++) {
+        subOptionList[i].push({
+          value: sub[sub.length - 1].id,
+          name: sub[sub.length - 1].sub,
         });
       }
 
