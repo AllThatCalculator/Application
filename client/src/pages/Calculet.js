@@ -6,10 +6,6 @@ import styles from "../components/styles";
 import { BtnBlue } from "../components/atom-components/ButtonTemplate";
 import CalculetHeader from "../components/calculet-block/CalculetHeader";
 
-// (임시) html 파일 string으로 읽어오기 위해 사용
-// -> 백엔드 연결 이후에는 http request로 계산기 정보들과 함께 받음
-// eslint-disable-next-line
-import srcCode from "raw-loader!../calculets/arithmetic-operation/arithmeticOperation.html";
 import { ContentLayout } from "../components/Layout";
 
 import axios from "axios";
@@ -17,7 +13,6 @@ import {
   updateCalculetCount,
   loadOftenUsedCalculet,
 } from "../utils/OftenUsedCalculet";
-import RecordCalculetHistory from "../components/calculet-block/RecordCalculetHistory";
 import { Font } from "../components/atom-components/StyledText";
 import FooterRecommend from "../components/global-component/FooterRecommend";
 
