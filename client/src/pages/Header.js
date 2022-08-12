@@ -92,17 +92,6 @@ function Header() {
   }, []);
 
   /**
-   * 카테고리바 정보 (대분류, 소분류에 따른 계산기) 서버에서 불러오기
-   * 페이지 렌더시 한 번만
-   */
-  const [contentsCategory, setContentsCategory] = useState(null);
-  useEffect(() => {
-    calculetsUser().then((res) => {
-      // 카테고리바 정보 불러오기 성공
-      if (res.success) setContentsCategory(res.calculetLists);
-    });
-  }, []);
-  /**
    * 스크롤의 위치
    */
   const [scrollPosition, setScrollPosition] = useState(0);
