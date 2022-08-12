@@ -5,12 +5,7 @@ exports.auth = (req, res, next) => {
   try {
     // 클라이언트 쿠키에서 토큰 가져오기
     token = req.cookies.access_token;
-  } catch (err) {
-    res.status(404).send({
-      success: false,
-      message: "no token",
-    });
-  }
+  } catch (err) {}
 
   // 토큰 복호화해서 유저 이메일 얻기
   const result = verify(token);

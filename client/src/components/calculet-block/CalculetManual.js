@@ -4,13 +4,22 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import styled from "styled-components";
 import { BtnToggle } from "../atom-components/ButtonIcon";
 import { BtnGray } from "../atom-components/ButtonTemplate";
+import { FlexRowLayout } from "../Layout";
 import styles from "../styles";
+import RecordCalculetHistory from "./RecordCalculetHistory";
 // import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+`;
+
+const WrapperButton = styled(FlexRowLayout)`
+  width: 100%;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: ${styles.styleLayout.basic700};
 `;
 
 /**
@@ -47,13 +56,14 @@ function MarkdownCode({ content }) {
 const MarkdownWrapper = styled.div`
   background-color: tomato;
   ${styles.sytleText.text100}
-`
+`;
 
 /**
  * 계산기 설명서(매뉴얼)를 볼 것인지 선택하는 토글 버튼과 설명문을 포함하는 컴포넌트
  * @param {string} content 마크다운 문법으로 이루어진 string
+ * @param {string} calculetId 계산기 번호
  */
-function CalculetManual({ content }) {
+function CalculetManual({ content, calculetId }) {
   // 설명서를 펼칠지 여부를 저장하는 state
   const [visibility, setVisibility] = useState(false);
 
@@ -67,7 +77,10 @@ function CalculetManual({ content }) {
   return (
     <>
       <div>
-        <BtnGray text="자세히" isToggle={visibility} onClick={toggle} />
+        <WrapperButton>
+          <BtnGray text="자세히" isToggle={visibility} onClick={toggle} />
+          <RecordCalculetHistory calculetId={calculetId} />
+        </WrapperButton>
         {visibility && (
           <>
             <MarkdownWrapper>
