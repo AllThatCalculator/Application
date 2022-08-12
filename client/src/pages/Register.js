@@ -3,14 +3,14 @@ import styles from "../components/styles";
 import WriteCode from "../components/register/WriteCode";
 import { WriteInform } from "../components/register/WriteInform";
 import UploadDoneBtn from "../components/register/UploadDoneBtn";
-import { useState, useRef, useEffect } from "react";
-import {
-  OPTIONS_CATEGORY_MAIN,
-  OPTIONS_CATEGORY_SUB,
-  OPTIONS_EMAIL_ADDRESS,
-} from "../components/register/Option";
+import { useState, useEffect } from "react";
 import { ContentLayout, White300Layout } from "../components/Layout";
 import { CalculetCss } from "../components/register/CalculetString";
+import axios from "axios";
+import useInput from "../user-hooks/UseInput";
+import { useNavigate } from "react-router-dom";
+import loadUserInfo from "../components/user-actions/userInfo";
+import calculetCategory from "../components/user-actions/calculetCategory";
 
 /**
  * ContentLayout을 상속하는 RegisterLayout
@@ -28,42 +28,27 @@ const RegisterLayout = styled(ContentLayout)`
  * - 여러 컴포넌트에서 관리하는 state들을 관리
  */
 function Register() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const navigate = useNavigate();
+
+  const title = useInput("");
+  const description = useInput("");
+
+  // 대분류 옵션
+  const [mainOption, setMainOption] = useState(null);
+
+  // 소분류 옵션
+  const [subOption, setSubOption] = useState(null);
+
   const [categoryMain, setCategoryMain] = useState("");
   const [categorySub, setCategorySub] = useState("");
   // 대분류 종류에 맞는 소분류 옵션 배열
   const [categorySubOption, setCategorySubOption] = useState(null);
-  const [address, setAddress] = useState("");
-  const [writedDomain, setWritedDomain] = useState("");
-  const [selectedDomain, setSelectedDomain] = useState("");
-  const [domain, setDomain] = useState("");
-  const [email, setEmail] = useState("");
 
-  // monaco editor의 값을 가져오기 위해 필요한 것
-  const editorRef = useRef(null);
+  const [categoryMainId, setCategoryMainId] = useState(null);
+  const [categorySubId, setCategorySubId] = useState(null);
 
   const [srcCode, setSrcCode] = useState("<!DOCTYPE html>");
   const [manual, setManual] = useState("### write detail!");
-
-  // 바로 초기화하면 defaultValue로 설정해서인지 값이 안 바뀌어서 나중에 set하기 위해 useEffect 사용
-  useEffect(() => setSelectedDomain("직접 입력"), []);
-
-  /**
-   * 계산기 제목 입력값 change 함수
-   * @param {*} event
-   */
-  function changeTitle(event) {
-    setTitle(event.target.value);
-  }
-
-  /**
-   * 계산기 한 줄 설명 change 함수
-   * @param {*} event
-   */
-  function changeDescription(event) {
-    setDescription(event.target.value);
-  }
 
   /**
    * 계산기 대분류 change 함수
@@ -72,15 +57,18 @@ function Register() {
    * @param {*} event
    */
   function changeCategoryMain(event) {
-    const targetValue = event.target.value;
-    const option = OPTIONS_CATEGORY_MAIN.filter((x) => x.value === targetValue);
-    const smallOption = OPTIONS_CATEGORY_SUB.filter(
-      (x) => x.big === option[0].value
-    );
-    setCategoryMain(option[0].name);
-    setCategorySub("");
-    if (smallOption.length) {
-      setCategorySubOption(smallOption[0].options);
+    // 대분류 타겟 value 값
+    const targetValue = Number(event.target.value);
+    // 대분류 옵션 네임
+    const main = mainOption[targetValue].name;
+    // 소분류 옵션 리스트
+    const subOptionList = subOption[targetValue];
+
+    setCategoryMain(main);
+    setCategoryMainId(targetValue);
+    setCategorySub(null);
+    if (subOptionList.length) {
+      setCategorySubOption(subOptionList);
     } else {
       setCategorySubOption(null);
     }
@@ -92,114 +80,120 @@ function Register() {
    * @param {*} event
    */
   function changeCategorySub(event) {
-    const targetValue = event.target.value;
+    const targetValue = Number(event.target.value);
     if (categorySubOption) {
       const option = categorySubOption.filter((x) => x.value === targetValue);
       setCategorySub(option[0].name);
+      setCategorySubId(targetValue);
+    }
+  }
+
+  // 유저 정보
+  const [userInfo, setUserInfo] = useState(null);
+
+  /**
+   * 사용자 정보 서버에 요청
+   */
+  function requestUserInfo(userEmail) {
+    const request = loadUserInfo(userEmail);
+    request.then((res) => {
+      setUserInfo(res);
+    });
+  }
+
+  /**
+   * (임시 - 나중에 작업 합쳐지면 user-actions에 있는 거 사용, 아니면 props로 이메일 받기?)
+   * 백엔드에서 사용자 정보 불러오는 함수
+   */
+  async function loadUserEmail() {
+    try {
+      await axios.get(`/users/me`).then((response) => {
+        requestUserInfo(response.data.userEmail);
+      });
+    } catch (error) {
+      navigate("/login");
     }
   }
 
   /**
-   * email 세팅하는 함수 = address + @ + domain
+   * 카테고리 서버에 요청 후, 데이터 가공
    */
-  function settingEmail(address, domain) {
-    setEmail(`${address}@${domain}`);
+  function loadCategory() {
+    const request = calculetCategory();
+    request.then((res) => {
+      const mainOptionList = [];
+      let subOptionList = [[]];
+      const main = res.main;
+      const sub = res.sub;
+
+      for (let i = 0; i < main.length; i++) {
+        mainOptionList.push({ value: main[i].id, name: main[i].main });
+        subOptionList[i + 1] = [{ value: sub[0].id, name: sub[0].sub }];
+      }
+
+      for (let i = 0; i < sub.length - 1; i++) {
+        subOptionList[sub[i].main_id].push({
+          value: sub[i].id,
+          name: sub[i].sub,
+        });
+      }
+
+      // 대분류마다 기타 소분류 추가
+      for (let i = 0; i < main.length; i++) {
+        subOptionList[i].push({
+          value: sub[sub.length - 1].id,
+          name: sub[sub.length - 1].sub,
+        });
+      }
+
+      setMainOption(mainOptionList);
+      setSubOption(subOptionList);
+    });
   }
 
   /**
-   * 저작자 이메일의 주소 부분 change 함수
-   * - email도 같이 세팅
-   * @param {*} event
+   * 현재 로그인한 사용자 계정 가져오기
    */
-  function changeAddress(event) {
-    setAddress(event.target.value);
-    settingEmail(event.target.value, domain);
-  }
-
-  /**
-   * 저작자 이메일의 도메인 부분 change 함수 (input 박스)
-   * - email도 같이 세팅
-   * @param {*} event
-   */
-  function changeDomain(event) {
-    const targetValue = event.target.value;
-    setWritedDomain(targetValue);
-    setDomain(targetValue);
-    settingEmail(address, targetValue);
-  }
-
-  /**
-   * 저작자 이메일의 도메인 부분 change 함수 (select 박스)
-   * - value에 먼저 접근한 후, value에 맞는 name을 찾아서 저장
-   * - email도 같이 세팅
-   * @param {*} event
-   */
-  function changeSelectedDomain(event) {
-    const targetValue = event.target.value;
-    const option = OPTIONS_EMAIL_ADDRESS.filter((x) => x.value === targetValue);
-    const domainValue = option[0].name;
-    if (domainValue === "직접 입력") {
-      setWritedDomain("");
-    } else {
-      setWritedDomain(domainValue);
-    }
-    setSelectedDomain(domainValue);
-    setDomain(domainValue);
-    settingEmail(address, domainValue);
-  }
-
-  /**
-   * HTML 코드 change 함수 (monaco editor)
-   */
-  function changeSrcCode() {
-    setSrcCode(editorRef.current.getValue());
-  }
-
-  /**
-   * MARKDOWN 코드 change 함수 (monaco editor)
-   */
-  function changeManual() {
-    setManual(editorRef.current.getValue());
-  }
+  useEffect(() => {
+    loadUserEmail();
+    loadCategory();
+  }, []);
 
   return (
     <White300Layout>
       <RegisterLayout>
-        <WriteInform
-          title={title}
-          description={description}
-          categoryMain={categoryMain}
-          categorySubOption={categorySubOption}
-          categorySub={categorySub}
-          address={address}
-          writedDomain={writedDomain}
-          selectedDomain={selectedDomain}
-          domain={domain}
-          email={email}
-          changeTitle={changeTitle}
-          changeDescription={changeDescription}
-          changeCategoryMain={changeCategoryMain}
-          changeCategorySub={changeCategorySub}
-          changeAddress={changeAddress}
-          changeDomain={changeDomain}
-          changeSelectedDomain={changeSelectedDomain}
-        />
+        {userInfo && (
+          <WriteInform
+            title={title.value}
+            description={description.value}
+            mainOption={mainOption}
+            categoryMain={categoryMain}
+            categorySubOption={categorySubOption}
+            categorySub={categorySub}
+            profileImg={userInfo.profileImg}
+            changeTitle={title.onChange}
+            changeDescription={description.onChange}
+            changeCategoryMain={changeCategoryMain}
+            changeCategorySub={changeCategorySub}
+          />
+        )}
         <WriteCode
-          editorRef={editorRef}
           srcCode={srcCode}
           manual={manual}
-          changeSrcCode={changeSrcCode}
-          changeManual={changeManual}
+          setSrcCode={setSrcCode}
+          setManual={setManual}
         />
-        <UploadDoneBtn
-          title={title}
-          description={description}
-          categoryMain={categoryMain}
-          categorySub={categorySub}
-          email={email}
-          srcCode={srcCode + `<style>${CalculetCss}</style>`}
-          manual={manual}
-        />
+        {userInfo && (
+          <UploadDoneBtn
+            title={title.value}
+            description={description.value}
+            categoryMainId={categoryMainId}
+            categorySubId={categorySubId}
+            email={userInfo.email}
+            srcCode={`<style>${CalculetCss}</style>` + srcCode}
+            manual={manual}
+          />
+        )}
       </RegisterLayout>
     </White300Layout>
   );

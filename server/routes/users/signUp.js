@@ -9,7 +9,7 @@ exports.signUp = (req, res) => {
   let pw = req.body.pw;
   bcrypt.genSalt(saltRounds, function (err, salt) {
     if (!err) {
-      bcrypt.hash(pw, salt, function (err, hash) {
+      bcrypt.hash(pw, salt, async function (err, hash) {
         if (!err) {
           // 암호화된 비밀번호로 저장
           pw = hash;
@@ -24,6 +24,7 @@ exports.signUp = (req, res) => {
             req.body.birthdate,
             req.body.job,
           ];
+
           const userLoginData = [req.body.email, pw];
 
           const userInfoQuery = `INSERT INTO user_info VALUES(?,?,?,?,?,?,?);`;
@@ -32,21 +33,20 @@ exports.signUp = (req, res) => {
           const sql1 = mariadb.format(userInfoQuery, userInfoData);
           const sql2 = mariadb.format(userLoginQuery, userLoginData);
 
-          mariadb.query(sql1 + sql2, (err, result, fields) => {
-            if (!err) {
-              res.status(201).send({
-                success: true,
-                location: `/users/${req.body.email}`,
-              });
-            } else {
-              res.status(400).send({
-                success: false,
-                message:
-                  "request parameters was wrong. retry request after change parameters",
-                err,
-              });
-            }
-          });
+          try {
+            await mariadb.query(sql1 + sql2);
+            res.status(201).send({
+              success: true,
+              location: `/users/${req.body.email}`,
+            });
+          } catch (err) {
+            res.status(400).send({
+              success: false,
+              message:
+                "request parameters was wrong. retry request after change parameters",
+              err,
+            });
+          }
         } else {
           res
             .status(403)

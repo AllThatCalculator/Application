@@ -160,7 +160,7 @@ function SelectBox({ options, placeholder, selected, onChange, isLine }) {
 
   function onSelectItem(event) {
     onChange(event);
-    setItem(event.target.value);
+    setItem(Number(event.target.value));
     setIsActive(false);
   }
 

@@ -2,11 +2,9 @@ import styled from "styled-components";
 import styles from "../styles";
 import PreviewBanner from "./PreviewBanner";
 import MiddleTitle from "./MiddleTitle";
-import { OPTIONS_CATEGORY_MAIN, OPTIONS_EMAIL_ADDRESS } from "./Option";
 import BigTitle from "../atom-components/BigTitle";
 import { FlexColumnLayout, ResponsiveTabletLayout } from "../Layout";
 import {
-  ExplanationEmail,
   ExplanationInputBox,
   ExplanationSelectBox,
 } from "../global-component/Explanation";
@@ -55,7 +53,7 @@ function WriteInform(props) {
   // 대분류, 소분류 SelectBox 필요한 정보들
   const categorys = [
     {
-      options: OPTIONS_CATEGORY_MAIN,
+      options: props.mainOption,
       placeholder: "대분류",
       selected: props.categoryMain,
       onChange: props.changeCategoryMain,
@@ -102,25 +100,10 @@ function WriteInform(props) {
             categorys={categorys}
           />
         </InformBox>
-        <MiddleTitle content="제작자 정보" />
-        <InformBox>
-          <ExplanationEmail
-            isLine={false}
-            ratioLeft="1"
-            ratioRight="2.8"
-            address={props.address}
-            onChangeAddress={props.changeAddress}
-            writedDomain={props.writedDomain}
-            selectedDomain={props.selectedDomain}
-            onChangeDomain={props.changeDomain}
-            emailAddressOptions={OPTIONS_EMAIL_ADDRESS}
-            onChangeSelectedDomain={props.changeSelectedDomain}
-          />
-        </InformBox>
       </WrapperInform>
       <WrapperBanner>
         <PreviewBanner
-          profile="/img/ori.png"
+          profile={props.profileImg}
           title={props.title}
           description={props.description}
         />
