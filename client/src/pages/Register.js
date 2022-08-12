@@ -60,7 +60,7 @@ function Register() {
     // 대분류 타겟 value 값
     const targetValue = Number(event.target.value);
     // 대분류 옵션 네임
-    const main = mainOption[targetValue - 1].name;
+    const main = mainOption[targetValue].name;
     // 소분류 옵션 리스트
     const subOptionList = subOption[targetValue];
 
@@ -128,7 +128,7 @@ function Register() {
 
       for (let i = 0; i < main.length; i++) {
         mainOptionList.push({ value: main[i].id, name: main[i].main });
-        subOptionList[i + 1] = [{ value: sub[0].id, name: sub[0].name }];
+        subOptionList[i + 1] = [{ value: sub[0].id, name: sub[0].sub }];
       }
 
       for (let i = 0; i < sub.length - 1; i++) {

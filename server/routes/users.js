@@ -77,47 +77,46 @@ router.get("/refresh", refresh);
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.get("/:email", (req, res) => {
-  // 사용자 정보 쿼리문
-  const userInfoQuery = `select * from user_info where email='${req.params.email}';`;
+router.get("/:email", async (req, res) => {
+  try {
+    // 사용자 정보 쿼리문
+    const userInfoQuery = `select * from user_info where email='${req.params.email}';`;
 
-  mariadb.query(userInfoQuery, (err, rows, fields) => {
-    if (!err) {
-      const userInfo = rows[0];
+    const rows = await mariadb.query(userInfoQuery);
+    const userInfo = rows[0][0];
 
-      let user = null;
-      if (userInfo) {
-        // 사용자 이미지를 base64string 으로 변환 + src 생성
-        const profileImgSrc = bufferToImageSrc(userInfo.profile_img);
+    let user = null;
+    if (userInfo) {
+      // 사용자 이미지를 base64string 으로 변환 + src 생성
+      const profileImgSrc = bufferToImageSrc(userInfo.profile_img);
 
-        user = {
-          email: userInfo.email,
-          userName: userInfo.user_name,
-          profileImg: profileImgSrc,
-          bio: userInfo.bio,
-          sex: userInfo.sex,
-          birthdate: userInfo.birthdate,
-          job: userInfo.job,
-        };
-      }
+      user = {
+        email: userInfo.email,
+        userName: userInfo.user_name,
+        profileImg: profileImgSrc,
+        bio: userInfo.bio,
+        sex: userInfo.sex,
+        birthdate: userInfo.birthdate,
+        job: userInfo.job,
+      };
+    }
 
-      if (user === null) {
-        res.status(404).send({ success: false, message: "user was not found" });
-      } else {
-        res.status(200).send({
-          success: true,
-          userInfo: user,
-        });
-      }
+    if (user === null) {
+      res.status(404).send({ success: false, message: "user was not found" });
     } else {
-      res.status(400).send({
-        success: false,
-        message:
-          "request parameters was wrong. retry request after change parameters",
-        err,
+      res.status(200).send({
+        success: true,
+        userInfo: user,
       });
     }
-  });
+  } catch (err) {
+    res.status(400).send({
+      success: false,
+      message:
+        "request parameters was wrong. retry request after change parameters",
+      err,
+    });
+  }
 });
 
 module.exports = router;

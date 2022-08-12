@@ -292,7 +292,7 @@ router.get("/:id", (req, res) => {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.post("/", auth, (req, res) => {
+router.post("/", auth, async (req, res) => {
   const sql =
     "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main_id, category_sub_id, contributor_email) VALUES(?,?,?,?,?,?,?);";
 
@@ -305,21 +305,19 @@ router.post("/", auth, (req, res) => {
     req.body.categorySubId,
     req.body.email,
   ];
-
-  mariadb.query(sql, calculet, (err, result, fields) => {
-    if (!err) {
-      res
-        .status(201)
-        .send({ success: true, location: `/calculets/${result.insertId}` });
-    } else {
-      res.status(400).send({
-        success: false,
-        message:
-          "request parameters was wrong. retry request after change parameters",
-        err,
-      });
-    }
-  });
+  try {
+    const rows = await mariadb.query(sql, calculet);
+    res
+      .status(201)
+      .send({ success: true, location: `/calculets/${rows[0].insertId}` });
+  } catch (err) {
+    res.status(400).send({
+      success: false,
+      message:
+        "request parameters was wrong. retry request after change parameters",
+      err,
+    });
+  }
 });
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const mariadb = require("../../config/database");
 
-exports.logout = (req, res) => {
+exports.logout = async (req, res) => {
   // 클라이언트 정보 얻기
   const decoded = jwt.decode(req.cookies.access_token);
 
@@ -19,12 +19,10 @@ exports.logout = (req, res) => {
 
   // DB에 있는 refresh token 지우기
   const sql = `update user_login set refresh_token='' where user_email='${decoded.email}'`;
-  mariadb.query(sql, (err, result, fields) => {
-    if (!err) {
-      // 로그아웃 완료
-      return res.status(200).redirect("/");
-    } else {
-      res.status(400).send({ success: false, message: "로그아웃 실패" });
-    }
-  });
+  try {
+    await mariadb.query(sql); // 로그아웃 완료
+    return res.status(200).redirect("/");
+  } catch (err) {
+    res.status(400).send({ success: false, message: "로그아웃 실패" });
+  }
 };
