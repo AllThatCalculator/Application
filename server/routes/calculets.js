@@ -60,91 +60,86 @@ function bufferToImageSrc(value) {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.get("/", (req, res) => {
-  // 계산기 정보 리스트 얻는 쿼리문
-  // order by를 통해 카테고리별로 묶음
-  const calculetInfoQuery = `select category_main_id, category_sub_id, id, title from calculet_info order by category_main_id, category_sub_id;`;
+router.get("/", async (req, res) => {
+  try {
+    // 기타 id
+    const etcId = 99999;
+    // 단위 변환기 id
+    const converterId = 0;
 
-  // 카테고리 대분류 리스트 얻어오기
-  const categoryMainQuery = `select * from category_main;`;
+    // 계산기 리스트
+    const calculetLists = [];
 
-  // 카테고리 소분류 리스트 얻어오기
-  const categorySubQuery = `select * from category_sub;`;
+    // 카테고리 대분류 리스트 얻어오기
+    const categoryMainQuery = `select * from category_main where id < 99999 order by id;`;
 
-  mariadb.query(
-    calculetInfoQuery + categoryMainQuery + categorySubQuery,
-    (err, rows, fields) => {
-      if (!err) {
-        const calculetInfo = rows[0];
-        const categoryMain = rows[1];
-        const categorySub = rows[2];
+    // 카테고리 소분류 리스트 얻어오기
+    const categorySubQuery = `select * from category_sub order by main_id, id;`;
 
-        // 계산기 리스트 잘 불러왔다면
-        const calculetLists = [];
-        if (calculetInfo) {
-          // 카테고리 분류에 맞게 틀 만들기
-          // 대분류
-          for (let i = 0; i < categoryMain.length; i++) {
-            calculetLists.push({
-              categoryMain: categoryMain[i].main,
-              mainItems: [{ categorySub: null, subItems: [] }],
-            });
-          }
+    const [[categoryMain, categorySub]] = await mariadb.query(
+      categoryMainQuery + categorySubQuery
+    );
 
-          // 소분류
-          for (let i = 0; i < categorySub.length; i++) {
-            const mainId = categorySub[i].main_id - 1;
-            const sub = categorySub[i].sub;
-            calculetLists[mainId].mainItems.push({
-              categorySub: sub,
-              subItems: [],
-            });
-          }
+    // 대분류 만큼 dictionary 초기화
+    for (let i = 0; i < categoryMain.length; i++) {
+      calculetLists.push({
+        calculetMain: categoryMain[i].main,
+        mainItems: [],
+      });
+    }
 
-          // 계산기 전체 목록들 카테고리에 맞게 분류
-          for (let i = 0; i < calculetInfo.length; i++) {
-            const mainId = calculetInfo[i].category_main_id - 1;
-            let sub = null;
-            if (calculetInfo[i].category_sub_id) {
-              sub = categorySub[calculetInfo[i].category_sub_id - 1].sub;
-            }
-            const id = calculetInfo[i].id;
-            const title = calculetInfo[i].title;
-            const mainItems = calculetLists[mainId].mainItems;
-            for (let j = 0; j < mainItems.length; j++) {
-              if (sub === mainItems[j].categorySub) {
-                calculetLists[mainId].mainItems[j].subItems.push({
-                  id: id,
-                  title: title,
-                });
-                break;
-              }
-            }
-          }
-          console.log(calculetLists);
-        }
-
-        // 계산기 리스트 잘 불러왔는지 확인
-        if (calculetLists.length === 0) {
-          res
-            .status(404)
-            .send({ success: false, message: "calculet was not found" });
-        } else {
-          res.status(200).send({
-            success: true,
-            calculetLists: calculetLists,
-          });
-        }
-      } else {
+    // 소분류 채우는 함수
+    async function fillSub(mainId, sub, sql) {
+      try {
+        const [rows] = await mariadb.query(sql);
+        calculetLists[mainId].mainItems.push({
+          calculetSub: sub,
+          subItems: rows,
+        });
+      } catch (error) {
         res.status(400).send({
           success: false,
           message:
             "request parameters was wrong. retry request after change parameters",
-          err,
+          error,
         });
       }
     }
-  );
+    // 각 대분류마다 단위 변환기 소분류 채우기
+    for (let i = 0; i < categoryMain.length - 1; i++) {
+      const sql = `select id, title from calculet_info where category_main_id=${i} and category_sub_id=${converterId};`;
+      await fillSub(i, "단위 변환기", sql);
+
+      if (i > 0) {
+        await fillSub(0, categoryMain[i].main, sql);
+      }
+    }
+
+    // 각 대분류마다 단위 변환기, 기타 제외한 소분류 채우기
+    for (let i = 1; i < categorySub.length - 1; i++) {
+      const mainId = categorySub[i].main_id;
+      const subId = categorySub[i].id;
+      const sub = categorySub[i].sub;
+      const sql = `select id, title from calculet_info where category_main_id=${mainId} and category_sub_id=${subId};`;
+      await fillSub(mainId, sub, sql);
+    }
+
+    // 각 대분류마다 기타 소분류 채우기 (단위 변환기 제외)
+    for (let i = 1; i < categoryMain.length; i++) {
+      const sql = `select id, title from calculet_info where category_main_id=${i} and category_sub_id=${etcId};`;
+      await fillSub(i, "기타", sql);
+    }
+
+    // console.log(calculetLists);
+    res.status(200).send({ success: true, calculetLists: calculetLists });
+  } catch (error) {
+    res.status(400).send({
+      success: false,
+      message:
+        "request parameters was wrong. retry request after change parameters",
+      error: error,
+    });
+  }
 });
 
 /**

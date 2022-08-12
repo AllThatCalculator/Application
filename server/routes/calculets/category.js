@@ -2,10 +2,10 @@ const mariadb = require("../../config/database");
 
 exports.category = (req, res) => {
   // 카테고리 대분류
-  const categoryMainQuery = `select * from category_main;`;
+  const categoryMainQuery = `select * from category_main where id < 99999 order by id;`;
 
   // 카테고리 소분류
-  const categorySubQuery = `select * from category_sub;`;
+  const categorySubQuery = `select * from category_sub order by id;`;
 
   mariadb.query(categoryMainQuery + categorySubQuery, (err, rows, fields) => {
     if (!err) {

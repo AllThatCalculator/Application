@@ -1,11 +1,11 @@
 CREATE TABLE category_main(
-    id INT AUTO_INCREMENT,
+    id INT NOT NULL,
 	main VARCHAR(20) NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE category_sub(
-    id INT AUTO_INCREMENT,
+    id INT NOT NULL,
 	sub VARCHAR(20) NOT NULL,
 	main_id INT NOT NULL,
     PRIMARY KEY (id)
@@ -88,9 +88,8 @@ CREATE TABLE user_info(
 	PRIMARY KEY (email)
 );
 
-ALTER TABLE category_main AUTO_INCREMENT = 1;
-ALTER TABLE category_sub AUTO_INCREMENT = 1;
 ALTER TABLE calculet_info AUTO_INCREMENT = 1;
+ALTER TABLE calculet_info_temp AUTO_INCREMENT = 1;
 
 ALTER TABLE category_sub ADD CONSTRAINT FOREIGN KEY (main_id) REFERENCES category_main(id);
 
