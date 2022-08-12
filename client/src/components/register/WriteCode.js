@@ -14,12 +14,15 @@ import { CustomPanel } from "./CustomPanel";
 
 const WrapperSrcCode = styled.div`
   width: 713px;
+  // 임시 높이
   min-height: 486px;
   height: 100%;
 `;
 
 const WrapperManual = styled.div`
   width: 100%;
+
+  // 임시 높이
   height: 486px;
 `;
 

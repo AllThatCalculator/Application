@@ -9,6 +9,8 @@ import { CalculetCss } from "../components/register/CalculetString";
 import axios from "axios";
 import useInput from "../user-hooks/UseInput";
 import { useNavigate } from "react-router-dom";
+import loadUserInfo from "../components/user-actions/userInfo";
+import calculetCategory from "../components/user-actions/calculetCategory";
 
 /**
  * ContentLayout을 상속하는 RegisterLayout
@@ -101,53 +103,53 @@ function Register() {
   /**
    * 사용자 정보 서버에 요청
    */
-  async function loadUserInfo(userEmail) {
-    try {
-      await axios.get(`/users/${userEmail}`).then((response) => {
-        setUserInfo(response.data.userInfo);
-      });
-    } catch (error) {
-      // 404 페이지
-    }
+  function requestUserInfo(userEmail) {
+    const request = loadUserInfo(userEmail);
+    request.then((res) => {
+      setUserInfo(res);
+    });
   }
 
   /**
+   * (임시 - 나중에 작업 합쳐지면 user-actions에 있는 거 사용, 아니면 props로 이메일 받기?)
    * 백엔드에서 사용자 정보 불러오는 함수
    */
   async function loadUserEmail() {
     try {
       await axios.get(`/users/me`).then((response) => {
-        loadUserInfo(response.data.userEmail);
+        requestUserInfo(response.data.userEmail);
       });
     } catch (error) {
       navigate("/login");
     }
   }
 
-  async function loadCategory() {
-    try {
-      await axios.get(`/calculets/category`).then((response) => {
-        const mainOptionList = [];
-        let subOptionList = [[]];
-        const main = response.data.categoryMain;
-        const sub = response.data.categorySub;
+  /**
+   * 카테고리 서버에 요청 후, 데이터 가공
+   */
+  function loadCategory() {
+    const request = calculetCategory();
+    request.then((res) => {
+      const mainOptionList = [];
+      let subOptionList = [[]];
+      const main = res.main;
+      const sub = res.sub;
 
-        for (let i = 0; i < main.length; i++) {
-          mainOptionList.push({ value: main[i].id, name: main[i].main });
-          subOptionList[i + 1] = new Array();
-        }
+      for (let i = 0; i < main.length; i++) {
+        mainOptionList.push({ value: main[i].id, name: main[i].main });
+        subOptionList[i + 1] = [];
+      }
 
-        for (let i = 0; i < sub.length; i++) {
-          subOptionList[sub[i].main_id].push({
-            value: sub[i].id,
-            name: sub[i].sub,
-          });
-        }
+      for (let i = 0; i < sub.length; i++) {
+        subOptionList[sub[i].main_id].push({
+          value: sub[i].id,
+          name: sub[i].sub,
+        });
+      }
 
-        setMainOption(mainOptionList);
-        setSubOption(subOptionList);
-      });
-    } catch (error) {}
+      setMainOption(mainOptionList);
+      setSubOption(subOptionList);
+    });
   }
 
   /**
@@ -161,7 +163,7 @@ function Register() {
   return (
     <White300Layout>
       <RegisterLayout>
-        {userInfo !== null ? (
+        {userInfo && (
           <WriteInform
             title={title.value}
             description={description.value}
@@ -175,8 +177,6 @@ function Register() {
             changeCategoryMain={changeCategoryMain}
             changeCategorySub={changeCategorySub}
           />
-        ) : (
-          <></>
         )}
         <WriteCode
           srcCode={srcCode}
@@ -185,7 +185,7 @@ function Register() {
           setSrcCode={setSrcCode}
           setManual={setManual}
         />
-        {userInfo !== null ? (
+        {userInfo && (
           <UploadDoneBtn
             title={title.value}
             description={description.value}
@@ -195,8 +195,6 @@ function Register() {
             srcCode={finalSrcCode}
             manual={manual}
           />
-        ) : (
-          <></>
         )}
       </RegisterLayout>
     </White300Layout>
