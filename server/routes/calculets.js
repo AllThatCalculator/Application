@@ -2,27 +2,125 @@ const express = require("express");
 const router = express.Router();
 const mariadb = require("../config/database");
 const { auth } = require("../middleware/auth");
+const { category } = require("./calculets/category");
+const {
+  bufferToString,
+  bufferToImageSrc,
+} = require("../utils/bufferConverter");
 
 /**
- * buffer 데이터를 string 형태로 바꿔주는 함수
- * @param {buffer}
- * value: buffer 상태 데이터
- * @returns
+ * @swagger
+ *  /calculets/:
+ *    get:
+ *      tags: [calculets]
+ *      summary: 계산기 전체 목록 불러오기
+ *      description: DB에 저장된 계산기의 전체 목록을 카테고리별로 불러온다
+ *      responses:
+ *        200:
+ *          description: 계산기 목록 불러오기 성공
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/getCalculetLists"
+ *        404:
+ *          description: 계산기를 찾지 못함
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/errorResult"
+ *        400:
+ *          description: 요청 오류
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/errorResult"
  */
-function bufferToString(value) {
-  return Buffer.from(value).toString();
-}
+router.get("/", async (req, res) => {
+  try {
+    // 기타 id
+    const etcId = 99999;
+    // 단위 변환기 id
+    const converterId = 0;
+
+    // 계산기 리스트
+    const calculetLists = [];
+
+    // 카테고리 대분류 리스트 얻어오기
+    const categoryMainQuery = `select * from category_main where id < 99999 order by id;`;
+
+    // 카테고리 소분류 리스트 얻어오기
+    const categorySubQuery = `select * from category_sub order by main_id, id;`;
+
+    const [[categoryMain, categorySub]] = await mariadb.query(
+      categoryMainQuery + categorySubQuery
+    );
+
+    // 대분류 만큼 dictionary 초기화
+    for (let i = 0; i < categoryMain.length; i++) {
+      calculetLists.push({
+        categoryMain: categoryMain[i].main,
+        mainItems: [],
+      });
+    }
+
+    // 소분류 채우는 함수
+    async function fillSub(mainId, sub, sql) {
+      try {
+        const [rows] = await mariadb.query(sql);
+        calculetLists[mainId].mainItems.push({
+          categorySub: sub,
+          subItems: rows,
+        });
+      } catch (error) {
+        res.status(400).send({
+          success: false,
+          message:
+            "request parameters was wrong. retry request after change parameters",
+          error,
+        });
+      }
+    }
+    // 각 대분류마다 단위 변환기 소분류 채우기
+    for (let i = 0; i < categoryMain.length - 1; i++) {
+      const sql = `select id, title from calculet_info where category_main_id=${i} and category_sub_id=${converterId};`;
+      await fillSub(i, "단위 변환기", sql);
+
+      if (i > 0) {
+        await fillSub(0, categoryMain[i].main, sql);
+      }
+    }
+
+    // 각 대분류마다 단위 변환기, 기타 제외한 소분류 채우기
+    for (let i = 1; i < categorySub.length - 1; i++) {
+      const mainId = categorySub[i].main_id;
+      const subId = categorySub[i].id;
+      const sub = categorySub[i].sub;
+      const sql = `select id, title from calculet_info where category_main_id=${mainId} and category_sub_id=${subId};`;
+      await fillSub(mainId, sub, sql);
+    }
+
+    // 각 대분류마다 기타 소분류 채우기 (단위 변환기 제외)
+    for (let i = 1; i < categoryMain.length; i++) {
+      const sql = `select id, title from calculet_info where category_main_id=${i} and category_sub_id=${etcId};`;
+      await fillSub(i, "기타", sql);
+    }
+
+    // console.log(calculetLists);
+    res.status(200).send({ success: true, calculetLists: calculetLists });
+  } catch (error) {
+    res.status(400).send({
+      success: false,
+      message:
+        "request parameters was wrong. retry request after change parameters",
+      error: error,
+    });
+  }
+});
 
 /**
- * buffer 데이터(이미지)를 base64String으로 인코딩해서 src 생성하는 함수
- * @param {buffer}
- * value: buffer 상태 데이터 (이미지)
- * @returns
+ * DB에 저장된 카테고리를 불러오는 API
  */
-function bufferToImageSrc(value) {
-  const base64String = Buffer.from(value).toString("base64");
-  return `data:image/png;base64,${base64String}`;
-}
+router.get("/category", category);
 
 /**
  * @swagger
@@ -57,7 +155,7 @@ function bufferToImageSrc(value) {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   // 계산기 정보 쿼리문
   const calculetInfoQuery = `select * from calculet_info where id=${req.params.id};`;
 
@@ -73,94 +171,92 @@ router.get("/:id", (req, res) => {
 
   // 제작자 사진
   const userInfoQuery = `select profile_img from user_info where email = (select contributor_email from calculet_info where id=${req.params.id});`;
+  try {
+    const rows = await mariadb.query(
+      calculetInfoQuery +
+        calculetStatisticsQuery +
+        calculetCountQuery +
+        userCalculetQuery +
+        userInfoQuery
+    );
+    const calculetInfo = rows[0][0][0];
+    const calculetStatistics = rows[0][1][0];
+    const calculetCount = rows[0][2][0];
+    let userCalculet = rows[0][3][0];
+    const userInfo = rows[0][4][0];
 
-  mariadb.query(
-    calculetInfoQuery +
-      calculetStatisticsQuery +
-      calculetCountQuery +
-      userCalculetQuery +
-      userInfoQuery,
-    (err, rows, fields) => {
-      if (!err) {
-        const calculetInfo = rows[0][0];
-        const calculetStatistics = rows[1][0];
-        const calculetCount = rows[2][0];
-        let userCalculet = rows[3][0];
-        const userInfo = rows[4][0];
-
-        // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
-        if (!userCalculet) {
-          userCalculet = {
-            bookmarked: false,
-            liked: false,
-          };
-        }
-
-        // 계산기 객체로 묶기
-        let calculet = null;
-        if (calculetInfo) {
-          // 소스 코드 buffer 형태를 string 으로 변환
-          const srcCode = bufferToString(calculetInfo.src_code);
-
-          // 마크다운 buffer 형태를 string 으로 변환
-          const manual = bufferToString(calculetInfo.manual);
-
-          // 제작자 이미지를 base64string 으로 변환 + src 생성
-          let contributorImgSrc = null;
-          if (userInfo.profile_img === null) {
-            // 기본 이미지인 경우
-            contributorImgSrc = "/img/defaultProfile.png";
-          } else {
-            contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
-          }
-
-          calculet = {
-            id: calculetInfo.id,
-            title: calculetInfo.title,
-            srcCode: srcCode,
-            manual: manual,
-            description: calculetInfo.description,
-            categoryMain: calculetInfo.category_main,
-            categorySub: calculetInfo.category_sub,
-            contributor: calculetInfo.contributor_email,
-            contributorImgSrc: contributorImgSrc,
-          };
-        }
-
-        // 통계 객체로 묶기
-        let statistics = null;
-        if (calculetStatistics && calculetCount && userCalculet) {
-          statistics = {
-            bookmarkCnt: calculetStatistics.bookmark_cnt,
-            bookmarked: userCalculet.bookmarked,
-            likeCnt: calculetStatistics.like_cnt,
-            liked: userCalculet.liked,
-            reportCnt: calculetStatistics.report_cnt,
-            viewCnt: calculetCount.view_cnt,
-          };
-        }
-
-        // 계산기 잘 불러왔는지 확인
-        if (calculet === null || statistics === null) {
-          res
-            .status(404)
-            .send({ success: false, message: "calculet was not found" });
-        } else {
-          res.status(200).send({
-            success: true,
-            calculet: calculet,
-            statistics: statistics,
-          });
-        }
-      } else {
-        res.status(400).send({
-          success: false,
-          message:
-            "request parameters was wrong. retry request after change parameters",
-        });
-      }
+    // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
+    if (!userCalculet) {
+      userCalculet = {
+        bookmarked: false,
+        liked: false,
+      };
     }
-  );
+
+    // 계산기 객체로 묶기
+    let calculet = null;
+    if (calculetInfo) {
+      // 소스 코드 buffer 형태를 string 으로 변환
+      const srcCode = bufferToString(calculetInfo.src_code);
+
+      // 마크다운 buffer 형태를 string 으로 변환
+      const manual = bufferToString(calculetInfo.manual);
+
+      // 제작자 이미지를 base64string 으로 변환 + src 생성
+      let contributorImgSrc = null;
+      if (userInfo.profile_img === null) {
+        // 기본 이미지인 경우
+        contributorImgSrc = "/img/defaultProfile.png";
+      } else {
+        contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
+      }
+      calculet = {
+        id: calculetInfo.id,
+        title: calculetInfo.title,
+        srcCode: srcCode,
+        manual: manual,
+        description: calculetInfo.description,
+        categoryMain: calculetInfo.category_main,
+        categorySub: calculetInfo.category_sub,
+        contributor: calculetInfo.contributor_email,
+        contributorImgSrc: contributorImgSrc,
+      };
+    }
+
+    // 통계 객체로 묶기
+    let statistics = null;
+    if (calculetStatistics && calculetCount && userCalculet) {
+      statistics = {
+        bookmarkCnt: calculetStatistics.bookmark_cnt,
+        bookmarked: userCalculet.bookmarked,
+        likeCnt: calculetStatistics.like_cnt,
+        liked: userCalculet.liked,
+        reportCnt: calculetStatistics.report_cnt,
+        viewCnt: calculetCount.view_cnt,
+      };
+    }
+
+    // 계산기 잘 불러왔는지 확인
+    if (calculet === null || statistics === null) {
+      res
+        .status(404)
+        .send({ success: false, message: "calculet was not found" });
+    } else {
+      res.status(200).send({
+        success: true,
+        calculet: calculet,
+        statistics: statistics,
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(400).send({
+      success: false,
+      message:
+        "request parameters was wrong. retry request after change parameters",
+      err,
+    });
+  }
 });
 
 /**
@@ -191,33 +287,32 @@ router.get("/:id", (req, res) => {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.post("/", auth, (req, res) => {
+router.post("/", auth, async (req, res) => {
   const sql =
-    "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main, category_sub, contributor_email) VALUES(?,?,?,?,?,?,?);";
+    "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main_id, category_sub_id, contributor_email) VALUES(?,?,?,?,?,?,?);";
 
   const calculet = [
     req.body.title,
     req.body.srcCode,
     req.body.manual,
     req.body.description,
-    req.body.categoryMain,
-    req.body.categorySub,
+    req.body.categoryMainId,
+    req.body.categorySubId,
     req.body.email,
   ];
-
-  mariadb.query(sql, calculet, (err, result, fields) => {
-    if (!err) {
-      res
-        .status(201)
-        .send({ success: true, location: `/calculets/${result.insertId}` });
-    } else {
-      res.status(400).send({
-        success: false,
-        message:
-          "request parameters was wrong. retry request after change parameters",
-      });
-    }
-  });
+  try {
+    const rows = await mariadb.query(sql, calculet);
+    res
+      .status(201)
+      .send({ success: true, location: `/calculets/${rows[0].insertId}` });
+  } catch (err) {
+    res.status(400).send({
+      success: false,
+      message:
+        "request parameters was wrong. retry request after change parameters",
+      err,
+    });
+  }
 });
 
 module.exports = router;

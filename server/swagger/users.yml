@@ -1,0 +1,53 @@
+# User API
+
+components:
+  schemas:
+    getSpecificUser:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+        userInfo:
+          $ref: "#components/schemas/userInfo"
+    userInfo:
+      type: object
+      properties:
+        email:
+          type: string
+          description: 사용자 이메일
+        userName:
+          type: string
+          description: 사용자 이름
+        profileImg:
+          type: string
+          description: 사용자 프로필 src 주소
+        bio:
+          type: string
+          description: 사용자 소개
+        sex:
+          type: string
+          description: 사용자 성별
+        birthdate:
+          type: string
+          description: 사용자 생년월일
+        job:
+          type: string
+          description: 사용자 직업
+      example:
+        email: "test@google.com"
+        userName: "test"
+        profileImg: "data:image/png;base64,iVOdfk2349..."
+        bio: "안녕하세요"
+        sex: "F"
+        birthdate: "0000-00-00"
+        job: "직업"
+    errorResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: 성공 여부
+        message:
+          type: string
+          description: 에러 메세지

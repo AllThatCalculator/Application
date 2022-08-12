@@ -41,20 +41,16 @@ module.exports = {
     // refresh token 검증
     const sql = `select refresh_token from user_login where user_email='${userEmail}'`;
 
-    mariadb.query(sql, (err, rows, fields) => {
-      if (!err) {
-        // refresh token 가져오기
-        const data = rows[0].refresh_token;
+    try {
+      const rows = mariadb.query(sql); // refresh token 가져오기
+      const data = rows[0].refresh_token;
 
-        if (data !== null) {
-          if (token === data) {
-            try {
-              jwt.verify(token, secret);
-              return true;
-            } catch (err) {
-              return false;
-            }
-          } else {
+      if (data !== null) {
+        if (token === data) {
+          try {
+            jwt.verify(token, secret);
+            return true;
+          } catch (err) {
             return false;
           }
         } else {
@@ -63,6 +59,8 @@ module.exports = {
       } else {
         return false;
       }
-    });
+    } catch (err) {
+      return false;
+    }
   },
 };

@@ -14,6 +14,15 @@ import AuthUser from "../components/user-actions/AuthUser";
 import URL from "../components/PageUrls";
 import LogoutUser from "../components/user-actions/LogoutUser";
 
+import calculetsUser from "../components/user-actions/calculetsUser";
+import useClickOutside from "../user-hooks/useClickOutside";
+/**
+ * header와 categoryBar 박스를 감싸는 스타일 정의
+ */
+const Wrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
 // 상단 고정
 const Positioner = styled.div`
   position: fixed;
@@ -80,28 +89,54 @@ function Contents({ onIsOpen, onLogin, onLogout }) {
  *
  */
 function Header() {
-  const navigate = useNavigate();
   /**
-   * 카테고리바 animation의 mode 제어 state
-   * true : 열 때 slideIn / false : 닫을 때 slideInOut
+   * 카테고리바 영역을 ref로 지정
+   * categoryBarRef
+   * -> elementRef : 카테고리 바 영역 ref
+   * -> isActive : 카테고리바 열 때 slideIn, 닫을 때 slideInOut 으로 작동할 수 있도록 animation의 mode를 제어하는 state
+   * -> setIsActive : 카테고리바 활성화 관리 함수
    */
-  const [aniMode, setAniMode] = useState(false);
+  const categoryBarRef = useClickOutside();
+  /**
+   * 카테고리바 정보 (대분류, 소분류에 따른 계산기) 서버에서 불러오기
+   * 페이지 렌더시 한 번만
+   */
+  const [contentsCategory, setContentsCategory] = useState(null);
+  useEffect(() => {
+    calculetsUser().then((res) => {
+      // 카테고리바 정보 불러오기 성공
+      if (res.success) setContentsCategory(res.calculetLists);
+    });
+  }, []);
 
-  // 스크롤의 위치
+  /**
+   * 스크롤의 위치
+   */
   const [scrollPosition, setScrollPosition] = useState(0);
-  // 색 변화 상태
+  /**
+   * header의 색 변화 상태
+   */
   const [isChange, setIsChange] = useState(false);
-  // 스크롤 위치 변화에 따라 'scrollPosition' 변화와 'isChange' 변화
+  /**
+   * 스크롤 위치 변화에 따라 'scrollPosition' 변화와 'isChange' 변화
+   */
   function updateScroll() {
-    setScrollPosition(window.scrollY || document.documentElement.scrollTop);
+    setScrollPosition(window.pageYOffset);
     if (scrollPosition < 10) setIsChange(false);
     else setIsChange(true);
   }
-  // 스크롤 위치 감지
+  /**
+   * 스크롤 위치 변화 감지
+   */
   useEffect(() => {
     window.addEventListener("scroll", updateScroll);
-  });
-
+  }, [scrollPosition]);
+  /**
+   * 로그인 페이지로 이동 이벤트
+   */
+  function onLogin() {
+    window.location.href = "/login";
+  }
   /**
    * 로그아웃
    */
@@ -118,16 +153,22 @@ function Header() {
   }
 
   return (
-    <>
+    <Wrapper ref={categoryBarRef.elementRef}>
       <Positioner isChange={isChange}>
         <Contents
-          onIsOpen={() => setAniMode(!aniMode)}
-          onLogin={() => navigate(URL.LOGIN)}
+          onIsOpen={() => categoryBarRef.setIsActive(!categoryBarRef.isActive)}
+          onLogin={onLogin}
           onLogout={onHandlerLogout}
         />
       </Positioner>
-      <CategoryBar contents={CategoryItems} aniMode={aniMode}></CategoryBar>
-    </>
+      {contentsCategory && (
+        <CategoryBar
+          contents={contentsCategory}
+          isActive={categoryBarRef.isActive}
+          setIsActive={categoryBarRef.setIsActive}
+        />
+      )}
+    </Wrapper>
   );
 }
 

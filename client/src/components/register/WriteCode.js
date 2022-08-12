@@ -15,11 +15,15 @@ import { CalculetCss } from "./CalculetString";
 
 const WrapperSrcCode = styled.div`
   width: 713px;
+  // 임시 높이
+  min-height: 486px;
   height: 100%;
 `;
 
 const WrapperManual = styled.div`
   width: 100%;
+
+  // 임시 높이
   height: 486px;
 `;
 
@@ -66,14 +70,6 @@ function WriteCode(props) {
     },
   ];
 
-  /**
-   * 모나코 에디터 값 관리하는 mount 함수
-   * @param {*} editor
-   */
-  function onMount(editor) {
-    props.editorRef.current = editor;
-  }
-
   return (
     <FlexColumnLayout gap={styles.styleLayout.basic900}>
       <BigTitle content="계산기 코드 입력하기" />
@@ -85,8 +81,7 @@ function WriteCode(props) {
               <CodeEditor
                 defaultLanguage="html"
                 defaultValue={props.srcCode}
-                onMount={onMount}
-                onChange={props.changeSrcCode}
+                setData={props.setSrcCode}
               />
             </WrapperSrcCode>
             <WrapperPannel>
@@ -99,14 +94,13 @@ function WriteCode(props) {
             <CodeEditor
               defaultLanguage="markdown"
               defaultValue={props.manual}
-              onMount={onMount}
-              onChange={props.changeManual}
+              setData={props.setManual}
             />
           </WrapperManual>
         )}
         {item === "미리 보기" && (
           <CalculetBlock
-            srcCode={props.srcCode + `<style>${CalculetCss}</style>`}
+            srcCode={`<style>${CalculetCss}</style>` + props.srcCode}
             manual={props.manual}
           />
         )}

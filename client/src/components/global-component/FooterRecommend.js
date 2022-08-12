@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { BtnWhite } from "../atom-components/ButtonTemplate";
 import TextWhite from "../atom-components/TextWhite";
 import { ContentLayout, FlexColumnLayout, FlexRowLayout } from "../Layout";
+import URL from "../PageUrls";
 import styles from "../styles";
 import Recommend from "./Recommend";
 
@@ -14,12 +16,13 @@ const Wrapper = styled(ContentLayout)`
 `;
 
 function FooterRecommend() {
+  const navigate = useNavigate();
   return (
     <Wrapper>
       <FlexColumnLayout gap="20px">
         <TextWhite text="다른 계산기들도 있어요 🤗" />
         <FlexRowLayout>
-          <BtnWhite text="더보기" />
+          <BtnWhite text="더보기" onClick={() => navigate(URL.CALCULET_LIST)} />
         </FlexRowLayout>
         <Recommend />
       </FlexColumnLayout>
