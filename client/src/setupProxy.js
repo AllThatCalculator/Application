@@ -11,4 +11,11 @@ module.exports = function (app) {
       },
     })
   );
+  app.use(
+    "/file",
+    createProxyMiddleware({
+      target: "http://nginx:80",
+      changeOrigin: true,
+    })
+  );
 };

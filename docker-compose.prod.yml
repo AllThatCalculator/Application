@@ -10,6 +10,7 @@ services:
     volumes:
       - /client/node_modules
       - ./client/:/client
+      - ./client/src/css:/static-files/css
     env_file: .env
     ports:
       - 8080:8080
