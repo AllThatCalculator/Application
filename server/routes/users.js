@@ -13,8 +13,8 @@ const router = express.Router();
 /**
  * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
  */
-router.use(express.urlencoded({ extended: true }));
-router.use(express.json());
+router.use(express.urlencoded({ limit: "1mb", extended: true }));
+router.use(express.json({ limit: "1mb" }));
 router.use(cookieParser());
 
 /**

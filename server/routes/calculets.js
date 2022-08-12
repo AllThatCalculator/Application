@@ -114,7 +114,13 @@ router.get("/:id", (req, res) => {
           const manual = bufferToString(calculetInfo.manual);
 
           // 제작자 이미지를 base64string 으로 변환 + src 생성
-          const contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
+          let contributorImgSrc = null;
+          if (userInfo.profile_img === null) {
+            // 기본 이미지인 경우
+            contributorImgSrc = "/img/defaultProfile.png";
+          } else {
+            contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
+          }
 
           calculet = {
             id: calculetInfo.id,

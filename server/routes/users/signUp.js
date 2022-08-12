@@ -14,11 +14,22 @@ exports.signUp = (req, res) => {
           // 암호화된 비밀번호로 저장
           pw = hash;
 
+          // 프로필 이미지 blob으로 변경
+          // 프론트엔드에서 전달받은 base64String
+          let base64String = req.body.profileImg;
+          // blob으로 변경해서 저장할 변수
+          let blobImage = null;
+          // 기본 이미지가 아닌 경우에만 blob으로 decode
+          if (base64String !== "/img/defaultProfile.png") {
+            blobImage = base64String.split(";base64,").pop();
+            blobImage = Buffer.from(blobImage, "base64");
+          }
+
           // 데이터 삽입
           const userInfoData = [
             req.body.email,
             req.body.userName,
-            req.body.profileImg,
+            blobImage,
             req.body.bio,
             req.body.sex,
             req.body.birthdate,

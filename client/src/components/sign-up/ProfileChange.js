@@ -21,11 +21,6 @@ const Wrapper = styled(FlexColumnLayout)`
  */
 function ProfileChange({ profileImg, setProfileImg }) {
   /**
-   * 인자로 넘어온 profileImg은 DB에 Blob로 넘기기 위한 state
-   * 그래서, 인코딩하여 미리보기를 위한 userImg state 선언
-   */
-  const [userImg, setUserImg] = useState(profileImg);
-  /**
    * 사용자가 프로필 사진 변경했는지 여부
    */
   const [isUserImg, setIsUserImg] = useState(false);
@@ -44,7 +39,6 @@ function ProfileChange({ profileImg, setProfileImg }) {
   function removeImage() {
     setIsUserImg(false);
     setProfileImg("/img/defaultProfile.png");
-    setUserImg("/img/defaultProfile.png");
   }
 
   /**
@@ -75,9 +69,7 @@ function ProfileChange({ profileImg, setProfileImg }) {
     return new Promise((resolve) => {
       reader.onload = () => {
         // 미리보기를 위한 갱신
-        setUserImg(reader.result);
-        // DB 에 BLOB으로 넘겨주기 위해 base64 Decode 갱신
-        setProfileImg(Buffer.from(reader.result, "base64").toString());
+        setProfileImg(reader.result);
         resolve();
       };
     });
@@ -96,7 +88,7 @@ function ProfileChange({ profileImg, setProfileImg }) {
   return (
     <FlexRowLayout>
       <Wrapper gap="10px">
-        <StyledCircleImg src={userImg} width="64px" height="64px" />
+        <StyledCircleImg src={profileImg} width="64px" height="64px" />
         {!isUserImg ? (
           <BtnText
             text="이미지 추가"
