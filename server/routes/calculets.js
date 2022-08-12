@@ -292,28 +292,26 @@ router.get("/:id", (req, res) => {
 
         // 계산기 정보 팝업에 들어가는 부분 객체로 묶기
         let calculetInfoPopup = null;
+
+        // 업데이트 로그 가공
         let updateLog = [];
         if (calculetUpdateLog.length > 0) {
-          let previous = DateTimeToString(calculetUpdateLog[0].update_date);
-          let message = [calculetUpdateLog[0].message];
           // 날짜 같은 계산기 메세지 묶기
-          for (let i = 1; i < calculetUpdateLog.length; i++) {
-            const cur = DateTimeToString(calculetUpdateLog[i].update_date);
-            if (previous === cur) {
-              message.push(calculetUpdateLog[i].message);
+          const dictUpdateLog = {};
+          for (const log of calculetUpdateLog) {
+            const date = DateTimeToString(log.update_date);
+            const message = [log.message];
+            if (dictUpdateLog[date]) {
+              dictUpdateLog[date].push(message);
             } else {
-              previous = cur;
-              message = [calculetUpdateLog[i].message];
-              updateLog.push({
-                updateDate: previous,
-                message: message,
-              });
+              dictUpdateLog[date] = [message];
             }
           }
-          updateLog.push({
-            updateDate: previous,
-            message: message,
-          });
+
+          // 객체로 묶기
+          for (const key in dictUpdateLog) {
+            updateLog.push({ updateDate: key, message: dictUpdateLog[key] });
+          }
         }
 
         if (calculetInfo && calculetCount) {
