@@ -1,9 +1,7 @@
-import axios from "axios";
-import { useEffect } from "react";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ApproachIframeTag from "../../utils/ApproachIframeTag";
 import { BtnIndigo } from "../atom-components/ButtonTemplate";
+import recordCalculet from "../user-actions/recordCalculet";
 
 /**
  * 계산 이력 저장 버튼 컴포넌트
@@ -14,41 +12,17 @@ function RecordCalculetHistory({ calculetId }) {
   // 페이지 넘기기 위해 필요한 navigate
   const navigate = useNavigate();
 
-  // 현재 로그인한 사용자 이메일
-  const [userEmail, setUserEmail] = useState(null);
-
-  /**
-   * 백엔드에서 사용자 정보 불러오는 함수
-   */
-  async function loadUserEmail() {
-    try {
-      await axios.get(`/users/me`).then((response) => {
-        setUserEmail(response.data.userEmail);
-      });
-    } catch (error) {}
-  }
-
-  /**
-   * 현재 로그인한 사용자 계정 가져오기
-   */
-  useEffect(() => {
-    loadUserEmail();
-  }, []);
-
   /**
    * 이력 저장 백엔드로 요청
    */
-  async function recordCalculetHistory(data) {
-    try {
-      await axios.post("/record", data);
-    } catch (error) {
-      switch (error.response.status) {
-        case 401:
-          navigate("/login");
-        default:
-          break;
+  function recordCalculetHistory(data) {
+    const request = recordCalculet(data);
+    request.then((res) => {
+      if (res === 401) {
+        // 인증 실패
+        navigate("/login");
       }
-    }
+    });
   }
 
   /**
@@ -79,7 +53,6 @@ function RecordCalculetHistory({ calculetId }) {
     // 오브젝트 최종 합치기
     // (임시) userId -> userEmail로 변경 해야함!
     const data = {
-      userId: userEmail,
       calculetId: calculetId,
       inputObj: inputObj,
       outputObj: outputObj,
