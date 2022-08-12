@@ -45,7 +45,7 @@ const Positioner = styled.div`
   z-index: 101;
   ${styles.styleEffect.opacity100};
   animation: ${(props) =>
-    props.aniMode === true
+    props.isActive === true
       ? css`
           ${slideIn}
         `
@@ -71,10 +71,10 @@ const StyledIndent = styled.div`
  * -> categoryMain : 대분류
  * -> categorySub : <배열> 소분류, 계산기들
  *    -> name: 소분류 이름, calculets: 계산기들
- * aniMode : 카테고리바 열 때 slideIn, 닫을 때 slideInOut 으로 작동할 수 있도록 animation의 mode를 제어하는 state
- * setAniMode : aniMode 관리 함수
+ * isActive : 카테고리바 열 때 slideIn, 닫을 때 slideInOut 으로 작동할 수 있도록 animation의 mode를 제어하는 state
+ * setIsActive : isActive 관리 함수
  */
-function CategoryBar({ contents, aniMode, setAniMode }) {
+function CategoryBar({ contents, isActive, setIsActive }) {
   const navigate = useNavigate();
   // < 카테고리 내용 >
   // 대분류 개수
@@ -118,7 +118,7 @@ function CategoryBar({ contents, aniMode, setAniMode }) {
         isCenter={false}
         onClick={() => {
           navigate(CALCULET + calculet.id);
-          setAniMode(false);
+          setIsActive(false);
         }}
       />
     );
@@ -178,7 +178,7 @@ function CategoryBar({ contents, aniMode, setAniMode }) {
     );
   }
   return (
-    <Positioner aniMode={aniMode}>
+    <Positioner isActive={isActive}>
       <FlexColumnLayout gap="3px">
         {contents.map((main, mainIndex) =>
           handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)

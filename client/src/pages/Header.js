@@ -132,8 +132,7 @@ function Header() {
       {contentsCategory && (
         <CategoryBar
           contents={contentsCategory}
-          aniMode={categoryBarRef.isActive}
-          setAniMode={categoryBarRef.setIsActive}
+          isActive={categoryBarRef.isActive}
           setIsActive={categoryBarRef.setIsActive}
         />
       )}
