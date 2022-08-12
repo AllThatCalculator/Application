@@ -49,8 +49,8 @@ components:
         srcCode: <html></html>
         manual: "### markdown"
         description: 계산기 한 줄 설명
-        categoryMain: 1
-        categorySub: 2
+        categoryMainId: 1
+        categorySubId: 2
         email: bsa0322@ewhain.net
     calculet:
       type: object
