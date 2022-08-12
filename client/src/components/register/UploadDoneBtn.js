@@ -16,7 +16,6 @@ const Wrapper = styled(FlexColumnLayout)`
 
 /**
  * 계산기 저작 등록 완료 버튼 컴포넌트
- * (임시) 등록 완료하면 console에 등록한 계산기 정보들 찍히도록
  * @param {*} props
  * props: DB로 넘겨야 하는 계산기 관련 정보들
  */

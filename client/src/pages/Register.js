@@ -50,15 +50,6 @@ function Register() {
   const [srcCode, setSrcCode] = useState("<!DOCTYPE html>");
   const [manual, setManual] = useState("### write detail!");
 
-  // atc-css 적용한 최종 srcCode
-  const [finalSrcCode, setFinalSrcCode] = useState(null);
-
-  // 사용자가 입력한 srcCode에 우리 코드 붙이기
-  useEffect(
-    () => setFinalSrcCode(`<style>${CalculetCss}</style>` + srcCode),
-    [srcCode]
-  );
-
   /**
    * 계산기 대분류 change 함수
    * - value에 먼저 접근한 후, value에 맞는 name을 찾아서 저장
@@ -180,7 +171,6 @@ function Register() {
         )}
         <WriteCode
           srcCode={srcCode}
-          previewSrcCode={finalSrcCode}
           manual={manual}
           setSrcCode={setSrcCode}
           setManual={setManual}
@@ -192,7 +182,7 @@ function Register() {
             categoryMainId={categoryMainId}
             categorySubId={categorySubId}
             email={userInfo.email}
-            srcCode={finalSrcCode}
+            srcCode={`<style>${CalculetCss}</style>` + srcCode}
             manual={manual}
           />
         )}
