@@ -163,7 +163,7 @@ function CalculetHeader({
               icon="Flag"
               number={statistics.reportCnt}
               isClicked={false}
-              onClick={() => console.log("move to report page")}
+              onClick={() => null}
             />
           </WrapperGroup>
         </WrapperLine>
