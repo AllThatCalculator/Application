@@ -2,27 +2,71 @@ version: "3"
 
 services:
   frontend:
+    container_name: frontend
     stdin_open: true
     build:
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     volumes:
-      - ./client/:/client
       - /client/node_modules
-    networks:
-      - app-tier
-    tty: true
-
-  nginx:
-    build: ./nginx
+      - ./client/:/client
+      - ./client/src/css:/static-files/css
+    env_file: .env
     ports:
-      - "8080:8080"
+      - 8080:8080
     networks:
       - app-tier
     depends_on:
-      - frontend
+      - backend
+    tty: true
+
+  backend:
+    container_name: backend
+    build:
+      context: ./server
+      dockerfile: Dockerfile.prod
+    env_file: .env
+    ports:
+      - 5000:5000
     volumes:
-      - ./client/:/client
+      - /server/node_modules
+      - ./server/:/server
+    networks:
+      - app-tier
+    restart: always
+    depends_on:
+      - mariadb
+      - mongodb
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:10
+    ports:
+      - 3306:3306
+    volumes:
+      - ./database/mariaDB/conf.d:/etc/mysql/conf.d
+      - ./database/mariaDB/data:/var/lib/mysql
+      - ./database/mariaDB/initdb.d:/docker-entrypoint-initdb.d:ro
+    env_file: .env
+    environment:
+      TZ: Asia/Seoul
+    networks:
+      - app-tier
+    restart: always
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:5.0.9
+    ports:
+      - 27017:27017
+    env_file: .env
+    volumes:
+      - ./database/mongoDB/data:/data/db
+      - ./database/mongoDB/initdb.d:/docker-entrypoint-initdb.d:ro
+    networks:
+      - app-tier
+    restart: always
+    command: mongod -quiet
 
 networks:
   app-tier:

@@ -6,7 +6,7 @@ services:
     stdin_open: true
     build:
       context: ./client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file: .env
     volumes:
       - /client/node_modules
@@ -20,11 +20,24 @@ services:
     depends_on:
       - backend
 
+  nginx:
+    container_name: nginx
+    build: ./nginx-dev
+    ports:
+      - 80:80
+    volumes:
+      - ./client/src/css:/src/css
+    depends_on:
+      - frontend
+    networks:
+      - app-tier
+    restart: always
+
   backend:
     container_name: backend
     build:
       context: ./server
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file: .env
     ports:
       - 5000:5000
@@ -44,7 +57,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - ./database/mariaDB/conf.d:/etc/mysql/conf.d
+      - ./database/mariaDB/conf.d:/etc/mysql/conf.d:ro
       - ./database/mariaDB/data:/var/lib/mysql
       - ./database/mariaDB/initdb.d:/docker-entrypoint-initdb.d:ro
     env_file: .env
@@ -66,6 +79,7 @@ services:
     networks:
       - app-tier
     restart: always
+    command: mongod -quiet
 
 networks:
   app-tier:
