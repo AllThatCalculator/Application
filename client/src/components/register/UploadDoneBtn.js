@@ -36,7 +36,7 @@ function UploadDoneBtn(props) {
   async function registerCalculet() {
     if (checkBeforeUpload()) {
       try {
-        await axios.post("/calculets/", props).then((response) => {
+        await axios.post("/api/calculets/", props).then((response) => {
           // 안내 팝업창
           navigate("/");
         });
