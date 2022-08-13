@@ -7,7 +7,7 @@ import axios from "axios";
 async function AuthUser() {
   let data;
   try {
-    await axios.get("/users/me").then((response) => {
+    await axios.get("/api/users/me").then((response) => {
       data = response.data;
     });
     return data;

@@ -8,7 +8,7 @@ import axios from "axios";
 async function loginUser(dataToSubmit = {}) {
   let data;
   try {
-    await axios.post(`/users/login`, dataToSubmit).then((response) => {
+    await axios.post(`/api/users/login`, dataToSubmit).then((response) => {
       data = response.data;
     });
     return data;

@@ -311,9 +311,7 @@ router.get("/:id", async (req, res) => {
       statistics === null ||
       calculetInfoPopup === null
     ) {
-      res
-        .status(404)
-        .send({ success: false, message: "calculet was not found" });
+      res.status(404).send({ success: false, message: "calculet not found" });
     } else {
       res.status(200).send({
         success: true,

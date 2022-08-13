@@ -27,7 +27,7 @@ const AppRouter = () => {
         <Route path={URL.SEARCH} element={<Search />} />
         <Route path={URL.CALCULET_LIST} element={<CalculetList />} />
       </Routes>
-      <BookmarkBar />
+      {/* <BookmarkBar /> */}
     </BrowserRouter>
   );
 };

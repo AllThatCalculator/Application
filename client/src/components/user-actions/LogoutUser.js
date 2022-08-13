@@ -6,7 +6,7 @@ import axios from "axios";
 async function LogoutUser() {
   let data;
   try {
-    await axios.get("/users/logout").then((response) => {
+    await axios.get("/api/users/logout").then((response) => {
       data = response.data;
     });
     return data;

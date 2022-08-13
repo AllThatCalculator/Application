@@ -9,7 +9,7 @@ import axios from "axios";
 async function calculetsUser() {
   let data;
   try {
-    await axios.get(`/calculets/`).then((response) => {
+    await axios.get(`/api/calculets/`).then((response) => {
       data = response.data;
     });
     return data;

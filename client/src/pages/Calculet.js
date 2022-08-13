@@ -104,7 +104,7 @@ function Calculet() {
           setErrorText(error.response.data.message);
           break;
         default:
-          setErrorText("서버가 잠시 중단되었습니다.");
+          setErrorText("404 NOT FOUND");
           break;
       }
     }
