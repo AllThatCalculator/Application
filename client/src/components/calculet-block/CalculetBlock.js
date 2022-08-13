@@ -29,7 +29,9 @@ function CalculetBlock({ srcCode, manual, calculetId }) {
   return (
     <Wrapper>
       <iframe
-        srcDoc={srcCode}
+        srcDoc={
+          `<link href="/file/css/calculet.css" rel="stylesheet">` + srcCode
+        }
         style={{ width: "100%", border: "none", overflow: "auto" }}
         onLoad={(e) => adjustHeight(e)}
         scrolling="no"

@@ -5,7 +5,6 @@ import { WriteInform } from "../components/register/WriteInform";
 import UploadDoneBtn from "../components/register/UploadDoneBtn";
 import { useState, useEffect } from "react";
 import { ContentLayout, White300Layout } from "../components/Layout";
-import { CalculetCss } from "../components/register/CalculetString";
 import axios from "axios";
 import useInput from "../user-hooks/UseInput";
 import { useNavigate } from "react-router-dom";
@@ -107,7 +106,7 @@ function Register() {
    */
   async function loadUserEmail() {
     try {
-      await axios.get(`/users/me`).then((response) => {
+      await axios.get(`/api/users/me`).then((response) => {
         requestUserInfo(response.data.userEmail);
       });
     } catch (error) {
@@ -190,7 +189,7 @@ function Register() {
             categoryMainId={categoryMainId}
             categorySubId={categorySubId}
             email={userInfo.email}
-            srcCode={`<style>${CalculetCss}</style>` + srcCode}
+            srcCode={srcCode}
             manual={manual}
           />
         )}

@@ -46,9 +46,7 @@ router.post("/", auth, (req, res) => {
   newRecord
     .save()
     .then(() => {
-      res
-        .status(201)
-        .send({ message: "calculet registration request completed." });
+      res.status(201).send({ message: "Record saved" });
     })
     .catch(() => res.status(400).send({ message: "Failed to save record." }));
 });

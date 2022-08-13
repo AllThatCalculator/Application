@@ -11,7 +11,6 @@ import {
   ResponsiveTabletLayout,
 } from "../Layout";
 import { CustomPanel } from "./CustomPanel";
-import { CalculetCss } from "./CalculetString";
 
 const WrapperSrcCode = styled.div`
   width: 713px;
@@ -99,10 +98,7 @@ function WriteCode(props) {
           </WrapperManual>
         )}
         {item === "미리 보기" && (
-          <CalculetBlock
-            srcCode={`<style>${CalculetCss}</style>` + props.srcCode}
-            manual={props.manual}
-          />
+          <CalculetBlock srcCode={props.srcCode} manual={props.manual} />
         )}
       </FlexRowLayout>
     </FlexColumnLayout>
