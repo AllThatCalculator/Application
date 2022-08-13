@@ -30,7 +30,13 @@ const StyledHr = styled.div`
   background-color: ${styles.styleColor.blue50};
 `;
 
-function CalculetHeader({ title, contributor, contributorImgSrc, statistics }) {
+function CalculetHeader({
+  title,
+  contributor,
+  contributorImgSrc,
+  statistics,
+  info,
+}) {
   /**
    * 좋아요 관련 정보
    * {int} number: 해당 계산기의 좋아요 수
@@ -106,46 +112,13 @@ function CalculetHeader({ title, contributor, contributorImgSrc, statistics }) {
   function onModalClose() {
     setModalOpen(false);
   }
-  /**
-   * 계산기 정보 팝업창에 들어갈 내용
-   */
-  const contents = {
-    profile_img: "/img/ori.png",
-    contributor_id: "bsa0322",
-    calculation_cnt: "1,000,000",
-    user_cnt: "12,345",
-    title: "사칙연산 계산기",
-    category_main: "수학",
-    category_sub: "계산",
-    birthday: "2022.06.24",
-    update_log: [
-      { update_date: "2022.06.26", message: ["버그수정", "내용 수정"] },
-      { update_date: "2022.06.28", message: [] },
-      {
-        update_date: "2022.06.29",
-        message: ["오류 수정", "내용 수정", "asdfasdf"],
-      },
-      {
-        update_date: "2022.06.30",
-        message: ["오류 수정", "내용 수정", "asdfasdf"],
-      },
-      {
-        update_date: "2022.07.09",
-        message: ["오류 수정", "내용 수정", "asdfasdf"],
-      },
-      {
-        update_date: "2022.10.05",
-        message: ["오류 수정", "내용 수정", "asdfasdf"],
-      },
-    ],
-  };
 
   return (
     <>
       {modalOpen && (
         <Modal
           onClick={onModalClose}
-          contents={<ModalCalculetInfo info={contents} />}
+          contents={<ModalCalculetInfo info={info} />}
         />
       )}
       <WrapperBox gap="10px">

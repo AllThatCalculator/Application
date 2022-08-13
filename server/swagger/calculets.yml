@@ -12,6 +12,8 @@ components:
           $ref: "#components/schemas/calculet"
         statistics:
           $ref: "#components/schemas/statistics"
+        info:
+          $ref: "#components/schemas/calculetInfoPopup"
     getCalculetLists:
       type: object
       properties:
@@ -107,6 +109,45 @@ components:
       type: array
       items:
         type: object
+    calculetInfoPopup:
+      type: object
+      properties:
+        profileImg:
+          type: string
+          description: 제작자 프로필 이미지 소스
+        contributorEmail:
+          type: string
+          description: 제작자 이메일
+        calculationCnt:
+          type: integer
+          description: 누적 연산 수
+        userCnt:
+          type: integer
+          description: 누적 사용자 수
+        title:
+          type: string
+          description: 계산기 제목
+        categoryMain:
+          type: string
+          description: 계산기 대분류
+        categorySub:
+          type: string
+          description: 계산기 소분류
+        birthday:
+          type: string
+          description: 계산기 등록일
+        updateLog:
+          type: object
+          description: 업데이트 로그
+          properties:
+            updateDate:
+              type: string
+              description: 업데이트 날짜
+            message:
+              type: array
+              items:
+                type: string
+                description: 업데이트 메시지
     postResult:
       type: object
       properties:

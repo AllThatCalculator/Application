@@ -7,6 +7,7 @@ const {
   bufferToString,
   bufferToImageSrc,
 } = require("../utils/bufferConverter");
+const { DateTimeToString } = require("../utils/StringConverter");
 
 /**
  * @swagger
@@ -171,19 +172,36 @@ router.get("/:id", async (req, res) => {
 
   // 제작자 사진
   const userInfoQuery = `select profile_img from user_info where email = (select contributor_email from calculet_info where id=${req.params.id});`;
+
+  // 계산기 업데이트 로그
+  const calculetUpdateLogQuery = `select update_date, message from calculet_update_log where calculet_id=${req.params.id};`;
+
+  // 카테고리 대분류
+  const categoryMainQuery = `select * from category_main where id < 99999 order by id;`;
+
+  // 카테고리 소분류
+  const categorySubQuery = `select * from category_sub order by id;`;
+
   try {
     const rows = await mariadb.query(
       calculetInfoQuery +
         calculetStatisticsQuery +
         calculetCountQuery +
         userCalculetQuery +
-        userInfoQuery
+        userInfoQuery +
+        calculetUpdateLogQuery +
+        categoryMainQuery +
+        categorySubQuery
     );
+
     const calculetInfo = rows[0][0][0];
     const calculetStatistics = rows[0][1][0];
     const calculetCount = rows[0][2][0];
     let userCalculet = rows[0][3][0];
     const userInfo = rows[0][4][0];
+    const calculetUpdateLog = rows[0][5];
+    const categoryMain = rows[0][6];
+    const categorySub = rows[0][7];
 
     // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
     if (!userCalculet) {
@@ -210,14 +228,13 @@ router.get("/:id", async (req, res) => {
       } else {
         contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
       }
+
       calculet = {
         id: calculetInfo.id,
         title: calculetInfo.title,
         srcCode: srcCode,
         manual: manual,
         description: calculetInfo.description,
-        categoryMain: calculetInfo.category_main,
-        categorySub: calculetInfo.category_sub,
         contributor: calculetInfo.contributor_email,
         contributorImgSrc: contributorImgSrc,
       };
@@ -236,8 +253,64 @@ router.get("/:id", async (req, res) => {
       };
     }
 
+    // 계산기 정보 팝업에 들어가는 부분 객체로 묶기
+    let calculetInfoPopup = null;
+
+    // 업데이트 로그 가공
+    let updateLog = [];
+    if (calculetUpdateLog.length > 0) {
+      // 날짜 같은 계산기 메세지 묶기
+      const dictUpdateLog = {};
+      for (const log of calculetUpdateLog) {
+        const date = DateTimeToString(log.update_date);
+        const message = [log.message];
+        if (dictUpdateLog[date]) {
+          dictUpdateLog[date].push(message);
+        } else {
+          dictUpdateLog[date] = [message];
+        }
+      }
+
+      // 객체로 묶기
+      for (const key in dictUpdateLog) {
+        updateLog.push({ updateDate: key, message: dictUpdateLog[key] });
+      }
+    }
+
+    if (calculetInfo && calculetCount) {
+      // 제작자 이미지를 base64string 으로 변환 + src 생성
+      const contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
+
+      const mainIdx = calculetInfo.category_main_id;
+      const subIdx = calculetInfo.category_sub_id;
+      let main = "기타";
+      if (mainIdx < 99999) {
+        main = categoryMain[calculetInfo.category_main_id].main;
+      }
+      let sub = "기타";
+      if (subIdx < 99999) {
+        sub = categorySub[calculetInfo.category_sub_id].sub;
+      }
+
+      calculetInfoPopup = {
+        profileImg: contributorImgSrc,
+        contributorEmail: calculetInfo.contributor_email,
+        calculationCnt: calculetCount.calculation_cnt,
+        userCnt: calculetCount.user_cnt,
+        title: calculetInfo.title,
+        categoryMain: main,
+        categorySub: sub,
+        birthday: DateTimeToString(calculetInfo.birthday),
+        updateLog: updateLog,
+      };
+    }
+
     // 계산기 잘 불러왔는지 확인
-    if (calculet === null || statistics === null) {
+    if (
+      calculet === null ||
+      statistics === null ||
+      calculetInfoPopup === null
+    ) {
       res
         .status(404)
         .send({ success: false, message: "calculet was not found" });
@@ -246,6 +319,7 @@ router.get("/:id", async (req, res) => {
         success: true,
         calculet: calculet,
         statistics: statistics,
+        info: calculetInfoPopup,
       });
     }
   } catch (err) {

@@ -30,8 +30,8 @@ app.use(cookieParser());
 /**
  * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
  */
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ limit: "1mb", extended: true }));
+app.use(express.json({ limit: "1mb" }));
 
 /**
  * API 문서 path 등록하기
