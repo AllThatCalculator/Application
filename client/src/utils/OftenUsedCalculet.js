@@ -21,7 +21,7 @@ function loadOftenUsedCalculet() {
   const previousCalculet = localStorage.getItem("previousCalculet");
 
   // 만약 이전 계산기의 연속 횟수가 기준에 도달했다면 자주 쓰는 계산기 값 변경
-  if (Number(continueCnt) === STANDARD_CNT) {
+  if (Number(continueCnt) >= STANDARD_CNT) {
     localStorage.setItem("oftenCalculet", previousCalculet);
   }
 
