@@ -49,12 +49,9 @@ function CalculetItemList({
       scrollY < locationRef(index + 1)
     );
   }
-  function test() {
+  useEffect(() => {
     for (let i = 0; i < contentsShortcut.length; i++)
       if (checkScroll(i)) setIsActive(i);
-  }
-  useEffect(() => {
-    test();
   }, [scrollPosition]);
 
   /**
