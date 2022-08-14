@@ -8,8 +8,8 @@ import { ContentLayout, White300Layout } from "../components/Layout";
 import axios from "axios";
 import useInput from "../user-hooks/UseInput";
 import { useNavigate } from "react-router-dom";
-import loadUserInfo from "../components/user-actions/userInfo";
-import calculetCategory from "../components/user-actions/calculetCategory";
+import loadUserInfo from "../user-actions/userInfo";
+import calculetCategory from "../user-actions/calculetCategory";
 
 /**
  * ContentLayout을 상속하는 RegisterLayout

@@ -2,7 +2,7 @@ import {
   ExplanationEmail,
   ExplanationInputBox,
 } from "../global-component/Explanation";
-import { OPTIONS_EMAIL_ADDRESS } from "../register/Option";
+import { OPTIONS_EMAIL_ADDRESS } from "./constants";
 import { InformBox } from "../register/WriteInform";
 /**
  * 회원가입 1번째 정보입력창

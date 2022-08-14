@@ -1,7 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import styles from "../styles";
 import { BtnSmallIcon } from "../atom-components/ButtonIcon";
-import { FlexColumnLayout, FlexRowLayout } from "../Layout";
+import { FlexColumnLayout } from "../Layout";
 
 //스타일드 애니메이션
 const slideDown = keyframes`

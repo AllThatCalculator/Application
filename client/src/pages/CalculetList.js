@@ -10,7 +10,6 @@ import {
 import styles from "../components/styles";
 import BigTitle from "../components/atom-components/BigTitle";
 import CalculetItemList from "../components/calculet-list/CalculetItemList";
-import { CALCULETS } from "../components/calculet-list/Calculets";
 import Shortcut from "../components/calculet-list/Shortcut";
 import UseMoveScroll from "../user-hooks/UseMoveScroll";
 import { useEffect } from "react";

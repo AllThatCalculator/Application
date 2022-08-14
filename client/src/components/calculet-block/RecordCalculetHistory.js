@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import ApproachIframeTag from "../../utils/ApproachIframeTag";
 import { BtnIndigo } from "../atom-components/ButtonTemplate";
-import recordCalculet from "../user-actions/recordCalculet";
+import recordCalculet from "../../user-actions/recordCalculet";
 
 /**
  * 계산 이력 저장 버튼 컴포넌트

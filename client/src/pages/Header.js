@@ -8,13 +8,11 @@ import CategoryBar from "../components/global-component/CategoryBar";
 import { useState } from "react";
 import { useEffect } from "react";
 import { FlexRowLayout } from "../components/Layout";
-import { CategoryItems } from "../components/header/CategoryItems";
-import { useNavigate } from "react-router-dom";
-import AuthUser from "../components/user-actions/AuthUser";
+import AuthUser from "../user-actions/AuthUser";
 import URL from "../components/PageUrls";
-import LogoutUser from "../components/user-actions/LogoutUser";
+import LogoutUser from "../user-actions/LogoutUser";
 
-import calculetsUser from "../components/user-actions/calculetsUser";
+import calculetsUser from "../user-actions/calculetsUser";
 import useClickOutside from "../user-hooks/useClickOutside";
 /**
  * header와 categoryBar 박스를 감싸는 스타일 정의

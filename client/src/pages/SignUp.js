@@ -13,9 +13,9 @@ import {
   OPTIONS_SEX,
   OPTIONS_YEAR,
   OPTIONS_MONTH,
-  fillOptionsList,
-} from "../components/sign-up/Option";
-import { OPTIONS_EMAIL_ADDRESS } from "../components/register/Option";
+} from "../components/sign-up/constants";
+import fillOptionsList from "../components/sign-up/fillOptionsList";
+import { OPTIONS_EMAIL_ADDRESS } from "../components/sign-up/constants";
 import ProfileChange from "../components/sign-up/ProfileChange";
 import WriteInformFirst from "../components/sign-up/WriteInformFirst";
 import WriteInformSecond from "../components/sign-up/WriteInformSecond";

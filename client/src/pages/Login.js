@@ -16,7 +16,7 @@ import {
 } from "../components/Layout";
 import WriteInform from "../components/login/WriteInform";
 import useInput from "../user-hooks/UseInput";
-import loginUser from "../components/user-actions/LoginUser";
+import loginUser from "../user-actions/LoginUser";
 import { useNavigate } from "react-router-dom";
 import ActGuide from "../components/sign-up/ActGuide";
 import URL from "../components/PageUrls";

@@ -6,7 +6,6 @@ import styles from "../components/styles";
 import { BtnBlue } from "../components/atom-components/ButtonTemplate";
 import CalculetHeader from "../components/calculet-block/CalculetHeader";
 
-import { ContentLayout } from "../components/Layout";
 import axios from "axios";
 import {
   updateCalculetCount,
