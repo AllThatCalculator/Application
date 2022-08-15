@@ -22,7 +22,7 @@ import WriteInformSecond from "../components/sign-up/WriteInformSecond";
 import ActGuide from "../components/sign-up/ActGuide";
 import WarningGuide from "../components/global-component/WarningGuide";
 import useInput from "../user-hooks/UseInput";
-import signUpUser from "../components/user-actions/SignUpUser";
+import signUpUser from "../user-actions/SignUpUser";
 import { useNavigate } from "react-router-dom";
 /**
  * 흰색 뒷 배경

@@ -16,9 +16,10 @@ async function signUpUser(dataToSubmit = {}) {
     switch (error.response.status) {
       case 400:
         return error.response.data;
-        break;
       case 403:
         break;
+      default:
+        return;
     }
   }
 }
