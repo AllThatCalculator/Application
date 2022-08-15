@@ -14,7 +14,7 @@ import Shortcut from "../components/calculet-list/Shortcut";
 import UseMoveScroll from "../user-hooks/UseMoveScroll";
 import { useEffect } from "react";
 import { useState } from "react";
-import calculetsUser from "../components/user-actions/calculetsUser";
+import calculetsUser from "../user-actions/calculetsUser";
 
 const BTN_CONVERSION = `단위
 변환기`;

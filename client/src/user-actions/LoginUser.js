@@ -19,6 +19,8 @@ async function loginUser(dataToSubmit = {}) {
       case 403:
       case 404:
         return error.response.data;
+      default:
+        return;
     }
   }
 }
