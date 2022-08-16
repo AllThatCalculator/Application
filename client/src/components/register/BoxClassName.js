@@ -9,8 +9,6 @@ import { useRef } from "react";
  * BoxClassName을 감싸는 최상위 컴포넌트
  */
 const Wrapper = styled.div`
-  box-sizing: border-box;
-
   display: flex;
   flex-direction: ${(props) => props.direction};
   align-items: ${(props) =>
@@ -39,6 +37,7 @@ const ClassNameWrapper = styled(FlexRowLayout)`
   align-items: center;
 
   padding: ${styles.styleLayout.basic700};
+
   width: 100%;
 
   ${styles.sytleText.text100};

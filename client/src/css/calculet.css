@@ -5,27 +5,8 @@
   margin: 0px;
 }
 
-.atc-calculet-save {
-  display: flex;
-  outline-style: none;
-  border: none;
-  background-color: #9cb2df;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 7px;
-  padding: 8px;
-  height: 30px;
-  font-family: "S-CoreDream-4Regular";
-  font-size: 14px;
-  color: #ffffff;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  transition-duration: 0.3s;
-}
-
-.atc-calculet-save:hover {
-  background-color: #6f8ac3;
-  cursor: pointer;
+*[class^="atc"] {
+  box-sizing: border-box;
 }
 
 .atc-button {
@@ -38,7 +19,7 @@
   height: 37px;
 
   font-family: "S-CoreDream-5Medium";
-  font-size: 12px;
+  font-size: 14px;
   color: #143578;
 
   /* white300 */
@@ -66,10 +47,11 @@
   padding: 12px;
   gap: 10px;
 
-  height: 21px;
+  width: 100%;
+  height: 45px;
 
   font-family: "S-CoreDream-4Regular";
-  font-size: 14px;
+  font-size: 16px;
   color: #000;
 
   /* white300 */
@@ -98,10 +80,11 @@
   padding: 12px;
   gap: 10px;
 
-  height: 21px;
+  width: 100%;
+  height: 45px;
 
   font-family: "S-CoreDream-4Regular";
-  font-size: 14px;
+  font-size: 16px;
   color: #000;
 
   /* white300 */
