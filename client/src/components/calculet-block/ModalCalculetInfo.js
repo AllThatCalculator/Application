@@ -140,15 +140,15 @@ function UpdateBox({ explain, contents, icon, color }) {
 }
 /**
  * 왼쪽 정보
- * -> 제작자 프로필 & 제작자 ID & 누적 연산 수 & 누적 사용자 수
+ * -> 제작자 프로필 & 제작자 닉네임 & 누적 연산 수 & 누적 사용자 수
  *
  * @param {info} param0
  *
  * info
- * -> profile_img : 제작자 프로필 사진
- * -> contributor_id : 제작자 ID
- * -> calculation_cnt : 누적 연산 수
- * -> user_cnt : 누적 사용자 수
+ * -> profileImg : 제작자 프로필 사진
+ * -> contributorName : 제작자 닉네임
+ * -> calculationCnt : 누적 연산 수
+ * -> useCnt : 누적 사용자 수
  */
 function LeftBox({ info }) {
   return (
@@ -156,7 +156,7 @@ function LeftBox({ info }) {
       <FlexColumnLayout gap="20px">
         <PositionerUnderCenter gap="10px">
           <StyledProfileImgBig src={info.profileImg} />
-          <StyledFont font="font100">{info.contributorEmail}</StyledFont>
+          <StyledFont font="font100">{info.contributorName}</StyledFont>
         </PositionerUnderCenter>
         <InfoBox explain="누적 연산 수" contents={info.calculationCnt} />
         <InfoBox explain="누적 사용자 수" contents={info.userCnt} />
