@@ -170,8 +170,8 @@ router.get("/:id", async (req, res) => {
   // 아직 로그인 기능 없어서 버튼 누른 회원 정보 못 얻어오므로 사람 구분은 x
   const userCalculetQuery = `select liked, bookmarked from user_calculet where calculet_id=${req.params.id};`;
 
-  // 제작자 사진
-  const userInfoQuery = `select profile_img from user_info where email = (select contributor_email from calculet_info where id=${req.params.id});`;
+  // 제작자 정보
+  const userInfoQuery = `select profile_img, user_name from user_info where email = (select contributor_email from calculet_info where id=${req.params.id});`;
 
   // 계산기 업데이트 로그
   const calculetUpdateLogQuery = `select update_date, message from calculet_update_log where calculet_id=${req.params.id};`;
@@ -213,7 +213,7 @@ router.get("/:id", async (req, res) => {
 
     // 계산기 객체로 묶기
     let calculet = null;
-    if (calculetInfo) {
+    if (calculetInfo && userInfo) {
       // 소스 코드 buffer 형태를 string 으로 변환
       const srcCode = bufferToString(calculetInfo.src_code);
 
@@ -235,7 +235,7 @@ router.get("/:id", async (req, res) => {
         srcCode: srcCode,
         manual: manual,
         description: calculetInfo.description,
-        contributor: calculetInfo.contributor_email,
+        contributor: userInfo.user_name,
         contributorImgSrc: contributorImgSrc,
       };
     }
@@ -277,7 +277,7 @@ router.get("/:id", async (req, res) => {
       }
     }
 
-    if (calculetInfo && calculetCount) {
+    if (calculetInfo && calculetCount && userInfo) {
       // 제작자 이미지를 base64string 으로 변환 + src 생성
       const contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
 
@@ -294,7 +294,7 @@ router.get("/:id", async (req, res) => {
 
       calculetInfoPopup = {
         profileImg: contributorImgSrc,
-        contributorEmail: calculetInfo.contributor_email,
+        contributorName: userInfo.user_name,
         calculationCnt: calculetCount.calculation_cnt,
         userCnt: calculetCount.user_cnt,
         title: calculetInfo.title,

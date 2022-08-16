@@ -45,7 +45,7 @@ components:
           description: 카테고리 소분류 ID
         email:
           type: string
-          description: 계산기 제작자 이메일
+          description: 계산기 제작자 닉네임
       example:
         title: 테스트 계산기
         srcCode: <html></html>
@@ -80,7 +80,7 @@ components:
           description: 카테고리 소분류
         contributor:
           type: string
-          description: 계산기 제작자 이메일
+          description: 계산기 제작자 닉네임
         contributorImgSrc:
           type: string
           description: 계산기 제작자 프로필 이미지 소스
@@ -115,9 +115,9 @@ components:
         profileImg:
           type: string
           description: 제작자 프로필 이미지 소스
-        contributorEmail:
+        contributorName:
           type: string
-          description: 제작자 이메일
+          description: 제작자 닉네임
         calculationCnt:
           type: integer
           description: 누적 연산 수
