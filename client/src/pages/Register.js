@@ -5,11 +5,11 @@ import { WriteInform } from "../components/register/WriteInform";
 import UploadDoneBtn from "../components/register/UploadDoneBtn";
 import { useState, useEffect } from "react";
 import { ContentLayout, White300Layout } from "../components/Layout";
-import axios from "axios";
 import useInput from "../user-hooks/UseInput";
 import { useNavigate } from "react-router-dom";
 import loadUserInfo from "../user-actions/userInfo";
 import calculetCategory from "../user-actions/calculetCategory";
+import AuthUser from "../user-actions/AuthUser";
 
 /**
  * ContentLayout을 상속하는 RegisterLayout
@@ -66,6 +66,7 @@ function Register() {
     setCategoryMain(main);
     setCategoryMainId(targetValue);
     setCategorySub(null);
+    setCategorySubId(null);
     if (subOptionList.length) {
       setCategorySubOption(subOptionList);
     } else {
@@ -101,17 +102,17 @@ function Register() {
   }
 
   /**
-   * (임시 - 나중에 작업 합쳐지면 user-actions에 있는 거 사용, 아니면 props로 이메일 받기?)
    * 백엔드에서 사용자 정보 불러오는 함수
    */
-  async function loadUserEmail() {
-    try {
-      await axios.get(`/api/users/me`).then((response) => {
-        requestUserInfo(response.data.userEmail);
-      });
-    } catch (error) {
-      navigate("/login");
-    }
+  function loadUserEmail() {
+    const request = AuthUser();
+    request.then((res) => {
+      if (res.success) {
+        requestUserInfo(res.userEmail);
+      } else {
+        navigate("/login");
+      }
+    });
   }
 
   /**
