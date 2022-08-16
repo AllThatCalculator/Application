@@ -370,7 +370,7 @@ router.post("/", auth, async (req, res) => {
     req.body.description,
     req.body.categoryMainId,
     req.body.categorySubId,
-    req.body.email,
+    req.email,
   ];
   try {
     const rows = await mariadb.query(sql, calculet);

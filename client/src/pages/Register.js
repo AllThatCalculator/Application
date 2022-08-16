@@ -188,7 +188,6 @@ function Register() {
             description={description.value}
             categoryMainId={categoryMainId}
             categorySubId={categorySubId}
-            email={userInfo.email}
             srcCode={srcCode}
             manual={manual}
           />
