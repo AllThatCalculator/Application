@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import WarningGuide from "../global-component/WarningGuide";
 import registerCalculetTemp from "../../user-actions/registerCalculetTemp";
+import URL from "../PageUrls";
 
 /**
  * 가장 바깥 스타일 정의
@@ -44,7 +45,7 @@ function UploadDoneBtn(props) {
       request.then((res) => {
         if (res) {
           // 안내 팝업창
-          navigate("/");
+          navigate(URL.CALCULET);
         } else {
           // 실패 팝업 처리
         }

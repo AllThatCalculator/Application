@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import loadUserInfo from "../user-actions/userInfo";
 import calculetCategory from "../user-actions/calculetCategory";
 import AuthUser from "../user-actions/AuthUser";
+import URL from "../components/PageUrls";
 
 /**
  * ContentLayout을 상속하는 RegisterLayout
@@ -110,7 +111,7 @@ function Register() {
       if (res.success) {
         requestUserInfo(res.userEmail);
       } else {
-        navigate("/login");
+        navigate(URL.LOGIN);
       }
     });
   }
