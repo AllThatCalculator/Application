@@ -36,8 +36,8 @@ const slideInOut = keyframes`
  */
 const Positioner = styled(FlexRowLayout)`
   position: fixed;
-  top: 60;
-  height: 100%;
+  top: 60px;
+  height: calc(100% - 60px);
 
   @media (min-width: ${PHONE}) and (max-width: ${TABLET}) {
     ${styles.styleSize.categoryPhone};
@@ -67,9 +67,15 @@ const Positioner = styled(FlexRowLayout)`
 `;
 
 /**
+ * 카테고리바 내의 계산기들과 스크롤바 묶은 box 스타일 정의
+ */
+const ScrollbarBox = styled(StyledScrollbar)`
+  padding-right: ${styles.styleLayout.basic700};
+`;
+/**
  * 카테고리바 내의 계산기들 묶은 box 스타일 정의
  */
-const StyledCategoryBox = styled(FlexRowLayout)`
+const StyledCategoryBox = styled(FlexColumnLayout)`
   width: 100%;
 `;
 /**
@@ -197,15 +203,13 @@ function CategoryBar({ contents, isActive, setIsActive }) {
   }
   return (
     <Positioner isActive={isActive}>
-      <StyledCategoryBox>
-        <StyledScrollbar>
-          <FlexColumnLayout gap="3px">
-            {contents.map((main, mainIndex) =>
-              handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
-            )}
-          </FlexColumnLayout>
-        </StyledScrollbar>
-      </StyledCategoryBox>
+      <ScrollbarBox>
+        <StyledCategoryBox gap="3px">
+          {contents.map((main, mainIndex) =>
+            handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
+          )}
+        </StyledCategoryBox>
+      </ScrollbarBox>
     </Positioner>
   );
 }
