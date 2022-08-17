@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import ApproachIframeTag from "../../utils/ApproachIframeTag";
 import { BtnIndigo } from "../atom-components/ButtonTemplate";
 import recordCalculet from "../../user-actions/recordCalculet";
 
@@ -11,6 +10,16 @@ import recordCalculet from "../../user-actions/recordCalculet";
 function RecordCalculetHistory({ calculetId }) {
   // 페이지 넘기기 위해 필요한 navigate
   const navigate = useNavigate();
+
+  /**
+   * iframe내의 태그를 찾아서 반환해주는 함수
+   * @param {string}
+   * className: iframe내에 찾고자 하는 클래스 네임
+   * @returns 태그 배열
+   */
+  function approachIframeTag(className) {
+    return window.frames[0].document.querySelectorAll(`.${className}`);
+  }
 
   /**
    * 이력 저장 백엔드로 요청
@@ -44,8 +53,8 @@ function RecordCalculetHistory({ calculetId }) {
    * 저장하기 버튼 클릭 시 input, output 정보 object로 가공하고 서버에 보낼 데이터 가공 및 요청 보내는 함수
    */
   function onClickRecordBtn() {
-    const inputTag = ApproachIframeTag("atc-calculet-input");
-    const outputTag = ApproachIframeTag("atc-calculet-output");
+    const inputTag = approachIframeTag("atc-calculet-input");
+    const outputTag = approachIframeTag("atc-calculet-output");
 
     const inputObj = makeObject(inputTag);
     const outputObj = makeObject(outputTag);

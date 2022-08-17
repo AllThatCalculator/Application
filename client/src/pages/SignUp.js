@@ -20,8 +20,8 @@ import ProfileChange from "../components/sign-up/ProfileChange";
 import WriteInformFirst from "../components/sign-up/WriteInformFirst";
 import WriteInformSecond from "../components/sign-up/WriteInformSecond";
 import ActGuide from "../components/sign-up/ActGuide";
-import WarningGuide from "../components/global-component/WarningGuide";
-import useInput from "../user-hooks/UseInput";
+import WarningGuide from "../components/global-components/WarningGuide";
+import useInput from "../hooks/useInput";
 import signUpUser from "../user-actions/SignUpUser";
 import { useNavigate } from "react-router-dom";
 /**

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import BigTitle from "../components/atom-components/BigTitle";
-import Pagination from "../components/global-component/Pagination";
+import Pagination from "../components/global-components/Pagination";
 import {
   ContentLayout,
   FlexColumnLayout,
@@ -12,7 +12,7 @@ import { CALCULET } from "../components/search/Calculet";
 import SearchCalculet from "../components/search/SearchCalculet";
 import styles from "../components/styles";
 import { Font } from "../components/atom-components/StyledText";
-import FooterRecommend from "../components/global-component/FooterRecommend";
+import FooterRecommend from "../components/global-components/FooterRecommend";
 /**
  * ContentLayout을 상속하는 SearchLayout
  * - flex와 gap, padding 을 새로 설정

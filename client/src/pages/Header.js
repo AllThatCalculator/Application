@@ -4,7 +4,7 @@ import BoxSearchInput from "../components/atom-components/BoxSearchInput";
 import styles from "../components/styles.js";
 import { BtnMiddleIcon } from "../components/atom-components/ButtonIcon.js";
 import { BtnWhite } from "../components/atom-components/ButtonTemplate";
-import CategoryBar from "../components/global-component/CategoryBar";
+import CategoryBar from "../components/global-components/CategoryBar";
 import { useState } from "react";
 import { useEffect } from "react";
 import { FlexRowLayout } from "../components/Layout";
@@ -13,7 +13,7 @@ import URL from "../components/PageUrls";
 import LogoutUser from "../user-actions/LogoutUser";
 
 import calculetsUser from "../user-actions/calculetsUser";
-import useClickOutside from "../user-hooks/useClickOutside";
+import useClickOutside from "../hooks/useClickOutside";
 /**
  * header와 categoryBar 박스를 감싸는 스타일 정의
  */

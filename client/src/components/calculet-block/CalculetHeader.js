@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { BoxIcon } from "../atom-components/BoxIcon";
 import { BtnSmallIcon, BtnStatisticsIcon } from "../atom-components/ButtonIcon";
-import { Modal } from "../global-component/Modal";
+import { Modal } from "../global-components/Modal";
 import ModalCalculetInfo from "../calculet-block/ModalCalculetInfo";
 import styles from "../styles";
 import { FlexColumnLayout, FlexRowLayout } from "../Layout";

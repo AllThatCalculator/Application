@@ -7,7 +7,7 @@ import {
   BtnIndigo,
   BtnText,
 } from "../components/atom-components/ButtonTemplate";
-import WarningGuide from "../components/global-component/WarningGuide";
+import WarningGuide from "../components/global-components/WarningGuide";
 import {
   ContentLayout,
   FlexColumnLayout,
@@ -15,7 +15,7 @@ import {
   White300Layout,
 } from "../components/Layout";
 import WriteInform from "../components/login/WriteInform";
-import useInput from "../user-hooks/UseInput";
+import useInput from "../hooks/useInput";
 import loginUser from "../user-actions/LoginUser";
 import { useNavigate } from "react-router-dom";
 import ActGuide from "../components/sign-up/ActGuide";

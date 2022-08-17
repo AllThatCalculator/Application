@@ -9,9 +9,9 @@ import CalculetHeader from "../components/calculet-block/CalculetHeader";
 import {
   updateCalculetCount,
   loadOftenUsedCalculet,
-} from "../utils/OftenUsedCalculet";
+} from "../components/calculet-block/oftenUsedCalculet";
 import { Font } from "../components/atom-components/StyledText";
-import FooterRecommend from "../components/global-component/FooterRecommend";
+import FooterRecommend from "../components/global-components/FooterRecommend";
 import URL from "../components/PageUrls";
 import calculetInfo from "../user-actions/calculetInfo";
 

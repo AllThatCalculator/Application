@@ -7,7 +7,7 @@ import { FlexColumnLayout, ResponsiveTabletLayout } from "../Layout";
 import {
   ExplanationInputBox,
   ExplanationSelectBox,
-} from "../global-component/Explanation";
+} from "../global-components/Explanation";
 
 /**
  * 정보칸 + 배너 미리보기 감싸는 스타일 정의

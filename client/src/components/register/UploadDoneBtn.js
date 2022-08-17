@@ -3,7 +3,7 @@ import { BtnBlue } from "../atom-components/ButtonTemplate";
 import { FlexColumnLayout } from "../Layout";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import WarningGuide from "../global-component/WarningGuide";
+import WarningGuide from "../global-components/WarningGuide";
 import registerCalculetTemp from "../../user-actions/registerCalculetTemp";
 import URL from "../PageUrls";
 

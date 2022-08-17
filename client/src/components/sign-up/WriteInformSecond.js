@@ -1,7 +1,7 @@
 import {
   ExplanationInputBox,
   ExplanationSelectBox,
-} from "../global-component/Explanation";
+} from "../global-components/Explanation";
 import { InformBox } from "../register/WriteInform";
 import { OPTIONS_SEX, OPTIONS_YEAR, OPTIONS_MONTH } from "./constants";
 

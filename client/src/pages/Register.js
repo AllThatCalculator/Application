@@ -5,7 +5,7 @@ import { WriteInform } from "../components/register/WriteInform";
 import UploadDoneBtn from "../components/register/UploadDoneBtn";
 import { useState, useEffect } from "react";
 import { ContentLayout, White300Layout } from "../components/Layout";
-import useInput from "../user-hooks/UseInput";
+import useInput from "../hooks/useInput";
 import { useNavigate } from "react-router-dom";
 import loadUserInfo from "../user-actions/userInfo";
 import calculetCategory from "../user-actions/calculetCategory";

@@ -1,7 +1,7 @@
 import {
   ExplanationEmail,
   ExplanationInputBox,
-} from "../global-component/Explanation";
+} from "../global-components/Explanation";
 import { OPTIONS_EMAIL_ADDRESS } from "./constants";
 import { InformBox } from "../register/WriteInform";
 /**

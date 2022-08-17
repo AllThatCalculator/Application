@@ -1,5 +1,5 @@
 import { BtnText } from "../atom-components/ButtonTemplate";
-import SmallTitle from "../global-component/SmallTitle";
+import SmallTitle from "../global-components/SmallTitle";
 import { FlexRowLayout } from "../Layout";
 
 /**
