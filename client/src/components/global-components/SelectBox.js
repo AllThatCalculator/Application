@@ -24,6 +24,8 @@ const StyledSelectBox = styled(FlexRowLayout)`
   border-right: ${(props) =>
     props.isLine ? `1px solid ${styles.styleColor.blue50}` : `0px`};
 
+  pointer-events: ${(props) => (props.isValid ? `auto` : `none`)};
+
   cursor: pointer;
 `;
 
@@ -136,15 +138,23 @@ function Option(props) {
 
 /**
  * 기본 select 박스에 대한 컴포넌트
- * @param {array, string, string, function, boolean}
+ * @param {array, string, string, function, boolean, boolean}
  * options: select 박스에 대한 option 리스트들
  * placeholder: select 박스 선택 전 보이는 회색 글씨에 대한 내용
  * selected: 선택된 option의 name 저장
  * onChange: 선택한 option이 바뀔 때 일어나는 함수
  * isLine: select 박스의 오른쪽에 구분선이 있는지 없는지를 나타내는 변수
+ * isValid: select 박스의 활성 여부
  * @returns
  */
-function SelectBox({ options, placeholder, selected, onChange, isLine }) {
+function SelectBox({
+  options,
+  placeholder,
+  selected,
+  onChange,
+  isLine,
+  isValid,
+}) {
   // option box 활성화 상태에 대한 변수
   const [isActive, setIsActive] = useState(false);
 
@@ -184,9 +194,15 @@ function SelectBox({ options, placeholder, selected, onChange, isLine }) {
     };
   }, []);
 
+  console.log(selected + isValid);
+
   return (
     <Wrapper ref={modalRef}>
-      <StyledSelectBox onClick={onActiveToggle} isLine={isLine}>
+      <StyledSelectBox
+        onClick={onActiveToggle}
+        isLine={isLine}
+        isValid={isValid !== undefined ? isValid : true}
+      >
         <InputBox
           placeholder={placeholder}
           onChange={onChange}

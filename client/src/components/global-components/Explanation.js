@@ -82,6 +82,7 @@ function ExplanationInputBox({
  *  - selected: 선택된 옵션 값
  *  - onChange: 선택 옵션 관리
  *  - isLine: selectBox에 구분선 여부
+ *  - isValid: selectBox 활성화 여부
  */
 function ExplanationSelectBox({
   isLine,
@@ -106,6 +107,7 @@ function ExplanationSelectBox({
             selected={category.selected}
             onChange={category.onChange}
             isLine={category.isLine}
+            isValid={category.isValid}
             key={index}
           />
         ))}
