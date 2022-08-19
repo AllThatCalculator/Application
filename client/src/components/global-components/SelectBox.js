@@ -194,8 +194,6 @@ function SelectBox({
     };
   }, []);
 
-  console.log(selected + isValid);
-
   return (
     <Wrapper ref={modalRef}>
       <StyledSelectBox
