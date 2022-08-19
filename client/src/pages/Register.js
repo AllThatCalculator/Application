@@ -3,7 +3,7 @@ import styles from "../components/styles";
 import WriteCode from "../components/register/WriteCode";
 import { WriteInform } from "../components/register/WriteInform";
 import UploadDoneBtn from "../components/register/UploadDoneBtn";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ContentLayout, White300Layout } from "../components/Layout";
 import useInput from "../hooks/useInput";
 import { useNavigate } from "react-router-dom";
@@ -119,7 +119,7 @@ function Register() {
   /**
    * 백엔드에서 사용자 정보 불러오는 함수
    */
-  function loadUserEmail() {
+  const loadUserEmail = useCallback(() => {
     const request = AuthUser();
     request.then((res) => {
       if (res.success) {
@@ -128,18 +128,18 @@ function Register() {
         navigate(URL.LOGIN);
       }
     });
-  }
+  }, [navigate]);
 
   /**
    * 카테고리 서버에 요청 후, 데이터 가공
    */
-  function loadCategory() {
+  const loadCategory = useCallback(() => {
     const request = calculetCategory();
     request.then((res) => {
       setMainOption(res.categoryMain);
       setSubOption(res.categorySub);
     });
-  }
+  }, []);
 
   /**
    * 현재 로그인한 사용자 계정 가져오기
@@ -147,7 +147,7 @@ function Register() {
   useEffect(() => {
     loadUserEmail();
     loadCategory();
-  }, []);
+  }, [loadUserEmail, loadCategory]);
 
   return (
     <White300Layout>
