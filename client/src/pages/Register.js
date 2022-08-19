@@ -39,13 +39,19 @@ function Register() {
   // 소분류 옵션
   const [subOption, setSubOption] = useState(null);
 
-  const [categoryMain, setCategoryMain] = useState("");
-  const [categorySub, setCategorySub] = useState("");
-  // 대분류 종류에 맞는 소분류 옵션 배열
+  // 선택한 대분류 종류에 맞는 소분류 옵션 배열
   const [categorySubOption, setCategorySubOption] = useState(null);
 
+  // 선택된 대분류, 소분류 네임
+  const [categoryMain, setCategoryMain] = useState("");
+  const [categorySub, setCategorySub] = useState("");
+
+  // 선택된 대분류, 소분류 id
   const [categoryMainId, setCategoryMainId] = useState(null);
   const [categorySubId, setCategorySubId] = useState(null);
+
+  // 소분류 선택 활성 여부
+  const [isValidSub, setIsValidSub] = useState(false);
 
   const [srcCode, setSrcCode] = useState("<!DOCTYPE html>");
   const [manual, setManual] = useState("### write detail!");
@@ -66,12 +72,20 @@ function Register() {
 
     setCategoryMain(main);
     setCategoryMainId(targetValue);
-    setCategorySub(null);
-    setCategorySubId(null);
-    if (subOptionList.length) {
-      setCategorySubOption(subOptionList);
+    setCategorySubOption(subOptionList);
+
+    // 대분류가 단위변환기이거나 기타라면
+    if (
+      targetValue === subOptionList[0].value ||
+      targetValue === mainOption.length - 1
+    ) {
+      setCategorySub(subOptionList[0].name);
+      setCategorySubId(subOptionList[0].value);
+      setIsValidSub(false);
     } else {
-      setCategorySubOption(null);
+      setCategorySub(null);
+      setCategorySubId(null);
+      setIsValidSub(true);
     }
   }
 
@@ -122,33 +136,8 @@ function Register() {
   function loadCategory() {
     const request = calculetCategory();
     request.then((res) => {
-      const mainOptionList = [];
-      let subOptionList = [[]];
-      const main = res.main;
-      const sub = res.sub;
-
-      for (let i = 0; i < main.length; i++) {
-        mainOptionList.push({ value: main[i].id, name: main[i].main });
-        subOptionList[i + 1] = [{ value: sub[0].id, name: sub[0].sub }];
-      }
-
-      for (let i = 0; i < sub.length - 1; i++) {
-        subOptionList[sub[i].main_id].push({
-          value: sub[i].id,
-          name: sub[i].sub,
-        });
-      }
-
-      // 대분류마다 기타 소분류 추가
-      for (let i = 0; i < main.length; i++) {
-        subOptionList[i].push({
-          value: sub[sub.length - 1].id,
-          name: sub[sub.length - 1].sub,
-        });
-      }
-
-      setMainOption(mainOptionList);
-      setSubOption(subOptionList);
+      setMainOption(res.categoryMain);
+      setSubOption(res.categorySub);
     });
   }
 
@@ -171,6 +160,7 @@ function Register() {
             categoryMain={categoryMain}
             categorySubOption={categorySubOption}
             categorySub={categorySub}
+            isValidSub={isValidSub}
             profileImg={userInfo.profileImg}
             changeTitle={title.onChange}
             changeDescription={description.onChange}

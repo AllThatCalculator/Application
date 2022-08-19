@@ -65,6 +65,7 @@ function WriteInform(props) {
       selected: props.categorySub,
       onChange: props.changeCategorySub,
       isLine: false,
+      isValid: props.isValidSub,
     },
   ];
 
