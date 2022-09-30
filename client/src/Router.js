@@ -14,6 +14,8 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Search from "./pages/Search";
 import CalculetList from "./pages/CalculetList";
+
+// google-analytics
 import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
 
 const AppRouter = () => {
