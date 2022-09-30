@@ -28,9 +28,7 @@ const RouteChangeTracker = () => {
 
   // 개발용
   // useEffect(() => {
-  //   ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID, {
-  //     debug: true,
-  //   });
+  //   ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID);
   //   ReactGA.set({ page: location.pathname });
   //   ReactGA.send("pageview");
   // }, [location]);
