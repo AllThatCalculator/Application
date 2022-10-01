@@ -14,8 +14,7 @@ async function LogoutUser() {
     switch (error.response.status) {
       case 400:
         return error.response.data;
-        break;
-      case 404:
+      default:
         break;
     }
   }

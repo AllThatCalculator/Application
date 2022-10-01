@@ -53,11 +53,11 @@ services:
 
   mariadb:
     container_name: mariadb
-    image: mariadb:10
+    image: mariadb:10.8.5
     ports:
       - 3306:3306
     volumes:
-      - ./database/mariaDB/conf.d:/etc/mysql/conf.d:ro
+      - ./database/mariaDB/conf.d:/etc/mysql/conf.d
       - ./database/mariaDB/data:/var/lib/mysql
       - ./database/mariaDB/initdb.d:/docker-entrypoint-initdb.d:ro
     env_file: .env

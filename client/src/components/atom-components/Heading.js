@@ -29,13 +29,15 @@ const StyledHeading = styled(FlexRowLayout)`
  * -> h : 제목 요소 (h1, h2 ...) (h1 쓰려면, 1 을 인자로 주기)
  * -> color : 색 (기본값 black)
  * -> isLine : 아래 구분선 여부 (있을 때만 true 기입)
- * id : 제목 id (기본값 : 내용)
+ * -> id : 제목 id (기본값 : 내용)
  */
-function Heading(props, ref = null, id = props.content) {
+function Heading(props, ref) {
+  const contentId = props.id ? props.id : props.content;
+  const contentRef = ref === null ? null : ref;
   return (
     <StyledHeading
-      id={id}
-      ref={ref}
+      id={contentId}
+      ref={contentRef}
       h={props.h}
       color={props.color}
       isLine={props.isLine}

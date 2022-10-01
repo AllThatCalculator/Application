@@ -1,9 +1,9 @@
 import {
   ExplanationInputBox,
   ExplanationSelectBox,
-} from "../global-component/Explanation";
+} from "../global-components/Explanation";
 import { InformBox } from "../register/WriteInform";
-import { OPTIONS_SEX, OPTIONS_YEAR, OPTIONS_MONTH } from "./Option";
+import { OPTIONS_SEX, OPTIONS_YEAR, OPTIONS_MONTH } from "./constants";
 
 /**
  * 회원가입 2번째 정보입력창

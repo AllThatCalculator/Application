@@ -3,13 +3,14 @@ import styles from "../components/styles";
 import WriteCode from "../components/register/WriteCode";
 import { WriteInform } from "../components/register/WriteInform";
 import UploadDoneBtn from "../components/register/UploadDoneBtn";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ContentLayout, White300Layout } from "../components/Layout";
-import axios from "axios";
-import useInput from "../user-hooks/UseInput";
+import useInput from "../hooks/useInput";
 import { useNavigate } from "react-router-dom";
-import loadUserInfo from "../components/user-actions/userInfo";
-import calculetCategory from "../components/user-actions/calculetCategory";
+import loadUserInfo from "../user-actions/userInfo";
+import calculetCategory from "../user-actions/calculetCategory";
+import AuthUser from "../user-actions/AuthUser";
+import URL from "../components/PageUrls";
 
 /**
  * ContentLayout을 상속하는 RegisterLayout
@@ -38,13 +39,19 @@ function Register() {
   // 소분류 옵션
   const [subOption, setSubOption] = useState(null);
 
-  const [categoryMain, setCategoryMain] = useState("");
-  const [categorySub, setCategorySub] = useState("");
-  // 대분류 종류에 맞는 소분류 옵션 배열
+  // 선택한 대분류 종류에 맞는 소분류 옵션 배열
   const [categorySubOption, setCategorySubOption] = useState(null);
 
+  // 선택된 대분류, 소분류 네임
+  const [categoryMain, setCategoryMain] = useState("");
+  const [categorySub, setCategorySub] = useState("");
+
+  // 선택된 대분류, 소분류 id
   const [categoryMainId, setCategoryMainId] = useState(null);
   const [categorySubId, setCategorySubId] = useState(null);
+
+  // 소분류 선택 활성 여부
+  const [isValidSub, setIsValidSub] = useState(false);
 
   const [srcCode, setSrcCode] = useState("<!DOCTYPE html>");
   const [manual, setManual] = useState("### write detail!");
@@ -65,11 +72,20 @@ function Register() {
 
     setCategoryMain(main);
     setCategoryMainId(targetValue);
-    setCategorySub(null);
-    if (subOptionList.length) {
-      setCategorySubOption(subOptionList);
+    setCategorySubOption(subOptionList);
+
+    // 대분류가 단위변환기이거나 기타라면
+    if (
+      targetValue === subOptionList[0].value ||
+      targetValue === mainOption.length - 1
+    ) {
+      setCategorySub(subOptionList[0].name);
+      setCategorySubId(subOptionList[0].value);
+      setIsValidSub(false);
     } else {
-      setCategorySubOption(null);
+      setCategorySub(null);
+      setCategorySubId(null);
+      setIsValidSub(true);
     }
   }
 
@@ -101,54 +117,29 @@ function Register() {
   }
 
   /**
-   * (임시 - 나중에 작업 합쳐지면 user-actions에 있는 거 사용, 아니면 props로 이메일 받기?)
    * 백엔드에서 사용자 정보 불러오는 함수
    */
-  async function loadUserEmail() {
-    try {
-      await axios.get(`/api/users/me`).then((response) => {
-        requestUserInfo(response.data.userEmail);
-      });
-    } catch (error) {
-      navigate("/login");
-    }
-  }
+  const loadUserEmail = useCallback(() => {
+    const request = AuthUser();
+    request.then((res) => {
+      if (res.success) {
+        requestUserInfo(res.userEmail);
+      } else {
+        navigate(URL.LOGIN);
+      }
+    });
+  }, [navigate]);
 
   /**
    * 카테고리 서버에 요청 후, 데이터 가공
    */
-  function loadCategory() {
+  const loadCategory = useCallback(() => {
     const request = calculetCategory();
     request.then((res) => {
-      const mainOptionList = [];
-      let subOptionList = [[]];
-      const main = res.main;
-      const sub = res.sub;
-
-      for (let i = 0; i < main.length; i++) {
-        mainOptionList.push({ value: main[i].id, name: main[i].main });
-        subOptionList[i + 1] = [{ value: sub[0].id, name: sub[0].sub }];
-      }
-
-      for (let i = 0; i < sub.length - 1; i++) {
-        subOptionList[sub[i].main_id].push({
-          value: sub[i].id,
-          name: sub[i].sub,
-        });
-      }
-
-      // 대분류마다 기타 소분류 추가
-      for (let i = 0; i < main.length; i++) {
-        subOptionList[i].push({
-          value: sub[sub.length - 1].id,
-          name: sub[sub.length - 1].sub,
-        });
-      }
-
-      setMainOption(mainOptionList);
-      setSubOption(subOptionList);
+      setMainOption(res.categoryMain);
+      setSubOption(res.categorySub);
     });
-  }
+  }, []);
 
   /**
    * 현재 로그인한 사용자 계정 가져오기
@@ -156,7 +147,7 @@ function Register() {
   useEffect(() => {
     loadUserEmail();
     loadCategory();
-  }, []);
+  }, [loadUserEmail, loadCategory]);
 
   return (
     <White300Layout>
@@ -169,6 +160,7 @@ function Register() {
             categoryMain={categoryMain}
             categorySubOption={categorySubOption}
             categorySub={categorySub}
+            isValidSub={isValidSub}
             profileImg={userInfo.profileImg}
             changeTitle={title.onChange}
             changeDescription={description.onChange}
@@ -188,7 +180,6 @@ function Register() {
             description={description.value}
             categoryMainId={categoryMainId}
             categorySubId={categorySubId}
-            email={userInfo.email}
             srcCode={srcCode}
             manual={manual}
           />

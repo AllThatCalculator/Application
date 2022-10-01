@@ -17,6 +17,8 @@ async function calculetsUser() {
     switch (error.response.status) {
       case 400:
         return error.response.data;
+      default:
+        return;
     }
   }
 }

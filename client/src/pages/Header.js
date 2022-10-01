@@ -4,18 +4,16 @@ import BoxSearchInput from "../components/atom-components/BoxSearchInput";
 import styles from "../components/styles.js";
 import { BtnMiddleIcon } from "../components/atom-components/ButtonIcon.js";
 import { BtnWhite } from "../components/atom-components/ButtonTemplate";
-import CategoryBar from "../components/global-component/CategoryBar";
-import { useState } from "react";
+import CategoryBar from "../components/global-components/CategoryBar";
+import { useCallback, useState } from "react";
 import { useEffect } from "react";
 import { FlexRowLayout } from "../components/Layout";
-import { CategoryItems } from "../components/header/CategoryItems";
-import { useNavigate } from "react-router-dom";
-import AuthUser from "../components/user-actions/AuthUser";
+import AuthUser from "../user-actions/AuthUser";
 import URL from "../components/PageUrls";
-import LogoutUser from "../components/user-actions/LogoutUser";
+import LogoutUser from "../user-actions/LogoutUser";
 
-import calculetsUser from "../components/user-actions/calculetsUser";
-import useClickOutside from "../user-hooks/useClickOutside";
+import calculetsUser from "../user-actions/calculetsUser";
+import useClickOutside from "../hooks/useClickOutside";
 /**
  * header와 categoryBar 박스를 감싸는 스타일 정의
  */
@@ -54,15 +52,16 @@ function Contents({ onIsOpen, onLogin, onLogout }) {
    * 페이지 새로고침 되자마자 로그인 상태 확인하여 로그인/아웃 버튼 렌더
    */
   const [logBtn, setLogBtn] = useState(null);
-  useEffect(onHandlerLogin, []);
-
-  function onHandlerLogin() {
-    AuthUser().then((res) => {
+  const onHandlerLogin = useCallback(() => {
+    AuthUser().then((res) =>
       !res.success
         ? setLogBtn(<BtnWhite text="로그인" icon="Person" onClick={onLogin} />)
-        : setLogBtn(<BtnWhite text="로그아웃" onClick={onLogout} />);
-    });
-  }
+        : setLogBtn(<BtnWhite text="로그아웃" onClick={onLogout} />)
+    );
+  }, [onLogin, onLogout]);
+
+  useEffect(onHandlerLogin, [onHandlerLogin]);
+
   return (
     <WhiteBackground>
       <HeaderContents>
@@ -102,12 +101,15 @@ function Header() {
    * 페이지 렌더시 한 번만
    */
   const [contentsCategory, setContentsCategory] = useState(null);
-  useEffect(() => {
+  const onHandlerSetContentsCategory = useCallback(() => {
     calculetsUser().then((res) => {
       // 카테고리바 정보 불러오기 성공
       if (res.success) setContentsCategory(res.calculetLists);
     });
   }, []);
+  useEffect(() => {
+    onHandlerSetContentsCategory();
+  }, [onHandlerSetContentsCategory]);
 
   /**
    * 스크롤의 위치
@@ -120,44 +122,45 @@ function Header() {
   /**
    * 스크롤 위치 변화에 따라 'scrollPosition' 변화와 'isChange' 변화
    */
-  function updateScroll() {
+  const updateScroll = useCallback(() => {
     setScrollPosition(window.pageYOffset);
     if (scrollPosition < 10) setIsChange(false);
     else setIsChange(true);
-  }
+  }, [scrollPosition]);
   /**
    * 스크롤 위치 변화 감지
    */
   useEffect(() => {
     window.addEventListener("scroll", updateScroll);
-  }, [scrollPosition]);
+    return () => {
+      window.removeEventListener("scroll", updateScroll);
+    };
+  }, [updateScroll]);
   /**
    * 로그인 페이지로 이동 이벤트
    */
-  function onLogin() {
-    window.location.href = "/login";
-  }
+  const onHandlerLogin = useCallback(() => {
+    window.location.href = URL.LOGIN;
+  }, []);
   /**
    * 로그아웃
    */
-  function onHandlerLogout(event) {
+  const onHandlerLogout = useCallback((event) => {
     event.preventDefault();
-
     // 서버에 요청
     LogoutUser().then((res) => {
       // 로그아웃 성공
       if (res.success) {
-        window.location.replace(URL.CALCULET);
+        window.location.href = URL.CALCULET;
       }
     });
-  }
-
+  }, []);
   return (
     <Wrapper ref={categoryBarRef.elementRef}>
       <Positioner isChange={isChange}>
         <Contents
           onIsOpen={() => categoryBarRef.setIsActive(!categoryBarRef.isActive)}
-          onLogin={onLogin}
+          onLogin={onHandlerLogin}
           onLogout={onHandlerLogout}
         />
       </Positioner>

@@ -1,10 +1,11 @@
-import axios from "axios";
 import styled from "styled-components";
 import { BtnBlue } from "../atom-components/ButtonTemplate";
 import { FlexColumnLayout } from "../Layout";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import WarningGuide from "../global-component/WarningGuide";
+import WarningGuide from "../global-components/WarningGuide";
+import registerCalculetTemp from "../../user-actions/registerCalculetTemp";
+import URL from "../PageUrls";
 
 /**
  * 가장 바깥 스타일 정의
@@ -25,7 +26,12 @@ function UploadDoneBtn(props) {
   const [warningMsg, setWarningMsg] = useState(null);
 
   function checkBeforeUpload() {
-    if (!props.title || !props.description || !props.categoryMainId) {
+    if (
+      !props.title ||
+      !props.description ||
+      props.categoryMainId === null ||
+      props.categorySubId === null
+    ) {
       setWarningMsg("모든 사항을 입력해주세요.");
       return false;
     } else {
@@ -33,16 +39,17 @@ function UploadDoneBtn(props) {
     }
   }
 
-  async function registerCalculet() {
+  function registerCalculet() {
     if (checkBeforeUpload()) {
-      try {
-        await axios.post("/api/calculets/", props).then((response) => {
+      const request = registerCalculetTemp(props);
+      request.then((res) => {
+        if (res) {
           // 안내 팝업창
-          navigate("/");
-        });
-      } catch (error) {
-        // 실패 팝업 처리
-      }
+          navigate(URL.CALCULET);
+        } else {
+          // 실패 팝업 처리
+        }
+      });
     }
   }
 

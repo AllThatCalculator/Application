@@ -15,9 +15,8 @@ async function AuthUser() {
     switch (error.response.status) {
       case 401:
         return error.response.data;
-        break;
-      case 404:
-        break;
+      default:
+        return error.response.status;
     }
   }
 }

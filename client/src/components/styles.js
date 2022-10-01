@@ -99,7 +99,8 @@ const styleEffect = {
   opacity200: `filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.3));`,
   opacity300: `filter: drop-shadow(0px 15px 35px rgba(0, 0, 0, 0.25));`,
 };
-export default {
+
+const styles = {
   sizes,
   styleColor,
   styleLayout,
@@ -108,3 +109,5 @@ export default {
   styleEffect,
   styleSize,
 };
+
+export default styles;

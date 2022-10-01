@@ -4,10 +4,7 @@ async function calculetCategory() {
   let data;
   try {
     await axios.get(`/api/calculets/category`).then((response) => {
-      data = {
-        main: response.data.categoryMain,
-        sub: response.data.categorySub,
-      };
+      data = response.data;
     });
   } catch (error) {}
   return data;

@@ -1,4 +1,4 @@
-import { ExplanationInputBox } from "../global-component/Explanation";
+import { ExplanationInputBox } from "../global-components/Explanation";
 import { InformBox } from "../register/WriteInform";
 import styles from "../styles";
 /**

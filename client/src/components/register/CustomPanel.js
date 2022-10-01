@@ -2,8 +2,8 @@ import styled from "styled-components";
 import StyledScrollbar from "../atom-components/StyledScrollbar";
 import { FlexColumnLayout } from "../Layout";
 import BoxClassName from "./BoxClassName";
-import { Design, InputOutput, Save } from "./Designs";
-import Guides from "./Guides";
+import { Design, InputOutput } from "./Designs";
+import { GUIDES } from "./constants";
 import GuideText from "./GuideText";
 
 /**
@@ -54,9 +54,8 @@ function ScrollCustomPanel({ guide, designs }) {
 function CustomPanel() {
   return (
     <>
-      <DefaultCustomPanel guide={Guides["InputOutput"]} designs={InputOutput} />
-      {/* <DefaultCustomPanel guide={Guides["Save"]} designs={Save} /> */}
-      <ScrollCustomPanel guide={Guides["Design"]} designs={Design} />
+      <DefaultCustomPanel guide={GUIDES["InputOutput"]} designs={InputOutput} />
+      <ScrollCustomPanel guide={GUIDES["Design"]} designs={Design} />
     </>
   );
 }

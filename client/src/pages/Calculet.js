@@ -1,20 +1,19 @@
 import styled from "styled-components";
 import CalculetBlock from "../components/calculet-block/CalculetBlock";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "../components/styles";
 import { BtnBlue } from "../components/atom-components/ButtonTemplate";
 import CalculetHeader from "../components/calculet-block/CalculetHeader";
 
-import { ContentLayout } from "../components/Layout";
-import axios from "axios";
 import {
   updateCalculetCount,
   loadOftenUsedCalculet,
-} from "../utils/OftenUsedCalculet";
+} from "../components/calculet-block/oftenUsedCalculet";
 import { Font } from "../components/atom-components/StyledText";
-import FooterRecommend from "../components/global-component/FooterRecommend";
+import FooterRecommend from "../components/global-components/FooterRecommend";
 import URL from "../components/PageUrls";
+import calculetInfo from "../user-actions/calculetInfo";
 
 // 계산기 블록 배경
 const Positioner = styled.div`
@@ -87,36 +86,30 @@ function Calculet() {
 
   /**
    * 백엔드에서 계산기 정보 불러오는 함수
+   * useEffect 오류 해결 위해 useCallback
    */
-  async function loadCalculetObj() {
-    try {
-      await axios.get(`/api/calculets/${id}`).then((response) => {
-        setCalculetObj(response.data.calculet);
-        setStatistics(response.data.statistics);
-        setContributorImgSrc(response.data.calculet.contributorImgSrc);
-        setInfo(response.data.info);
-      });
-    } catch (error) {
-      setCalculetObj(null);
-      switch (error.response.status) {
-        case 400:
-        case 404:
-          setErrorText(error.response.data.message);
-          break;
-        default:
-          setErrorText("404 NOT FOUND");
-          break;
+  const loadCalculetObj = useCallback(() => {
+    const request = calculetInfo(id);
+    request.then((data) => {
+      if (data.calculet) {
+        setCalculetObj(data.calculet);
+        setStatistics(data.statistics);
+        setContributorImgSrc(data.calculet.contributorImgSrc);
+        setInfo(data.info);
+      } else {
+        setErrorText(data);
       }
-    }
-  }
+    });
+  }, [id]);
 
+  const onHandlerLoadClaculetObj = useCallback(() => {
+    loadCalculetObj();
+    updateCalculetCount(id);
+  }, [loadCalculetObj, id]);
   /**
    * 계산기 객체 불러오기
    */
-  useEffect(() => {
-    loadCalculetObj();
-    updateCalculetCount(id);
-  }, [id]);
+  useEffect(onHandlerLoadClaculetObj, [onHandlerLoadClaculetObj]);
 
   return (
     <>

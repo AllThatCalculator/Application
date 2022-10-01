@@ -6,7 +6,7 @@ import { useRef } from "react";
  * scrollTo: 스크롤 이동
  * + 위에 고정바 계산하여 높이 계산
  */
-function UseMoveScroll() {
+function useMoveScroll() {
   const element = useRef(null);
   function onMoveToElement() {
     const location = element.current.offsetTop;
@@ -15,4 +15,4 @@ function UseMoveScroll() {
   return { element, onMoveToElement };
 }
 
-export default UseMoveScroll;
+export default useMoveScroll;

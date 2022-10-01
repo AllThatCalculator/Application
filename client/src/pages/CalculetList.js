@@ -10,12 +10,11 @@ import {
 import styles from "../components/styles";
 import BigTitle from "../components/atom-components/BigTitle";
 import CalculetItemList from "../components/calculet-list/CalculetItemList";
-import { CALCULETS } from "../components/calculet-list/Calculets";
 import Shortcut from "../components/calculet-list/Shortcut";
-import UseMoveScroll from "../user-hooks/UseMoveScroll";
+import useMoveScroll from "../hooks/useMoveScroll";
 import { useEffect } from "react";
 import { useState } from "react";
-import calculetsUser from "../components/user-actions/calculetsUser";
+import calculetsUser from "../user-actions/calculetsUser";
 
 const BTN_CONVERSION = `단위
 변환기`;
@@ -74,12 +73,12 @@ function CalculetList() {
   /**
    * 바로가기를 위한 ref
    */
-  const conversion = UseMoveScroll();
-  const math = UseMoveScroll();
-  const science = UseMoveScroll();
-  const economy = UseMoveScroll();
-  const daily = UseMoveScroll();
-  const etc = UseMoveScroll();
+  const conversion = useMoveScroll();
+  const math = useMoveScroll();
+  const science = useMoveScroll();
+  const economy = useMoveScroll();
+  const daily = useMoveScroll();
+  const etc = useMoveScroll();
 
   /**
    * 대분류 수학 Ref, Ref로 스크롤 이동하는 함수
