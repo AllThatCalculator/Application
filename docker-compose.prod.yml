@@ -8,10 +8,8 @@ services:
       context: ./client
       dockerfile: Dockerfile.prod
     volumes:
-      - /client/node_modules
-      - ./client/:/client
       - ./client/src/css:/static-files/css
-    env_file: .env
+    env_file: ./client/.env
     ports:
       - 80:80
     networks:
