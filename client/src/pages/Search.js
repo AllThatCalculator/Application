@@ -77,7 +77,7 @@ function Search() {
     const response = CALCULET;
     setCalculets(response.slice(0, KEY_MAX));
     setLoading(false);
-  }, []);
+  }, [KEY_MAX]);
 
   // 예를 들어/ 한 페이지당 3 일 때, 2 페이지 네비버튼을 누르면, 4~6 번째 계산기가 렌더
   const indexOfLast = currentPage * KEY_PAGE;

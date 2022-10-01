@@ -4,7 +4,7 @@ import styles from "../styles";
 import CalculetItem from "./CalculetItem";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import URL from "../PageUrls";
 
 const Wrapper = styled(FlexRowLayout)`
@@ -29,30 +29,42 @@ function CalculetItemList({
    * 각 바로가기 버튼에 맞는 대분류의 위치 얻기
    * @param {int} index 바로가기 버튼의 index
    */
-  function locationRef(index) {
-    return Math.round(
-      contentsShortcut[index].itemRef.element.current.getBoundingClientRect()
-        .top +
-        window.pageYOffset -
-        80
-    );
-  }
+  const locationRef = useCallback(
+    (index) => {
+      return Math.round(
+        contentsShortcut[index].itemRef.element.current.getBoundingClientRect()
+          .top +
+          window.pageYOffset -
+          80
+      );
+    },
+    [contentsShortcut]
+  );
   /**
    * Ref의 위치와 스크롤 Y 위치를 비교하여, 스크롤 Y 에 따라 바로가기 버튼 활성화
    * @param {int} index 바로가기 버튼의 index
    */
-  function checkScroll(index) {
-    const scrollY = Math.round(scrollPosition);
-    return (
-      scrollY >= locationRef(index) &&
-      contentsShortcut[index] &&
-      scrollY < locationRef(index + 1)
-    );
-  }
-  useEffect(() => {
+  const checkScroll = useCallback(
+    (index) => {
+      const scrollY = Math.round(scrollPosition);
+      return (
+        scrollY >= locationRef(index) &&
+        contentsShortcut[index] &&
+        scrollY < locationRef(index + 1)
+      );
+    },
+    [contentsShortcut, locationRef, scrollPosition]
+  );
+  const onHandlerSetIsActive = useCallback(() => {
     for (let i = 0; i < contentsShortcut.length; i++)
       if (checkScroll(i)) setIsActive(i);
-  }, [scrollPosition]);
+  }, [checkScroll, contentsShortcut.length, setIsActive]);
+  /**
+   * useEffect 경고 막기 위함
+   */
+  useEffect(() => {
+    onHandlerSetIsActive();
+  }, [onHandlerSetIsActive]);
 
   /**
    * 계산기 나열

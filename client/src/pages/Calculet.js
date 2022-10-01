@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import CalculetBlock from "../components/calculet-block/CalculetBlock";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "../components/styles";
 import { BtnBlue } from "../components/atom-components/ButtonTemplate";
@@ -86,8 +86,9 @@ function Calculet() {
 
   /**
    * 백엔드에서 계산기 정보 불러오는 함수
+   * useEffect 오류 해결 위해 useCallback
    */
-  function loadCalculetObj() {
+  const loadCalculetObj = useCallback(() => {
     const request = calculetInfo(id);
     request.then((data) => {
       if (data.calculet) {
@@ -99,15 +100,16 @@ function Calculet() {
         setErrorText(data);
       }
     });
-  }
+  }, [id]);
 
+  const onHandlerLoadClaculetObj = useCallback(() => {
+    loadCalculetObj();
+    updateCalculetCount(id);
+  }, [loadCalculetObj, id]);
   /**
    * 계산기 객체 불러오기
    */
-  useEffect(() => {
-    loadCalculetObj();
-    updateCalculetCount(id);
-  }, [id]);
+  useEffect(onHandlerLoadClaculetObj, [onHandlerLoadClaculetObj]);
 
   return (
     <>

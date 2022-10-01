@@ -42,7 +42,7 @@ function Shortcut({ contentsShortcut, isActive, setIsActive }) {
           icon={cont.icon}
           isActive={index === isActive ? true : false}
           onClick={(event) => onClickShortcut(event, cont.itemRef)}
-          direction={true}
+          isColumn={true}
           degree={cont.degree ? cont.degree : 0}
         />
       ))}
