@@ -54,7 +54,7 @@ function MarkdownCode({ content }) {
 }
 
 const MarkdownWrapper = styled.div`
-  padding-top: 10px;
+  padding: 10px;
   ${styles.sytleText.text100}
 `;
 
