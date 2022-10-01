@@ -15,9 +15,13 @@ import SignUp from "./pages/SignUp";
 import Search from "./pages/Search";
 import CalculetList from "./pages/CalculetList";
 
+// google-analytics
+import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
+
 const AppRouter = () => {
   return (
     <BrowserRouter>
+      <RouteChangeTracker />
       <Header />
       <Routes>
         <Route path={URL.CALCULET} element={<Calculet />}>
