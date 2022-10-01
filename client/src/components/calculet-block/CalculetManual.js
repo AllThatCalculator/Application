@@ -54,7 +54,7 @@ function MarkdownCode({ content }) {
 }
 
 const MarkdownWrapper = styled.div`
-  background-color: tomato;
+  padding-top: 10px;
   ${styles.sytleText.text100}
 `;
 
