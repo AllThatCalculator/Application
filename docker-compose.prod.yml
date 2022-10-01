@@ -13,7 +13,7 @@ services:
       - ./client/src/css:/static-files/css
     env_file: .env
     ports:
-      - 8080:8080
+      - 80:80
     networks:
       - app-tier
     depends_on:
