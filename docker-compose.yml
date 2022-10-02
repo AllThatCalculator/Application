@@ -7,7 +7,7 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile.dev
-    env_file: .env
+    env_file: ./client/.env
     volumes:
       - /client/node_modules
       - ./client/:/client
