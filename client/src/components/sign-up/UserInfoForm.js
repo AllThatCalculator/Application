@@ -6,15 +6,17 @@ import { InformBox } from "../register/WriteInform";
 import { OPTIONS_SEX, OPTIONS_YEAR, OPTIONS_MONTH } from "./constants";
 
 /**
- * 회원가입 2번째 정보입력창
+ * 회원가입 - 유저 정보 입력 폼
  *
  * @param { string, string, string, string, string, funtion, funtion, funtion, funtion, funtion} param0
+ * userName : 닉네임
  * sex : 성별
  * year : 년도
  * month : 월
  * date : 일
  * job : 직업
  * bio : 자기소개 문구
+ * changeUserName : 닉네임 change 함수
  * changeSex : 성별 change 함수
  * changeYear : 년도 change 함수
  * changeMonth : 월 change 함수
@@ -22,7 +24,7 @@ import { OPTIONS_SEX, OPTIONS_YEAR, OPTIONS_MONTH } from "./constants";
  * changeJob : 직업 change 함수
  * changeBio : 자기소개 문구 change 함수
  */
-function WriteInformSecond(props) {
+function UserInfoForm(props) {
   // 성별 SelectBox 필요한 정보들
   const categorySex = [
     {
@@ -59,6 +61,15 @@ function WriteInformSecond(props) {
   ];
   return (
     <InformBox>
+      <ExplanationInputBox
+        isLine={true}
+        ratioLeft="1"
+        ratioRight="3.5"
+        explanation="닉네임"
+        placeholder="닉네임을 입력하세요."
+        defaultValue={props.userName}
+        onChange={props.changeUserName}
+      />
       <ExplanationSelectBox
         isLine={true}
         ratioLeft="1"
@@ -94,4 +105,4 @@ function WriteInformSecond(props) {
     </InformBox>
   );
 }
-export default WriteInformSecond;
+export default UserInfoForm;
