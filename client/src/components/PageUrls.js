@@ -20,6 +20,9 @@ const URL = {
   // 회원 가입
   SIGN_UP: "/sign-up",
 
+  // 정보 입력 페이지
+  WRITE_USER_INFO: "/write-user-info",
+
   // 계산기 신고
   REPORT: "/report",
 };
