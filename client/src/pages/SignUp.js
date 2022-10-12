@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import styles from "../components/styles";
 import { BoxBorder } from "../components/atom-components/BoxBorder";
 import { StyledImg } from "../components/atom-components/BoxIcon";
 import BoxTitle from "../components/atom-components/BoxTitle";
-import {
-  BtnIndigo,
-  StyledIcon,
-} from "../components/atom-components/ButtonTemplate";
+import { BtnIndigo } from "../components/atom-components/ButtonTemplate";
 import {
   ContentLayout,
   FlexColumnLayout,
@@ -20,7 +16,8 @@ import WarningGuide from "../components/global-components/WarningGuide";
 import useInput from "../hooks/useInput";
 import { useNavigate } from "react-router-dom";
 import EmailForm from "../components/sign-up/EmailForm";
-import SmallTitle from "../components/global-components/SmallTitle";
+import { Font } from "../components/atom-components/StyledText";
+import OtherLine from "../components/sign-up/OtherLine";
 
 /**
  * 흰색 뒷 배경
@@ -48,15 +45,21 @@ const WrapperStretch = styled(FlexColumnLayout)`
   width: 100%;
 `;
 
-const Title = styled.div`
-  ${styles.sytleText.text200};
-`;
-
+/**
+ * 로고 스타일 정의 (구글, 깃허브)
+ */
 const Logo = styled.img`
   width: 24px;
   height: 24px;
   align-items: center;
   justify-content: center;
+`;
+
+/**
+ * 버튼 커서 스타일 정의
+ */
+const WrapperCursor = styled(BoxBorder)`
+  cursor: pointer;
 `;
 
 /**
@@ -175,18 +178,19 @@ function SignUp() {
             onClick={() => navigate("/login")}
           />
         </BoxBorder>
-        <BoxBorder>
+        <OtherLine />
+        <WrapperCursor>
           <FlexRowLayout gap="20px">
             <Logo src="/img/googleLogo.png" />
-            <Title>Google 계정으로 가입 하기</Title>
+            <Font font="text200">Google 계정으로 가입 하기</Font>
           </FlexRowLayout>
-        </BoxBorder>
-        <BoxBorder>
+        </WrapperCursor>
+        <WrapperCursor>
           <FlexRowLayout gap="20px">
             <Logo src="/img/githubLogo.png" />
-            <Title>Github 계정으로 가입 하기</Title>
+            <Font font="text200">Github 계정으로 가입 하기</Font>
           </FlexRowLayout>
-        </BoxBorder>
+        </WrapperCursor>
       </WrapperPad>
     </>
   );

@@ -65,7 +65,7 @@ function UserInfoForm(props) {
         isLine={true}
         ratioLeft="1"
         ratioRight="3.5"
-        explanation="닉네임"
+        explanation="닉네임 *"
         placeholder="닉네임을 입력하세요."
         defaultValue={props.userName}
         onChange={props.changeUserName}
@@ -74,21 +74,21 @@ function UserInfoForm(props) {
         isLine={true}
         ratioLeft="1"
         ratioRight="3.5"
-        explanation="성별"
+        explanation="성별 *"
         categorys={categorySex}
       />
       <ExplanationSelectBox
         isLine={true}
         ratioLeft="1"
         ratioRight="3.5"
-        explanation="생년월일"
+        explanation="생년월일 *"
         categorys={categoryBirthdate}
       />
       <ExplanationInputBox
         isLine={true}
         ratioLeft="1"
         ratioRight="3.5"
-        explanation="직업"
+        explanation="직업 *"
         placeholder="본인의 직업을 입력하세요. (ex.학생)"
         defaultValue={props.job}
         onChange={props.changeJob}

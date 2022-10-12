@@ -20,6 +20,8 @@ import loginUser from "../user-actions/LoginUser";
 import { useNavigate } from "react-router-dom";
 import ActGuide from "../components/sign-up/ActGuide";
 import URL from "../components/PageUrls";
+import { Font } from "../components/atom-components/StyledText";
+import OtherLine from "../components/sign-up/OtherLine";
 /**
  * 흰색 뒷 배경
  */
@@ -53,6 +55,23 @@ const WrapperFind = styled(FlexRowLayout)`
 `;
 
 /**
+ * 로고 스타일 정의 (구글, 깃허브)
+ */
+const Logo = styled.img`
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+`;
+
+/**
+ * 버튼 커서 스타일 정의
+ */
+const WrapperCursor = styled(BoxBorder)`
+  cursor: pointer;
+`;
+
+/**
  * 로그인 페이지
  */
 function Login() {
@@ -71,6 +90,9 @@ function Login() {
       setWarning("이메일과 비밀번호를 입력해주세요.");
       return;
     }
+
+    // firebase 통한 로그인으로 바꿔야 함
+
     // 서버에 보낼 정보 => body
     let body = {
       email: email.value,
@@ -117,15 +139,26 @@ function Login() {
             <WrapperStretch>
               <BtnIndigo type="submit" text="로그인하기" />
             </WrapperStretch>
+            <ActGuide
+              guide="계정이 없으신가요?"
+              lead="회원가입하기"
+              onClick={() => navigate(URL.SIGN_UP)}
+            />
           </BoxBorder>
         </form>
-        <BoxBorder>
-          <ActGuide
-            guide="계정이 없으신가요?"
-            lead="회원가입하기"
-            onClick={() => navigate(URL.SIGN_UP)}
-          />
-        </BoxBorder>
+        <OtherLine />
+        <WrapperCursor>
+          <FlexRowLayout gap="20px">
+            <Logo src="/img/googleLogo.png" />
+            <Font font="text200">Google 계정으로 로그인 하기</Font>
+          </FlexRowLayout>
+        </WrapperCursor>
+        <WrapperCursor>
+          <FlexRowLayout gap="20px">
+            <Logo src="/img/githubLogo.png" />
+            <Font font="text200">Github 계정으로 로그인 하기</Font>
+          </FlexRowLayout>
+        </WrapperCursor>
       </WrapperPad>
     </>
   );
