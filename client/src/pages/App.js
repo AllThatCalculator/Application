@@ -1,13 +1,14 @@
 import AppRouter from "../Router";
 import { useState, useEffect } from "react";
-import { authService } from "../firebase";
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 function App() {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    authService.onAuthStateChanged((user) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsLoggedIn(true);
       } else {
@@ -16,6 +17,7 @@ function App() {
       setInit(true);
     });
   }, []);
+
   return <>{init ? <AppRouter isLoggedIn={isLoggedIn} /> : <></>}</>;
 }
 
