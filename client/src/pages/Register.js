@@ -106,29 +106,29 @@ function Register() {
   // 유저 정보
   const [userInfo, setUserInfo] = useState(null);
 
-  /**
-   * 사용자 정보 서버에 요청
-   */
-  function requestUserInfo(userEmail) {
-    const request = loadUserInfo(userEmail);
-    request.then((res) => {
-      setUserInfo(res);
-    });
-  }
+  // /**
+  //  * 사용자 정보 서버에 요청
+  //  */
+  // function requestUserInfo(userEmail) {
+  //   const request = loadUserInfo(userEmail);
+  //   request.then((res) => {
+  //     setUserInfo(res);
+  //   });
+  // }
 
-  /**
-   * 백엔드에서 사용자 정보 불러오는 함수
-   */
-  const loadUserEmail = useCallback(() => {
-    const request = AuthUser();
-    request.then((res) => {
-      if (res.success) {
-        requestUserInfo(res.userEmail);
-      } else {
-        navigate(URL.LOGIN);
-      }
-    });
-  }, [navigate]);
+  // /**
+  //  * 백엔드에서 사용자 정보 불러오는 함수
+  //  */
+  // const loadUserEmail = useCallback(() => {
+  //   const request = AuthUser();
+  //   request.then((res) => {
+  //     if (res.success) {
+  //       requestUserInfo(res.userEmail);
+  //     } else {
+  //       navigate(URL.LOGIN);
+  //     }
+  //   });
+  // }, [navigate]);
 
   /**
    * 카테고리 서버에 요청 후, 데이터 가공
@@ -141,13 +141,13 @@ function Register() {
     });
   }, []);
 
-  /**
-   * 현재 로그인한 사용자 계정 가져오기
-   */
-  useEffect(() => {
-    loadUserEmail();
-    loadCategory();
-  }, [loadUserEmail, loadCategory]);
+  // /**
+  //  * 현재 로그인한 사용자 계정 가져오기
+  //  */
+  // useEffect(() => {
+  //   loadUserEmail();
+  //   loadCategory();
+  // }, [loadUserEmail, loadCategory]);
 
   return (
     <White300Layout>

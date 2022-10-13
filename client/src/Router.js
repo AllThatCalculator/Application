@@ -19,18 +19,20 @@ import WriteUserInfo from "./pages/WriteUserInfo";
 // google-analytics
 import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
 
-const AppRouter = () => {
+function AppRouter({ isLoggedIn }) {
   return (
     <BrowserRouter>
       <RouteChangeTracker />
-      <Header />
+      <Header isLoggedIn={isLoggedIn} />
       <Routes>
         <Route path={URL.CALCULET} element={<Calculet />}>
           <Route path=":id" element={<Calculet />} />
         </Route>
         <Route
           path={URL.REGISTER}
-          element={<Auth authComponent={<Register />} />}
+          element={
+            <Auth isLoggedIn={isLoggedIn} authComponent={<Register />} />
+          }
         />
         <Route path={URL.LOGIN} element={<Login />} />
         <Route path={URL.SIGN_UP} element={<SignUp />} />
@@ -41,6 +43,6 @@ const AppRouter = () => {
       {/* <BookmarkBar /> */}
     </BrowserRouter>
   );
-};
+}
 
 export default AppRouter;

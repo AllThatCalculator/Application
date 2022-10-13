@@ -21,6 +21,8 @@ import useInput from "../hooks/useInput";
 import signUpUser from "../user-actions/SignUpUser";
 import { useNavigate } from "react-router-dom";
 import UserInfoForm from "../components/sign-up/UserInfoForm";
+import { authService } from "../firebase";
+
 /**
  * 흰색 뒷 배경
  */
@@ -50,7 +52,10 @@ const WrapperStretch = styled(FlexColumnLayout)`
 /**
  * 회원가입 페이지
  */
-function SignUp() {
+function WriteUserInfo() {
+  // 회원가입한 사람의 UID
+  const userUid = authService.currentUser.uid;
+
   /**
    * 프로필 사진 profileImg - type : Blob
    *
@@ -117,14 +122,14 @@ function SignUp() {
       return;
     } else setWarningAll("");
 
-    // (임시) 서버 보내는 부분 api와 함께 수정 필요
-
     // DB 데이터 타입에 맞게 처리
     const sexDb = sex === "여자" ? "F" : "M";
     const birthdateDb = year + "-" + month + "-" + date;
 
+    // (임시) 우선 UID를 Email로 보냄
     // 서버에 보낼 정보 => body
     let body = {
+      email: userUid,
       userName: userName.value,
       profileImg: profileImg,
       bio: bio.value,
@@ -138,8 +143,8 @@ function SignUp() {
     request.then((res) => {
       // 회원 가입 실패
       if (res.message) setWarningAll("올바른 정보를 입력해 주세요.");
-      // 회원 가입 성공
-      else if (res.location) navigate("/login");
+      // 회원 가입 성공 -> 자동 로그인 -> 메인화면
+      else if (res.location) window.location.href = "/";
     });
   }
   return (
@@ -187,4 +192,4 @@ function SignUp() {
     </>
   );
 }
-export default SignUp;
+export default WriteUserInfo;

@@ -8,12 +8,13 @@ import CategoryBar from "../components/global-components/CategoryBar";
 import { useCallback, useState } from "react";
 import { useEffect } from "react";
 import { FlexRowLayout } from "../components/Layout";
-import AuthUser from "../user-actions/AuthUser";
 import URL from "../components/PageUrls";
-import LogoutUser from "../user-actions/LogoutUser";
 
 import calculetsUser from "../user-actions/calculetsUser";
 import useClickOutside from "../hooks/useClickOutside";
+
+import { authService } from "../firebase";
+
 /**
  * header와 categoryBar 박스를 감싸는 스타일 정의
  */
@@ -47,18 +48,19 @@ const HeaderContents = styled(FlexRowLayout)`
  * @param {function} onLogin 로그인 페이지로 이동 이벤트 (로그인 버튼 이벤트)
  * @param {function} onLogout 로그아웃 이벤트 (로그아웃 버튼 이벤트)
  */
-function Contents({ onIsOpen, onLogin, onLogout }) {
+function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
   /**
    * 페이지 새로고침 되자마자 로그인 상태 확인하여 로그인/아웃 버튼 렌더
    */
   const [logBtn, setLogBtn] = useState(null);
+
   const onHandlerLogin = useCallback(() => {
-    AuthUser().then((res) =>
-      !res.success
-        ? setLogBtn(<BtnWhite text="로그인" icon="Person" onClick={onLogin} />)
-        : setLogBtn(<BtnWhite text="로그아웃" onClick={onLogout} />)
-    );
-  }, [onLogin, onLogout]);
+    if (isLoggedIn) {
+      setLogBtn(<BtnWhite text="로그아웃" onClick={onLogout} />);
+    } else {
+      setLogBtn(<BtnWhite text="로그인" icon="Person" onClick={onLogin} />);
+    }
+  }, [isLoggedIn, onLogin, onLogout]);
 
   useEffect(onHandlerLogin, [onHandlerLogin]);
 
@@ -87,7 +89,7 @@ function Contents({ onIsOpen, onLogin, onLogout }) {
  * -> 계산기 카테고리, 로고, 검색창, 로그인 버튼
  *
  */
-function Header() {
+function Header({ isLoggedIn }) {
   /**
    * 카테고리바 영역을 ref로 지정
    * categoryBarRef
@@ -139,26 +141,26 @@ function Header() {
   /**
    * 로그인 페이지로 이동 이벤트
    */
-  const onHandlerLogin = useCallback(() => {
+  function onHandlerLogin(event) {
     window.location.href = URL.LOGIN;
-  }, []);
+  }
   /**
    * 로그아웃
    */
-  const onHandlerLogout = useCallback((event) => {
-    event.preventDefault();
-    // 서버에 요청
-    LogoutUser().then((res) => {
-      // 로그아웃 성공
-      if (res.success) {
-        window.location.href = URL.CALCULET;
-      }
-    });
-  }, []);
+  async function onHandlerLogout(event) {
+    try {
+      await authService.signOut();
+      // 로그아웃 성공하면 메인 화면으로 새로고침
+      window.location.href = URL.CALCULET;
+    } catch (e) {
+      console.log(e);
+    }
+  }
   return (
     <Wrapper ref={categoryBarRef.elementRef}>
       <Positioner isChange={isChange}>
         <Contents
+          isLoggedIn={isLoggedIn}
           onIsOpen={() => categoryBarRef.setIsActive(!categoryBarRef.isActive)}
           onLogin={onHandlerLogin}
           onLogout={onHandlerLogout}
