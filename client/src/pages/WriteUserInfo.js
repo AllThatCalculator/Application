@@ -21,7 +21,8 @@ import useInput from "../hooks/useInput";
 import signUpUser from "../user-actions/SignUpUser";
 import { useNavigate } from "react-router-dom";
 import UserInfoForm from "../components/sign-up/UserInfoForm";
-import { authService } from "../firebase";
+
+import { auth } from "../firebase";
 
 /**
  * 흰색 뒷 배경
@@ -54,7 +55,8 @@ const WrapperStretch = styled(FlexColumnLayout)`
  */
 function WriteUserInfo() {
   // 회원가입한 사람의 UID
-  const userUid = authService.currentUser.uid;
+  const userUid = auth.currentUser.uid;
+  console.log(userUid);
 
   /**
    * 프로필 사진 profileImg - type : Blob

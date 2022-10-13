@@ -18,8 +18,15 @@ import { useNavigate } from "react-router-dom";
 import EmailForm from "../components/sign-up/EmailForm";
 import { Font } from "../components/atom-components/StyledText";
 import OtherLine from "../components/sign-up/OtherLine";
-import { authService } from "../firebase";
 import URL from "../components/PageUrls";
+
+import { auth } from "../firebase";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
 
 /**
  * 흰색 뒷 배경
@@ -106,8 +113,9 @@ function SignUp() {
     } else setWarningPw("");
   }, [pw.value, pwConfirmation.value]);
 
-  // 입력 변경 사항 있을 시, 회원가입 후 경고 메세지 초기화
+  // 입력 변경 사항 있을 시, 회원가입 후 경고 메세지 & 모든 사항 입력 경고 메세지 초기화
   useEffect(() => {
+    setWarningAll("");
     setWarningSignUp("");
   }, [address.value, domain, pw.value, pwConfirmation.value]);
 
@@ -132,7 +140,7 @@ function SignUp() {
    * 폼 제출
    * - 입력된 비밀번호와 비밀번호 확인에 따른 경고 안내문 & 회원가입 성공
    */
-  async function onSubmitHandler(event) {
+  function onSubmitHandler(event) {
     event.preventDefault();
     // 비밀번호 & 비밀번호 확인 비교
     if (warningPw) return;
@@ -144,26 +152,85 @@ function SignUp() {
 
     // firebase 통한 이메일 회원가입 진행
     const email = address.value + "@" + domain;
-    try {
-      await authService.createUserWithEmailAndPassword(email, pw.value);
-      // 성공 시, 정보 입력해야 하므로 정보 입력 페이지로 넘어감
-      navigate(URL.WRITE_USER_INFO);
-    } catch (e) {
-      switch (e.code) {
-        case "auth/email-already-in-use":
-          setWarningSignUp("이미 존재하는 계정입니다.");
-          break;
-        case "auth/weak-password":
-          setWarningSignUp("6자리 이상 비밀번호를 입력해주세요.");
-          break;
-        case "auth/invalid-email":
-          setWarningSignUp("이메일 계정 형식을 올바르게 입력해주세요.");
-          break;
-        default:
-          break;
-      }
-    }
+    createUserWithEmailAndPassword(auth, email, pw.value)
+      .then((userCredential) => {
+        // 성공 시, 정보 입력해야 하므로 정보 입력 페이지로 넘어감
+        navigate(URL.WRITE_USER_INFO);
+      })
+      .catch((error) => {
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setWarningSignUp("이미 존재하는 계정입니다.");
+            break;
+          case "auth/weak-password":
+            setWarningSignUp("6자리 이상 비밀번호를 입력해주세요.");
+            break;
+          case "auth/invalid-email":
+            setWarningSignUp("이메일 계정 형식을 올바르게 입력해주세요.");
+            break;
+          default:
+            break;
+        }
+      });
   }
+
+  /**
+   * firebase google 회원가입
+   */
+  function googleSignUp(event) {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // ...
+        // 성공 시, 정보 입력해야 하므로 정보 입력 페이지로 넘어감
+        navigate(URL.WRITE_USER_INFO);
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  }
+
+  /**
+   * firebase github 회원가입
+   */
+  function githubSignUp(event) {
+    const provider = new GithubAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+        const credential = GithubAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+
+        // The signed-in user info.
+        const user = result.user;
+        // ...
+        // 성공 시, 정보 입력해야 하므로 정보 입력 페이지로 넘어감
+        navigate(URL.WRITE_USER_INFO);
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        switch (error.code) {
+          case "auth/account-exists-with-different-credential":
+            console.log("이미 존재하는 계정");
+            break;
+          default:
+            break;
+        }
+      });
+  }
+
   return (
     <>
       <StyledWhite300 />
@@ -200,13 +267,13 @@ function SignUp() {
           </BoxBorder>
         </form>
         <OtherLine />
-        <WrapperCursor>
+        <WrapperCursor onClick={googleSignUp}>
           <FlexRowLayout gap="20px">
             <Logo src="/img/googleLogo.png" />
             <Font font="text200">Google 계정으로 가입 하기</Font>
           </FlexRowLayout>
         </WrapperCursor>
-        <WrapperCursor>
+        <WrapperCursor onClick={githubSignUp}>
           <FlexRowLayout gap="20px">
             <Logo src="/img/githubLogo.png" />
             <Font font="text200">Github 계정으로 가입 하기</Font>

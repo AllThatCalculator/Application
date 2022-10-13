@@ -22,7 +22,9 @@ import ActGuide from "../components/sign-up/ActGuide";
 import URL from "../components/PageUrls";
 import { Font } from "../components/atom-components/StyledText";
 import OtherLine from "../components/sign-up/OtherLine";
-import { authService } from "../firebase";
+
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 /**
  * 흰색 뒷 배경
@@ -91,7 +93,7 @@ function Login() {
    * 폼 제출
    * - 입력된 이메일과 비밀번호에 따른 경고 안내문 change & 로그인 통과
    */
-  async function onSubmitHandler(event) {
+  function onSubmitHandler(event) {
     event.preventDefault();
     if (!email.value || !pw.value) {
       setWarning("이메일과 비밀번호를 입력해주세요.");
@@ -99,22 +101,23 @@ function Login() {
     }
 
     // firebase 통한 이메일&패스워드 로그인
-    try {
-      await authService.signInWithEmailAndPassword(email.value, pw.value);
-      // 로그인 성공 시, 메인 화면으로
-      navigate("/");
-    } catch (e) {
-      switch (e.code) {
-        case "auth/user-not-found":
-          setWarning("존재하지 않는 계정입니다.");
-          break;
-        case "auth/wrong-password":
-          setWarning("잘못된 비밀번호입니다.");
-          break;
-        default:
-          break;
-      }
-    }
+    signInWithEmailAndPassword(auth, email.value, pw.value)
+      .then((userCredential) => {
+        // 로그인 성공 시, 메인 화면으로
+        navigate("/");
+      })
+      .catch((error) => {
+        switch (error.code) {
+          case "auth/user-not-found":
+            setWarning("존재하지 않는 계정입니다.");
+            break;
+          case "auth/wrong-password":
+            setWarning("잘못된 비밀번호입니다.");
+            break;
+          default:
+            break;
+        }
+      });
   }
 
   /**

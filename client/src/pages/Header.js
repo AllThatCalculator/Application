@@ -13,7 +13,8 @@ import URL from "../components/PageUrls";
 import calculetsUser from "../user-actions/calculetsUser";
 import useClickOutside from "../hooks/useClickOutside";
 
-import { authService } from "../firebase";
+import { auth } from "../firebase";
+import { signOut } from "firebase/auth";
 
 /**
  * header와 categoryBar 박스를 감싸는 스타일 정의
@@ -147,15 +148,17 @@ function Header({ isLoggedIn }) {
   /**
    * 로그아웃
    */
-  async function onHandlerLogout(event) {
-    try {
-      await authService.signOut();
-      // 로그아웃 성공하면 메인 화면으로 새로고침
-      window.location.href = URL.CALCULET;
-    } catch (e) {
-      console.log(e);
-    }
+  function onHandlerLogout(event) {
+    signOut(auth)
+      .then(() => {
+        // 로그아웃 성공하면 메인 화면으로 새로고침
+        window.location.href = URL.CALCULET;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
+
   return (
     <Wrapper ref={categoryBarRef.elementRef}>
       <Positioner isChange={isChange}>
