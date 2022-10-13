@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BoxBorder } from "../components/atom-components/BoxBorder";
 import { StyledImg } from "../components/atom-components/BoxIcon";
@@ -22,6 +22,8 @@ import ActGuide from "../components/sign-up/ActGuide";
 import URL from "../components/PageUrls";
 import { Font } from "../components/atom-components/StyledText";
 import OtherLine from "../components/sign-up/OtherLine";
+import { authService } from "../firebase";
+
 /**
  * 흰색 뒷 배경
  */
@@ -80,34 +82,39 @@ function Login() {
   const [warning, setWarning] = useState("");
   const navigate = useNavigate();
 
+  // 입력 변경 사항 있을 시, 회원가입 후 경고 메세지 초기화
+  useEffect(() => {
+    setWarning("");
+  }, [email.value, pw.value]);
+
   /**
    * 폼 제출
    * - 입력된 이메일과 비밀번호에 따른 경고 안내문 change & 로그인 통과
    */
-  function onSubmitHandler(event) {
+  async function onSubmitHandler(event) {
     event.preventDefault();
     if (!email.value || !pw.value) {
       setWarning("이메일과 비밀번호를 입력해주세요.");
       return;
     }
 
-    // firebase 통한 로그인으로 바꿔야 함
-
-    // 서버에 보낼 정보 => body
-    let body = {
-      email: email.value,
-      pw: pw.value,
-    };
-    // 서버에 요청
-    const request = loginUser(body);
-    request.then((res) => {
-      // 로그인 실패
-      if (!res.success) setWarning(res.message);
-      // 로그인 성공
-      else {
-        window.location.replace(URL.CALCULET);
+    // firebase 통한 이메일&패스워드 로그인
+    try {
+      await authService.signInWithEmailAndPassword(email.value, pw.value);
+      // 로그인 성공 시, 메인 화면으로
+      navigate("/");
+    } catch (e) {
+      switch (e.code) {
+        case "auth/user-not-found":
+          setWarning("존재하지 않는 계정입니다.");
+          break;
+        case "auth/wrong-password":
+          setWarning("잘못된 비밀번호입니다.");
+          break;
+        default:
+          break;
       }
-    });
+    }
   }
 
   /**

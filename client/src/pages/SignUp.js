@@ -18,6 +18,8 @@ import { useNavigate } from "react-router-dom";
 import EmailForm from "../components/sign-up/EmailForm";
 import { Font } from "../components/atom-components/StyledText";
 import OtherLine from "../components/sign-up/OtherLine";
+import { authService } from "../firebase";
+import URL from "../components/PageUrls";
 
 /**
  * 흰색 뒷 배경
@@ -79,11 +81,14 @@ function SignUp() {
   const pw = useInput("");
   const pwConfirmation = useInput("");
 
-  // 주의 문구 여부 : 비밀번호 유효성 검사 / 비밀번호 & 비밀번호 확인 비교
+  // 주의 문구 여부 : 비밀번호 & 비밀번호 확인 비교
   const [warningPw, setWarningPw] = useState("");
 
-  // 주의 문구 여부: 다 입력되었는지 여부 & 요청 정보 오류
+  // 주의 문구 여부 : 다 입력되었는지 여부 & 요청 정보 오류
   const [warningAll, setWarningAll] = useState("");
+
+  // 주의 문구 여부 : 가입하기 버튼 클릭 후 (이미 존재 계정, 비밀번호 유효성, 이메일 형식)
+  const [warningSignUp, setWarningSignUp] = useState("");
 
   // 라우터 역할 네이게이션
   const navigate = useNavigate();
@@ -94,24 +99,17 @@ function SignUp() {
   // 선택되거나 입력된 도메인 갱신
   useEffect(() => setDomain(writtenDomain), [writtenDomain]);
 
-  // 비밀번호 유효성 검사 (10자 이상, 알파벳과 특수문자 포함)
   // 비밀번호 & 비밀번호 확인 같은지 검사
   useEffect(() => {
-    // 비밀번호 최소 10자, 하나의 문자, 하나의 숫자, 하나의 특수 문자 정규식
-    const specialLetter =
-      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{10,}$/g;
-    if (!specialLetter.test(pw.value)) {
-      if (pw.value.length > 0) {
-        setWarningPw(
-          "최소 10자 이상, 숫자와 알파벳과 특수문자를 포함해 주세요."
-        );
-        return;
-      } else setWarningPw("");
-    }
     if (pw.value !== pwConfirmation.value) {
       setWarningPw("비밀번호가 일치하지 않습니다.");
     } else setWarningPw("");
   }, [pw.value, pwConfirmation.value]);
+
+  // 입력 변경 사항 있을 시, 회원가입 후 경고 메세지 초기화
+  useEffect(() => {
+    setWarningSignUp("");
+  }, [address.value, domain, pw.value, pwConfirmation.value]);
 
   /**
    * 저작자 이메일의 도메인 부분 change 함수 (select 박스)
@@ -134,7 +132,7 @@ function SignUp() {
    * 폼 제출
    * - 입력된 비밀번호와 비밀번호 확인에 따른 경고 안내문 & 회원가입 성공
    */
-  function onSubmitHandler(event) {
+  async function onSubmitHandler(event) {
     event.preventDefault();
     // 비밀번호 & 비밀번호 확인 비교
     if (warningPw) return;
@@ -145,39 +143,62 @@ function SignUp() {
     } else setWarningAll("");
 
     // firebase 통한 이메일 회원가입 진행
+    const email = address.value + "@" + domain;
+    try {
+      await authService.createUserWithEmailAndPassword(email, pw.value);
+      // 성공 시, 정보 입력해야 하므로 정보 입력 페이지로 넘어감
+      navigate(URL.WRITE_USER_INFO);
+    } catch (e) {
+      switch (e.code) {
+        case "auth/email-already-in-use":
+          setWarningSignUp("이미 존재하는 계정입니다.");
+          break;
+        case "auth/weak-password":
+          setWarningSignUp("6자리 이상 비밀번호를 입력해주세요.");
+          break;
+        case "auth/invalid-email":
+          setWarningSignUp("이메일 계정 형식을 올바르게 입력해주세요.");
+          break;
+        default:
+          break;
+      }
+    }
   }
   return (
     <>
       <StyledWhite300 />
       <WrapperPad gap="20px">
         <StyledImg src="/ATCLogoBlueImgText.png" width="214px" />
-        <BoxBorder gap="20px">
-          <BoxTitle content="회원가입" />
-          <WrapperStretch gap="10px">
-            <EmailForm
-              address={address.value}
-              writtenDomain={writtenDomain}
-              selectedDomain={selectedDomain}
-              pw={pw.value}
-              pwConfirmation={pwConfirmation.value}
-              changeAddress={address.onChange}
-              changeDomain={(event) => setwrittenDomain(event.target.value)}
-              changeSelectedDomain={changeSelectedDomain}
-              changePw={pw.onChange}
-              changePwConfirmation={pwConfirmation.onChange}
+        <form onSubmit={onSubmitHandler}>
+          <BoxBorder gap="20px">
+            <BoxTitle content="회원가입" />
+            <WrapperStretch gap="10px">
+              <EmailForm
+                address={address.value}
+                writtenDomain={writtenDomain}
+                selectedDomain={selectedDomain}
+                pw={pw.value}
+                pwConfirmation={pwConfirmation.value}
+                changeAddress={address.onChange}
+                changeDomain={(event) => setwrittenDomain(event.target.value)}
+                changeSelectedDomain={changeSelectedDomain}
+                changePw={pw.onChange}
+                changePwConfirmation={pwConfirmation.onChange}
+              />
+              {warningPw && <WarningGuide content={warningPw} />}
+              {warningAll && <WarningGuide content={warningAll} />}
+              {warningSignUp && <WarningGuide content={warningSignUp} />}
+            </WrapperStretch>
+            <WrapperStretch>
+              <BtnIndigo text="가입하기" onClick={onSubmitHandler} />
+            </WrapperStretch>
+            <ActGuide
+              guide="이미 계정이 있으신가요?"
+              lead="로그인하기"
+              onClick={() => navigate("/login")}
             />
-            {warningPw && <WarningGuide content={warningPw} />}
-            {warningAll && <WarningGuide content={warningAll} />}
-          </WrapperStretch>
-          <WrapperStretch>
-            <BtnIndigo text="가입하기" onClick={onSubmitHandler} />
-          </WrapperStretch>
-          <ActGuide
-            guide="이미 계정이 있으신가요?"
-            lead="로그인하기"
-            onClick={() => navigate("/login")}
-          />
-        </BoxBorder>
+          </BoxBorder>
+        </form>
         <OtherLine />
         <WrapperCursor>
           <FlexRowLayout gap="20px">
