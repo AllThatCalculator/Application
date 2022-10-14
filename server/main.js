@@ -10,18 +10,6 @@ const app = express();
 require("dotenv").config();
 const port = process.env.EXPRESS_PORT;
 
-// mongoDB 연결
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-  })
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
 /**
  * 쿠키 파싱
  */
@@ -34,7 +22,7 @@ app.use(express.urlencoded({ limit: "1mb", extended: true }));
 app.use(express.json({ limit: "1mb" }));
 
 /**
- * API 문서 path 등록하기
+ * API 문서 path 등록하기 - 배포할 때 제외하는 옵션 필요
  */
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
