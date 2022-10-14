@@ -41,7 +41,6 @@ router.post("/", auth, (req, res) => {
     outputObj: JSON.stringify(req.body.outputObj),
     createdAt: JSON.stringify(Date()),
   };
-  console.dir(newRecord);
 
   // 기록 저장
   //   newRecord
