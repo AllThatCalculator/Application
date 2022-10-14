@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const Record = require("../mongoDB/recordModel");
 const { auth } = require("../middleware/auth");
 
 /**
@@ -35,20 +34,21 @@ const { auth } = require("../middleware/auth");
  */
 router.post("/", auth, (req, res) => {
   // 새로운 기록 객체 생성
-  const newRecord = new Record({
+  const newRecord = {
     userEmail: req.email,
     calculetId: req.body.calculetId,
-    inputObj: req.body.inputObj,
-    outputObj: req.body.outputObj,
-  });
+    inputObj: JSON.stringify(req.body.inputObj),
+    outputObj: JSON.stringify(req.body.outputObj),
+    createdAt: JSON.stringify(Date()),
+  };
 
   // 기록 저장
-  newRecord
-    .save()
-    .then(() => {
-      res.status(201).send({ message: "Record saved" });
-    })
-    .catch(() => res.status(400).send({ message: "Failed to save record." }));
+  //   newRecord
+  //     .save()
+  //     .then(() => {
+  //       res.status(201).send({ message: "Record saved" });
+  //     })
+  //     .catch(() => res.status(400).send({ message: "Failed to save record." }));
 });
 /**
  * @swagger
@@ -84,32 +84,54 @@ router.post("/", auth, (req, res) => {
  *                $ref: "#/components/schemas/errorResult"
  */
 router.get("/", auth, (req, res) => {
+  recordList = [
+    {
+      inputObj: JSON.parse('{"입력":""}'),
+      outputObj: JSON.parse('{"출력":"15"}'),
+      createdAt: Date(),
+    },
+    {
+      inputObj: JSON.parse('{"입력":""}'),
+      outputObj: JSON.parse('{"출력":"20"}'),
+      createdAt: Date(),
+    },
+    {
+      inputObj: JSON.parse('{"입력":"1+1"}'),
+      outputObj: JSON.parse('{"출력":"2"}'),
+      createdAt: Date(),
+    },
+    {
+      inputObj: JSON.parse('{"입력":"이거 대체"}'),
+      outputObj: JSON.parse('{"출력":"몇개까지 만들어 둬야 해"}'),
+      createdAt: Date(),
+    },
+  ];
+  res.status(200).send({ recordList });
   // 해당 이력 검색
-  Record.find({
-    userEmail: req.email,
-    calculetId: req.query.calculetId,
-  })
-    .then((recordList) => {
-      // 데이터 가공
-      recordList = recordList.map((row) => {
-        const { inputObj, outputObj, createdAt } = row;
-        return {
-          inputObj: inputObj,
-          outputObj: outputObj,
-          createdAt: createdAt,
-        };
-      });
-
-      // 최신순 정렬
-      recordList.sort((a, b) => a.createdAt < b.createdAt);
-      res.status(200).send({ recordList });
-    })
-    .catch(() => {
-      res.status(400).send({
-        message:
-          "request parameters was wrong. retry request after change parameters",
-      });
-    });
+  // Record.find({
+  //   userEmail: req.email,
+  //   calculetId: req.query.calculetId,
+  // })
+  //   .then((recordList) => {
+  //     // 데이터 가공
+  //     recordList = recordList.map((row) => {
+  //       const { inputObj, outputObj, createdAt } = row;
+  //       return {
+  //         inputObj: inputObj,
+  //         outputObj: outputObj,
+  //         createdAt: createdAt,
+  //       };
+  //     });
+  //     // 최신순 정렬
+  //     recordList.sort((a, b) => a.createdAt < b.createdAt);
+  //     res.status(200).send({ recordList });
+  //   })
+  //   .catch(() => {
+  //     res.status(400).send({
+  //       message:
+  //         "request parameters was wrong. retry request after change parameters",
+  //     });
+  //   });
 });
 
 module.exports = router;

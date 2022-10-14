@@ -7,7 +7,7 @@ Docker-compose --build시
 3. `initdb.d/load_file` 실행
 
 ```
-database
+MariaDB
 ├── conf.d // 설정 파일 폴더
 │   └── my.cnf
 ├── data    // DB 데이터 저장되는 폴더 (로컬)
