@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const calculets = require("./routes/calculets");
 const users = require("./routes/users");
 const record = require("./routes/record");
@@ -22,7 +21,7 @@ app.use(express.urlencoded({ limit: "1mb", extended: true }));
 app.use(express.json({ limit: "1mb" }));
 
 /**
- * API 문서 path 등록하기 - 배포할 때 제외하는 옵션 필요
+ * API 문서 path 등록하기
  */
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
