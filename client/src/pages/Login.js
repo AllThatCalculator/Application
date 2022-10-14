@@ -24,7 +24,14 @@ import { Font } from "../components/atom-components/StyledText";
 import OtherLine from "../components/sign-up/OtherLine";
 
 import { auth } from "../firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  signInWithPopup,
+  getAdditionalUserInfo,
+  signOut,
+} from "firebase/auth";
 
 /**
  * 흰색 뒷 배경
@@ -121,6 +128,78 @@ function Login() {
   }
 
   /**
+   * firebase google 로그인
+   */
+  function googleSignIn(event) {
+    setWarning("");
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // 회원가입과 구분
+        const { isNewUser } = getAdditionalUserInfo(result);
+        if (isNewUser) {
+          // 존재하지 않는 계정
+          signOut(auth)
+            .then(() => {
+              setWarning("존재하지 않는 계정입니다.");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          // 로그인 성공 시, 메인 화면으로
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        switch (error.code) {
+          case "auth/account-exists-with-different-credential":
+            setWarning("존재하지 않는 계정입니다.");
+            break;
+          default:
+            break;
+        }
+      });
+  }
+
+  /**
+   * firebase github 로그인
+   */
+  function githubSignIn(event) {
+    setWarning("");
+    const provider = new GithubAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // 회원가입과 구분
+        const { isNewUser } = getAdditionalUserInfo(result);
+        if (isNewUser) {
+          // 존재하지 않는 계정
+          signOut(auth)
+            .then(() => {
+              setWarning("존재하지 않는 계정입니다.");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          // 로그인 성공 시, 메인 화면으로
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        switch (error.code) {
+          case "auth/account-exists-with-different-credential":
+            setWarning("존재하지 않는 계정입니다.");
+            break;
+          default:
+            break;
+        }
+      });
+  }
+
+  /**
    * 비밀번호 찾기 버튼 이벤트
    */
   function onFindPw() {
@@ -157,13 +236,13 @@ function Login() {
           </BoxBorder>
         </form>
         <OtherLine />
-        <WrapperCursor>
+        <WrapperCursor onClick={googleSignIn}>
           <FlexRowLayout gap="20px">
             <Logo src="/img/googleLogo.png" />
             <Font font="text200">Google 계정으로 로그인 하기</Font>
           </FlexRowLayout>
         </WrapperCursor>
-        <WrapperCursor>
+        <WrapperCursor onClick={githubSignIn}>
           <FlexRowLayout gap="20px">
             <Logo src="/img/githubLogo.png" />
             <Font font="text200">Github 계정으로 로그인 하기</Font>
