@@ -84,10 +84,27 @@ router.post("/", auth, (req, res) => {
  *                $ref: "#/components/schemas/errorResult"
  */
 router.get("/", auth, (req, res) => {
-  inputObj = JSON.parse('{"입력":""}');
-  outputObj = JSON.parse('{"출력":"15"}');
   recordList = [
-    { inputObj: inputObj, outputObj: outputObj, createdAt: Date() },
+    {
+      inputObj: JSON.parse('{"입력":""}'),
+      outputObj: JSON.parse('{"출력":"15"}'),
+      createdAt: Date(),
+    },
+    {
+      inputObj: JSON.parse('{"입력":""}'),
+      outputObj: JSON.parse('{"출력":"20"}'),
+      createdAt: Date(),
+    },
+    {
+      inputObj: JSON.parse('{"입력":"1+1"}'),
+      outputObj: JSON.parse('{"출력":"2"}'),
+      createdAt: Date(),
+    },
+    {
+      inputObj: JSON.parse('{"입력":"이거 대체"}'),
+      outputObj: JSON.parse('{"출력":"몇개까지 만들어 둬야 해"}'),
+      createdAt: Date(),
+    },
   ];
   res.status(200).send({ recordList });
   // 해당 이력 검색
