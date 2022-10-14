@@ -26,6 +26,8 @@ import {
   GoogleAuthProvider,
   GithubAuthProvider,
   signInWithPopup,
+  getAdditionalUserInfo,
+  signOut,
 } from "firebase/auth";
 
 /**
@@ -178,27 +180,36 @@ function SignUp() {
    * firebase google 회원가입
    */
   function googleSignUp(event) {
+    setWarningSignUp("");
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // ...
-        // 성공 시, 정보 입력해야 하므로 정보 입력 페이지로 넘어감
-        navigate(URL.WRITE_USER_INFO);
+        // 로그인과 구분
+        const { isNewUser } = getAdditionalUserInfo(result);
+        if (isNewUser) {
+          // 새로운 회원!
+          // 정보 입력해야 하므로 정보 입력 페이지로 넘어감
+          navigate(URL.WRITE_USER_INFO);
+        } else {
+          // 이미 존재하는 계정
+          signOut(auth)
+            .then(() => {
+              setWarningSignUp("이미 존재하는 계정입니다.");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       })
       .catch((error) => {
         // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+        switch (error.code) {
+          case "auth/account-exists-with-different-credential":
+            setWarningSignUp("이미 존재하는 계정입니다.");
+            break;
+          default:
+            break;
+        }
       });
   }
 
@@ -206,24 +217,32 @@ function SignUp() {
    * firebase github 회원가입
    */
   function githubSignUp(event) {
+    setWarningSignUp("");
     const provider = new GithubAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a GitHub Access Token. You can use it to access the GitHub API.
-        const credential = GithubAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-
-        // The signed-in user info.
-        const user = result.user;
-        // ...
-        // 성공 시, 정보 입력해야 하므로 정보 입력 페이지로 넘어감
-        navigate(URL.WRITE_USER_INFO);
+        // 로그인과 구분
+        const { isNewUser } = getAdditionalUserInfo(result);
+        if (isNewUser) {
+          // 새로운 회원!
+          // 정보 입력해야 하므로 정보 입력 페이지로 넘어감
+          navigate(URL.WRITE_USER_INFO);
+        } else {
+          // 이미 존재하는 계정
+          signOut(auth)
+            .then(() => {
+              setWarningSignUp("이미 존재하는 계정입니다.");
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
       })
       .catch((error) => {
         // Handle Errors here.
         switch (error.code) {
           case "auth/account-exists-with-different-credential":
-            console.log("이미 존재하는 계정");
+            setWarningSignUp("이미 존재하는 계정입니다.");
             break;
           default:
             break;
