@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import UserInfoForm from "../components/sign-up/UserInfoForm";
 
 import { auth } from "../firebase";
+import usePreventLeave from "../hooks/usePreventLeave";
 
 /**
  * 흰색 뒷 배경
@@ -54,8 +55,16 @@ const WrapperStretch = styled(FlexColumnLayout)`
  * 회원가입 페이지
  */
 function WriteUserInfo() {
+  window.history.pushState(null, "", window.location.href);
+  const preventLeave = usePreventLeave();
+
+  preventLeave.enablePrevent();
+
   // 회원가입한 사람의 UID
   const userUid = auth.currentUser.uid;
+  // 회원가입한 사람의 이메일
+  const userEmail = auth.currentUser.email;
+
   console.log(userUid);
 
   /**
@@ -131,7 +140,8 @@ function WriteUserInfo() {
     // (임시) 우선 UID를 Email로 보냄
     // 서버에 보낼 정보 => body
     let body = {
-      email: userUid,
+      id: userUid,
+      email: userEmail,
       userName: userName.value,
       profileImg: profileImg,
       bio: bio.value,
@@ -144,9 +154,12 @@ function WriteUserInfo() {
     const request = signUpUser(body);
     request.then((res) => {
       // 회원 가입 실패
-      if (res.message) setWarningAll("올바른 정보를 입력해 주세요.");
+      if (res === 400) setWarningAll("올바른 정보를 입력해 주세요.");
       // 회원 가입 성공 -> 자동 로그인 -> 메인화면
-      else if (res.location) window.location.href = "/";
+      else if (res.success) {
+        window.location.href = "/";
+        return preventLeave.disablePrevent();
+      }
     });
   }
   return (

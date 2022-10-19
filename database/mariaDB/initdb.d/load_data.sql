@@ -1,7 +1,5 @@
-INSERT INTO user_info VALUES('allthatcalculator@gmail.com', 'allthatcalculator', LOAD_FILE('/docker-entrypoint-initdb.d/initial-data/profile/atc.png'), NULL, 'F', '2022-04-02', '관리자');
-INSERT INTO user_info VALUES('bsa0322@ewhain.net', 'bsa0322', LOAD_FILE('/docker-entrypoint-initdb.d/initial-data/profile/bsa0322.png'), NULL, 'F', '2002-03-22', '학생');
-
-INSERT INTO user_login(user_email, pw) VALUES('bsa0322@ewhain.net', 'password');
+INSERT INTO user_info VALUES('1','allthatcalculator@gmail.com', 'allthatcalculator', LOAD_FILE('/docker-entrypoint-initdb.d/initial-data/profile/atc.png'), NULL, 'F', '2022-04-02', '관리자');
+INSERT INTO user_info VALUES('2','bsa0322@ewhain.net', 'bsa0322', LOAD_FILE('/docker-entrypoint-initdb.d/initial-data/profile/bsa0322.png'), NULL, 'F', '2002-03-22', '학생');
 
 INSERT INTO category_main VALUES(0, '단위 변환기');
 INSERT INTO category_main VALUES(1, '수학');
@@ -24,4 +22,4 @@ INSERT INTO category_sub VALUES(9, '쇼핑',4);
 INSERT INTO category_sub VALUES(10,'학교',4);
 INSERT INTO category_sub VALUES(99999, '기타', 99999);
 
-INSERT INTO calculet_info(title, src_code, manual, description, category_main_id, category_sub_id, contributor_email) VALUES('사칙연산 계산기',LOAD_FILE('/docker-entrypoint-initdb.d/initial-data/calculet/arithmeticOperation.html'),LOAD_FILE('/docker-entrypoint-initdb.d/initial-data/calculet/arithmeticOperation.md'),'사칙연산을 하는 계산기입니다.',1,1,'bsa0322@ewhain.net');
+INSERT INTO calculet_info(title, src_code, manual, description, category_main_id, category_sub_id, contributor_id) VALUES('사칙연산 계산기',LOAD_FILE('/docker-entrypoint-initdb.d/initial-data/calculet/arithmeticOperation.html'),LOAD_FILE('/docker-entrypoint-initdb.d/initial-data/calculet/arithmeticOperation.md'),'사칙연산을 하는 계산기입니다.',1,1,'2');

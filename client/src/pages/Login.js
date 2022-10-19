@@ -31,6 +31,7 @@ import {
   signInWithPopup,
   getAdditionalUserInfo,
   signOut,
+  deleteUser,
 } from "firebase/auth";
 
 /**
@@ -139,7 +140,7 @@ function Login() {
         const { isNewUser } = getAdditionalUserInfo(result);
         if (isNewUser) {
           // 존재하지 않는 계정
-          signOut(auth)
+          deleteUser(auth.currentUser)
             .then(() => {
               setWarning("존재하지 않는 계정입니다.");
             })
@@ -175,7 +176,7 @@ function Login() {
         const { isNewUser } = getAdditionalUserInfo(result);
         if (isNewUser) {
           // 존재하지 않는 계정
-          signOut(auth)
+          deleteUser(auth.currentUser)
             .then(() => {
               setWarning("존재하지 않는 계정입니다.");
             })
