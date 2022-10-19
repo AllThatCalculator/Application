@@ -13,14 +13,7 @@ async function signUpUser(dataToSubmit = {}) {
     });
     return data;
   } catch (error) {
-    switch (error.response.status) {
-      case 400:
-        return error.response.data;
-      case 403:
-        break;
-      default:
-        return;
-    }
+    return error.response.status;
   }
 }
 export default signUpUser;
