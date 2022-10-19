@@ -52,7 +52,7 @@ services:
 
   mariadb:
     container_name: mariadb
-    image: mariadb:10.8.5
+    image: mariadb:10.5
     ports:
       - 3306:3306
     volumes:
