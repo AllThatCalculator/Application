@@ -3,7 +3,7 @@ version: "3"
 services:
   frontend:
     container_name: frontend
-    restart: always
+    restart: unless-stopped
     stdin_open: true
     build:
       context: ./client
