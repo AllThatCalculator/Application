@@ -4,12 +4,6 @@ function usePreventLeave(unload = () => {}) {
     event.preventDefault();
     event.returnValue = "";
   }
-
-  function preventGoBack() {
-    console.log("뒤로가기 막자");
-    window.history.pushState(null, "", window.location.href);
-  }
-
   /** beforunload는 window가 닫히기 전에 funtion이 실행되도록 함. */
   /** enablePrevent : beforeunload 이벤트 리스너로 listener 지정 */
   function enablePrevent() {
@@ -20,15 +14,12 @@ function usePreventLeave(unload = () => {}) {
      * unload로 페이지 나갈 시 인자로 넘어온 unload함수 수행
      */
     window.addEventListener("unload", unload);
-    // 뒤로가기 막는 이벤트 리스너 추가
-    window.addEventListener("popstate", preventGoBack);
   }
   /** disablePrevent : beforeunload 이벤트 제거 */
   function disablePrevent() {
     // console.log("이벤트 제거");
     window.removeEventListener("beforeunload", listenr);
     window.removeEventListener("unload", unload);
-    window.removeEventListener("popstate", preventGoBack);
   }
 
   return { enablePrevent, disablePrevent };
