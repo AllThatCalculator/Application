@@ -16,23 +16,13 @@ import {
 } from "../components/Layout";
 import WriteInform from "../components/login/WriteInform";
 import useInput from "../hooks/useInput";
-import loginUser from "../user-actions/LoginUser";
 import { useNavigate } from "react-router-dom";
 import ActGuide from "../components/sign-up/ActGuide";
 import URL from "../components/PageUrls";
 import { Font } from "../components/atom-components/StyledText";
 import OtherLine from "../components/sign-up/OtherLine";
 
-import { auth } from "../firebase";
-import {
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  signInWithPopup,
-  getAdditionalUserInfo,
-  signOut,
-  deleteUser,
-} from "firebase/auth";
+import firebaseAuth from "../firebaseAuth";
 
 /**
  * 흰색 뒷 배경
@@ -109,13 +99,13 @@ function Login() {
     }
 
     // firebase 통한 이메일&패스워드 로그인
-    signInWithEmailAndPassword(auth, email.value, pw.value)
-      .then((userCredential) => {
+    const request = firebaseAuth.signInWithEmail(email.value, pw.value);
+    request.then((result) => {
+      if (result === true) {
         // 로그인 성공 시, 메인 화면으로
         navigate("/");
-      })
-      .catch((error) => {
-        switch (error.code) {
+      } else {
+        switch (result) {
           case "auth/user-not-found":
             setWarning("존재하지 않는 계정입니다.");
             break;
@@ -125,7 +115,8 @@ function Login() {
           default:
             break;
         }
-      });
+      }
+    });
   }
 
   /**
@@ -133,35 +124,23 @@ function Login() {
    */
   function googleSignIn(event) {
     setWarning("");
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // 회원가입과 구분
-        const { isNewUser } = getAdditionalUserInfo(result);
-        if (isNewUser) {
-          // 존재하지 않는 계정
-          deleteUser(auth.currentUser)
-            .then(() => {
-              setWarning("존재하지 않는 계정입니다.");
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        } else {
-          // 로그인 성공 시, 메인 화면으로
-          navigate("/");
-        }
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        switch (error.code) {
+    const request = firebaseAuth.signInWithSocial("google");
+    request.then((result) => {
+      if (result === true) {
+        // 로그인 성공 시, 메인 화면으로
+        navigate("/");
+      } else if (result === false) {
+        setWarning("존재하지 않는 계정입니다.");
+      } else {
+        switch (result) {
           case "auth/account-exists-with-different-credential":
-            setWarning("존재하지 않는 계정입니다.");
+            setWarning("다른 업체로 존재하는 계정입니다.");
             break;
           default:
             break;
         }
-      });
+      }
+    });
   }
 
   /**
@@ -169,35 +148,23 @@ function Login() {
    */
   function githubSignIn(event) {
     setWarning("");
-    const provider = new GithubAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // 회원가입과 구분
-        const { isNewUser } = getAdditionalUserInfo(result);
-        if (isNewUser) {
-          // 존재하지 않는 계정
-          deleteUser(auth.currentUser)
-            .then(() => {
-              setWarning("존재하지 않는 계정입니다.");
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        } else {
-          // 로그인 성공 시, 메인 화면으로
-          navigate("/");
-        }
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        switch (error.code) {
+    const request = firebaseAuth.signInWithSocial("github");
+    request.then((result) => {
+      if (result === true) {
+        // 로그인 성공 시, 메인 화면으로
+        navigate("/");
+      } else if (result === false) {
+        setWarning("존재하지 않는 계정입니다.");
+      } else {
+        switch (result) {
           case "auth/account-exists-with-different-credential":
-            setWarning("존재하지 않는 계정입니다.");
+            setWarning("다른 업체로 존재하는 계정입니다.");
             break;
           default:
             break;
         }
-      });
+      }
+    });
   }
 
   /**

@@ -13,8 +13,7 @@ import URL from "../components/PageUrls";
 import calculetsUser from "../user-actions/calculetsUser";
 import useClickOutside from "../hooks/useClickOutside";
 
-import { auth } from "../firebase";
-import { signOut } from "firebase/auth";
+import firebaseAuth from "../firebaseAuth";
 
 /**
  * header와 categoryBar 박스를 감싸는 스타일 정의
@@ -149,14 +148,13 @@ function Header({ isLoggedIn }) {
    * 로그아웃
    */
   function onHandlerLogout(event) {
-    signOut(auth)
-      .then(() => {
+    const request = firebaseAuth.signOutAuth();
+    request.then((result) => {
+      if (result === true) {
         // 로그아웃 성공하면 메인 화면으로 새로고침
         window.location.href = URL.CALCULET;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      }
+    });
   }
 
   return (

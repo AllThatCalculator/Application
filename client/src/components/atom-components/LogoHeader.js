@@ -29,7 +29,7 @@ export default function LogoHeader() {
   const navigate = useNavigate();
 
   return (
-    <StyledButton onClick={() => navigate(URL.CALCULET)}>
+    <StyledButton onClick={() => (window.location.href = "/")}>
       All That Calculator
     </StyledButton>
   );

@@ -1,39 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
-import { BoxBorder } from "../components/atom-components/BoxBorder";
 import { StyledImg } from "../components/atom-components/BoxIcon";
-import BoxTitle from "../components/atom-components/BoxTitle";
-import { BtnIndigo } from "../components/atom-components/ButtonTemplate";
-import {
-  ContentLayout,
-  FlexColumnLayout,
-  FlexRowLayout,
-  White300Layout,
-} from "../components/Layout";
-import { OPTIONS_EMAIL_ADDRESS } from "../components/sign-up/constants";
-import ActGuide from "../components/sign-up/ActGuide";
-import WarningGuide from "../components/global-components/WarningGuide";
-import useInput from "../hooks/useInput";
-import { useNavigate } from "react-router-dom";
-import EmailForm from "../components/sign-up/EmailForm";
-import { Font } from "../components/atom-components/StyledText";
-import OtherLine from "../components/sign-up/OtherLine";
-import URL from "../components/PageUrls";
+import { ContentLayout, White300Layout } from "../components/Layout";
 
-import { auth } from "../firebase";
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  signInWithPopup,
-  getAdditionalUserInfo,
-  signOut,
-  deleteUser,
-} from "firebase/auth";
-import SignUpFirst from "../components/sign-up/SignUpFirst";
-import SignUpSecond from "../components/sign-up/SignUpSecond";
+import SignUpFirebase from "../components/sign-up/SignUpFirebase";
+import SignUpInform from "../components/sign-up/SignUpInform";
 import usePreventLeave from "../hooks/usePreventLeave";
-import { useCallback } from "react";
+import firebaseAuth from "../firebaseAuth";
 
 /**
  * 흰색 뒷 배경
@@ -59,56 +32,61 @@ const WrapperPad = styled(ContentLayout)`
  * 회원가입 페이지
  */
 function SignUp() {
-  // 라우터 역할 네이게이션
-  const navigate = useNavigate();
+  // 훅 관리하는 state
+  const [isActive, setIsActive] = useState(false);
 
-  // 나가는 거 확인하는 훅
-  const preventLeave = usePreventLeave(asyncAwait);
+  // 정보 입력 컴포넌트 활성화 여부
+  const [isActiveInform, setIsActiveInform] = useState(false);
 
-  // 다음 스텝으로 넘어가는 거 확인하는 state
-  const [checkInform, setCheckInform] = useState(false);
-
-  function nextStep() {
-    setCheckInform(true);
+  function activateEvent() {
+    setIsActive(true);
   }
 
-  function exitStep() {
-    setCheckInform(false);
+  function deactivateEvent() {
+    setIsActive(false);
   }
 
-  async function deleteUserFirebase() {
-    console.log("2");
-    deleteUser(auth.currentUser)
-      .then(() => {
-        console.log("회원 계정 삭제");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  function activateComponent() {
+    setIsActive(true);
+    setIsActiveInform(true);
   }
 
-  async function asyncAwait() {
-    await deleteUserFirebase();
-  }
+  const preventLeaveHandler = useCallback(() => {
+    const request = firebaseAuth.deleteAuth();
+    request.then((result) => {
+      if (result === true) {
+        console.log("회원 정보 삭제");
+      } else {
+        console.log("오류");
+      }
+    });
+  }, []);
 
-  const onCheck = useCallback(() => {
-    if (checkInform) {
-      console.log("1");
+  // 페이지 나갈 때 관리하는 훅
+  const preventLeave = usePreventLeave(preventLeaveHandler);
+
+  useEffect(() => {
+    if (isActive) {
       preventLeave.enablePrevent();
     } else {
-      return preventLeave.disablePrevent();
+      preventLeave.disablePrevent();
     }
-  }, [checkInform, preventLeave]);
-
-  useEffect(onCheck, [onCheck]);
+  }, [isActive, preventLeave]);
 
   return (
     <>
       <StyledWhite300 />
       <WrapperPad gap="20px">
         <StyledImg src="/ATCLogoBlueImgText.png" width="214px" />
-        {!checkInform && <SignUpFirst nextStep={nextStep} />}
-        {checkInform && <SignUpSecond exitStep={exitStep} />}
+        {!isActiveInform && (
+          <SignUpFirebase activateComponent={activateComponent} />
+        )}
+        {isActiveInform && (
+          <SignUpInform
+            activateEvent={activateEvent}
+            deactivateEvent={deactivateEvent}
+          />
+        )}
       </WrapperPad>
     </>
   );

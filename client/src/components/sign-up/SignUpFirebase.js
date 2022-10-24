@@ -4,25 +4,16 @@ import { BoxBorder } from "../atom-components/BoxBorder";
 import BoxTitle from "../atom-components/BoxTitle";
 import { BtnIndigo } from "../atom-components/ButtonTemplate";
 import { FlexColumnLayout, FlexRowLayout } from "../Layout.js";
-import { OPTIONS_EMAIL_ADDRESS } from "../sign-up/constants";
-import ActGuide from "../sign-up/ActGuide";
+import { OPTIONS_EMAIL_ADDRESS } from "./constants";
+import ActGuide from "./ActGuide";
 import WarningGuide from "../global-components/WarningGuide";
 import useInput from "../../hooks/useInput";
 import { useNavigate } from "react-router-dom";
-import EmailForm from "../sign-up/EmailForm";
+import EmailForm from "./EmailForm";
 import { Font } from "../atom-components/StyledText";
-import OtherLine from "../sign-up/OtherLine";
-import URL from "../PageUrls";
+import OtherLine from "./OtherLine";
 
-import { auth } from "../../firebase";
-import {
-  createUserWithEmailAndPassword,
-  GoogleAuthProvider,
-  GithubAuthProvider,
-  signInWithPopup,
-  getAdditionalUserInfo,
-  signOut,
-} from "firebase/auth";
+import firebaseAuth from "../../firebaseAuth";
 
 /**
  * 양쪽으로 꽉 차게 스타일 정의
@@ -51,19 +42,19 @@ const WrapperCursor = styled(BoxBorder)`
 /**
  * 회원가입 페이지
  */
-function SignUpFirst({ nextStep }) {
+function SignUpFirebase({ activateComponent }) {
   /**
    * 이메일 email -> address, writtenDomain, selectedDomain
    * 비밀번호 pw
    * 비밀번호 확인 pwConfirmation
    */
-  const address = useInput("");
+  const address = useInput("a");
   const [domain, setDomain] = useState("");
-  const [writtenDomain, setwrittenDomain] = useState("");
+  const [writtenDomain, setwrittenDomain] = useState("google.com");
   const [selectedDomain, setSelectedDomain] = useState("");
 
-  const pw = useInput("");
-  const pwConfirmation = useInput("");
+  const pw = useInput("123456");
+  const pwConfirmation = useInput("123456");
 
   // 주의 문구 여부 : 비밀번호 & 비밀번호 확인 비교
   const [warningPw, setWarningPw] = useState("");
@@ -126,17 +117,18 @@ function SignUpFirst({ nextStep }) {
     if (!address.value || !domain || !pw.value || !pwConfirmation.value) {
       setWarningAll("모든 사항을 입력해 주세요.");
       return;
-    } else setWarningAll("");
+    }
+    setWarningAll("");
 
-    // firebase 통한 이메일 회원가입 진행
+    // firebase 통한 이메일&패스워드 회원가입 진행
     const email = address.value + "@" + domain;
-    createUserWithEmailAndPassword(auth, email, pw.value)
-      .then((userCredential) => {
+    const request = firebaseAuth.signUpWithEmail(email, pw.value);
+    request.then((result) => {
+      if (result === true) {
         // 성공 시, 정보 입력해야 하므로 정보 입력 페이지로 넘어감
-        nextStep();
-      })
-      .catch((error) => {
-        switch (error.code) {
+        activateComponent();
+      } else {
+        switch (result) {
           case "auth/email-already-in-use":
             setWarningSignUp("이미 존재하는 계정입니다.");
             break;
@@ -149,7 +141,8 @@ function SignUpFirst({ nextStep }) {
           default:
             break;
         }
-      });
+      }
+    });
   }
 
   /**
@@ -157,36 +150,23 @@ function SignUpFirst({ nextStep }) {
    */
   function googleSignUp(event) {
     setWarningSignUp("");
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // 로그인과 구분
-        const { isNewUser } = getAdditionalUserInfo(result);
-        if (isNewUser) {
-          // 새로운 회원!
-          // 정보 입력해야 하므로 정보 입력 페이지로 넘어감
-          nextStep();
-        } else {
-          // 이미 존재하는 계정
-          signOut(auth)
-            .then(() => {
-              setWarningSignUp("이미 존재하는 계정입니다.");
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        switch (error.code) {
+    const request = firebaseAuth.signUpWithSocial("google");
+    request.then((result) => {
+      if (result === true) {
+        // 정보 입력해야 하므로 정보 입력 페이지로 넘어감
+        activateComponent();
+      } else if (result === false) {
+        setWarningSignUp("이미 존재하는 계정입니다.");
+      } else {
+        switch (result) {
           case "auth/account-exists-with-different-credential":
-            setWarningSignUp("이미 존재하는 계정입니다.");
+            setWarningSignUp("다른 업체에 존재하는 계정입니다.");
             break;
           default:
             break;
         }
-      });
+      }
+    });
   }
 
   /**
@@ -194,36 +174,23 @@ function SignUpFirst({ nextStep }) {
    */
   function githubSignUp(event) {
     setWarningSignUp("");
-    const provider = new GithubAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // 로그인과 구분
-        const { isNewUser } = getAdditionalUserInfo(result);
-        if (isNewUser) {
-          // 새로운 회원!
-          // 정보 입력해야 하므로 정보 입력 페이지로 넘어감
-          nextStep();
-        } else {
-          // 이미 존재하는 계정
-          signOut(auth)
-            .then(() => {
-              setWarningSignUp("이미 존재하는 계정입니다.");
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        switch (error.code) {
+    const request = firebaseAuth.signUpWithSocial("github");
+    request.then((result) => {
+      if (result === true) {
+        // 정보 입력해야 하므로 정보 입력 페이지로 넘어감
+        activateComponent();
+      } else if (result === false) {
+        setWarningSignUp("이미 존재하는 계정입니다.");
+      } else {
+        switch (result) {
           case "auth/account-exists-with-different-credential":
-            setWarningSignUp("이미 존재하는 계정입니다.");
+            setWarningSignUp("다른 업체에 존재하는 계정입니다.");
             break;
           default:
             break;
         }
-      });
+      }
+    });
   }
 
   return (
@@ -275,4 +242,4 @@ function SignUpFirst({ nextStep }) {
   );
 }
 
-export default SignUpFirst;
+export default SignUpFirebase;

@@ -1,41 +1,19 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { BoxBorder } from "../atom-components/BoxBorder";
-import { StyledImg } from "../atom-components/BoxIcon";
 import BoxTitle from "../atom-components/BoxTitle";
 import { BtnIndigo } from "../atom-components/ButtonTemplate";
-import { ContentLayout, FlexColumnLayout, White300Layout } from "../Layout";
-import { OPTIONS_SEX, OPTIONS_YEAR, OPTIONS_MONTH } from "../sign-up/constants";
-import fillOptionsList from "../sign-up/fillOptionsList";
-import ProfileChange from "../sign-up/ProfileChange";
+import { FlexColumnLayout } from "../Layout";
+import { OPTIONS_SEX, OPTIONS_YEAR, OPTIONS_MONTH } from "./constants";
+import fillOptionsList from "./fillOptionsList";
+import ProfileChange from "./ProfileChange";
 import WarningGuide from "../global-components/WarningGuide";
 import useInput from "../../hooks/useInput";
 import signUpUser from "../../user-actions/SignUpUser";
-import { useNavigate } from "react-router-dom";
-import UserInfoForm from "../sign-up/UserInfoForm";
+import UserInfoForm from "./UserInfoForm";
 
 import { auth } from "../../firebase";
-import usePreventLeave from "../../hooks/usePreventLeave";
 
-/**
- * 흰색 뒷 배경
- */
-const StyledWhite300 = styled(White300Layout)`
-  position: fixed;
-  top: 60px;
-  bottom: 0;
-  z-index: -1;
-`;
-/**
- * 회원가입 크기 530px
- * 윗부분에 패딩을 주기 위한 스타일 정의
- */
-const WrapperPad = styled(ContentLayout)`
-  flex-direction: column;
-  width: 530px;
-  padding: 50px 0px;
-  gap: ${(props) => props.gap};
-`;
 /**
  * 양쪽으로 꽉 차게 스타일 정의
  */
@@ -46,18 +24,11 @@ const WrapperStretch = styled(FlexColumnLayout)`
 /**
  * 회원가입 페이지
  */
-function SignUpSecond({ exitStep }) {
-  window.history.pushState(null, "", window.location.href);
-  const preventLeave = usePreventLeave();
-
-  preventLeave.enablePrevent();
-
+function SignUpInform({ activateEvent, deactivateEvent }) {
   // 회원가입한 사람의 UID
   const userUid = auth.currentUser.uid;
   // 회원가입한 사람의 이메일
   const userEmail = auth.currentUser.email;
-
-  console.log(userUid);
 
   /**
    * 프로필 사진 profileImg - type : Blob
@@ -70,14 +41,14 @@ function SignUpSecond({ exitStep }) {
    */
   const [profileImg, setProfileImg] = useState("/img/defaultProfile.png");
 
-  const userName = useInput("");
-  const [sex, setSex] = useState("");
-  const [year, setYear] = useState("");
-  const [month, setMonth] = useState("");
-  const [date, setDate] = useState("");
+  const userName = useInput("1");
+  const [sex, setSex] = useState("여");
+  const [year, setYear] = useState("2000");
+  const [month, setMonth] = useState("2");
+  const [date, setDate] = useState("2");
 
-  const job = useInput("");
-  const bio = useInput("");
+  const job = useInput("1");
+  const bio = useInput("1");
 
   // 주의 문구 여부: 다 입력되었는지 여부 & 요청 정보 오류
   // bio 빼고 모두 필수
@@ -87,9 +58,6 @@ function SignUpSecond({ exitStep }) {
   const [dateEnd, setDateEnd] = useState(1);
   const [dates, setDates] = useState(null);
 
-  // 라우터 역할 네이게이션
-  const navigate = useNavigate();
-
   // 년도에 따른 월의 마지막 날 계산 & 일수 구하기 (년도와 월을 둘 다 선택해야 갱신)
   useEffect(() => {
     if (year && month) {
@@ -97,6 +65,20 @@ function SignUpSecond({ exitStep }) {
       setDates(fillOptionsList(1, dateEnd));
     }
   }, [year, month, dateEnd]);
+
+  // 입력 변경 사항 있을 시, 회원가입 후 경고 메세지 & 모든 사항 입력 경고 메세지 초기화
+  useEffect(() => {
+    setWarningAll("");
+  }, [
+    profileImg,
+    userName.value,
+    sex,
+    year,
+    month,
+    date,
+    job.value,
+    bio.value,
+  ]);
 
   /**
    * 인자로 넘어온 정보에 대한 change 함수
@@ -119,13 +101,15 @@ function SignUpSecond({ exitStep }) {
    */
   function onSubmitHandler(event) {
     event.preventDefault();
-    exitStep();
+    deactivateEvent();
 
     // 다 입력했는지 확인
     if (!userName.value || !sex || !year || !month || !date || !job.value) {
       setWarningAll("필수 사항을 모두 입력해 주세요.");
+      activateEvent();
       return;
-    } else setWarningAll("");
+    }
+    setWarningAll("");
 
     // DB 데이터 타입에 맞게 처리
     const sexDb = sex === "여자" ? "F" : "M";
@@ -145,22 +129,23 @@ function SignUpSecond({ exitStep }) {
 
     // 서버에 요청
     const request = signUpUser(body);
-    request.then((res) => {
+    request.then((result) => {
       // 회원 가입 실패
-      if (res === 400) setWarningAll("올바른 정보를 입력해 주세요.");
-      // 회원 가입 성공 -> 자동 로그인 -> 메인화면
-      else if (res.success) {
+      if (result === 400) {
+        setWarningAll("올바른 정보를 입력해 주세요.");
+        activateEvent();
+      } else if (result.success) {
+        // 회원 가입 성공 -> 자동 로그인 -> 메인화면
         window.location.href = "/";
-        return preventLeave.disablePrevent();
       }
     });
   }
 
   return (
-    <BoxBorder gap="20px">
-      <BoxTitle content="회원가입" />
-      <ProfileChange profileImg={profileImg} setProfileImg={setProfileImg} />
-      <form onSubmit={onSubmitHandler}>
+    <form onSubmit={onSubmitHandler}>
+      <BoxBorder gap="20px">
+        <BoxTitle content="회원가입" />
+        <ProfileChange profileImg={profileImg} setProfileImg={setProfileImg} />
         <WrapperStretch gap="10px">
           <UserInfoForm
             userName={userName.value}
@@ -190,8 +175,8 @@ function SignUpSecond({ exitStep }) {
         <WrapperStretch>
           <BtnIndigo text="가입하기" onClick={onSubmitHandler} />
         </WrapperStretch>
-      </form>
-    </BoxBorder>
+      </BoxBorder>
+    </form>
   );
 }
-export default SignUpSecond;
+export default SignUpInform;
