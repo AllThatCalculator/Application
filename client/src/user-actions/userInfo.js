@@ -1,9 +1,9 @@
 import axios from "axios";
 
-async function loadUserInfo(userEmail) {
+async function loadUserInfo(userId) {
   let data;
   try {
-    await axios.get(`/api/users/${userEmail}`).then((response) => {
+    await axios.get(`/api/users/${userId}`).then((response) => {
       data = response.data.userInfo;
     });
   } catch (error) {}

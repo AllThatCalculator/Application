@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const mariadb = require("../config/database");
-const { auth } = require("../middleware/auth");
 const { category } = require("./calculets/category");
 const {
   bufferToString,
@@ -359,7 +358,7 @@ router.get("/:id", async (req, res) => {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.post("/", auth, async (req, res) => {
+router.post("/", async (req, res) => {
   const sql =
     "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main_id, category_sub_id, contributor_id) VALUES(?,?,?,?,?,?,?);";
 
