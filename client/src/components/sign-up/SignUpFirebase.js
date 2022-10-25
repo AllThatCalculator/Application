@@ -14,6 +14,8 @@ import { Font } from "../atom-components/StyledText";
 import OtherLine from "./OtherLine";
 
 import firebaseAuth from "../../firebaseAuth";
+import ModalEmailForm from "./ModalEmailForm";
+import { Modal } from "../global-components/Modal";
 
 /**
  * 양쪽으로 꽉 차게 스타일 정의
@@ -43,18 +45,21 @@ const WrapperCursor = styled(BoxBorder)`
  * 회원가입 페이지
  */
 function SignUpFirebase({ activateComponent }) {
+  // 이메일&패스워드 입력 팝업창
+  const [modalEmailActive, setModalEmailActive] = useState(false);
+
   /**
    * 이메일 email -> address, writtenDomain, selectedDomain
    * 비밀번호 pw
    * 비밀번호 확인 pwConfirmation
    */
-  const address = useInput("a");
+  const address = useInput("");
   const [domain, setDomain] = useState("");
-  const [writtenDomain, setwrittenDomain] = useState("google.com");
+  const [writtenDomain, setwrittenDomain] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("");
 
-  const pw = useInput("123456");
-  const pwConfirmation = useInput("123456");
+  const pw = useInput("");
+  const pwConfirmation = useInput("");
 
   // 주의 문구 여부 : 비밀번호 & 비밀번호 확인 비교
   const [warningPw, setWarningPw] = useState("");
@@ -103,6 +108,10 @@ function SignUpFirebase({ activateComponent }) {
       setwrittenDomain(domainValue);
     }
     setSelectedDomain(domainValue);
+  }
+
+  function modalEmailClose() {
+    setModalEmailActive(false);
   }
 
   /**
@@ -195,6 +204,9 @@ function SignUpFirebase({ activateComponent }) {
 
   return (
     <>
+      {modalEmailActive && (
+        <Modal onClick={modalEmailClose} contents={<ModalEmailForm />} />
+      )}
       <form onSubmit={onSubmitHandler}>
         <BoxBorder gap="20px">
           <BoxTitle content="회원가입" />
