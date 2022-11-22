@@ -41,14 +41,14 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
    */
   const [profileImg, setProfileImg] = useState("/img/defaultProfile.png");
 
-  const userName = useInput("1");
-  const [sex, setSex] = useState("여");
-  const [year, setYear] = useState("2000");
-  const [month, setMonth] = useState("2");
-  const [date, setDate] = useState("2");
+  const userName = useInput("");
+  const [sex, setSex] = useState("");
+  const [year, setYear] = useState("");
+  const [month, setMonth] = useState("");
+  const [date, setDate] = useState("");
 
-  const job = useInput("1");
-  const bio = useInput("1");
+  const job = useInput("");
+  const bio = useInput("");
 
   // 주의 문구 여부: 다 입력되었는지 여부 & 요청 정보 오류
   // bio 빼고 모두 필수

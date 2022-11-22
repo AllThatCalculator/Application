@@ -19,7 +19,6 @@ import ProfileChange from "../components/sign-up/ProfileChange";
 import WarningGuide from "../components/global-components/WarningGuide";
 import useInput from "../hooks/useInput";
 import signUpUser from "../user-actions/SignUpUser";
-import { useNavigate } from "react-router-dom";
 import UserInfoForm from "../components/sign-up/UserInfoForm";
 
 import { auth } from "../firebase";
@@ -94,9 +93,6 @@ function WriteUserInfo() {
   // 년도와 월로 일수 구하기
   const [dateEnd, setDateEnd] = useState(1);
   const [dates, setDates] = useState(null);
-
-  // 라우터 역할 네이게이션
-  const navigate = useNavigate();
 
   // 년도에 따른 월의 마지막 날 계산 & 일수 구하기 (년도와 월을 둘 다 선택해야 갱신)
   useEffect(() => {

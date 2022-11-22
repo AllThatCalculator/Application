@@ -134,7 +134,7 @@ function Login() {
       } else {
         switch (result) {
           case "auth/account-exists-with-different-credential":
-            setWarning("다른 업체로 존재하는 계정입니다.");
+            setWarning("다른 인증 방식으로 존재하는 계정입니다.");
             break;
           default:
             break;
@@ -158,7 +158,7 @@ function Login() {
       } else {
         switch (result) {
           case "auth/account-exists-with-different-credential":
-            setWarning("다른 업체로 존재하는 계정입니다.");
+            setWarning("다른 인증 방식으로 존재하는 계정입니다.");
             break;
           default:
             break;
@@ -206,13 +206,13 @@ function Login() {
         <OtherLine />
         <WrapperCursor onClick={googleSignIn}>
           <FlexRowLayout gap="20px">
-            <Logo src="/img/googleLogo.png" />
+            <Logo src="/svgs/btn_google_light_normal_ios.svg" />
             <Font font="text200">Google 계정으로 로그인 하기</Font>
           </FlexRowLayout>
         </WrapperCursor>
         <WrapperCursor onClick={githubSignIn}>
           <FlexRowLayout gap="20px">
-            <Logo src="/img/githubLogo.png" />
+            <Logo src="/img/GitHub-Mark-32px.png" />
             <Font font="text200">Github 계정으로 로그인 하기</Font>
           </FlexRowLayout>
         </WrapperCursor>

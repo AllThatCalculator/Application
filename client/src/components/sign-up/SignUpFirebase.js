@@ -55,7 +55,7 @@ function SignUpFirebase({ activateComponent }) {
    */
   const address = useInput("");
   const [domain, setDomain] = useState("");
-  const [writtenDomain, setwrittenDomain] = useState("");
+  const [writtenDomain, setWrittenDomain] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("");
 
   const pw = useInput("");
@@ -103,9 +103,9 @@ function SignUpFirebase({ activateComponent }) {
     const option = OPTIONS_EMAIL_ADDRESS.filter((x) => x.value === targetValue);
     const domainValue = option[0].name;
     if (domainValue === "직접 입력") {
-      setwrittenDomain("");
+      setWrittenDomain("");
     } else {
-      setwrittenDomain(domainValue);
+      setWrittenDomain(domainValue);
     }
     setSelectedDomain(domainValue);
   }
@@ -169,7 +169,7 @@ function SignUpFirebase({ activateComponent }) {
       } else {
         switch (result) {
           case "auth/account-exists-with-different-credential":
-            setWarningSignUp("다른 업체에 존재하는 계정입니다.");
+            setWarningSignUp("다른 인증 방식으로 존재하는 계정입니다.");
             break;
           default:
             break;
@@ -193,7 +193,7 @@ function SignUpFirebase({ activateComponent }) {
       } else {
         switch (result) {
           case "auth/account-exists-with-different-credential":
-            setWarningSignUp("다른 업체에 존재하는 계정입니다.");
+            setWarningSignUp("다른 인증 방식으로 존재하는 계정입니다.");
             break;
           default:
             break;
@@ -218,7 +218,7 @@ function SignUpFirebase({ activateComponent }) {
               pw={pw.value}
               pwConfirmation={pwConfirmation.value}
               changeAddress={address.onChange}
-              changeDomain={(event) => setwrittenDomain(event.target.value)}
+              changeDomain={(event) => setWrittenDomain(event.target.value)}
               changeSelectedDomain={changeSelectedDomain}
               changePw={pw.onChange}
               changePwConfirmation={pwConfirmation.onChange}
@@ -240,13 +240,13 @@ function SignUpFirebase({ activateComponent }) {
       <OtherLine />
       <WrapperCursor onClick={googleSignUp}>
         <FlexRowLayout gap="20px">
-          <Logo src="/img/googleLogo.png" />
+          <Logo src="/svgs/btn_google_light_normal_ios.svg" />
           <Font font="text200">Google 계정으로 가입 하기</Font>
         </FlexRowLayout>
       </WrapperCursor>
       <WrapperCursor onClick={githubSignUp}>
         <FlexRowLayout gap="20px">
-          <Logo src="/img/githubLogo.png" />
+          <Logo src="/img/GitHub-Mark-32px.png" />
           <Font font="text200">Github 계정으로 가입 하기</Font>
         </FlexRowLayout>
       </WrapperCursor>
