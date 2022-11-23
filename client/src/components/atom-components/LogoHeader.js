@@ -1,6 +1,4 @@
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import URL from "../PageUrls.js";
 import styles from "../styles.js";
 const StyledButton = styled.button`
   display: flex;
@@ -26,10 +24,8 @@ const StyledButton = styled.button`
  * -> 클릭 시, 홈페이지로 이동
  */
 export default function LogoHeader() {
-  const navigate = useNavigate();
-
   return (
-    <StyledButton onClick={() => navigate(URL.CALCULET)}>
+    <StyledButton onClick={() => (window.location.href = "/")}>
       All That Calculator
     </StyledButton>
   );

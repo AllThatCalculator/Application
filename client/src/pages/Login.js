@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BoxBorder } from "../components/atom-components/BoxBorder";
 import { StyledImg } from "../components/atom-components/BoxIcon";
@@ -16,10 +16,14 @@ import {
 } from "../components/Layout";
 import WriteInform from "../components/login/WriteInform";
 import useInput from "../hooks/useInput";
-import loginUser from "../user-actions/LoginUser";
 import { useNavigate } from "react-router-dom";
 import ActGuide from "../components/sign-up/ActGuide";
 import URL from "../components/PageUrls";
+import { Font } from "../components/atom-components/StyledText";
+import OtherLine from "../components/sign-up/OtherLine";
+
+import firebaseAuth from "../firebaseAuth";
+
 /**
  * 흰색 뒷 배경
  */
@@ -53,6 +57,23 @@ const WrapperFind = styled(FlexRowLayout)`
 `;
 
 /**
+ * 로고 스타일 정의 (구글, 깃허브)
+ */
+const Logo = styled.img`
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+`;
+
+/**
+ * 버튼 커서 스타일 정의
+ */
+const WrapperCursor = styled(BoxBorder)`
+  cursor: pointer;
+`;
+
+/**
  * 로그인 페이지
  */
 function Login() {
@@ -60,6 +81,11 @@ function Login() {
   const pw = useInput("");
   const [warning, setWarning] = useState("");
   const navigate = useNavigate();
+
+  // 입력 변경 사항 있을 시, 회원가입 후 경고 메세지 초기화
+  useEffect(() => {
+    setWarning("");
+  }, [email.value, pw.value]);
 
   /**
    * 폼 제출
@@ -71,19 +97,72 @@ function Login() {
       setWarning("이메일과 비밀번호를 입력해주세요.");
       return;
     }
-    // 서버에 보낼 정보 => body
-    let body = {
-      email: email.value,
-      pw: pw.value,
-    };
-    // 서버에 요청
-    const request = loginUser(body);
-    request.then((res) => {
-      // 로그인 실패
-      if (!res.success) setWarning(res.message);
-      // 로그인 성공
-      else {
-        window.location.replace(URL.CALCULET);
+
+    // firebase 통한 이메일&패스워드 로그인
+    const request = firebaseAuth.signInWithEmail(email.value, pw.value);
+    request.then((result) => {
+      if (result === true) {
+        // 로그인 성공 시, 메인 화면으로
+        navigate("/");
+      } else {
+        switch (result) {
+          case "auth/user-not-found":
+            setWarning("존재하지 않는 계정입니다.");
+            break;
+          case "auth/wrong-password":
+            setWarning("잘못된 비밀번호입니다.");
+            break;
+          default:
+            break;
+        }
+      }
+    });
+  }
+
+  /**
+   * firebase google 로그인
+   */
+  function googleSignIn(event) {
+    setWarning("");
+    const request = firebaseAuth.signInWithSocial("google");
+    request.then((result) => {
+      if (result === true) {
+        // 로그인 성공 시, 메인 화면으로
+        navigate("/");
+      } else if (result === false) {
+        setWarning("존재하지 않는 계정입니다.");
+      } else {
+        switch (result) {
+          case "auth/account-exists-with-different-credential":
+            setWarning("다른 인증 방식으로 존재하는 계정입니다.");
+            break;
+          default:
+            break;
+        }
+      }
+    });
+  }
+
+  /**
+   * firebase github 로그인
+   */
+  function githubSignIn(event) {
+    setWarning("");
+    const request = firebaseAuth.signInWithSocial("github");
+    request.then((result) => {
+      if (result === true) {
+        // 로그인 성공 시, 메인 화면으로
+        navigate("/");
+      } else if (result === false) {
+        setWarning("존재하지 않는 계정입니다.");
+      } else {
+        switch (result) {
+          case "auth/account-exists-with-different-credential":
+            setWarning("다른 인증 방식으로 존재하는 계정입니다.");
+            break;
+          default:
+            break;
+        }
       }
     });
   }
@@ -117,15 +196,26 @@ function Login() {
             <WrapperStretch>
               <BtnIndigo type="submit" text="로그인하기" />
             </WrapperStretch>
+            <ActGuide
+              guide="계정이 없으신가요?"
+              lead="회원가입하기"
+              onClick={() => navigate(URL.SIGN_UP)}
+            />
           </BoxBorder>
         </form>
-        <BoxBorder>
-          <ActGuide
-            guide="계정이 없으신가요?"
-            lead="회원가입하기"
-            onClick={() => navigate(URL.SIGN_UP)}
-          />
-        </BoxBorder>
+        <OtherLine />
+        <WrapperCursor onClick={googleSignIn}>
+          <FlexRowLayout gap="20px">
+            <Logo src="/svgs/btn_google_light_normal_ios.svg" />
+            <Font font="text200">Google 계정으로 로그인 하기</Font>
+          </FlexRowLayout>
+        </WrapperCursor>
+        <WrapperCursor onClick={githubSignIn}>
+          <FlexRowLayout gap="20px">
+            <Logo src="/img/GitHub-Mark-32px.png" />
+            <Font font="text200">Github 계정으로 로그인 하기</Font>
+          </FlexRowLayout>
+        </WrapperCursor>
       </WrapperPad>
     </>
   );

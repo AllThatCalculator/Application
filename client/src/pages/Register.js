@@ -6,11 +6,10 @@ import UploadDoneBtn from "../components/register/UploadDoneBtn";
 import { useState, useEffect, useCallback } from "react";
 import { ContentLayout, White300Layout } from "../components/Layout";
 import useInput from "../hooks/useInput";
-import { useNavigate } from "react-router-dom";
 import loadUserInfo from "../user-actions/userInfo";
 import calculetCategory from "../user-actions/calculetCategory";
-import AuthUser from "../user-actions/AuthUser";
-import URL from "../components/PageUrls";
+
+import { auth } from "../firebase";
 
 /**
  * ContentLayout을 상속하는 RegisterLayout
@@ -28,8 +27,6 @@ const RegisterLayout = styled(ContentLayout)`
  * - 여러 컴포넌트에서 관리하는 state들을 관리
  */
 function Register() {
-  const navigate = useNavigate();
-
   const title = useInput("");
   const description = useInput("");
 
@@ -109,26 +106,12 @@ function Register() {
   /**
    * 사용자 정보 서버에 요청
    */
-  function requestUserInfo(userEmail) {
-    const request = loadUserInfo(userEmail);
+  const requestUserInfo = useCallback((userId) => {
+    const request = loadUserInfo(userId);
     request.then((res) => {
       setUserInfo(res);
     });
-  }
-
-  /**
-   * 백엔드에서 사용자 정보 불러오는 함수
-   */
-  const loadUserEmail = useCallback(() => {
-    const request = AuthUser();
-    request.then((res) => {
-      if (res.success) {
-        requestUserInfo(res.userEmail);
-      } else {
-        navigate(URL.LOGIN);
-      }
-    });
-  }, [navigate]);
+  }, []);
 
   /**
    * 카테고리 서버에 요청 후, 데이터 가공
@@ -142,12 +125,12 @@ function Register() {
   }, []);
 
   /**
-   * 현재 로그인한 사용자 계정 가져오기
+   * 카테고리 가져오기
    */
   useEffect(() => {
-    loadUserEmail();
+    requestUserInfo(auth.currentUser.uid);
     loadCategory();
-  }, [loadUserEmail, loadCategory]);
+  }, [requestUserInfo, loadCategory]);
 
   return (
     <White300Layout>
@@ -176,6 +159,7 @@ function Register() {
         />
         {userInfo && (
           <UploadDoneBtn
+            id={auth.currentUser.uid}
             title={title.value}
             description={description.value}
             categoryMainId={categoryMainId}

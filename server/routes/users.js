@@ -1,11 +1,5 @@
 const express = require("express");
-const { auth } = require("../middleware/auth");
-const { findUser } = require("../middleware/findUser");
 const { signUp } = require("./users/signUp");
-const { login } = require("./users/login");
-const { me } = require("./users/me");
-const { logout } = require("./users/logout");
-const { refresh } = require("./users/refresh");
 const { bufferToImageSrc } = require("../utils/bufferConverter");
 const mariadb = require("../config/database");
 
@@ -14,41 +8,21 @@ const router = express.Router();
 /**
  * 회원 가입
  */
-router.post("/", findUser, signUp);
-
-/**
- * 로그인 요청
- */
-router.post("/login", login);
-
-/**
- * 로그인한 사용자인지 인증 (인가)
- */
-router.get("/me", auth, me);
-
-/**
- * 로그아웃
- */
-router.get("/logout", logout);
-
-/**
- * refresh token을 통해 access token 재발급하는 모듈 (현재는 쓰고 있지 않음)
- */
-router.get("/refresh", refresh);
+router.post("/", signUp);
 
 /**
  * @swagger
- *  /users/{email}:
+ *  /users/{id}:
  *    get:
  *      tags: [users]
  *      summary: 특정 유저 정보 조회
- *      description: email과 일치하는 유저 찾아서 정보 조회
+ *      description: id와 일치하는 유저 찾아서 정보 조회
  *      parameters:
  *        - in: path
  *          type: string
  *          required: true
- *          name: email
- *          description: 사용자 이메일
+ *          name: id
+ *          description: 사용자 ID
  *      responses:
  *        200:
  *          description: 조회 성공
@@ -69,10 +43,10 @@ router.get("/refresh", refresh);
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.get("/:email", async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     // 사용자 정보 쿼리문
-    const userInfoQuery = `select * from user_info where email='${req.params.email}';`;
+    const userInfoQuery = `select * from user_info where id='${req.params.id}';`;
 
     const rows = await mariadb.query(userInfoQuery);
     const userInfo = rows[0][0];
@@ -83,6 +57,7 @@ router.get("/:email", async (req, res) => {
       const profileImgSrc = bufferToImageSrc(userInfo.profile_img);
 
       user = {
+        id: userInfo.id,
         email: userInfo.email,
         userName: userInfo.user_name,
         profileImg: profileImgSrc,

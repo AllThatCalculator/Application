@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const mariadb = require("../config/database");
-const { auth } = require("../middleware/auth");
 const { category } = require("./calculets/category");
 const {
   bufferToString,
@@ -171,7 +170,7 @@ router.get("/:id", async (req, res) => {
   const userCalculetQuery = `select liked, bookmarked from user_calculet where calculet_id=${req.params.id};`;
 
   // 제작자 정보
-  const userInfoQuery = `select profile_img, user_name from user_info where email = (select contributor_email from calculet_info where id=${req.params.id});`;
+  const userInfoQuery = `select profile_img, user_name from user_info where id = (select contributor_id from calculet_info where id=${req.params.id});`;
 
   // 계산기 업데이트 로그
   const calculetUpdateLogQuery = `select update_date, message from calculet_update_log where calculet_id=${req.params.id};`;
@@ -359,9 +358,9 @@ router.get("/:id", async (req, res) => {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.post("/", auth, async (req, res) => {
+router.post("/", async (req, res) => {
   const sql =
-    "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main_id, category_sub_id, contributor_email) VALUES(?,?,?,?,?,?,?);";
+    "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main_id, category_sub_id, contributor_id) VALUES(?,?,?,?,?,?,?);";
 
   const calculet = [
     req.body.title,
@@ -370,7 +369,7 @@ router.post("/", auth, async (req, res) => {
     req.body.description,
     req.body.categoryMainId,
     req.body.categorySubId,
-    req.email,
+    req.body.id,
   ];
   try {
     const rows = await mariadb.query(sql, calculet);
