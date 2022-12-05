@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const calculets = require("./routes/calculets");
 const users = require("./routes/users");
 const record = require("./routes/record");
@@ -9,18 +8,6 @@ const app = express();
 
 require("dotenv").config();
 const port = process.env.EXPRESS_PORT;
-
-// mongoDB 연결
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-  })
-  .then(() => {
-    console.log("Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
 
 /**
  * 쿠키 파싱
