@@ -9,4 +9,8 @@ RUN npm install --silent
 
 COPY . .
 
+# for ssh port forwarding
+RUN apt update
+RUN apt install autossh
+
 CMD ["./entrypoint.sh"]
