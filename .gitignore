@@ -26,6 +26,8 @@
 
 # DB Key등 설정 파일
 .env
+*.pem
+
 # 로컬에 저장되는 DB파일
 database/mariaDB/data
 

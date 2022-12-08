@@ -9,5 +9,4 @@ RUN npm install --silent
 
 COPY . .
 
-# ========개발용==========
-CMD [ "npx", "nodemon", "-L", "main.js"]
+CMD ["./entrypoint.sh"]
