@@ -9,5 +9,8 @@ RUN npm install --silent
 
 COPY . .
 
-# ========개발용==========
-CMD [ "npx", "nodemon", "-L", "main.js"]
+# for ssh port forwarding
+RUN apt update
+RUN apt install autossh
+
+CMD ["./entrypoint.sh"]
