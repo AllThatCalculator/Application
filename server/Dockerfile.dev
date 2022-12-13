@@ -12,5 +12,6 @@ COPY . .
 # for ssh port forwarding
 RUN apt update
 RUN apt install autossh
+RUN sed -i -e 's/\r$//' ./entrypoint.sh
 
 CMD ["./entrypoint.sh"]
