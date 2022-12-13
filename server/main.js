@@ -4,10 +4,22 @@ const users = require("./routes/users");
 const record = require("./routes/record");
 const { swaggerUi, specs } = require("./swagger");
 const cookieParser = require("cookie-parser");
+const fs = require("fs");
+const { sequelize } = require("./models");
+
 const app = express();
 
 require("dotenv").config();
 const port = process.env.EXPRESS_PORT;
+
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("연결 성공");
+  })
+  .catch((err) => {
+    console.error(`연결 실패 - ${err}`);
+  });
 
 /**
  * 쿠키 파싱
