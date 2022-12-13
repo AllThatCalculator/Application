@@ -3,15 +3,16 @@ FROM node:16.16
 WORKDIR /server
 ENV PATH /server/node_modules/.bin:$PATH
 
-COPY package*.json ./
+# install package
+COPY ["package*.json", "./"]
 
-RUN npm install --silent
+RUN ["npm", "install", "--silent"]
 
 COPY . .
 
 # for ssh port forwarding
-RUN apt update
-RUN apt install autossh
+RUN ["apt", "update"]
+RUN ["apt", "install", "autossh"]
 RUN sed -i -e 's/\r$//' ./entrypoint.sh
 
 CMD ["./entrypoint.sh"]
