@@ -38,30 +38,12 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile.prod
-    env_file: .env
+    env_file: ./server/.env
     ports:
       - 5000:5000
     volumes:
       - /server/node_modules
       - ./server/:/server
-    networks:
-      - app-tier
-    restart: always
-    depends_on:
-      - mariadb
-
-  mariadb:
-    container_name: mariadb
-    image: mariadb:10.5
-    ports:
-      - 3306:3306
-    volumes:
-      - ./database/mariaDB/conf.d:/etc/mysql/conf.d
-      - ./database/mariaDB/data:/var/lib/mysql
-      - ./database/mariaDB/initdb.d:/docker-entrypoint-initdb.d:ro
-    env_file: .env
-    environment:
-      TZ: Asia/Seoul
     networks:
       - app-tier
     restart: always
