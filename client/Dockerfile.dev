@@ -6,7 +6,6 @@ ENV CHOKIDAR_USEPOLLING=TRUE
 
 # install package
 COPY ["package*.json", "./"]
-RUN ["npm", "install", "react-scripts", "-g", "--slient"]
 RUN ["npm", "install", "--silent"]
 
 # run npm server
