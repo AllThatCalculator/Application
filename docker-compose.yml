@@ -12,7 +12,7 @@ services:
       - /client/node_modules
       - ./client/:/client
     ports:
-      - 3000:3000
+      - ${LOCALHOST_PORT:-3000}:3000
     networks:
       - app-tier
     tty: true
