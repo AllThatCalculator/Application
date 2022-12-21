@@ -8,7 +8,7 @@ COPY ["package*.json", "./"]
 
 RUN ["npm", "install", "--silent"]
 
-COPY . .
+COPY [".", "."]
 
 # for ssh port forwarding
 RUN ["apt", "update"]
