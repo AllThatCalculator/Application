@@ -13,10 +13,6 @@ const auto = new SequelizeAuto(
     dialect: "mysql",
     caseModel: "c",
     caseFile: "c",
-    additional: {
-      freezeTableName: true,
-      timestamps: true,
-    },
   }
 );
 auto.run((err) => {

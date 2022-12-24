@@ -61,8 +61,7 @@ module.exports = function(sequelize, DataTypes) {
     sequelize,
     tableName: 'calculet_info',
     hasTrigger: true,
-    timestamps: true,
-    freezeTableName: true,
+    timestamps: false,
     indexes: [
       {
         name: "PRIMARY",

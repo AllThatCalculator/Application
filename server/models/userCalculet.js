@@ -30,8 +30,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     sequelize,
     tableName: 'user_calculet',
-    timestamps: true,
-    freezeTableName: true,
+    timestamps: false,
     indexes: [
       {
         name: "PRIMARY",

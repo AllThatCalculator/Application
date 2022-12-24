@@ -13,8 +13,7 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     sequelize,
     tableName: 'category_main',
-    timestamps: true,
-    freezeTableName: true,
+    timestamps: false,
     indexes: [
       {
         name: "PRIMARY",
