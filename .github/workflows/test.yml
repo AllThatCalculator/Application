@@ -30,7 +30,7 @@ jobs:
       - name: Package Application
         run: tar -czvf build.tar.gz build
       - name: Deploy to EC2
-        uses: appleboy/scp-action@v1
+        uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.DEV_EC2_IP_ADDRESS }}
           username: ${{ secrets.DEV_EC2_USER }}
