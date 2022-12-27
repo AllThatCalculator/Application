@@ -15,6 +15,15 @@ jobs:
         run: npm install
       - name: Build
         run: npm run build
+        env:
+          REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID: ${{ secrets.DEV_REACT_APP_GOOGLE_ANALYTICS_TRAKING_ID }}
+          REACT_APP_API_KEY: ${{ secrets.DEV_REACT_APP_API_KEY }}
+          REACT_APP_AUTH_DOMAIN: ${{ secrets.DEV_REACT_APP_AUTH_DOMAIN }}
+          REACT_APP_PROJECT_ID: ${{ secrets.DEV_REACT_APP_PROJECT_ID }}
+          REACT_APP_STORAGE_BUCKET: ${{ secrets.DEV_REACT_APP_STORAGE_BUCKET }}
+          REACT_APP_MESSAGIN_ID: ${{ secrets.DEV_REACT_APP_MESSAGIN_ID }}
+          REACT_APP_APP_ID: ${{ secrets.DEV_REACT_APP_APP_ID }}
+          REACT_APP_MEASUREMENT_ID: ${{ secrets.DEV_REACT_APP_MEASUREMENT_ID }}
       - name: Package Application
         run: tar -czvf build.tar.gz build
       - name: Deploy to EC2
