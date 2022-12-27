@@ -1,0 +1,32 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - docker-setting
+    paths:
+      - client/*
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Package Application
+        run: tar -czvf build.tar.gz build
+      - name: Deploy to EC2
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.DEV_EC2_IP_ADDRESS }}
+          username: ${{ secrets.DEV_EC2_USER }}
+          key: ${{ secrets.DEV_EC2_PRIVATE_KEY }}
+          source: build.tar.gz
+          target: /var/www/html/
+  execute-command-on-ec2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute Command on EC2
+        run: ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_IP_ADDRESS }} 'sudo tar -xzvf build.tar.gz -C /usr/share/nginx/html/'
