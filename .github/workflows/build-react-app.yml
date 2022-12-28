@@ -7,7 +7,7 @@ on:
     paths:
       - client/*
 jobs:
-  build-and-deploy:
+  build-and-deploy-react-app-for-development-server:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -38,4 +38,9 @@ jobs:
           source: client/build.tar.gz
           target: ~/project/application/
       - name: place build file in right place
-        run: ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ${{ secrets.DEV_EC2_USER }}@${{ secrets.DEV_EC2_IP_ADDRESS }} 'cd /home/ubuntu/project/application/client/nginx; ./deploy-build-file.sh'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEV_EC2_IP_ADDRESS }}
+          username: ${{ secrets.DEV_EC2_USER }}
+          key: ${{ secrets.DEV_EC2_PRIVATE_KEY }}
+          script: 'cd /home/ubuntu/project/application/client/nginx; ./deploy-build-file.sh'
