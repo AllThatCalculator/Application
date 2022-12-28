@@ -1,0 +1,39 @@
+# This is for develop server
+version: "3"
+
+services:
+  frontend_dev-server:
+    container_name: frontend_dev-server
+    restart: unless-stopped
+    stdin_open: true
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev-server
+    volumes:
+      - ./client/nginx/nginx-dev-server.conf:/etc/nginx/conf.d/nginx.conf
+      - ./client/src/css:/static-files/css
+      - ./client/build:/usr/share/nginx/html
+    ports:
+      - 80:80
+    networks:
+      - app-tier
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+
+  backend_dev-server:
+    container_name: backend_dev-server
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev-server
+    env_file: ./server/.env
+    volumes:
+      - /server/node_modules
+      - ./server/:/server
+    ports:
+      - 5000:5000
+    networks:
+      - app-tier
+    restart: always
+
+networks:
+  app-tier:
+    driver: bridge
