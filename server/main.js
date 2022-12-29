@@ -15,10 +15,10 @@ const port = process.env.EXPRESS_PORT;
 sequelize
   .sync({ force: false })
   .then(() => {
-    console.log("연결 성공");
+    console.log("sequelize 연결 성공");
   })
   .catch((err) => {
-    console.error(`연결 실패 - ${err}`);
+    console.error(`sequelize 연결 실패 - ${err}`);
   });
 
 /**
