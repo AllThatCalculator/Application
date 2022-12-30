@@ -6,9 +6,16 @@ AllThatCalculator Application
 
 [allthatcalculator.io](allthatcalculator.io)
 
-## development server
+### system architecture
+![image](https://user-images.githubusercontent.com/78730403/210069413-9730e9b7-ec36-4f42-bfa1-a3e26459e00e.png)
+
+
+## development server - for alpha test
 
 [allthatcalculator.net](www.allthatcalculator.net)
+
+### system architecture
+![image](https://user-images.githubusercontent.com/78730403/210069822-3df4e1f0-80f6-4659-8e91-5e226bafa8bc.png)
 
 ---
 
@@ -30,6 +37,8 @@ If you don't have access, use this [link](https://iewha-my.sharepoint.com/:f:/g/
 ---
 
 ## 3-A. Run frontend in local environment
+![image](https://user-images.githubusercontent.com/78730403/210070117-ad290a8e-ecbf-4e0a-b5eb-8aafe092005c.png)
+
 
 - Requirements
   - `node: 16.14.1`
@@ -51,6 +60,7 @@ npm start
 ---
 
 ## 3-B. Run backend in local environment
+![image](https://user-images.githubusercontent.com/78730403/210070332-1011df1d-4cae-4d1b-ac3b-4fe6a3ebdaf8.png)
 
 - Requirements
   - `docker: (20.10.XX)`
@@ -72,6 +82,7 @@ docker compose up
 ---
 
 ## 3-C. Run both frontend & backend in local environment
+![image](https://user-images.githubusercontent.com/78730403/210070625-7d49ea44-5966-49e3-90ae-00d0454dbbf7.png)
 
 - Requirements
   - `docker: (20.10.XX)`
