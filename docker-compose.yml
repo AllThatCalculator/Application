@@ -1,3 +1,5 @@
+# for local backend development
+
 version: "3"
 
 services:
@@ -12,9 +14,7 @@ services:
     networks:
       - app-tier
     restart: always
-    # command: "nginx -g 'daemon off;'"
     command: ["/scripts/relaod-nginx.sh"]
-    # command: env
 
   backend:
     container_name: backend
