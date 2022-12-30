@@ -1,11 +1,9 @@
-const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    "calculetInfoTemp",
+    "calculetInfo",
     {
       id: {
-        autoIncrement: true,
-        type: DataTypes.INTEGER,
+        type: DataTypes.CHAR(36),
         allowNull: false,
         primaryKey: true,
       },
@@ -42,19 +40,14 @@ module.exports = function (sequelize, DataTypes) {
         },
       },
       contributor_id: {
-        type: DataTypes.STRING(254),
+        type: DataTypes.CHAR(36),
         allowNull: false,
         references: {
           model: "user_info",
           key: "id",
         },
       },
-      birthday: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.Sequelize.fn("current_timestamp"),
-      },
-      updated: {
+      blocked: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: 0,
@@ -62,8 +55,9 @@ module.exports = function (sequelize, DataTypes) {
     },
     {
       sequelize,
-      tableName: "calculet_info_temp",
-      timestamps: false,
+      tableName: "calculet_info",
+      hasTrigger: true,
+      timestamps: true,
       indexes: [
         {
           name: "PRIMARY",

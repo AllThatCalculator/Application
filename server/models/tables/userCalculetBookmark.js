@@ -1,41 +1,41 @@
-const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    "categorySub",
+    "userCalculetBookmark",
     {
-      id: {
-        type: DataTypes.INTEGER,
+      calculet_id: {
+        type: DataTypes.CHAR(36),
         allowNull: false,
         primaryKey: true,
-      },
-      sub: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
-      },
-      main_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
         references: {
-          model: "category_main",
+          model: "calculet_info",
+          key: "id",
+        },
+      },
+      user_id: {
+        type: DataTypes.CHAR(36),
+        allowNull: false,
+        primaryKey: true,
+        references: {
+          model: "user_info",
           key: "id",
         },
       },
     },
     {
       sequelize,
-      tableName: "category_sub",
+      tableName: "user_calculet_bookmark",
       timestamps: false,
       indexes: [
         {
           name: "PRIMARY",
           unique: true,
           using: "BTREE",
-          fields: [{ name: "id" }],
+          fields: [{ name: "calculet_id" }, { name: "user_id" }],
         },
         {
-          name: "main_id",
+          name: "user_id",
           using: "BTREE",
-          fields: [{ name: "main_id" }],
+          fields: [{ name: "user_id" }],
         },
       ],
     }

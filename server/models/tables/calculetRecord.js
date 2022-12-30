@@ -1,18 +1,9 @@
-const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    "userCalculet",
+    "calculetRecord",
     {
-      liked: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
-      },
-      bookmarked: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
-      },
       calculet_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.CHAR(36),
         allowNull: false,
         primaryKey: true,
         references: {
@@ -21,7 +12,7 @@ module.exports = function (sequelize, DataTypes) {
         },
       },
       user_id: {
-        type: DataTypes.STRING(254),
+        type: DataTypes.CHAR(36),
         allowNull: false,
         primaryKey: true,
         references: {
@@ -29,10 +20,18 @@ module.exports = function (sequelize, DataTypes) {
           key: "id",
         },
       },
+      input: {
+        type: DataTypes.STRING(2184),
+        allowNull: true,
+      },
+      output: {
+        type: DataTypes.STRING(2184),
+        allowNull: false,
+      },
     },
     {
       sequelize,
-      tableName: "user_calculet",
+      tableName: "calculet_record",
       timestamps: false,
       indexes: [
         {

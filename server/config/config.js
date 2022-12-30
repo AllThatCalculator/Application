@@ -4,6 +4,7 @@ const development = {
   database: process.env.MYSQL_DATABASE,
   host: process.env.MYSQL_HOST,
   dialect: "mysql",
+  timezone: "+09:00",
 };
 
 const production = {

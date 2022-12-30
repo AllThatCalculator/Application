@@ -1,10 +1,9 @@
-const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     "userInfo",
     {
       id: {
-        type: DataTypes.STRING(254),
+        type: DataTypes.CHAR(36),
         allowNull: false,
         primaryKey: true,
       },
@@ -40,7 +39,7 @@ module.exports = function (sequelize, DataTypes) {
     {
       sequelize,
       tableName: "user_info",
-      timestamps: false,
+      timestamps: true,
       indexes: [
         {
           name: "PRIMARY",
