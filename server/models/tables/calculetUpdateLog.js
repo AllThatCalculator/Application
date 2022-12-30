@@ -1,20 +1,13 @@
-const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     "calculetUpdateLog",
     {
-      update_date: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.Sequelize.fn("current_timestamp"),
-        primaryKey: true,
-      },
       message: {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
       calculet_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.CHAR(36),
         allowNull: false,
         primaryKey: true,
         references: {
@@ -26,13 +19,13 @@ module.exports = function (sequelize, DataTypes) {
     {
       sequelize,
       tableName: "calculet_update_log",
-      timestamps: false,
+      timestamps: true,
       indexes: [
         {
           name: "PRIMARY",
           unique: true,
           using: "BTREE",
-          fields: [{ name: "calculet_id" }, { name: "update_date" }],
+          fields: [{ name: "calculet_id" }, { name: "created_at" }],
         },
       ],
     }
