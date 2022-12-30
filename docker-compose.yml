@@ -24,7 +24,7 @@ services:
     container_name: nginx
     build: ./nginx-dev
     ports:
-      - 80:80
+      - 8080:8080
     volumes:
       - ./client/src/css:/src/css
     depends_on:
