@@ -11,8 +11,6 @@ services:
     volumes:
       - /client/node_modules
       - ./client/:/client
-    ports:
-      - ${LOCALHOST_PORT:-3000}:3000
     networks:
       - app-tier
     tty: true
