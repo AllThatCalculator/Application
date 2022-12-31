@@ -7,8 +7,7 @@ AllThatCalculator Application
 [allthatcalculator.io](https://allthatcalculator.io)
 
 ### system architecture
-![image](https://user-images.githubusercontent.com/78730403/210069413-9730e9b7-ec36-4f42-bfa1-a3e26459e00e.png)
-
+![image](https://user-images.githubusercontent.com/78730403/210151266-8e113d99-20c5-49c4-bfec-c165e163a7de.png)
 
 ## development server - for alpha test
 
@@ -94,7 +93,7 @@ sed -i -e 's/\r$//' ./scripts/dev/reload-nginx.sh
 ---
 
 ## 3-C. Run both frontend & backend in local environment
-![image](https://user-images.githubusercontent.com/78730403/210070625-7d49ea44-5966-49e3-90ae-00d0454dbbf7.png)
+![image](https://user-images.githubusercontent.com/78730403/210151286-22d2cb77-94c3-4928-92a3-0e87c3f7a813.png)
 
 - Requirements
   - `docker: (20.10.XX)`
