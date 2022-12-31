@@ -76,6 +76,18 @@ docker compose build
 ```bash
 docker compose up
 ```
+#### trouble shooting
+![image](https://user-images.githubusercontent.com/78730403/210150591-9bfb7ebc-ade0-472c-a152-375524657431.png)
+
+- for Windows, enter `wsl`
+  ```bash
+  wsl
+  ```
+
+```bash
+sed -i -e 's/\r$//' ./server/entrypoint.sh
+sed -i -e 's/\r$//' ./scripts/dev/reload-nginx.sh
+```
 
 **note** that you should visit `localhost:8080` to test in browser, not `localhost:3000`
 
