@@ -4,7 +4,7 @@ module.exports = function (app) {
   app.use(
     ["/api", "/file"],
     createProxyMiddleware({
-      target: process.env.REACT_APP_BACKEND_URL,
+      target: "http://www.allthatcalculator.net",
       changeOrigin: true,
     })
   );
