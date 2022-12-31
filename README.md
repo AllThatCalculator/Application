@@ -60,7 +60,7 @@ npm start
 ---
 
 ## 3-B. Run backend in local environment
-![image](https://user-images.githubusercontent.com/78730403/210070332-1011df1d-4cae-4d1b-ac3b-4fe6a3ebdaf8.png)
+![image](https://user-images.githubusercontent.com/78730403/210149102-d6069cc3-7995-4e4b-aded-00ee525afc2d.png)
 
 - Requirements
   - `docker: (20.10.XX)`
