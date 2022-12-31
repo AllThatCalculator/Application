@@ -4,7 +4,7 @@ AllThatCalculator Application
 
 ## production
 
-[allthatcalculator.io](allthatcalculator.io)
+[allthatcalculator.io](https://allthatcalculator.io)
 
 ### system architecture
 ![image](https://user-images.githubusercontent.com/78730403/210069413-9730e9b7-ec36-4f42-bfa1-a3e26459e00e.png)
@@ -12,7 +12,7 @@ AllThatCalculator Application
 
 ## development server - for alpha test
 
-[allthatcalculator.net](www.allthatcalculator.net)
+[allthatcalculator.net](http://www.allthatcalculator.net)
 
 ### system architecture
 ![image](https://user-images.githubusercontent.com/78730403/210069822-3df4e1f0-80f6-4659-8e91-5e226bafa8bc.png)
