@@ -10,11 +10,11 @@ services:
       - 8080:8080
     volumes:
       - ./nginx/nginx.BE.conf:/etc/nginx/conf.d/nginx.conf
-      - ./scripts/dev/reload-nginx.sh:/scripts/reload-nginx.sh
+      - ./scripts/dev/auto-reload-nginx.sh:/scripts/auto-reload-nginx.sh
     networks:
       - app-tier
     restart: always
-    command: ["/scripts/reload-nginx.sh"]
+    command: ["/scripts/auto-reload-nginx.sh"]
 
   backend:
     container_name: backend
