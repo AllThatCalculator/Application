@@ -20,12 +20,12 @@ services:
 
   nginx:
     container_name: nginx
-    build: ./nginx-dev
+    build: ./nginx
     ports:
       - 8080:8080
     volumes:
       - ./client/src/css:/src/css
-      - ./nginx-dev/nginx-FEBE.conf:/etc/nginx/conf.d/nginx.conf
+      - ./nginx/nginx.FEBE.conf:/etc/nginx/conf.d/nginx.conf
     depends_on:
       - frontend
       - backend

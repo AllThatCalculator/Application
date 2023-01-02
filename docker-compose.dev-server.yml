@@ -6,11 +6,9 @@ services:
     container_name: frontend_dev-server
     restart: unless-stopped
     stdin_open: true
-    build:
-      context: ./client
-      dockerfile: Dockerfile.dev-server
+    build: nginx
     volumes:
-      - ./client/nginx/nginx-dev-server.conf:/etc/nginx/conf.d/nginx.conf
+      - ./nginx/nginx.dev-server.conf:/etc/nginx/conf.d/nginx.conf
       - ./client/src/css:/static-files/css
       - ./client/build:/usr/share/nginx/html
     ports:
