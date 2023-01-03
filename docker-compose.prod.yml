@@ -5,14 +5,13 @@ services:
     container_name: frontend
     restart: unless-stopped
     stdin_open: true
-    build:
-      context: ./client
-      dockerfile: Dockerfile.prod
+    build: nginx
     volumes:
-      - ./client/nginx:/etc/nginx/conf.d
+      - ./nginx/nginx.prod.conf:/etc/nginx/conf.d/nginx.conf
       - ./client/src/css:/static-files/css
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
+      - ./client/build:/usr/share/nginx/html
     env_file: ./client/.env
     ports:
       - 80:80
@@ -39,8 +38,6 @@ services:
       context: ./server
       dockerfile: Dockerfile.prod
     env_file: ./server/.env
-    ports:
-      - 5000:5000
     volumes:
       - /server/node_modules
       - ./server/:/server
