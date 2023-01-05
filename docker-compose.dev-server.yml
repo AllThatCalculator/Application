@@ -16,7 +16,7 @@ services:
     networks:
       - app-tier
     depends_on:
-      - backend
+      - backend_dev-server
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
 
   backend_dev-server:
