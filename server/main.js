@@ -50,7 +50,7 @@ app.use("/users", users);
 /**
  * 계산 이력 관리 API
  */
-app.use("/record", record);
+// app.use("/record", record);
 
 /**
  * 서버 시작
