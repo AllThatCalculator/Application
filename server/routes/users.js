@@ -1,7 +1,8 @@
 const express = require("express");
 const { signUp } = require("./users/signUp");
 const { bufferToImageSrc } = require("../utils/bufferConverter");
-const mariadb = require("../config/database");
+const { models } = require("../models");
+const sequelize = require("sequelize");
 
 const router = express.Router();
 
@@ -45,11 +46,13 @@ router.post("/", signUp);
  */
 router.get("/:id", async (req, res) => {
   try {
-    // 사용자 정보 쿼리문
-    const userInfoQuery = `select * from user_info where id='${req.params.id}';`;
-
-    const rows = await mariadb.query(userInfoQuery);
-    const userInfo = rows[0][0];
+    const userInfo = await models.userInfo.findOne({
+      where: {
+        id: {
+          [sequelize.Op.eq]: req.params.id,
+        },
+      },
+    });
 
     let user = null;
     if (userInfo) {

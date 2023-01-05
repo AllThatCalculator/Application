@@ -1,7 +1,7 @@
 const express = require("express");
 const calculets = require("./routes/calculets");
 const users = require("./routes/users");
-const record = require("./routes/record");
+// const record = require("./routes/record");
 const { swaggerUi, specs } = require("./swagger");
 const cookieParser = require("cookie-parser");
 const fs = require("fs");
