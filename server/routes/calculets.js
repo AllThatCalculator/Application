@@ -7,6 +7,8 @@ const {
   bufferToImageSrc,
 } = require("../utils/bufferConverter");
 const { DateTimeToString } = require("../utils/StringConverter");
+const { models } = require("../models");
+const sequelize = require("sequelize");
 
 /**
  * @swagger
@@ -54,7 +56,6 @@ router.get("/", async (req, res) => {
       },
       order: [["id", "ASC"]],
     });
-    console.log(categoryMain);
 
     // 카테고리 소분류 리스트 얻어오기
     const categorySub = await models.categorySub.findAll({
@@ -172,63 +173,76 @@ router.get("/category", category);
  *                $ref: "#/components/schemas/errorResult"
  */
 router.get("/:id", async (req, res) => {
-  // 계산기 정보 쿼리문
-  const calculetInfoQuery = `select * from calculet_info where id=${req.params.id};`;
-
-  // 계산기 통계 쿼리문
-  const calculetStatisticsQuery = `select bookmark_cnt, like_cnt, report_cnt from calculet_statistics where calculet_id=${req.params.id};`;
-
-  // 계산기 누적 통계 쿼리문
-  const calculetCountQuery = `select view_cnt, calculation_cnt, user_cnt from calculet_count where calculet_id=${req.params.id};`;
-
-  // (임시) 사용자-계산기 관련 정보(북마크 여부, 좋아요 여부) 쿼리문
-  // 아직 로그인 기능 없어서 버튼 누른 회원 정보 못 얻어오므로 사람 구분은 x
-  // const userCalculetQuery = `select liked, bookmarked from user_calculet where calculet_id=${req.params.id};`;
-
-  // 제작자 정보
-  const userInfoQuery = `select profile_img, user_name from user_info where id = (select contributor_id from calculet_info where id=${req.params.id});`;
-
-  // 계산기 업데이트 로그
-  const calculetUpdateLogQuery = `select created_at, message from calculet_update_log where calculet_id=${req.params.id};`;
-
-  // 카테고리 대분류
-  const categoryMainQuery = `select * from category_main where id < 99999 order by id;`;
-
-  // 카테고리 소분류
-  const categorySubQuery = `select * from category_sub order by id;`;
-
   try {
-    const rows = await mariadb.query(
-      calculetInfoQuery +
-        calculetStatisticsQuery +
-        calculetCountQuery +
-        // userCalculetQuery +
-        userInfoQuery +
-        calculetUpdateLogQuery +
-        categoryMainQuery +
-        categorySubQuery
-    );
+    // 계산기 정보 (유저와 카테고리 대분류, 소분류와 조인)
+    const [calculetInfo] = await models.calculetInfo.findAll({
+      include: [
+        {
+          model: models.userInfo,
+          required: true,
+          attributes: ["user_name", "profile_img"],
+          as: "contributor",
+        },
+        {
+          model: models.categorySub,
+          required: true,
+          attributes: ["sub"],
+          as: "category_sub",
+          include: [
+            {
+              model: models.categoryMain,
+              required: true,
+              attributes: ["main"],
+              as: "main",
+            },
+          ],
+        },
+      ],
+      where: {
+        id: {
+          [sequelize.Op.eq]: req.params.id,
+        },
+      },
+    });
 
-    const calculetInfo = rows[0][0][0];
-    const calculetStatistics = rows[0][1][0];
-    const calculetCount = rows[0][2][0];
-    // let userCalculet = rows[0][3][0];
-    const userInfo = rows[0][3][0];
-    const calculetUpdateLog = rows[0][4];
-    const categoryMain = rows[0][5];
-    const categorySub = rows[0][6];
+    console.log(calculetInfo);
 
-    // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
-    // if (!userCalculet) {
-    //   userCalculet = {
-    //     bookmarked: false,
-    //     liked: false,
-    //   };
-    // }
+    // 계산기 통계
+    const calculetStatistics = await models.calculetStatistics.findAll({
+      attributes: ["bookmark_cnt", "like_cnt", "report_cnt"],
+      where: {
+        calculet_id: {
+          [sequelize.Op.eq]: req.params.id,
+        },
+      },
+    });
+    // 계산기 조회수
+    const calculetCount = await models.calculetCount.findAll({
+      attributes: ["view_cnt", "calculation_cnt", "user_cnt"],
+      where: {
+        calculet_id: {
+          [sequelize.Op.eq]: req.params.id,
+        },
+      },
+    });
+    // (임시) 사용자-계산기 관련 정보(북마크 여부, 좋아요 여부)
+    const userCalculet = {
+      bookmarked: false,
+      liked: false,
+    };
+    // 계산기 업데이트 로그
+    const calculetUpdateLog = await models.calculetUpdateLog.findAll({
+      attributes: ["created_at", "message"],
+      where: {
+        calculet_id: {
+          [sequelize.Op.eq]: req.params.id,
+        },
+      },
+    });
 
     // 계산기 객체로 묶기
     let calculet = null;
-    if (calculetInfo && userInfo) {
+    if (calculetInfo) {
       // 소스 코드 buffer 형태를 string 으로 변환
       const srcCode = bufferToString(calculetInfo.src_code);
 
@@ -237,11 +251,13 @@ router.get("/:id", async (req, res) => {
 
       // 제작자 이미지를 base64string 으로 변환 + src 생성
       let contributorImgSrc = null;
-      if (userInfo.profile_img === null) {
+      if (calculetInfo.contributor.profile_img === null) {
         // 기본 이미지인 경우
         contributorImgSrc = "/img/defaultProfile.png";
       } else {
-        contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
+        contributorImgSrc = bufferToImageSrc(
+          calculetInfo.contributor.profile_img
+        );
       }
 
       calculet = {
@@ -250,20 +266,19 @@ router.get("/:id", async (req, res) => {
         srcCode: srcCode,
         manual: manual,
         description: calculetInfo.description,
-        contributor: userInfo.user_name,
+        contributor: calculetInfo.contributor.user_name,
         contributorImgSrc: contributorImgSrc,
       };
     }
 
     // 통계 객체로 묶기
     let statistics = null;
-    if (calculetStatistics && calculetCount) {
-      // && userCalculet) {
+    if (calculetStatistics && calculetCount && userCalculet) {
       statistics = {
         bookmarkCnt: calculetStatistics.bookmark_cnt,
-        // bookmarked: userCalculet.bookmarked,
+        bookmarked: userCalculet.bookmarked,
         likeCnt: calculetStatistics.like_cnt,
-        // liked: userCalculet.liked,
+        liked: userCalculet.liked,
         reportCnt: calculetStatistics.report_cnt,
         viewCnt: calculetCount.view_cnt,
       };
@@ -274,7 +289,6 @@ router.get("/:id", async (req, res) => {
 
     // 업데이트 로그 가공
     let updateLog = [];
-    console.log(calculetUpdateLog.length);
     if (calculetUpdateLog.length > 0) {
       // 날짜 같은 계산기 메세지 묶기
       const dictUpdateLog = {};
@@ -294,29 +308,20 @@ router.get("/:id", async (req, res) => {
       }
     }
 
-    if (calculetInfo && calculetCount && userInfo) {
+    if (calculetInfo && calculetCount) {
       // 제작자 이미지를 base64string 으로 변환 + src 생성
-      const contributorImgSrc = bufferToImageSrc(userInfo.profile_img);
-
-      const mainIdx = calculetInfo.category_main_id;
-      const subIdx = calculetInfo.category_sub_id;
-      let main = "기타";
-      if (mainIdx < 99999) {
-        main = categoryMain[calculetInfo.category_main_id].main;
-      }
-      let sub = "기타";
-      if (subIdx < 99999) {
-        sub = categorySub[calculetInfo.category_sub_id].sub;
-      }
+      const contributorImgSrc = bufferToImageSrc(
+        calculetInfo.contributor.profile_img
+      );
 
       calculetInfoPopup = {
         profileImg: contributorImgSrc,
-        contributorName: userInfo.user_name,
+        contributorName: calculetInfo.contributor.user_name,
         calculationCnt: calculetCount.calculation_cnt,
         userCnt: calculetCount.user_cnt,
         title: calculetInfo.title,
-        categoryMain: main,
-        categorySub: sub,
+        categoryMain: calculetInfo.category_sub.main.main,
+        categorySub: calculetInfo.category_sub.sub,
         birthday: DateTimeToString(calculetInfo.created_at),
         updateLog: updateLog,
       };
