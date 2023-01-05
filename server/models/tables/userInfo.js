@@ -16,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
       },
       profile_img: {
-        type: DataTypes.BLOB,
+        type: DataTypes.CHAR(36),
         allowNull: true,
       },
       bio: {
