@@ -46,14 +46,23 @@ router.get("/", async (req, res) => {
     const calculetLists = [];
 
     // 카테고리 대분류 리스트 얻어오기
-    const categoryMainQuery = `select * from category_main where id < 99999 order by id;`;
+    const categoryMain = await models.categoryMain.findAll({
+      where: {
+        id: {
+          [sequelize.Op.lt]: 99999,
+        },
+      },
+      order: [["id", "ASC"]],
+    });
+    console.log(categoryMain);
 
     // 카테고리 소분류 리스트 얻어오기
-    const categorySubQuery = `select * from category_sub order by main_id, id;`;
-
-    const [[categoryMain, categorySub]] = await mariadb.query(
-      categoryMainQuery + categorySubQuery
-    );
+    const categorySub = await models.categorySub.findAll({
+      order: [
+        ["main_id", "ASC"],
+        ["id", "ASC"],
+      ],
+    });
 
     // 대분류 만큼 dictionary 초기화
     for (let i = 0; i < categoryMain.length; i++) {
@@ -64,12 +73,22 @@ router.get("/", async (req, res) => {
     }
 
     // 소분류 채우는 함수
-    async function fillSub(mainId, sub, sql) {
+    async function fillSub(mainId, sub, subId) {
       try {
-        const [rows] = await mariadb.query(sql);
+        const subItemCalculets = await models.calculetInfo.findAll({
+          attributes: ["id", "title"],
+          where: {
+            category_main_id: {
+              [sequelize.Op.eq]: mainId,
+            },
+            category_sub_id: {
+              [sequelize.Op.eq]: subId,
+            },
+          },
+        });
         calculetLists[mainId].mainItems.push({
           categorySub: sub,
-          subItems: rows,
+          subItems: subItemCalculets,
         });
       } catch (error) {
         res.status(400).send({
@@ -82,11 +101,10 @@ router.get("/", async (req, res) => {
     }
     // 각 대분류마다 단위 변환기 소분류 채우기
     for (let i = 0; i < categoryMain.length - 1; i++) {
-      const sql = `select id, title from calculet_info where category_main_id=${i} and category_sub_id=${converterId};`;
-      await fillSub(i, "단위 변환기", sql);
+      await fillSub(i, "단위 변환기", converterId);
 
       if (i > 0) {
-        await fillSub(0, categoryMain[i].main, sql);
+        await fillSub(0, categoryMain[i].main, converterId);
       }
     }
 
@@ -95,14 +113,12 @@ router.get("/", async (req, res) => {
       const mainId = categorySub[i].main_id;
       const subId = categorySub[i].id;
       const sub = categorySub[i].sub;
-      const sql = `select id, title from calculet_info where category_main_id=${mainId} and category_sub_id=${subId};`;
-      await fillSub(mainId, sub, sql);
+      await fillSub(mainId, sub, subId);
     }
 
     // 각 대분류마다 기타 소분류 채우기 (단위 변환기 제외)
     for (let i = 1; i < categoryMain.length; i++) {
-      const sql = `select id, title from calculet_info where category_main_id=${i} and category_sub_id=${etcId};`;
-      await fillSub(i, "기타", sql);
+      await fillSub(i, "기타", etcId);
     }
 
     // console.log(calculetLists);
@@ -167,13 +183,13 @@ router.get("/:id", async (req, res) => {
 
   // (임시) 사용자-계산기 관련 정보(북마크 여부, 좋아요 여부) 쿼리문
   // 아직 로그인 기능 없어서 버튼 누른 회원 정보 못 얻어오므로 사람 구분은 x
-  const userCalculetQuery = `select liked, bookmarked from user_calculet where calculet_id=${req.params.id};`;
+  // const userCalculetQuery = `select liked, bookmarked from user_calculet where calculet_id=${req.params.id};`;
 
   // 제작자 정보
   const userInfoQuery = `select profile_img, user_name from user_info where id = (select contributor_id from calculet_info where id=${req.params.id});`;
 
   // 계산기 업데이트 로그
-  const calculetUpdateLogQuery = `select update_date, message from calculet_update_log where calculet_id=${req.params.id};`;
+  const calculetUpdateLogQuery = `select created_at, message from calculet_update_log where calculet_id=${req.params.id};`;
 
   // 카테고리 대분류
   const categoryMainQuery = `select * from category_main where id < 99999 order by id;`;
@@ -186,7 +202,7 @@ router.get("/:id", async (req, res) => {
       calculetInfoQuery +
         calculetStatisticsQuery +
         calculetCountQuery +
-        userCalculetQuery +
+        // userCalculetQuery +
         userInfoQuery +
         calculetUpdateLogQuery +
         categoryMainQuery +
@@ -196,19 +212,19 @@ router.get("/:id", async (req, res) => {
     const calculetInfo = rows[0][0][0];
     const calculetStatistics = rows[0][1][0];
     const calculetCount = rows[0][2][0];
-    let userCalculet = rows[0][3][0];
-    const userInfo = rows[0][4][0];
-    const calculetUpdateLog = rows[0][5];
-    const categoryMain = rows[0][6];
-    const categorySub = rows[0][7];
+    // let userCalculet = rows[0][3][0];
+    const userInfo = rows[0][3][0];
+    const calculetUpdateLog = rows[0][4];
+    const categoryMain = rows[0][5];
+    const categorySub = rows[0][6];
 
     // (임시) 사용자가 현재 계산기 처음 들어오는 거라면 user-calculet에 데이터 삽입
-    if (!userCalculet) {
-      userCalculet = {
-        bookmarked: false,
-        liked: false,
-      };
-    }
+    // if (!userCalculet) {
+    //   userCalculet = {
+    //     bookmarked: false,
+    //     liked: false,
+    //   };
+    // }
 
     // 계산기 객체로 묶기
     let calculet = null;
@@ -241,12 +257,13 @@ router.get("/:id", async (req, res) => {
 
     // 통계 객체로 묶기
     let statistics = null;
-    if (calculetStatistics && calculetCount && userCalculet) {
+    if (calculetStatistics && calculetCount) {
+      // && userCalculet) {
       statistics = {
         bookmarkCnt: calculetStatistics.bookmark_cnt,
-        bookmarked: userCalculet.bookmarked,
+        // bookmarked: userCalculet.bookmarked,
         likeCnt: calculetStatistics.like_cnt,
-        liked: userCalculet.liked,
+        // liked: userCalculet.liked,
         reportCnt: calculetStatistics.report_cnt,
         viewCnt: calculetCount.view_cnt,
       };
@@ -257,11 +274,12 @@ router.get("/:id", async (req, res) => {
 
     // 업데이트 로그 가공
     let updateLog = [];
+    console.log(calculetUpdateLog.length);
     if (calculetUpdateLog.length > 0) {
       // 날짜 같은 계산기 메세지 묶기
       const dictUpdateLog = {};
       for (const log of calculetUpdateLog) {
-        const date = DateTimeToString(log.update_date);
+        const date = DateTimeToString(log.created_at);
         const message = [log.message];
         if (dictUpdateLog[date]) {
           dictUpdateLog[date].push(message);
@@ -299,7 +317,7 @@ router.get("/:id", async (req, res) => {
         title: calculetInfo.title,
         categoryMain: main,
         categorySub: sub,
-        birthday: DateTimeToString(calculetInfo.birthday),
+        birthday: DateTimeToString(calculetInfo.created_at),
         updateLog: updateLog,
       };
     }
