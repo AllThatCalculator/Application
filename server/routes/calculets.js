@@ -175,7 +175,7 @@ router.get("/category", category);
 router.get("/:id", async (req, res) => {
   try {
     // 계산기 정보 (유저와 카테고리 대분류, 소분류와 조인)
-    const [calculetInfo] = await models.calculetInfo.findAll({
+    const calculetInfo = await models.calculetInfo.findOne({
       include: [
         {
           model: models.userInfo,
@@ -208,7 +208,7 @@ router.get("/:id", async (req, res) => {
     console.log(calculetInfo);
 
     // 계산기 통계
-    const calculetStatistics = await models.calculetStatistics.findAll({
+    const calculetStatistics = await models.calculetStatistics.findOne({
       attributes: ["bookmark_cnt", "like_cnt", "report_cnt"],
       where: {
         calculet_id: {
@@ -217,7 +217,7 @@ router.get("/:id", async (req, res) => {
       },
     });
     // 계산기 조회수
-    const calculetCount = await models.calculetCount.findAll({
+    const calculetCount = await models.calculetCount.findOne({
       attributes: ["view_cnt", "calculation_cnt", "user_cnt"],
       where: {
         calculet_id: {
@@ -382,23 +382,20 @@ router.get("/:id", async (req, res) => {
  *                $ref: "#/components/schemas/errorResult"
  */
 router.post("/", async (req, res) => {
-  const sql =
-    "INSERT INTO calculet_info_temp(title, src_code, manual, description, category_main_id, category_sub_id, contributor_id) VALUES(?,?,?,?,?,?,?);";
-
-  const calculet = [
-    req.body.title,
-    req.body.srcCode,
-    req.body.manual,
-    req.body.description,
-    req.body.categoryMainId,
-    req.body.categorySubId,
-    req.body.id,
-  ];
   try {
-    const rows = await mariadb.query(sql, calculet);
-    res
-      .status(201)
-      .send({ success: true, location: `/calculets/${rows[0].insertId}` });
+    const calculetInfoTemp = models.calculetInfoTemp.create({
+      title: req.body.title,
+      src_code: req.body.srcCode,
+      manual: req.body.manual,
+      description: req.body.description,
+      category_main_id: req.body.categoryMainId,
+      category_sub_id: req.body.categorySubId,
+      contributor_id: req.body.id,
+    });
+    res.status(201).send({
+      success: true,
+      location: `/calculets/${calculetInfoTemp.id}`,
+    });
   } catch (err) {
     res.status(400).send({
       success: false,
