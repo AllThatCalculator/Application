@@ -1,4 +1,4 @@
-name: [DEV] restart backend container
+name: (DEV) restart backend container
 
 on:
   push:

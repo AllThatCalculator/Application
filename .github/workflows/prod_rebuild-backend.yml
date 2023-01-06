@@ -1,4 +1,4 @@
-name: [PROD] rebuild backend container
+name: (PROD) rebuild backend container
 
 on:
   push:
