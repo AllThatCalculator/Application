@@ -1,4 +1,4 @@
-name: reload nginx for dev server
+name: [DEV] reload nginx
 
 on:
   push:

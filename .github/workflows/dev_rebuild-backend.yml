@@ -1,4 +1,4 @@
-name: rebuild backend container for dev server
+name: [DEV] rebuild backend container
 
 on:
   push:

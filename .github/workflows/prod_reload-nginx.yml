@@ -1,4 +1,4 @@
-name: reload nginx for production
+name: [PROD] reload nginx
 
 on:
   push:

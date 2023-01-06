@@ -1,4 +1,4 @@
-name: build react app for development server
+name: [DEV] build react app
 
 on:
   push:
