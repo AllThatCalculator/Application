@@ -3,7 +3,6 @@ const calculets = require("./routes/calculets");
 const users = require("./routes/users");
 // const record = require("./routes/record");
 const { swaggerUi, specs } = require("./swagger");
-const cookieParser = require("cookie-parser");
 const fs = require("fs");
 const { sequelize } = require("./models");
 
@@ -20,11 +19,6 @@ sequelize
   .catch((err) => {
     console.error(`sequelize 연결 실패 - ${err}`);
   });
-
-/**
- * 쿠키 파싱
- */
-app.use(cookieParser());
 
 /**
  * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
