@@ -5,8 +5,8 @@ on:
     branches:
       - develop
     paths:
-      - ../client/src/*
-      - ../client/public/*
+      - client/src/*
+      - client/public/*
 jobs:
   build-and-deploy-react-app-for-development-server:
     runs-on: ubuntu-20.04
