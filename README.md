@@ -119,7 +119,3 @@ docker compose -f ./docker-compose.FEBE.yml up
 **note** that you should visit `localhost:8080` to test in browser, not `localhost:3000`
 
 ---
-
-# ERD
-
-![image](https://user-images.githubusercontent.com/68186101/211045213-bc5a568f-5358-4525-87b1-113158c9c9cb.png)
