@@ -7,6 +7,7 @@ AllThatCalculator Application
 [allthatcalculator.io](https://allthatcalculator.io)
 
 ### system architecture
+
 ![image](https://user-images.githubusercontent.com/78730403/210151266-8e113d99-20c5-49c4-bfec-c165e163a7de.png)
 
 ## development server - for alpha test
@@ -14,6 +15,7 @@ AllThatCalculator Application
 [allthatcalculator.net](http://www.allthatcalculator.net)
 
 ### system architecture
+
 ![image](https://user-images.githubusercontent.com/78730403/210069822-3df4e1f0-80f6-4659-8e91-5e226bafa8bc.png)
 
 ---
@@ -36,8 +38,8 @@ If you don't have access, use this [link](https://iewha-my.sharepoint.com/:f:/g/
 ---
 
 ## 3-A. Run frontend in local environment
-![image](https://user-images.githubusercontent.com/78730403/210070117-ad290a8e-ecbf-4e0a-b5eb-8aafe092005c.png)
 
+![image](https://user-images.githubusercontent.com/78730403/210070117-ad290a8e-ecbf-4e0a-b5eb-8aafe092005c.png)
 
 - Requirements
   - `node: 16.14.1`
@@ -59,6 +61,7 @@ npm start
 ---
 
 ## 3-B. Run backend in local environment
+
 ![image](https://user-images.githubusercontent.com/78730403/210149102-d6069cc3-7995-4e4b-aded-00ee525afc2d.png)
 
 - Requirements
@@ -75,7 +78,9 @@ docker compose build
 ```bash
 docker compose up
 ```
+
 #### trouble shooting
+
 ![image](https://user-images.githubusercontent.com/78730403/210150591-9bfb7ebc-ade0-472c-a152-375524657431.png)
 
 - for Windows, enter `wsl`
@@ -93,6 +98,7 @@ sed -i -e 's/\r$//' ./scripts/dev/reload-nginx.sh
 ---
 
 ## 3-C. Run both frontend & backend in local environment
+
 ![image](https://user-images.githubusercontent.com/78730403/210151286-22d2cb77-94c3-4928-92a3-0e87c3f7a813.png)
 
 - Requirements
@@ -113,3 +119,7 @@ docker compose -f ./docker-compose.FEBE.yml up
 **note** that you should visit `localhost:8080` to test in browser, not `localhost:3000`
 
 ---
+
+# ERD
+
+![image](https://user-images.githubusercontent.com/68186101/211045213-bc5a568f-5358-4525-87b1-113158c9c9cb.png)
