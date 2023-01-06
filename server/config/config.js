@@ -5,6 +5,12 @@ const development = {
   host: process.env.MYSQL_HOST,
   dialect: "mysql",
   timezone: "+09:00",
+  define: {
+    underscored: true,
+    underscoredAll: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
+  },
 };
 
 const production = {

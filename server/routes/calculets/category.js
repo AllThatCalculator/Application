@@ -1,16 +1,25 @@
-const mariadb = require("../../config/database");
+const { models } = require("../../models");
+const sequelize = require("sequelize");
 
 exports.category = async (req, res) => {
-  // 카테고리 대분류
-  const categoryMainQuery = `select * from category_main where id < 99999 order by id;`;
-
-  // 카테고리 소분류
-  const categorySubQuery = `select * from category_sub order by id;`;
-
   try {
-    const rows = await mariadb.query(categoryMainQuery + categorySubQuery);
-    const main = rows[0][0];
-    const sub = rows[0][1];
+    // 카테고리 대분류 리스트 얻어오기
+    const main = await models.categoryMain.findAll({
+      where: {
+        id: {
+          [sequelize.Op.lt]: 99999,
+        },
+      },
+      order: [["id", "ASC"]],
+    });
+
+    // 카테고리 소분류 리스트 얻어오기
+    const sub = await models.categorySub.findAll({
+      order: [
+        ["main_id", "ASC"],
+        ["id", "ASC"],
+      ],
+    });
 
     const mainOptionList = [];
     const subOptionList = [[]];
