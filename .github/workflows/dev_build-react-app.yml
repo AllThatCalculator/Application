@@ -8,7 +8,7 @@ on:
       - client/src/*
       - client/public/*
 jobs:
-  build-and-deploy-react-app-for-development-server:
+  build-and-deploy-react-app:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
