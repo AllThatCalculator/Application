@@ -6,9 +6,8 @@ on:
       - develop
     paths:
       - server/*
-    paths-ignore:
-      - server/package*.json
-      - server/Dockerfile.dev-server
+      - "!server/package*.json"
+      - "!server/Dockerfile.dev-server"
 jobs:
   restart-backend-container:
     runs-on: ubuntu-20.04
