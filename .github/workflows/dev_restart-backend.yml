@@ -6,7 +6,7 @@ on:
       - develop
     paths:
       - server/*
-      - "!/server/package*.json"
+      - "!server/package*.json"
       - "!server/Dockerfile.dev-server"
 jobs:
   restart-backend-container:
