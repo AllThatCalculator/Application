@@ -6,7 +6,7 @@ on:
       - develop
     paths:
       - server/*
-    paths_ignore:
+    paths-ignore:
       - server/package*.json
       - server/Dockerfile.dev-server
 jobs:
