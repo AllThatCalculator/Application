@@ -28,8 +28,6 @@ services:
     volumes:
       - /server/node_modules
       - ./server/:/server
-    ports:
-      - 5000:5000
     networks:
       - app-tier
     restart: always
