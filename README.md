@@ -16,7 +16,7 @@ AllThatCalculator Application
 
 ### system architecture
 
-![image](https://user-images.githubusercontent.com/78730403/210069822-3df4e1f0-80f6-4659-8e91-5e226bafa8bc.png)
+![image](https://user-images.githubusercontent.com/78730403/211194669-853463e1-d459-4d36-b34f-9ab2dd2972f3.png)
 
 ---
 
@@ -39,7 +39,7 @@ If you don't have access, use this [link](https://iewha-my.sharepoint.com/:f:/g/
 
 ## 3-A. Run frontend in local environment
 
-![image](https://user-images.githubusercontent.com/78730403/210070117-ad290a8e-ecbf-4e0a-b5eb-8aafe092005c.png)
+![image](https://user-images.githubusercontent.com/78730403/211194688-49a99337-40e1-42f7-be01-2d77d2789a14.png)
 
 - Requirements
   - `node: 16.14.1`
@@ -62,7 +62,7 @@ npm start
 
 ## 3-B. Run backend in local environment
 
-![image](https://user-images.githubusercontent.com/78730403/210149102-d6069cc3-7995-4e4b-aded-00ee525afc2d.png)
+![image](https://user-images.githubusercontent.com/78730403/211194867-9e8cf188-ef2c-4b19-ae98-7029352e3b9e.png)
 
 - Requirements
   - `docker: (20.10.XX)`
@@ -99,7 +99,7 @@ sed -i -e 's/\r$//' ./scripts/dev/reload-nginx.sh
 
 ## 3-C. Run both frontend & backend in local environment
 
-![image](https://user-images.githubusercontent.com/78730403/210151286-22d2cb77-94c3-4928-92a3-0e87c3f7a813.png)
+![image](https://user-images.githubusercontent.com/78730403/211195240-2cfcb903-5765-4bc6-8e3c-d0dbd07e466b.png)
 
 - Requirements
   - `docker: (20.10.XX)`
