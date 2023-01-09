@@ -5,7 +5,7 @@ on:
     branches:
       - prod # for temporary
     paths:
-      - nginx/nginx.prod.conf
+      - nginx/nginx.prod/*
 
 jobs:
   reload-production-nginx:

@@ -5,7 +5,7 @@ on:
     branches:
       - develop
     paths:
-      - nginx/nginx.dev-server.conf
+      - nginx/nginx.dev-server/*
 
 jobs:
   reload-nginx:
