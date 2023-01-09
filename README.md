@@ -7,15 +7,16 @@ AllThatCalculator Application
 [allthatcalculator.io](https://allthatcalculator.io)
 
 ### system architecture
-![image](https://user-images.githubusercontent.com/78730403/210069413-9730e9b7-ec36-4f42-bfa1-a3e26459e00e.png)
 
+![image](https://user-images.githubusercontent.com/78730403/210151266-8e113d99-20c5-49c4-bfec-c165e163a7de.png)
 
 ## development server - for alpha test
 
 [allthatcalculator.net](http://www.allthatcalculator.net)
 
 ### system architecture
-![image](https://user-images.githubusercontent.com/78730403/210069822-3df4e1f0-80f6-4659-8e91-5e226bafa8bc.png)
+
+![image](https://user-images.githubusercontent.com/78730403/211194669-853463e1-d459-4d36-b34f-9ab2dd2972f3.png)
 
 ---
 
@@ -37,8 +38,8 @@ If you don't have access, use this [link](https://iewha-my.sharepoint.com/:f:/g/
 ---
 
 ## 3-A. Run frontend in local environment
-![image](https://user-images.githubusercontent.com/78730403/210070117-ad290a8e-ecbf-4e0a-b5eb-8aafe092005c.png)
 
+![image](https://user-images.githubusercontent.com/78730403/211194688-49a99337-40e1-42f7-be01-2d77d2789a14.png)
 
 - Requirements
   - `node: 16.14.1`
@@ -60,7 +61,8 @@ npm start
 ---
 
 ## 3-B. Run backend in local environment
-![image](https://user-images.githubusercontent.com/78730403/210070332-1011df1d-4cae-4d1b-ac3b-4fe6a3ebdaf8.png)
+
+![image](https://user-images.githubusercontent.com/78730403/211194867-9e8cf188-ef2c-4b19-ae98-7029352e3b9e.png)
 
 - Requirements
   - `docker: (20.10.XX)`
@@ -77,12 +79,27 @@ docker compose build
 docker compose up
 ```
 
+#### trouble shooting
+
+![image](https://user-images.githubusercontent.com/78730403/210150591-9bfb7ebc-ade0-472c-a152-375524657431.png)
+
+- for Windows, enter `wsl`
+  ```bash
+  wsl
+  ```
+
+```bash
+sed -i -e 's/\r$//' ./server/entrypoint.sh
+sed -i -e 's/\r$//' ./scripts/dev/reload-nginx.sh
+```
+
 **note** that you should visit `localhost:8080` to test in browser, not `localhost:3000`
 
 ---
 
 ## 3-C. Run both frontend & backend in local environment
-![image](https://user-images.githubusercontent.com/78730403/210070625-7d49ea44-5966-49e3-90ae-00d0454dbbf7.png)
+
+![image](https://user-images.githubusercontent.com/78730403/211195240-2cfcb903-5765-4bc6-8e3c-d0dbd07e466b.png)
 
 - Requirements
   - `docker: (20.10.XX)`

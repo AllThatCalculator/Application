@@ -1,4 +1,5 @@
 #!/bin/sh
 
-cd ..
+git pull
+cd ./client
 sudo tar -xzvf build.tar.gz

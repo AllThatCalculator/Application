@@ -1,18 +1,24 @@
 const express = require("express");
 const calculets = require("./routes/calculets");
 const users = require("./routes/users");
-const record = require("./routes/record");
+// const record = require("./routes/record");
 const { swaggerUi, specs } = require("./swagger");
-const cookieParser = require("cookie-parser");
+const fs = require("fs");
+const { sequelize } = require("./models");
+
 const app = express();
 
 require("dotenv").config();
 const port = process.env.EXPRESS_PORT;
 
-/**
- * 쿠키 파싱
- */
-app.use(cookieParser());
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("sequelize 연결 성공");
+  })
+  .catch((err) => {
+    console.error(`sequelize 연결 실패 - ${err}`);
+  });
 
 /**
  * body에 싸서 온 데이터에 접근하기 위해 필요한 부분
@@ -38,7 +44,7 @@ app.use("/users", users);
 /**
  * 계산 이력 관리 API
  */
-app.use("/record", record);
+// app.use("/record", record);
 
 /**
  * 서버 시작

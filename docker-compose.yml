@@ -5,16 +5,16 @@ version: "3"
 services:
   nginx:
     container_name: nginx
-    build: ./nginx-dev
+    build: ./nginx
     ports:
       - 8080:8080
     volumes:
-      - ./nginx-dev/nginx-BE.conf:/etc/nginx/conf.d/nginx.conf
-      - ./scripts/dev/reload-nginx.sh:/scripts/relaod-nginx.sh
+      - ./nginx/nginx.BE.conf:/etc/nginx/conf.d/nginx.conf
+      - ./scripts/dev/auto-reload-nginx.sh:/scripts/auto-reload-nginx.sh
     networks:
       - app-tier
     restart: always
-    command: ["/scripts/relaod-nginx.sh"]
+    command: ["/scripts/auto-reload-nginx.sh"]
 
   backend:
     container_name: backend

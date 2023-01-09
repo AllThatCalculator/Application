@@ -1,0 +1,21 @@
+name: (PROD) reload nginx
+
+on:
+  push:
+    branches:
+      - prod # for temporary
+    paths:
+      - nginx/nginx.prod.conf
+
+jobs:
+  reload-production-nginx:
+    runs-on: ubuntu:20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: reload nginx
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.PROD_EC2_IP_ADDRESS }}
+          username: ${{ secrets.PROD_EC2_USER }}
+          key: ${{ secrets.PROD_EC2_PRIVATE_KEY }}
+          script: "cd /home/ubuntu/project/application; ./scripts/dev-server/reload-nginx.sh"

@@ -1,19 +1,20 @@
-name: build react app for development server
+name: (DEV) build react app
 
 on:
   push:
     branches:
       - develop
     paths:
-      - client/*
+      - client/src/*
+      - client/public/*
 jobs:
-  build-and-deploy-react-app-for-development-server:
-    runs-on: ubuntu-latest
+  build-and-deploy-react-app:
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: 16.14.1
       - name: Install Dependencies
         run: cd client && npm install --production
       - name: Build
@@ -37,10 +38,10 @@ jobs:
           key: ${{ secrets.DEV_EC2_PRIVATE_KEY }}
           source: client/build.tar.gz
           target: ~/project/application/
-      - name: place build file in right place
+      - name: execute shell script
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEV_EC2_IP_ADDRESS }}
           username: ${{ secrets.DEV_EC2_USER }}
           key: ${{ secrets.DEV_EC2_PRIVATE_KEY }}
-          script: 'cd /home/ubuntu/project/application/client/nginx; ./deploy-build-file.sh'
+          script: "cd /home/ubuntu/project/application; ./scripts/dev-server/deploy-build-file.sh"

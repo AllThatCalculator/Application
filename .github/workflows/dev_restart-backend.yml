@@ -1,0 +1,22 @@
+name: (DEV) restart backend container
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - server/*
+      - "!server/package*.json"
+      - "!server/Dockerfile.dev-server"
+jobs:
+  restart-backend-container:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: rebuild backend container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEV_EC2_IP_ADDRESS }}
+          username: ${{ secrets.DEV_EC2_USER }}
+          key: ${{ secrets.DEV_EC2_PRIVATE_KEY }}
+          script: "cd /home/ubuntu/project/application; ./scripts/dev-server/restart-backend.sh"
