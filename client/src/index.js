@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { createGlobalStyle } from "styled-components";
+import { ThemeComponent } from "./components/theme";
 import App from "./pages/App";
 
 const GlobalStyles = createGlobalStyle` 
@@ -24,12 +25,16 @@ const GlobalStyles = createGlobalStyle`
     *{
         box-sizing: border-box;
     }
+    
+    html {
+      font-size: 62.5%; 
+    }
 `;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <GlobalStyles />
-    <App />
+    <ThemeComponent component={<App />} />
   </React.StrictMode>
 );
