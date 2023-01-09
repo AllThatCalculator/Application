@@ -25,7 +25,7 @@ services:
       - 8080:8080
     volumes:
       - ./client/src/css:/src/css
-      - ./nginx/nginx.FEBE.conf:/etc/nginx/conf.d/nginx.conf
+      - ./nginx/nginx.FEBE:/etc/nginx/conf.d
     depends_on:
       - frontend
       - backend
