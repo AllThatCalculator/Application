@@ -4,7 +4,7 @@
 
 // /**
 //  * @swagger
-//  *  /record/:
+//  *  /api/record/:
 //  *    post:
 //  *      tags: [record]
 //  *      summary: 계산 이력 저장하기
@@ -52,7 +52,7 @@
 // });
 // /**
 //  * @swagger
-//  *  /record/{calculetId}:
+//  *  /api/record/{calculetId}:
 //  *    get:
 //  *      tags: [record]
 //  *      summary: 계산 이력 불러오기

@@ -11,7 +11,7 @@ const sequelize = require("sequelize");
 
 /**
  * @swagger
- *  /calculets/:
+ *  /api/calculets/:
  *    get:
  *      tags: [calculets]
  *      summary: 계산기 전체 목록 불러오기
@@ -140,7 +140,7 @@ router.get("/category", category);
 
 /**
  * @swagger
- *  /calculets/{id}:
+ *  /api/calculets/{id}:
  *    get:
  *      tags: [calculets]
  *      summary: 계산기 불러오기
@@ -354,7 +354,7 @@ router.get("/:id", async (req, res) => {
 
 /**
  * @swagger
- *  /calculets/:
+ *  /api/calculets/:
  *    post:
  *      tags: [calculets]
  *      summary: 계산기 임시 등록
