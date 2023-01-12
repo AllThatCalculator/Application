@@ -13,7 +13,7 @@ router.post("/", signUp);
 
 /**
  * @swagger
- *  /users/{id}:
+ *  /api/users/{id}:
  *    get:
  *      tags: [users]
  *      summary: 특정 유저 정보 조회
