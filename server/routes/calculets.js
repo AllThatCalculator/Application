@@ -7,7 +7,9 @@ const {
 } = require("../utils/bufferConverter");
 const { DateTimeToString } = require("../utils/StringConverter");
 const { models } = require("../models");
+const { auth } = require("../middleware/auth");
 const sequelize = require("sequelize");
+const { errorHandler } = require("../middleware/errorHandler");
 
 /**
  * @swagger
@@ -357,7 +359,7 @@ router.get("/:id", async (req, res) => {
  *  /api/calculets/:
  *    post:
  *      tags: [calculets]
- *      summary: 계산기 임시 등록
+ *      summary: 계산기 임시 등록 <Auth>
  *      description: 계산기 등록 전, 보안 검사를 위해 임시 테이블에 등록한다
  *      requestBody:
  *        description: 계산기 정보
@@ -380,16 +382,16 @@ router.get("/:id", async (req, res) => {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.post("/", async (req, res) => {
+router.post("/", [auth.firebase, auth.database], async (req, res) => {
   try {
-    const calculetInfoTemp = models.calculetInfoTemp.create({
+    const calculetInfoTemp = await models.calculetInfoTemp.create({
       title: req.body.title,
       src_code: req.body.srcCode,
       manual: req.body.manual,
       description: req.body.description,
       category_main_id: req.body.categoryMainId,
       category_sub_id: req.body.categorySubId,
-      contributor_id: req.body.id,
+      contributor_id: res.locals.userId,
     });
     res.status(201).send({
       success: true,

@@ -11,14 +11,24 @@ const options = {
     },
     servers: [
       {
-        url: "http://dev.localhost:8080/",
-        description: "local Server",
-      },
-      {
         url: "http://dev.allthatcalculator.net/",
         description: "develop server (AWS)",
       },
+      {
+        url: "http://dev.localhost:8080/",
+        description: "local Server",
+      },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [{ bearerAuth: [] }],
   },
   apis: ["./routes/*.js", "./swagger/*"],
 };

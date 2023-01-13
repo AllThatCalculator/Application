@@ -3,13 +3,13 @@ const { signUp } = require("./users/signUp");
 const { bufferToImageSrc } = require("../utils/bufferConverter");
 const { models } = require("../models");
 const sequelize = require("sequelize");
-
+const { auth } = require("../middleware/auth");
 const router = express.Router();
 
 /**
  * 회원 가입
  */
-router.post("/", signUp);
+router.post("/", auth.firebase, signUp);
 
 /**
  * @swagger
@@ -44,6 +44,7 @@ router.post("/", signUp);
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
+
 router.get("/:id", async (req, res) => {
   try {
     const userInfo = await models.userInfo.findOne({

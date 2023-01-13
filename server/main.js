@@ -5,6 +5,7 @@ const users = require("./routes/users");
 const { swaggerUi, specs } = require("./swagger");
 const fs = require("fs");
 const { sequelize } = require("./models");
+const { errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 
@@ -45,6 +46,8 @@ app.use("/users", users);
  * 계산 이력 관리 API
  */
 // app.use("/record", record);
+
+app.use(errorHandler.default);
 
 /**
  * 서버 시작
