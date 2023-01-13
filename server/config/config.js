@@ -11,6 +11,7 @@ const development = {
     createdAt: "created_at",
     updatedAt: "updated_at",
   },
+  logging: false,
 };
 
 const production = {
