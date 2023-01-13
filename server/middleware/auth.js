@@ -1,9 +1,11 @@
 const { admin } = require("../config/firebase");
+const { models } = require("../models");
+const sequelize = require("sequelize");
 
 /**
- * 미들웨어 - 인증이 필요한 api 앞단에서 클라이언트의 토큰 유효성 검사
+ * 미들웨어 - 인증이 필요한 api 앞단에서 클라이언트의 토큰 유효성 검사 (firebase)
  */
-function checkIdToken(req, res, next) {
+async function authFirebase(req, res, next) {
   let idToken = null;
   if (
     req.headers.authorization &&
@@ -13,7 +15,11 @@ function checkIdToken(req, res, next) {
     idToken = req.headers.authorization.split("Bearer ")[1];
   } else {
     // token not found
-    res.status(401).send("Unauthorized");
+    res.status(401).send({
+      code: -1,
+      message: "can't find token",
+    });
+    return;
   }
 
   // verify token
@@ -21,8 +27,7 @@ function checkIdToken(req, res, next) {
     .auth()
     .verifyIdToken(idToken)
     .then((decodedIdToken) => {
-      // Verify token and do something with decodedIdToken
-      console.log(decodedIdToken);
+      res.locals.userId = decodedIdToken.user_id;
       next();
     })
     .catch((error) => {
@@ -33,12 +38,47 @@ function checkIdToken(req, res, next) {
       switch (error.code) {
         // expired token
         case "auth/id-token-expired":
-          res.send("token-expired");
+          res.send({
+            code: 0,
+            message: "token expired",
+          });
+          break;
         // invalid token
         case "auth/argument-error":
-          res.send("Unauthorized");
+          res.send({
+            code: 1,
+            message: "Unauthorized",
+          });
+          break;
       }
     });
 }
 
-exports.auth = checkIdToken;
+/**
+ * 미들웨어 - 인증이 필요한 api 앞단에서 가입된 유저인지 확인 (DB)
+ * @returns
+ */
+async function authDatabase(req, res, next) {
+  const userInfo = await models.userInfo.findOne({
+    where: {
+      id: {
+        [sequelize.Op.eq]: res.locals.userId,
+      },
+    },
+  });
+
+  if (userInfo == null) {
+    res.status(401).send({
+      code: 2,
+      message: "can't find user",
+    });
+  } else {
+    next();
+  }
+  return;
+}
+
+exports.auth = {
+  firebase: authFirebase,
+  database: authDatabase,
+};

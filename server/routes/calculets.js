@@ -9,6 +9,7 @@ const { DateTimeToString } = require("../utils/StringConverter");
 const { models } = require("../models");
 const { auth } = require("../middleware/auth");
 const sequelize = require("sequelize");
+const { errorHandler } = require("../middleware/errorHandler");
 
 /**
  * @swagger
@@ -381,16 +382,16 @@ router.get("/:id", async (req, res) => {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.post("/", auth, async (req, res) => {
+router.post("/", [auth.firebase, auth.database], async (req, res) => {
   try {
-    const calculetInfoTemp = models.calculetInfoTemp.create({
+    const calculetInfoTemp = await models.calculetInfoTemp.create({
       title: req.body.title,
       src_code: req.body.srcCode,
       manual: req.body.manual,
       description: req.body.description,
       category_main_id: req.body.categoryMainId,
       category_sub_id: req.body.categorySubId,
-      contributor_id: req.body.id,
+      contributor_id: res.locals.userId,
     });
     res.status(201).send({
       success: true,
