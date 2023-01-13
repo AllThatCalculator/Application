@@ -19,6 +19,16 @@ const options = {
         description: "develop server (AWS)",
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [{ bearerAuth: [] }],
   },
   apis: ["./routes/*.js", "./swagger/*"],
 };
