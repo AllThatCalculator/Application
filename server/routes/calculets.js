@@ -7,6 +7,7 @@ const {
 } = require("../utils/bufferConverter");
 const { DateTimeToString } = require("../utils/StringConverter");
 const { models } = require("../models");
+const { auth } = require("../middleware/auth");
 const sequelize = require("sequelize");
 
 /**
@@ -380,7 +381,7 @@ router.get("/:id", async (req, res) => {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   try {
     const calculetInfoTemp = models.calculetInfoTemp.create({
       title: req.body.title,
