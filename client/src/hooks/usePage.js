@@ -5,10 +5,21 @@ import URL from "../components/PageUrls";
 function usePage() {
   const navigate = useNavigate();
 
-  function RegisterPage() {
+  // 계산기 상세
+  function calculetIdPage(id) {
+    navigate(URL.CALCULET + id);
+  }
+
+  // 계산기 등록
+  function registerPage() {
     navigate(URL.REGISTER);
   }
 
-  return { RegisterPage };
+  // 계산기 목록
+  function calculetListPage() {
+    navigate(URL.CALCULET_LIST);
+  }
+
+  return { calculetIdPage, registerPage, calculetListPage };
 }
 export default usePage;

@@ -34,7 +34,20 @@ let theme = createTheme({
       xl: 1920,
     },
   },
+
   // shape: { borderRadius: "0.8rem" },
+  components: {
+    // Name of the component
+    MuiButton: {
+      styleOverrides: {
+        // Name of the slot
+        root: {
+          // The props to change the default for.
+          minWidth: "fit-content",
+        },
+      },
+    },
+  },
 });
 
 /**

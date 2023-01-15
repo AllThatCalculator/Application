@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, ButtonBase, Typography } from "@mui/material";
 import useSx from "../../hooks/useSx";
 import { FlexBox } from "../global-components/FlexBox";
 import { styled } from "@mui/material/styles";
@@ -27,6 +27,7 @@ function CountButton({ text, icon, clickedIcon, number, isClicked, onClick }) {
     </Button>
   );
 }
+
 /** 가장 중요한 버튼 : 계산기 등록 */
 const MainButton = styled(Button)(({ theme }) => ({
   fontWeight: "bold",
@@ -34,4 +35,17 @@ const MainButton = styled(Button)(({ theme }) => ({
   color: theme.palette.secondary.main,
   borderColor: theme.palette.secondary.main,
 }));
-export { CountButton, MainButton };
+
+/** 배경 흰색, 메인 색 버튼 : ex. 로그인 버튼 */
+const InvertButton = styled(Button)(({ theme }) => ({
+  backgroundColor: "white",
+  color: theme.palette.primary.main,
+  "&:hover": {
+    backgroundColor: "#F6F7FA",
+    color: theme.palette.primary.main,
+  },
+}));
+
+const TextButton = styled(ButtonBase)(({ theme }) => ({}));
+
+export { CountButton, MainButton, InvertButton, TextButton };

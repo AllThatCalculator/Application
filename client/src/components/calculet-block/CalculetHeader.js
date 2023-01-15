@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Modal } from "../global-components/Modal";
 import ModalCalculetInfo from "../calculet-block/ModalCalculetInfo";
 import { useEffect } from "react";
 import { Avatar, Divider, Grid, IconButton, Typography } from "@mui/material";
@@ -13,6 +12,10 @@ import TurnedInOutlinedIcon from "@mui/icons-material/TurnedInOutlined";
 import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
 import { CountButton } from "../atom-components/Buttons";
 import useSx from "../../hooks/useSx";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ShareIcon from "@mui/icons-material/Share";
+import PopupList from "../global-components/PopupList";
+import Title from "../global-components/Title";
 
 function CalculetHeader({
   title,
@@ -104,7 +107,11 @@ function CalculetHeader({
     // 내용 컴포넌트
     function Typo({ content }) {
       return (
-        <Typography color="primary" variant="body2">
+        <Typography
+          color="primary"
+          variant="body2"
+          sx={{ minWidth: "fit-content" }}
+        >
           {content}
         </Typography>
       );
@@ -139,30 +146,9 @@ function CalculetHeader({
   ];
   // =================계산기 이름, 정보=================
   function CalculetTitle() {
-    const color = "primary.main";
     return (
       <>
-        <Divider
-          orientation="vertical"
-          variant="middle"
-          flexItem
-          sx={{
-            color: color,
-            borderColor: color,
-            backgroundColor: color,
-            border: 2,
-            mr: "1.2rem",
-          }}
-        />
-        <Typography
-          variant="h6"
-          color="primary"
-          sx={{
-            fontWeight: "bold",
-          }}
-        >
-          {title}
-        </Typography>
+        <Title content={title} />
         <IconButton color="primary" onClick={onModalOpen}>
           <InfoOutlinedIcon />
         </IconButton>
@@ -197,14 +183,36 @@ function CalculetHeader({
     },
   ];
 
+  function handleUrlShare() {
+    const currUrl = window.location.href; // 현재 url
+    navigator.clipboard.writeText(currUrl).then(() => {
+      alert("링크를 복사하였습니다.");
+    });
+  }
+
+  // 더보기
+  const moreList = [
+    [
+      {
+        name: "링크 공유",
+        icon: <ShareIcon />,
+        onClickFuntion: handleUrlShare,
+      },
+    ],
+  ];
+  const MorePopupLists = [
+    {
+      isMd: true,
+      popupIcon: <MoreVertIcon />,
+      popupTitle: "더보기",
+      popupListData: moreList,
+      popupContent: null,
+    },
+  ];
+
   return (
     <>
-      {modalOpen && (
-        <Modal
-          onClick={onModalClose}
-          contents={<ModalCalculetInfo info={info} />}
-        />
-      )}
+      {modalOpen && <ModalCalculetInfo info={info} onClick={onModalClose} />}
 
       {/* 계산기 타이틀, 계산기 정보 */}
       <Grid container sx={{ alignItems: "center" }}>
@@ -237,6 +245,16 @@ function CalculetHeader({
                 number={data.number}
                 isClicked={data.isClicked}
                 onClick={data.onClick}
+              />
+            ))}
+
+            {MorePopupLists.map((popupData, index) => (
+              <PopupList
+                key={index}
+                popupIcon={popupData.popupIcon}
+                popupTitle={popupData.popupTitle}
+                popupListData={popupData.popupListData}
+                popupContent={popupData.popupContent}
               />
             ))}
           </FlexBox>

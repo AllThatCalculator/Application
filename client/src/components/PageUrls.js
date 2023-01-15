@@ -25,5 +25,9 @@ const URL = {
 
   // 계산기 신고
   REPORT: "/report",
+
+  //============변수================
+  /** 계산기 id */
+  CALCULET_ID: "id",
 };
 export default URL;

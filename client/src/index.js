@@ -11,7 +11,7 @@ const GlobalStyles = createGlobalStyle`
       scroll-behavior: smooth;
     }
     body{
-      padding-top:60px;
+      padding-top: 60px;
       background: rgb(63, 104, 185);
       background: linear-gradient(
         152deg,

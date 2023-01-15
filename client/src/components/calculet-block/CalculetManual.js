@@ -6,10 +6,24 @@ import CalculateIcon from "@mui/icons-material/Calculate";
 // import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 //////
-import { Button, Tabs, Box, Tab, IconButton } from "@mui/material";
+import {
+  Button,
+  Tabs,
+  Box,
+  Tab,
+  IconButton,
+  Fab,
+  Zoom,
+  Collapse,
+  CardContent,
+} from "@mui/material";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import HistoryIcon from "@mui/icons-material/History";
-
+import { styled } from "@mui/material/styles";
+import useSx from "../../hooks/useSx";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+// import Textarea from "@mui/base/Textarea";
 /**
  * 마크다운 문법으로 작성된 문자열을 리액트 컴포넌트로 반환하는 함수
  * @param {string} content 마크다운 문법으로 이루어진 string
@@ -47,16 +61,6 @@ function MarkdownCode({ content }) {
  * @param {string} calculetId 계산기 번호
  */
 function CalculetManual({ content, calculetId }) {
-  // 설명서를 펼칠지 여부를 저장하는 state
-  const [visibility, setVisibility] = useState(false);
-
-  /**
-   * visibility 값을 반전시키는 버튼 이벤트 함수
-   */
-  function handleToggle() {
-    setVisibility((current) => !current);
-  }
-
   /** tab 컨트롤 : 계산기 마크다운 정보, 계산 내역 */
   const [tabValue, setTabValue] = useState(0);
   /** tab state */
@@ -68,11 +72,64 @@ function CalculetManual({ content, calculetId }) {
   const tapList = [
     {
       label: "계산기 설명",
-      icon: <CalculateIcon fontSize="small" />,
+      icon: <CalculateIcon />,
     },
     {
       label: "내 계산 내역",
-      icon: <HistoryIcon fontSize="small" />,
+      icon: <HistoryIcon />,
+    },
+  ];
+
+  const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+  })(({ theme, expand }) => ({
+    transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest,
+    }),
+  }));
+
+  // 계산기 설명 더보기
+  const [isMorePanel, setIsMorePanel] = useState(false);
+  function handleOpenIsMorePanel() {
+    setIsMorePanel(!isMorePanel);
+  }
+
+  const { atcLinearBlue, atcBlue, transitionDuration } = useSx();
+
+  // 계산기 설명 더미
+  const dummyContent =
+    "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+
+  // 더보기 버튼sx
+  const fabAtcBlueStyle = {
+    bgcolor: atcBlue[200],
+    "&:hover": {
+      bgcolor: atcBlue[100],
+    },
+  };
+
+  // 설명 더보기 | 접기
+  const fabs = [
+    {
+      color: "inherit",
+      sx: { ...fabAtcBlueStyle },
+      justifyContent: "center",
+      icon: <KeyboardArrowDownIcon />,
+      label: "더보기",
+      isMore: false, //현재 펼쳐져 있지 않음
+      onClick: handleOpenIsMorePanel,
+    },
+    {
+      color: "secondary",
+      sx: null,
+      justifyContent: "flex-end",
+      icon: <KeyboardArrowUpIcon />,
+      label: "접기",
+      isMore: true, //현재 펼쳐져 있음
+      onClick: handleOpenIsMorePanel,
     },
   ];
 
@@ -80,12 +137,52 @@ function CalculetManual({ content, calculetId }) {
   function CalculetMarkdownCode() {
     return (
       <>
-        <Box>
-          <MarkdownCode content={content} />
-        </Box>
-        <IconButton color="primary" onClick={handleToggle}>
-          <ArrowDropUpIcon fontSize="large" />
-        </IconButton>
+        {fabs.map((fab, index) => (
+          <Box
+            key={index}
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: fab.justifyContent,
+            }}
+          >
+            <Zoom
+              key={fab.color}
+              in={isMorePanel === fab.isMore}
+              timeout={transitionDuration}
+              style={{
+                transitionDelay: `${
+                  isMorePanel === fab.isMore ? transitionDuration.exit : 0
+                }ms`,
+              }}
+              unmountOnExit
+            >
+              <Fab
+                variant="extended"
+                sx={fab.sx}
+                color={fab.color}
+                onClick={fab.onClick}
+              >
+                {fab.label}
+                {fab.icon}
+              </Fab>
+            </Zoom>
+          </Box>
+        ))}
+
+        <Collapse in={isMorePanel} timeout="auto" unmountOnExit>
+          <Box
+            sx={{
+              background: isMorePanel ? atcBlue[100] : atcLinearBlue[100],
+              p: "1.8rem 2.4rem",
+              gap: "2.4rem",
+            }}
+          >
+            <CardContent>
+              <MarkdownCode content={dummyContent} />
+            </CardContent>
+          </Box>
+        </Collapse>
       </>
     );
   }
@@ -103,14 +200,14 @@ function CalculetManual({ content, calculetId }) {
           sx={{
             borderBottom: 1,
             borderColor: "divider",
-            marginBottom: "2.0rem",
           }}
         >
+          {/* 탭 메뉴 */}
           <Tabs
-            sx={{ minHeight: "4.4rem", height: "4.4rem" }}
             value={tabValue}
             onChange={handleTabChange}
-            textColor="inherit"
+            variant="scrollable"
+            scrollButtons="auto"
           >
             {tapList.map((data) => (
               <Tab
@@ -121,17 +218,17 @@ function CalculetManual({ content, calculetId }) {
                 sx={{
                   minHeight: "4.4rem",
                   height: "4.4rem",
-                  bgcolor: "primary.main",
-                  color: "white",
-                  borderRadius: "0.4rem 0.4rem 0rem 0rem",
                 }}
               />
             ))}
           </Tabs>
         </Box>
-        {tapContentList.map(
-          (data, index) => index == tabValue && <div key={index}>{data}</div>
-        )}
+        {/* 계산기 설명, 내 계산 내역 */}
+        <Box>
+          {tapContentList.map(
+            (data, index) => index == tabValue && <div key={index}>{data}</div>
+          )}
+        </Box>
       </Box>
     </>
   );

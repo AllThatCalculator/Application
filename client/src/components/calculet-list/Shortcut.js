@@ -1,14 +1,6 @@
-import styled from "styled-components";
-import { BtnTrans } from "../atom-components/ButtonTemplate";
-import Heading from "../atom-components/Heading";
-import { FlexColumnLayout } from "../Layout";
-import styles from "../styles";
-
-const Wrapper = styled(FlexColumnLayout)`
-  margin: 0 auto;
-  justify-content: center;
-  color: ${styles.styleColor.black};
-`;
+import { Button, Divider, Typography } from "@mui/material";
+import useSx from "../../hooks/useSx";
+import { FlexColumnBox } from "../global-components/FlexBox";
 
 /**
  * 클릭 시, 각 대분류로 바로가기
@@ -17,6 +9,7 @@ const Wrapper = styled(FlexColumnLayout)`
  * @param {function} setIsActive 바로가기 버튼 활성화 함수
  */
 function Shortcut({ contentsShortcut, isActive, setIsActive }) {
+  const { atcBlue } = useSx();
   /**
    * 바로가기 버튼에서 활성화된 값
    * - 각 버튼마다 id부여하여 index로 접근해서 활성화 여부 알기
@@ -27,26 +20,33 @@ function Shortcut({ contentsShortcut, isActive, setIsActive }) {
     currentRef.onMoveToElement();
   }
   return (
-    <Wrapper gap="14px">
-      <Heading
-        content="바로가기"
-        h={2}
-        color={styles.styleColor.gray100}
-        isLine={true}
-      />
+    <FlexColumnBox gap="1.4rem">
+      <Typography variant="body1">바로가기</Typography>
+      <Divider />
       {contentsShortcut.map((cont, index) => (
-        <BtnTrans
-          key={cont.text}
-          id={index}
-          text={cont.text}
-          icon={cont.icon}
-          isActive={index === isActive ? true : false}
+        <Button
+          key={index}
+          sx={{
+            backgroundColor: index === isActive && atcBlue[100],
+
+            color: index !== isActive && "grey.600",
+          }}
           onClick={(event) => onClickShortcut(event, cont.itemRef)}
-          isColumn={true}
-          degree={cont.degree ? cont.degree : 0}
-        />
+        >
+          <FlexColumnBox
+            sx={{ alignItems: "center", whiteSpace: "pre-wrap", gap: "0.4rem" }}
+          >
+            {cont.icon}
+            <Typography
+              variant="body2"
+              sx={{ fontWeight: index === isActive && "bold" }}
+            >
+              {cont.text}
+            </Typography>
+          </FlexColumnBox>
+        </Button>
       ))}
-    </Wrapper>
+    </FlexColumnBox>
   );
 }
 export default Shortcut;

@@ -7,8 +7,8 @@ const PageScreenBox = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   justifyContent: "center",
   margin: "0 auto",
-  pt: "8.0rem",
-
+  padding: "2.4rem 0",
   maxWidth: 1128,
+  width: "100%",
 }));
 export default PageScreenBox;

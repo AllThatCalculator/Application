@@ -8,7 +8,7 @@ import {
 } from "../components/calculet-block/oftenUsedCalculet";
 import FooterRecommend from "../components/global-components/FooterRecommend";
 import calculetInfo from "../user-actions/calculetInfo";
-import { Grid, Paper, Typography } from "@mui/material";
+import { Avatar, Grid, Paper, Typography } from "@mui/material";
 import PageScreenBox from "../components/global-components/PageScreenBox";
 import LoadingPage from "../components/global-components/LoadingPage";
 import UploadIcon from "@mui/icons-material/Upload";
@@ -16,7 +16,7 @@ import usePage from "../hooks/usePage";
 import { MainButton } from "../components/atom-components/Buttons";
 
 function Calculet() {
-  const { RegisterPage } = usePage();
+  const { registerPage } = usePage();
   // 계산기 객체
   // {object} calculetObj 계산기 객체
   //         {string} title: "사칙연산 계산기", - 계산기 이름
@@ -98,9 +98,7 @@ function Calculet() {
           <Grid container sx={{ backgroundColor: "white" }}>
             <PageScreenBox
               sx={{
-                width: 1,
                 gap: { xs: "0.4rem", sm: "0.8rem", md: "1.2rem" },
-                p: "2.4rem 0",
               }}
             >
               <CalculetHeader
@@ -134,13 +132,15 @@ function Calculet() {
                   }}
                 >
                   <Grid item>
-                    <Typography>자신만의 계산기를 만드세요!</Typography>
+                    <Typography color="grey.600">
+                      자신만의 계산기를 만드세요!
+                    </Typography>
                   </Grid>
                   <Grid item>
                     <MainButton
                       variant="contained"
                       startIcon={<UploadIcon />}
-                      onClick={RegisterPage}
+                      onClick={registerPage}
                       sx={{ border: 1.2 }}
                     >
                       계산기 등록
