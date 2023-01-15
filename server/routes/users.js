@@ -4,12 +4,50 @@ const { bufferToImageSrc } = require("../utils/bufferConverter");
 const { models } = require("../models");
 const sequelize = require("sequelize");
 const { auth } = require("../middleware/auth");
+const { errorHandler } = require("../middleware/errorHandler");
 const router = express.Router();
-
+const { postProfile } = require("./s3Bucket/profile");
+const multer = require("multer");
+const upload = multer();
 /**
- * 회원 가입
+ * @swagger
+ *  /api/users/:
+ *    post:
+ *      tags: [users]
+ *      summary: 회원가입 <Auth>
+ *      description: firebase 계정 등록 이후 회원 정보를 서버에 등록함
+ *      requestBody:
+ *        description: 회원 정보
+ *        required: true
+ *        content:
+ *          multipart/form-data:
+ *            schema:
+ *              $ref: "#/components/schemas/postUser"
+ *      responses:
+ *        201:
+ *          description: 회원 등록 완료
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/postResult"
+ *        400:
+ *          description: 회원 등록 오류 (failed)
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/errorResult"
+ *        401:
+ *          description: 인증 오류 (invalid token)
  */
-router.post("/", auth.firebase, signUp);
+router.post(
+  "/",
+  [
+    upload.single("profileImg"),
+    auth.firebase,
+    errorHandler.asyncWrapper(postProfile),
+  ],
+  errorHandler.asyncWrapper(signUp)
+);
 
 /**
  * @swagger
@@ -57,14 +95,11 @@ router.get("/:id", async (req, res) => {
 
     let user = null;
     if (userInfo) {
-      // 사용자 이미지를 base64string 으로 변환 + src 생성
-      const profileImgSrc = bufferToImageSrc(userInfo.profile_img);
-
       user = {
         id: userInfo.id,
         email: userInfo.email,
         userName: userInfo.user_name,
-        profileImg: profileImgSrc,
+        profileImgSrc: `/file/profile/${userInfo.profile_img}`,
         bio: userInfo.bio,
         sex: userInfo.sex,
         birthdate: userInfo.birthdate,
