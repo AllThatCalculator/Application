@@ -112,7 +112,7 @@ components:
     calculetInfoPopup:
       type: object
       properties:
-        profileImg:
+        profileImgSrc:
           type: string
           description: 제작자 프로필 이미지 소스
         contributorName:

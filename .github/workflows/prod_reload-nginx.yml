@@ -5,11 +5,11 @@ on:
     branches:
       - prod # for temporary
     paths:
-      - nginx/nginx.prod.conf
+      - nginx/nginx.prod/*
 
 jobs:
   reload-production-nginx:
-    runs-on: ubuntu:20.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: reload nginx

@@ -3,11 +3,10 @@ const calculets = require("./routes/calculets");
 const users = require("./routes/users");
 // const record = require("./routes/record");
 const { swaggerUi, specs } = require("./swagger");
-const fs = require("fs");
 const { sequelize } = require("./models");
+const { errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
-
 require("dotenv").config();
 const port = process.env.EXPRESS_PORT;
 
@@ -45,6 +44,8 @@ app.use("/users", users);
  * 계산 이력 관리 API
  */
 // app.use("/record", record);
+
+app.use(errorHandler.default);
 
 /**
  * 서버 시작
