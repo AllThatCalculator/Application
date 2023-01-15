@@ -1,20 +1,15 @@
 import LogoHeader from "../components/atom-components/LogoHeader";
 import BoxSearchInput from "../components/atom-components/BoxSearchInput";
-import styles from "../components/styles.js";
-import { BtnWhite } from "../components/atom-components/ButtonTemplate";
 import CategoryBar from "../components/global-components/CategoryBar";
 import { useCallback, useState } from "react";
 import { useEffect } from "react";
-import { FlexRowLayout } from "../components/Layout";
 import URL from "../components/PageUrls";
 import calculetsUser from "../user-actions/calculetsUser";
-import useClickOutside from "../hooks/useClickOutside";
 import firebaseAuth from "../firebaseAuth";
 import {
   AppBar,
   Avatar,
   Box,
-  Button,
   Dialog,
   Divider,
   IconButton,
@@ -26,8 +21,6 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { styled } from "@mui/material/styles";
-import { keyframes } from "@emotion/react";
 import PersonIcon from "@mui/icons-material/Person";
 import { InvertButton } from "../components/atom-components/Buttons";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
@@ -37,7 +30,6 @@ import useSx from "../hooks/useSx";
 import SearchIcon from "@mui/icons-material/Search";
 import { forwardRef } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useParams } from "react-router-dom";
 /**
  * 헤더에 있는 컴포넌트들
  * -> 카테고리바, 로고, 검색창, 로그인/아웃 버튼

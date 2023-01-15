@@ -1,25 +1,21 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+// import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import RecordCalculetHistory from "./RecordCalculetHistory";
 import CalculateIcon from "@mui/icons-material/Calculate";
 // import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 //////
 import {
-  Button,
   Tabs,
   Box,
   Tab,
-  IconButton,
   Fab,
   Zoom,
   Collapse,
   CardContent,
 } from "@mui/material";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import HistoryIcon from "@mui/icons-material/History";
-import { styled } from "@mui/material/styles";
 import useSx from "../../hooks/useSx";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -79,17 +75,6 @@ function CalculetManual({ content, calculetId }) {
       icon: <HistoryIcon />,
     },
   ];
-
-  const ExpandMore = styled((props) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-  })(({ theme, expand }) => ({
-    transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
-    marginLeft: "auto",
-    transition: theme.transitions.create("transform", {
-      duration: theme.transitions.duration.shortest,
-    }),
-  }));
 
   // 계산기 설명 더보기
   const [isMorePanel, setIsMorePanel] = useState(false);
@@ -226,7 +211,7 @@ function CalculetManual({ content, calculetId }) {
         {/* 계산기 설명, 내 계산 내역 */}
         <Box>
           {tapContentList.map(
-            (data, index) => index == tabValue && <div key={index}>{data}</div>
+            (data, index) => index === tabValue && <div key={index}>{data}</div>
           )}
         </Box>
       </Box>
@@ -237,8 +222,8 @@ function CalculetManual({ content, calculetId }) {
 export default CalculetManual;
 
 // 토글 버튼
-{
-  /* <Button
+// {
+/* <Button
             onClick={handleToggle}
             startIcon={
               <ArrowRightIcon
@@ -266,7 +251,7 @@ export default CalculetManual;
           >
             자세히
           </Button> */
-}
+// }
 
 // import { useState } from "react";
 // import ReactMarkdown from "react-markdown";
