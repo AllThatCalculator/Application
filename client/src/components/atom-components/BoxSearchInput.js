@@ -96,12 +96,12 @@ function BoxSearchInput() {
     event.preventDefault();
     setInputText("");
   };
-  // 버튼 막음
-  const onKeyDown = (event) => {
-    if (event.keyCode === 13) {
-      onSubmit(event);
-    }
-  };
+  // // 버튼 막음
+  // const onKeyDown = (event) => {
+  //   if (event.keyCode === 13) {
+  //     onSubmit(event);
+  //   }
+  // };
 
   return (
     // <StyledForm name="form" onKeyDown={onKeyDown}>

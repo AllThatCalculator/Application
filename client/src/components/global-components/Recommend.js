@@ -60,6 +60,7 @@ function Recommend() {
   const [page, setPage] = useState(1);
   const handlePageChange = (event, value) => {
     setPage(value);
+    setCurrentPage(value);
   };
 
   return (

@@ -8,7 +8,7 @@ import {
 } from "../components/calculet-block/oftenUsedCalculet";
 import FooterRecommend from "../components/global-components/FooterRecommend";
 import calculetInfo from "../user-actions/calculetInfo";
-import { Avatar, Grid, Paper, Typography } from "@mui/material";
+import { Grid, Paper, Typography } from "@mui/material";
 import PageScreenBox from "../components/global-components/PageScreenBox";
 import LoadingPage from "../components/global-components/LoadingPage";
 import UploadIcon from "@mui/icons-material/Upload";

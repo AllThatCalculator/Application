@@ -1,6 +1,4 @@
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import URL from "../components/PageUrls";
 
 /**
  * 현재 url에서 id 뽑아 내기

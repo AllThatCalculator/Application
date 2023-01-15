@@ -17,8 +17,6 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useEffect } from "react";
 import useSx from "../../hooks/useSx";
 import usePage from "../../hooks/usePage";
-import useGetUrlParam from "../../hooks/useGetUrlParam";
-import { useParams } from "react-router-dom";
 
 /**
  * 카테고리 바 구현
@@ -56,7 +54,7 @@ function CategoryBar({ contents, isActive, setIsActive }) {
       categoryToggleSet.push({ toggle: false, subToggle });
     }
     setCategoryToggle(categoryToggleSet);
-  }, []);
+  }, [contents]);
 
   const [categoryToggle, setCategoryToggle] = useState(null);
   // 대분류 toggle 값을 반전시키는 버튼 이벤트 함수
