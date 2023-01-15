@@ -1,7 +1,9 @@
 # User API
 
+# data
 components:
   schemas:
+    # response
     getSpecificUser:
       type: object
       properties:
@@ -9,45 +11,64 @@ components:
           type: boolean
           description: 성공 여부
         userInfo:
-          $ref: "#components/schemas/userInfo"
+          $ref: "#/components/schemas/userInfo"
+          properties:
+            profileImgSrc:
+              $ref: "#/components/schemas/profileImgSrc"
+    postUser:
+      type: object
+      properties:
+        profileImg:
+          $ref: "#/components/schemas/profileImg"
+        userInfo:
+          $ref: "#/components/schemas/userInfo"
     userInfo:
       type: object
       properties:
         email:
           type: string
           description: 사용자 이메일
+          example: "test@gmail.com"
         userName:
           type: string
           description: 사용자 이름
-        profileImg:
-          type: string
-          description: 사용자 프로필 src 주소
+          example: "test"
         bio:
           type: string
           description: 사용자 소개
+          example: "안녕하세요"
         sex:
           type: string
           description: 사용자 성별
+          oneOf:
+            - "F"
+            - "M"
+          example: "F"
         birthdate:
           type: string
           description: 사용자 생년월일
+          example: "2023-01-01"
         job:
           type: string
           description: 사용자 직업
-      example:
-        email: "test@google.com"
-        userName: "test"
-        profileImg: "data:image/png;base64,iVOdfk2349..."
-        bio: "안녕하세요"
-        sex: "F"
-        birthdate: "0000-00-00"
-        job: "직업"
+          example: "개발자"
+    profileImgSrc:
+      type: string
+      description: 사용자 프로필 src path
+      exapmle: "/file/profile/123ae3c23e..."
+    profileImg:
+      type: string
+      format: binary
+      description: 프로필 이미지
     errorResult:
       type: object
       properties:
         success:
           type: boolean
           description: 성공 여부
+        code:
+          type: integer
+          description: 에러 코드 (only when it is failed)
         message:
           type: string
           description: 에러 메세지
