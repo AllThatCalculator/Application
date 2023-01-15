@@ -10,7 +10,7 @@ import URL from "../PageUrls";
 const Wrapper = styled(FlexRowLayout)`
   flex-wrap: wrap;
 `;
-//trigger
+
 /**
  * 대분류1, 소분류*, 계산기* 목록들을 나열하여 반환하는 컴포넌트
  * @param {object} item 나열할 대분류, 소분류, 계산기 정보
