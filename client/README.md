@@ -14,5 +14,3 @@ npm install
 ```bash
 npm run start
 ```
-
-test github actions
