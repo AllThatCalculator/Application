@@ -26,7 +26,7 @@ exports.signUp = async (req, res) => {
       res.status(400).send({
         success: false,
         code: 3,
-        message: "already",
+        message: "already exists",
       });
     });
 };
