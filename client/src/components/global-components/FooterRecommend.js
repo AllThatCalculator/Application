@@ -1,32 +1,57 @@
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { BtnWhite } from "../atom-components/ButtonTemplate";
-import TextWhite from "../atom-components/TextWhite";
-import { ContentLayout, FlexColumnLayout, FlexRowLayout } from "../Layout";
-import URL from "../PageUrls";
-import styles from "../styles";
 import Recommend from "./Recommend";
-
-/**
- * ContentLayout을 상속하는 계산기 추천 모듈 감쌈
- * - padding을 새로 설정
- */
-const Wrapper = styled(ContentLayout)`
-  padding: ${styles.styleLayout.basic350};
-`;
+import PageScreenBox from "./PageScreenBox";
+import { Box, Typography } from "@mui/material";
+import { TextButton } from "../atom-components/Buttons";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import useSx from "../../hooks/useSx";
+import usePage from "../../hooks/usePage";
 
 function FooterRecommend() {
-  const navigate = useNavigate();
+  const { atcTextShadow, atcFilterShadow } = useSx();
+  const { calculetListPage } = usePage();
+
   return (
-    <Wrapper>
-      <FlexColumnLayout gap="20px">
-        <TextWhite text="다른 계산기들도 있어요 🤗" />
-        <FlexRowLayout>
-          <BtnWhite text="더보기" onClick={() => navigate(URL.CALCULET_LIST)} />
-        </FlexRowLayout>
-        <Recommend />
-      </FlexColumnLayout>
-    </Wrapper>
+    <PageScreenBox sx={{ p: "3.2rem 0rem", gap: "2rem" }}>
+      <Box sx={{ display: "flex", width: "100%" }}>
+        <TextButton onClick={calculetListPage}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyItems: "flex-start",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                variant="h5"
+                color="white"
+                sx={{
+                  ...atcTextShadow[100],
+                }}
+              >
+                다른 계산기들도 있어요 🚀
+              </Typography>
+              <KeyboardArrowRightIcon
+                fontSize="large"
+                sx={{
+                  color: "white",
+                  ...atcFilterShadow[100],
+                }}
+              />
+            </Box>
+            <Typography variant="body2" color="grey.300" align="left">
+              다양한 계산기를 만나보세요.
+            </Typography>
+          </Box>
+        </TextButton>
+      </Box>
+      <Recommend />
+    </PageScreenBox>
   );
 }
 export default FooterRecommend;

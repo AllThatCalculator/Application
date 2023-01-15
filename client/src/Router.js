@@ -20,14 +20,17 @@ import WriteUserInfo from "./pages/WriteUserInfo";
 import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
 
 function AppRouter({ isLoggedIn }) {
+  const PATH_CALCULET_ID = ":" + URL.CALCULET_ID;
+
   return (
     <BrowserRouter>
       <RouteChangeTracker />
       <Header isLoggedIn={isLoggedIn} />
       <Routes>
         <Route path={URL.CALCULET} element={<Calculet />}>
-          <Route path=":id" element={<Calculet />} />
+          <Route path={PATH_CALCULET_ID} element={<Calculet />} />
         </Route>
+
         <Route
           path={URL.REGISTER}
           element={
