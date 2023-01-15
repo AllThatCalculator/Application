@@ -1,10 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { category } = require("./calculets/category");
-const {
-  bufferToString,
-  bufferToImageSrc,
-} = require("../utils/bufferConverter");
+const { bufferToString } = require("../utils/bufferConverter");
 const { DateTimeToString } = require("../utils/StringConverter");
 const { models } = require("../models");
 const { auth } = require("../middleware/auth");
@@ -206,8 +203,6 @@ router.get("/:id", async (req, res) => {
       },
     });
 
-    console.log(calculetInfo);
-
     // 계산기 통계
     const calculetStatistics = await models.calculetStatistics.findOne({
       attributes: ["bookmark_cnt", "like_cnt", "report_cnt"],
@@ -243,6 +238,7 @@ router.get("/:id", async (req, res) => {
 
     // 계산기 객체로 묶기
     let calculet = null;
+    let contributorImgSrc = null;
     if (calculetInfo) {
       // 소스 코드 buffer 형태를 string 으로 변환
       const srcCode = bufferToString(calculetInfo.src_code);
@@ -251,14 +247,8 @@ router.get("/:id", async (req, res) => {
       const manual = bufferToString(calculetInfo.manual);
 
       // 제작자 이미지를 base64string 으로 변환 + src 생성
-      let contributorImgSrc = null;
-      if (calculetInfo.contributor.profile_img === null) {
-        // 기본 이미지인 경우
-        contributorImgSrc = "/img/defaultProfile.png";
-      } else {
-        contributorImgSrc = bufferToImageSrc(
-          calculetInfo.contributor.profile_img
-        );
+      if (calculetInfo.contributor.profile_img !== null) {
+        contributorImgSrc = `/file/profile/${calculetInfo.contributor.profile_img}`;
       }
 
       calculet = {
@@ -310,13 +300,8 @@ router.get("/:id", async (req, res) => {
     }
 
     if (calculetInfo && calculetCount) {
-      // 제작자 이미지를 base64string 으로 변환 + src 생성
-      const contributorImgSrc = bufferToImageSrc(
-        calculetInfo.contributor.profile_img
-      );
-
       calculetInfoPopup = {
-        profileImg: contributorImgSrc,
+        profileImgSrc: contributorImgSrc,
         contributorName: calculetInfo.contributor.user_name,
         calculationCnt: calculetCount.calculation_cnt,
         userCnt: calculetCount.user_cnt,
