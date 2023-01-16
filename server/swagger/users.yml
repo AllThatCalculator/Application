@@ -25,10 +25,6 @@ components:
     userInfo:
       type: object
       properties:
-        email:
-          type: string
-          description: 사용자 이메일
-          example: "test@gmail.com"
         userName:
           type: string
           description: 사용자 이름

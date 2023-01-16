@@ -28,6 +28,7 @@ async function authFirebase(req, res, next) {
     .verifyIdToken(idToken)
     .then((decodedIdToken) => {
       res.locals.userId = decodedIdToken.user_id;
+      res.locals.email = decodedIdToken.email;
       next();
     })
     .catch((error) => {
