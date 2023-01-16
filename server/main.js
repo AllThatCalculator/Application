@@ -1,7 +1,7 @@
 const express = require("express");
 const calculets = require("./routes/calculets");
 const users = require("./routes/users");
-// const record = require("./routes/record");
+const record = require("./routes/record");
 const { swaggerUi, specs } = require("./swagger");
 const { sequelize } = require("./models");
 const { errorHandler } = require("./middleware/errorHandler");
@@ -43,8 +43,9 @@ app.use("/users", users);
 /**
  * 계산 이력 관리 API
  */
-// app.use("/record", record);
+app.use("/record", record);
 
+// default error handler
 app.use(errorHandler.default);
 
 /**
