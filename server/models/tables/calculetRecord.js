@@ -5,7 +5,7 @@ module.exports = function (sequelize, DataTypes) {
       calculet_id: {
         type: DataTypes.CHAR(36),
         allowNull: false,
-        primaryKey: true,
+        primaryKey: false,
         references: {
           model: "calculet_info",
           key: "id",
@@ -14,7 +14,7 @@ module.exports = function (sequelize, DataTypes) {
       user_id: {
         type: DataTypes.CHAR(36),
         allowNull: false,
-        primaryKey: true,
+        primaryKey: false,
         references: {
           model: "user_info",
           key: "id",
@@ -32,18 +32,17 @@ module.exports = function (sequelize, DataTypes) {
     {
       sequelize,
       tableName: "calculet_record",
-      timestamps: true,
+      timestamps: false,
       indexes: [
-        {
-          name: "PRIMARY",
-          unique: true,
-          using: "BTREE",
-          fields: [{ name: "calculet_id" }, { name: "user_id" }],
-        },
         {
           name: "user_id",
           using: "BTREE",
           fields: [{ name: "user_id" }],
+        },
+        {
+          name: "calculet_id",
+          using: "BTREE",
+          fields: [{ name: "calculet_id" }],
         },
       ],
     }
