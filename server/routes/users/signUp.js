@@ -6,7 +6,7 @@ exports.signUp = async (req, res) => {
   await models.userInfo
     .create({
       id: res.locals.userId,
-      email: userInfo.email,
+      email: res.locals.email,
       user_name: userInfo.userName,
       bio: userInfo.bio,
       sex: userInfo.sex,

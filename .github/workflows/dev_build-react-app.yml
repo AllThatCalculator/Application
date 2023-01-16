@@ -1,4 +1,4 @@
-name: (DEV) build react app
+name: (DEV) build react app and reload nginx
 
 on:
   push:
