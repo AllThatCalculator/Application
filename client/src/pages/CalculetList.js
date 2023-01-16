@@ -17,6 +17,7 @@ import {
   FlexColumnBox,
 } from "../components/global-components/FlexBox";
 import Title from "../components/global-components/Title";
+import useSx from "../hooks/useSx";
 
 const BTN_CONVERSION = `단위
 변환기`;
@@ -33,6 +34,7 @@ const BTN_ETC = "기타";
  * 계산기 전체 목록 페이지
  */
 function CalculetList() {
+  const { isWindowSmDown } = useSx();
   /**
    * 바로가기를 위한 ref
    */
@@ -43,39 +45,40 @@ function CalculetList() {
   const daily = useMoveScroll();
   const etc = useMoveScroll();
 
+  // 반응형 아이콘 크기
+  const fontSize = isWindowSmDown ? "medium" : "large";
   /**
    * 대분류 수학 Ref, Ref로 스크롤 이동하는 함수
    */
   const contentsShortcut = [
     {
       text: BTN_CONVERSION,
-      icon: <ImportExportIcon fontSize="large" />,
+      icon: <ImportExportIcon fontSize={fontSize} />,
       itemRef: conversion,
-      degree: 180,
     },
     {
       text: BTN_MATH,
-      icon: <IsoIcon fontSize="large" />,
+      icon: <IsoIcon fontSize={fontSize} />,
       itemRef: math,
     },
     {
       text: BTN_SCIENCE,
-      icon: <LightbulbOutlinedIcon fontSize="large" />,
+      icon: <LightbulbOutlinedIcon fontSize={fontSize} />,
       itemRef: science,
     },
     {
       text: BTN_ECONOMY,
-      icon: <PeopleAltIcon fontSize="large" />,
+      icon: <PeopleAltIcon fontSize={fontSize} />,
       itemRef: economy,
     },
     {
       text: BTN_DAILY,
-      icon: <TodayIcon fontSize="large" />,
+      icon: <TodayIcon fontSize={fontSize} />,
       itemRef: daily,
     },
     {
       text: BTN_ETC,
-      icon: <MoreHorizIcon fontSize="large" />,
+      icon: <MoreHorizIcon fontSize={fontSize} />,
       itemRef: etc,
     },
   ];
@@ -124,7 +127,8 @@ function CalculetList() {
   return (
     <>
       <Grid container sx={{ backgroundColor: "white" }}>
-        <PageScreenBox sx={{ flexDirection: "row" }}>
+        <PageScreenBox sx={{ flexDirection: "row", mb: "8rem" }}>
+          {/* 바로가기 */}
           <FlexBox sx={{ width: widthSx }}>
             <FlexBox sx={{ position: "fixed" }}>
               <Shortcut
@@ -134,11 +138,11 @@ function CalculetList() {
               />
             </FlexBox>
           </FlexBox>
-
+          {/* 계산기 전체 목록 */}
           <FlexColumnBox
             sx={{
               width: "100%",
-              gap: { xs: "0.4rem", sm: "0.8rem", md: "1.2rem" },
+              gap: "2.8rem",
             }}
           >
             <Grid container>

@@ -82,7 +82,7 @@ function CalculetManual({ content, calculetId }) {
     setIsMorePanel(!isMorePanel);
   }
 
-  const { atcLinearBlue, atcBlue, transitionDuration } = useSx();
+  const { transitionDuration } = useSx();
 
   // 계산기 설명 더미
   const dummyContent =
@@ -90,9 +90,9 @@ function CalculetManual({ content, calculetId }) {
 
   // 더보기 버튼sx
   const fabAtcBlueStyle = {
-    bgcolor: atcBlue[200],
+    bgcolor: "atcBlue.200",
     "&:hover": {
-      bgcolor: atcBlue[100],
+      bgcolor: "atcBlue.100",
     },
   };
 
@@ -158,7 +158,9 @@ function CalculetManual({ content, calculetId }) {
         <Collapse in={isMorePanel} timeout="auto" unmountOnExit>
           <Box
             sx={{
-              background: isMorePanel ? atcBlue[100] : atcLinearBlue[100],
+              background: (theme) =>
+                !isMorePanel && theme.palette.atcLinearBlue[100],
+              backgroundColor: isMorePanel && "atcBlue.100",
               p: "1.8rem 2.4rem",
               gap: "2.4rem",
             }}

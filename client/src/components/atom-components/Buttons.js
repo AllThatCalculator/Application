@@ -1,4 +1,4 @@
-import { Button, ButtonBase, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import useSx from "../../hooks/useSx";
 import { FlexBox } from "../global-components/FlexBox";
 import { styled } from "@mui/material/styles";
@@ -41,11 +41,17 @@ const InvertButton = styled(Button)(({ theme }) => ({
   backgroundColor: "white",
   color: theme.palette.primary.main,
   "&:hover": {
-    backgroundColor: "#F6F7FA",
+    backgroundColor: theme.palette.atcBlue[50],
     color: theme.palette.primary.main,
   },
 }));
 
-const TextButton = styled(ButtonBase)(({ theme }) => ({}));
+/** 계산기 목록 - 계산기 버튼 */
+const ItemButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.atcBlue[50],
+  "&:hover": {
+    backgroundColor: theme.palette.atcBlue[100],
+  },
+}));
 
-export { CountButton, MainButton, InvertButton, TextButton };
+export { CountButton, MainButton, InvertButton, ItemButton };

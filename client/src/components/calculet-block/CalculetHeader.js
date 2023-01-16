@@ -215,7 +215,7 @@ function CalculetHeader({
       {modalOpen && <ModalCalculetInfo info={info} onClick={onModalClose} />}
 
       {/* 계산기 타이틀, 계산기 정보 */}
-      <Grid container sx={{ alignItems: "center" }}>
+      <Grid container>
         <CalculetTitle />
       </Grid>
       <Grid container sx={{ alignItems: "center" }}>

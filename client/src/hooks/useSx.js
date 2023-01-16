@@ -20,11 +20,6 @@ function useSx() {
   // 정보 컴포넌트 sx 정의
   const boxSx = { gap: "0.6rem", alignItems: "center" };
 
-  // 색 정의
-  const atcBlue = { 100: "#ECF2FF", 200: "#E6EBF4" };
-  const atcLinearBlue = {
-    100: "linear-gradient(#ECF2FF, transparent)",
-  };
   const atcLinearWhite = {
     100: "linear-gradient(to bottom right, #FFFFFF, #FFFFFFCC, transparent)",
   };
@@ -57,8 +52,6 @@ function useSx() {
     isWindowLgDown,
     isWindowXlDown,
     boxSx,
-    atcBlue,
-    atcLinearBlue,
     atcLinearWhite,
     transitionDuration,
     atcTextShadow,

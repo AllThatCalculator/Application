@@ -23,7 +23,7 @@ function Title({ content }) {
         }}
       />
       <Typography
-        variant="h6"
+        variant="h5"
         color="primary"
         sx={{
           fontWeight: "bold",
