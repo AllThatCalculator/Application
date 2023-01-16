@@ -5,7 +5,7 @@ on:
     branches:
       - develop
     paths:
-      - server/*
+      - "server/*"
       - "!server/package*.json"
       - "!server/Dockerfile.dev-server"
 jobs:
