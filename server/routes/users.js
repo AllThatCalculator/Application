@@ -14,7 +14,7 @@ const upload = multer();
 const router = express.Router();
 /**
  * @swagger
- *  /api/users/:
+ *  /api/users:
  *    post:
  *      tags: [users]
  *      summary: 회원가입 <Auth>
