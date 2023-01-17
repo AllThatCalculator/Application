@@ -1,14 +1,17 @@
 const express = require("express");
-const { signUp } = require("./users/signUp");
-const { bufferToImageSrc } = require("../utils/bufferConverter");
-const { models } = require("../models");
-const sequelize = require("sequelize");
+
 const { auth } = require("../middleware/auth");
 const { errorHandler } = require("../middleware/errorHandler");
-const router = express.Router();
+
 const { postProfile } = require("./s3Bucket/profile");
+
+const { signUp } = require("./users/signUp");
+const { me } = require("./users/getMyInfo");
+
 const multer = require("multer");
 const upload = multer();
+
+const router = express.Router();
 /**
  * @swagger
  *  /api/users/:
@@ -24,12 +27,17 @@ const upload = multer();
  *            schema:
  *              $ref: "#/components/schemas/postUser"
  *      responses:
- *        201:
+ *        301:
  *          description: 회원 등록 완료
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/postResult"
+ *                type: object
+ *                properties:
+ *                  url:
+ *                    type: string
+ *                    example: "/"
+ *                    description: 루트로 이동
  *        400:
  *          description: 회원 등록 오류 (failed)
  *          content:
@@ -38,6 +46,10 @@ const upload = multer();
  *                $ref: "#/components/schemas/errorResult"
  *        401:
  *          description: 인증 오류 (invalid token)
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/errorResult"
  */
 router.post(
   "/",
@@ -51,17 +63,11 @@ router.post(
 
 /**
  * @swagger
- *  /api/users/{id}:
+ *  /api/users/me/profile:
  *    get:
  *      tags: [users]
- *      summary: 특정 유저 정보 조회
- *      description: id와 일치하는 유저 찾아서 정보 조회
- *      parameters:
- *        - in: path
- *          type: string
- *          required: true
- *          name: id
- *          description: 사용자 ID
+ *      summary: 로그인 한 사용자 (본인) 프로필 전체 요청 <Auth>
+ *      description: 본인 정보 조회
  *      responses:
  *        200:
  *          description: 조회 성공
@@ -69,60 +75,24 @@ router.post(
  *            application/json:
  *              schema:
  *                $ref: "#/components/schemas/getSpecificUser"
- *        404:
- *          description: 유저를 찾지 못함
- *          content:
- *            application/json:
- *              schema:
- *                $ref: "#/components/schemas/errorResult"
- *        400:
- *          description: 요청 오류
- *          content:
- *            application/json:
- *              schema:
- *                $ref: "#/components/schemas/errorResult"
  */
+router.get("/me/profile", auth.firebase, errorHandler.dbWrapper(me.profile));
 
-router.get("/:id", async (req, res) => {
-  try {
-    const userInfo = await models.userInfo.findOne({
-      where: {
-        id: {
-          [sequelize.Op.eq]: req.params.id,
-        },
-      },
-    });
-
-    let user = null;
-    if (userInfo) {
-      user = {
-        id: userInfo.id,
-        email: userInfo.email,
-        userName: userInfo.user_name,
-        profileImgSrc: `/file/profile/${userInfo.profile_img}`,
-        bio: userInfo.bio,
-        sex: userInfo.sex,
-        birthdate: userInfo.birthdate,
-        job: userInfo.job,
-      };
-    }
-
-    if (user === null) {
-      res.status(404).send({ success: false, message: "user was not found" });
-    } else {
-      res.status(200).send({
-        success: true,
-        userInfo: user,
-      });
-    }
-  } catch (err) {
-    res.status(400).send({
-      success: false,
-      message:
-        "request parameters was wrong. retry request after change parameters",
-      err,
-    });
-  }
-});
+/**
+ * @swagger
+ *  /api/users/me:
+ *    get:
+ *      tags: [users]
+ *      summary: 로그인 한 사용자 (본인) 표시할 정보 요청 <Auth>
+ *      description: 본인 정보 조회 (username, profile)
+ *      responses:
+ *        200:
+ *          description: 조회 성공
+ *          content:
+ *            application/json:
+ *              schema:
+ *                $ref: "#/components/schemas/userSimpleInfo"
+ */
+router.get("/me", auth.firebase, errorHandler.dbWrapper(me.default));
 
 module.exports = router;

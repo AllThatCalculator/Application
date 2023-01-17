@@ -4,17 +4,6 @@
 components:
   schemas:
     # response
-    getSpecificUser:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 성공 여부
-        userInfo:
-          $ref: "#/components/schemas/userInfo"
-          properties:
-            profileImgSrc:
-              $ref: "#/components/schemas/profileImgSrc"
     postUser:
       type: object
       properties:
@@ -22,13 +11,27 @@ components:
           $ref: "#/components/schemas/profileImg"
         userInfo:
           $ref: "#/components/schemas/userInfo"
+    userSimpleInfo:
+      type: object
+      properties:
+        userName:
+          $ref: "#/components/schemas/userInfo/properties/userName"
+        profileImgSrc:
+          $ref: "#/components/schemas/profileImgSrc"
+    getSpecificUser:
+      $ref: "#/components/schemas/userInfo"
+      properties:
+        profileImgSrc:
+          $ref: "#/components/schemas/profileImgSrc"
+        email:
+          $ref: "#/components/schemas/email"
     userInfo:
       type: object
       properties:
         userName:
           type: string
           description: 사용자 이름
-          example: "test"
+          example: "test user"
         bio:
           type: string
           description: 사용자 소개
@@ -51,20 +54,25 @@ components:
     profileImgSrc:
       type: string
       description: 사용자 프로필 src path
-      exapmle: "/file/profile/123ae3c23e..."
+      example: "/file/profile/123ae3c23e..."
     profileImg:
       type: string
       format: binary
       description: 프로필 이미지
+    email:
+      type: string
+      format: email
+      descrition: 사용자 이메일
+      example: "test@naver.com"
+
     errorResult:
       type: object
       properties:
-        success:
-          type: boolean
-          description: 성공 여부
         code:
           type: integer
           description: 에러 코드 (only when it is failed)
+          example: 1
         message:
           type: string
           description: 에러 메세지
+          example: "invalid token"
