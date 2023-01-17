@@ -157,12 +157,3 @@ components:
         location:
           type: string
           description: 등록된 경로
-    errorResult:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 성공 여부
-        message:
-          type: string
-          description: 에러 메세지
