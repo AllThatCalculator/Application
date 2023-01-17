@@ -1,6 +1,7 @@
 const { admin } = require("../config/firebase");
 const { models } = require("../models");
 const sequelize = require("sequelize");
+const { errorObject } = require("../utils/errorMessage");
 
 /**
  * 미들웨어 - 인증이 필요한 api 앞단에서 클라이언트의 토큰 유효성 검사 (firebase)
@@ -39,17 +40,11 @@ async function authFirebase(req, res, next) {
       switch (error.code) {
         // expired token
         case "auth/id-token-expired":
-          res.send({
-            code: 0,
-            message: "token expired",
-          });
+          res.send(errorObject(401, 0));
           break;
         // invalid token
         case "auth/argument-error":
-          res.send({
-            code: 1,
-            message: "Unauthorized",
-          });
+          res.send(errorObject(401, 1));
           break;
       }
     });
