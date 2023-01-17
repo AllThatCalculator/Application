@@ -1,3 +1,3 @@
 # ERD
 
-![image](https://user-images.githubusercontent.com/68186101/211045213-bc5a568f-5358-4525-87b1-113158c9c9cb.png)
+![image](https://user-images.githubusercontent.com/78730403/212737494-c3e00c33-0ec1-492a-87ce-72fb7f9fbd5b.png)

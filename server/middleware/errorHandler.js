@@ -17,7 +17,20 @@ const asyncWrapper = (asyncFunc) => {
   };
 };
 
+const dbErrorHandler = (asyncFunc) => {
+  return (req, res, next) => {
+    asyncFunc(req, res, next).catch((error) => {
+      console.log(error);
+      console.log("error occured during creating record to DB");
+      res.status(400).send({
+        code: 1,
+      });
+    });
+  };
+};
+
 exports.errorHandler = {
   default: defaultErrorHandler,
   asyncWrapper: asyncWrapper,
+  dbWrapper: dbErrorHandler,
 };
