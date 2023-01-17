@@ -7,9 +7,9 @@ const { models } = require("../models");
 
 /**
  * @swagger
- *  /api/record/:
+ *  /api/records:
  *    post:
- *      tags: [record]
+ *      tags: [records]
  *      summary: 계산 이력 저장하기
  *      description: 입력값, 결과값을 포함한 계산 이력 저장
  *      requestBody:
@@ -46,9 +46,9 @@ router.post(
 
 /**
  * @swagger
- *  /api/record/{calculetId}:
+ *  /api/records/{calculetId}:
  *    get:
- *      tags: [record]
+ *      tags: [records]
  *      summary: 계산 이력 불러오기
  *      description: userEmail의 calculetId 사용 이력을 불러오기
  *      parameters:
@@ -73,7 +73,7 @@ router.get(
   "/:id",
   [auth.firebase, auth.database],
   errorHandler.dbWrapper(async (req, res) => {
-    let recordList = await models.calculetRecord.findAll({
+    let records = await models.calculetRecord.findAll({
       attributes: ["input", "output", "created_at"],
       where: {
         calculet_id: {
@@ -86,7 +86,7 @@ router.get(
     });
 
     // 데이터 가공
-    recordList = recordList.map((row) => {
+    records = records.map((row) => {
       return {
         inputObj: JSON.parse(row.dataValues.input),
         outputObj: JSON.parse(row.dataValues.output),
@@ -94,7 +94,7 @@ router.get(
       };
     });
     // 최신순 정렬
-    recordList.sort((a, b) => {
+    records.sort((a, b) => {
       if (a.createdAt < b.createdAt) {
         return 1;
       } else if (a.createdAt > b.createdAt) {
@@ -104,7 +104,7 @@ router.get(
       }
     });
 
-    res.status(200).send(recordList);
+    res.status(200).send(records);
   })
 );
 
