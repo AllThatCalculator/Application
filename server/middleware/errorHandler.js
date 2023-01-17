@@ -1,3 +1,5 @@
+const { errorObject } = require("../utils/errorMessage");
+
 /**
  * 기본 에러 핸들러
  * - 백엔드 로직에 예상하지 못한 버그가 있는 경우 app crash 발생 예방
@@ -22,9 +24,7 @@ const dbErrorHandler = (asyncFunc) => {
     asyncFunc(req, res, next).catch((error) => {
       console.log(error);
       console.log("error occured during creating record to DB");
-      res.status(400).send({
-        code: 1,
-      });
+      res.status(400).send(errorObject(400, 1));
     });
   };
 };
