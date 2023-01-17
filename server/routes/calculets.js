@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { category } = require("./calculets/category");
 const { bufferToString } = require("../utils/bufferConverter");
-const { DateTimeToString } = require("../utils/StringConverter");
 const { models } = require("../models");
 const { auth } = require("../middleware/auth");
 const sequelize = require("sequelize");
@@ -284,7 +283,7 @@ router.get("/:id", async (req, res) => {
       // 날짜 같은 계산기 메세지 묶기
       const dictUpdateLog = {};
       for (const log of calculetUpdateLog) {
-        const date = DateTimeToString(log.created_at);
+        const date = log.created_at;
         const message = [log.message];
         if (dictUpdateLog[date]) {
           dictUpdateLog[date].push(message);
@@ -308,7 +307,7 @@ router.get("/:id", async (req, res) => {
         title: calculetInfo.title,
         categoryMain: calculetInfo.category_sub.main.main,
         categorySub: calculetInfo.category_sub.sub,
-        birthday: DateTimeToString(calculetInfo.created_at),
+        birthday: calculetInfo.created_at,
         updateLog: updateLog,
       };
     }
