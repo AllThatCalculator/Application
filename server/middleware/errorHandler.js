@@ -6,7 +6,7 @@ const { errorObject } = require("../utils/errorMessage");
  */
 function defaultErrorHandler(err, req, res, next) {
   console.error(err.stack);
-  res.status(500).send("Something broke!");
+  res.status(500).send(errorObject(500, 0));
 }
 
 /**
@@ -24,7 +24,7 @@ const dbErrorHandler = (asyncFunc) => {
     asyncFunc(req, res, next).catch((error) => {
       console.log(error);
       console.log("error occured during creating record to DB");
-      res.status(400).send(errorObject(400, 1));
+      res.status(400).send(errorObject(400, 0));
     });
   };
 };

@@ -58,7 +58,7 @@ router.post(
     auth.firebase,
     errorHandler.asyncWrapper(postProfile),
   ],
-  errorHandler.asyncWrapper(signUp)
+  errorHandler.dbWrapper(signUp)
 );
 
 /**
