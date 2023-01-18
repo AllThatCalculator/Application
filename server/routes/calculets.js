@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const { category } = require("./calculets/category");
-const { bufferToString } = require("../utils/bufferConverter");
+const { registerCalculet } = require("./calculets/register");
+
 const { models } = require("../models");
 const { auth } = require("../middleware/auth");
 const sequelize = require("sequelize");
 const { errorHandler } = require("../middleware/errorHandler");
+const { getCalculetInfo } = require("./calculets/getCalculetInfo");
 
 /**
  * @swagger
@@ -25,8 +27,6 @@ const { errorHandler } = require("../middleware/errorHandler");
  *          description: 계산기를 찾지 못함
  *          content:
  *            application/json:
- *              schema:
- *                $ref: "#/components/schemas/errorResult"
  *        400:
  *          description: 요청 오류
  *          content:
@@ -142,7 +142,7 @@ router.get("/category", category);
  *    get:
  *      tags: [calculets]
  *      summary: 계산기 불러오기
- *      description: id 번째 계산기를 DB에서 조회한 후 불러오기
+ *      description: id번 계산기를 DB에서 조회한 후 불러오기
  *      parameters:
  *        - in: path
  *          type: string
@@ -158,10 +158,6 @@ router.get("/category", category);
  *                $ref: "#/components/schemas/getSpecificCalculet"
  *        404:
  *          description: 계산기를 찾지 못함
- *          content:
- *            application/json:
- *              schema:
- *                $ref: "#/components/schemas/errorResult"
  *        400:
  *          description: 계산기 요청 오류
  *          content:
@@ -169,174 +165,7 @@ router.get("/category", category);
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.get("/:id", async (req, res) => {
-  try {
-    // 계산기 정보 (유저와 카테고리 대분류, 소분류와 조인)
-    const calculetInfo = await models.calculetInfo.findOne({
-      include: [
-        {
-          model: models.userInfo,
-          required: true,
-          attributes: ["user_name", "profile_img"],
-          as: "contributor",
-        },
-        {
-          model: models.categorySub,
-          required: true,
-          attributes: ["sub"],
-          as: "category_sub",
-          include: [
-            {
-              model: models.categoryMain,
-              required: true,
-              attributes: ["main"],
-              as: "main",
-            },
-          ],
-        },
-      ],
-      where: {
-        id: {
-          [sequelize.Op.eq]: req.params.id,
-        },
-      },
-    });
-
-    // 계산기 통계
-    const calculetStatistics = await models.calculetStatistics.findOne({
-      attributes: ["bookmark_cnt", "like_cnt", "report_cnt"],
-      where: {
-        calculet_id: {
-          [sequelize.Op.eq]: req.params.id,
-        },
-      },
-    });
-    // 계산기 조회수
-    const calculetCount = await models.calculetCount.findOne({
-      attributes: ["view_cnt", "calculation_cnt", "user_cnt"],
-      where: {
-        calculet_id: {
-          [sequelize.Op.eq]: req.params.id,
-        },
-      },
-    });
-    // (임시) 사용자-계산기 관련 정보(북마크 여부, 좋아요 여부)
-    const userCalculet = {
-      bookmarked: false,
-      liked: false,
-    };
-    // 계산기 업데이트 로그
-    const calculetUpdateLog = await models.calculetUpdateLog.findAll({
-      attributes: ["created_at", "message"],
-      where: {
-        calculet_id: {
-          [sequelize.Op.eq]: req.params.id,
-        },
-      },
-    });
-
-    // 계산기 객체로 묶기
-    let calculet = null;
-    let contributorImgSrc = null;
-    if (calculetInfo) {
-      // 소스 코드 buffer 형태를 string 으로 변환
-      const srcCode = bufferToString(calculetInfo.src_code);
-
-      // 마크다운 buffer 형태를 string 으로 변환
-      const manual = bufferToString(calculetInfo.manual);
-
-      // 제작자 이미지를 base64string 으로 변환 + src 생성
-      if (calculetInfo.contributor.profile_img !== null) {
-        contributorImgSrc = `/file/profile/${calculetInfo.contributor.profile_img}`;
-      }
-
-      calculet = {
-        id: calculetInfo.id,
-        title: calculetInfo.title,
-        srcCode: srcCode,
-        manual: manual,
-        description: calculetInfo.description,
-        contributor: calculetInfo.contributor.user_name,
-        contributorImgSrc: contributorImgSrc,
-      };
-    }
-
-    // 통계 객체로 묶기
-    let statistics = null;
-    if (calculetStatistics && calculetCount && userCalculet) {
-      statistics = {
-        bookmarkCnt: calculetStatistics.bookmark_cnt,
-        bookmarked: userCalculet.bookmarked,
-        likeCnt: calculetStatistics.like_cnt,
-        liked: userCalculet.liked,
-        reportCnt: calculetStatistics.report_cnt,
-        viewCnt: calculetCount.view_cnt,
-      };
-    }
-
-    // 계산기 정보 팝업에 들어가는 부분 객체로 묶기
-    let calculetInfoPopup = null;
-
-    // 업데이트 로그 가공
-    let updateLog = [];
-    if (calculetUpdateLog.length > 0) {
-      // 날짜 같은 계산기 메세지 묶기
-      const dictUpdateLog = {};
-      for (const log of calculetUpdateLog) {
-        const date = log.created_at;
-        const message = [log.message];
-        if (dictUpdateLog[date]) {
-          dictUpdateLog[date].push(message);
-        } else {
-          dictUpdateLog[date] = [message];
-        }
-      }
-
-      // 객체로 묶기
-      for (const key in dictUpdateLog) {
-        updateLog.push({ updateDate: key, message: dictUpdateLog[key] });
-      }
-    }
-
-    if (calculetInfo && calculetCount) {
-      calculetInfoPopup = {
-        profileImgSrc: contributorImgSrc,
-        contributorName: calculetInfo.contributor.user_name,
-        calculationCnt: calculetCount.calculation_cnt,
-        userCnt: calculetCount.user_cnt,
-        title: calculetInfo.title,
-        categoryMain: calculetInfo.category_sub.main.main,
-        categorySub: calculetInfo.category_sub.sub,
-        birthday: calculetInfo.created_at,
-        updateLog: updateLog,
-      };
-    }
-
-    // 계산기 잘 불러왔는지 확인
-    if (
-      calculet === null ||
-      statistics === null ||
-      calculetInfoPopup === null
-    ) {
-      res.status(404).send({ success: false, message: "calculet not found" });
-    } else {
-      res.status(200).send({
-        success: true,
-        calculet: calculet,
-        statistics: statistics,
-        info: calculetInfoPopup,
-      });
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(400).send({
-      success: false,
-      message:
-        "request parameters was wrong. retry request after change parameters",
-      err,
-    });
-  }
-});
+router.get("/:id", errorHandler.dbWrapper(getCalculetInfo));
 
 /**
  * @swagger
@@ -351,14 +180,14 @@ router.get("/:id", async (req, res) => {
  *        content:
  *          application/json:
  *            schema:
- *              $ref: "#/components/schemas/registerCalculetTemp"
+ *              $ref: "#/components/schemas/calculet"
  *      responses:
- *        201:
- *          description: 계산기 등록 완료
+ *        301:
+ *          description: 계산기 등록 완료 -> 루트로 디라이렉션
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/postResult"
+ *                $ref: "#/components/schemas/success301"
  *        400:
  *          description: 계산기 등록 요청 오류
  *          content:
@@ -366,29 +195,10 @@ router.get("/:id", async (req, res) => {
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.post("/", [auth.firebase, auth.database], async (req, res) => {
-  try {
-    const calculetInfoTemp = await models.calculetInfoTemp.create({
-      title: req.body.title,
-      src_code: req.body.srcCode,
-      manual: req.body.manual,
-      description: req.body.description,
-      category_main_id: req.body.categoryMainId,
-      category_sub_id: req.body.categorySubId,
-      contributor_id: res.locals.userId,
-    });
-    res.status(201).send({
-      success: true,
-      location: `/calculets/${calculetInfoTemp.id}`,
-    });
-  } catch (err) {
-    res.status(400).send({
-      success: false,
-      message:
-        "request parameters was wrong. retry request after change parameters",
-      err,
-    });
-  }
-});
+router.post(
+  "/",
+  [auth.firebase, auth.database],
+  errorHandler.dbWrapper(registerCalculet)
+);
 
 module.exports = router;

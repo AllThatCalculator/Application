@@ -3,17 +3,12 @@
 components:
   schemas:
     getSpecificCalculet:
-      type: object
+      $ref: "#/components/schemas/calculet"
       properties:
-        success:
-          type: boolean
-          description: 성공 여부
-        calculet:
-          $ref: "#components/schemas/calculet"
+        id:
+          $ref: "#/components/schemas/calculetId"
         statistics:
-          $ref: "#components/schemas/statistics"
-        info:
-          $ref: "#components/schemas/calculetInfoPopup"
+          $ref: "#/components/schemas/statistics"
     getCalculetLists:
       type: object
       properties:
@@ -22,138 +17,102 @@ components:
           description: 성공 여부
         calculetLists:
           $ref: "#components/schemas/calculetLists"
-    registerCalculetTemp:
-      type: object
-      properties:
-        title:
-          type: string
-          description: 계산기 이름
-        srcCode:
-          type: string
-          description: 계산기 코드
-        manual:
-          type: string
-          description: 계산기 설명 마크다운
-        description:
-          type: string
-          description: 계산기 한 줄 설명
-        categoryMainId:
-          type: integer
-          description: 카테고리 대분류 ID
-        categorySubId:
-          type: integer
-          description: 카테고리 소분류 ID
-        email:
-          type: string
-          description: 계산기 제작자 닉네임
-      example:
-        title: 테스트 계산기
-        srcCode: <html></html>
-        manual: "### markdown"
-        description: 계산기 한 줄 설명
-        categoryMainId: 1
-        categorySubId: 2
-        email: bsa0322@ewhain.net
+
+    # objects
     calculet:
       type: object
       properties:
-        id:
-          type: integer
-          description: 계산기 ID
         title:
           type: string
           description: 계산기 이름
+          example: "사칙연산 계산기"
         srcCode:
           type: string
           description: 계산기 코드
+          example: "<html>hello world</html>"
         manual:
           type: string
           description: 계산기 설명 마크다운
+          example: "### hello, world"
         description:
           type: string
           description: 계산기 한 줄 설명
+          example: "이 계산기에 대한 한 줄 설명"
         categoryMain:
-          type: string
+          type: integer
           description: 카테고리 대분류
+          example: 1
         categorySub:
-          type: string
+          type: integer
           description: 카테고리 소분류
-        contributor:
-          type: string
-          description: 계산기 제작자 닉네임
-        contributorImgSrc:
-          type: string
-          description: 계산기 제작자 프로필 이미지 소스
+          example: 1
+    calculetId:
+      type: string
+      description: 계산기 UUID
+      example: 1
     statistics:
       type: object
       properties:
-        bookmarkCnt:
+        bookmark:
           type: integer
           description: 북마크 횟수
-        bookmarked:
-          type: boolean
-          description: 북마크 여부
-        likeCnt:
+        like:
           type: integer
           description: 좋아요 횟수
-        liked:
-          type: integer
-          description: 좋아요 여부
-        reportCnt:
+        report:
           type: integer
           description: 신고 횟수
-        viewCnt:
+        view:
           type: integer
           description: 누적 접속 수
-    calculetLists:
-      type: array
-      items:
-        type: object
-    calculetInfoPopup:
-      type: object
-      properties:
-        profileImgSrc:
-          type: string
-          description: 제작자 프로필 이미지 소스
-        contributorName:
-          type: string
-          description: 제작자 닉네임
-        calculationCnt:
+        user:
           type: integer
-          description: 누적 연산 수
-        userCnt:
+          description: 사용자 수
+        calculation:
           type: integer
-          description: 누적 사용자 수
-        title:
-          type: string
-          description: 계산기 제목
-        categoryMain:
-          type: string
-          description: 계산기 대분류
-        categorySub:
-          type: string
-          description: 계산기 소분류
-        birthday:
-          type: string
-          description: 계산기 등록일
-        updateLog:
-          type: object
-          description: 업데이트 로그
-          properties:
-            updateDate:
-              type: string
-              description: 업데이트 날짜
-            message:
-              type: array
-              items:
-                type: string
-                description: 업데이트 메시지
-    postResult:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 성공 여부
-        location:
-          type: string
-          description: 등록된 경로
+          description: 누적 계산 횟수
+
+    # not using
+    # calculetLists:
+    #   type: array
+    #   items:
+    #     type: object
+    # calculetInfoPopup:
+    #   type: object
+    #   properties:
+    #     profileImgSrc:
+    #       type: string
+    #       description: 제작자 프로필 이미지 소스
+    #     contributorName:
+    #       type: string
+    #       description: 제작자 닉네임
+    #     calculationCnt:
+    #       type: integer
+    #       description: 누적 연산 수
+    #     userCnt:
+    #       type: integer
+    #       description: 누적 사용자 수
+    #     title:
+    #       type: string
+    #       description: 계산기 제목
+    #     categoryMain:
+    #       type: string
+    #       description: 계산기 대분류
+    #     categorySub:
+    #       type: string
+    #       description: 계산기 소분류
+    #     birthday:
+    #       type: string
+    #       description: 계산기 등록일
+    #     updateLog:
+    #       type: object
+    #       description: 업데이트 로그
+    #       properties:
+    #         updateDate:
+    #           type: string
+    #           description: 업데이트 날짜
+    #         message:
+    #           type: array
+    #           items:
+    #             type: string
+    #             description: 업데이트 메시지
