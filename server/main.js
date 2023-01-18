@@ -2,7 +2,6 @@ const express = require("express");
 const calculets = require("./routes/calculets");
 const users = require("./routes/users");
 const records = require("./routes/records");
-const { swaggerUi, specs } = require("./swagger");
 const { sequelize } = require("./models");
 const { errorHandler } = require("./middleware/errorHandler");
 
@@ -25,10 +24,11 @@ sequelize
 app.use(express.urlencoded({ limit: "1mb", extended: true }));
 app.use(express.json({ limit: "1mb" }));
 
-/**
- * API 문서 path 등록하기
- */
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+// swagger
+if (process.env.NODE_ENV === "development") {
+  const { swaggerUi, specs } = require("./swagger");
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+}
 
 /**
  * 계산기 관리 API
