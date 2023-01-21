@@ -10,6 +10,7 @@ import {
   AppBar,
   Avatar,
   Box,
+  Button,
   Dialog,
   Divider,
   IconButton,
@@ -22,7 +23,10 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import PersonIcon from "@mui/icons-material/Person";
-import { InvertButton } from "../components/atom-components/Buttons";
+import {
+  InvertButton,
+  InvertTextButton,
+} from "../components/atom-components/Buttons";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import PopupList from "../components/global-components/PopupList";
 import useSx from "../hooks/useSx";
@@ -30,6 +34,8 @@ import useSx from "../hooks/useSx";
 import SearchIcon from "@mui/icons-material/Search";
 import { forwardRef } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { FlexBox } from "../components/global-components/FlexBox";
+import usePage from "../hooks/usePage";
 /**
  * 헤더에 있는 컴포넌트들
  * -> 카테고리바, 로고, 검색창, 로그인/아웃 버튼
@@ -39,6 +45,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
  */
 function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
   const { isWindowSmDown } = useSx();
+  const { loginPage, signUpPage } = usePage();
 
   // 내 계정 팝업 리스트
   const myAccountList = [
@@ -211,13 +218,12 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
               )
           )
         ) : (
-          <InvertButton
-            variant="contained"
-            startIcon={<PersonIcon />}
-            onClick={onLogin}
-          >
-            로그인
-          </InvertButton>
+          <>
+            <InvertTextButton onClick={loginPage}>로그인</InvertTextButton>
+            <InvertButton variant="contained" onClick={signUpPage}>
+              회원가입
+            </InvertButton>
+          </>
         )}
       </Box>
     </Box>

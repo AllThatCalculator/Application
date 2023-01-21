@@ -1,5 +1,5 @@
 import Recommend from "./Recommend";
-import PageScreenBox from "./PageScreenBox";
+import { PageScreenBox } from "./PageScreenBox";
 import { Box, ButtonBase, Typography } from "@mui/material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import useSx from "../../hooks/useSx";

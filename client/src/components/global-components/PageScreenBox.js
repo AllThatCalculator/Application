@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 /** page 제일 바깥 스크린 크기 레이아웃 */
@@ -11,4 +11,16 @@ const PageScreenBox = styled(Box)(({ theme }) => ({
   maxWidth: 1128,
   width: "100%",
 }));
-export default PageScreenBox;
+
+/**
+ * page 제일 바깥 스크린 크기 레이아웃 (흰 배경)
+ * ex. 로그인, 회원 가입
+ */
+const PageWhiteScreenBox = styled(Grid)(({ theme }) => ({
+  position: "fixed",
+  top: 0,
+  bottom: 0,
+  backgroundColor: "white",
+}));
+
+export { PageScreenBox, PageWhiteScreenBox };

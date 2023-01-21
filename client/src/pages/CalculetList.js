@@ -11,7 +11,7 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import TodayIcon from "@mui/icons-material/Today";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Grid } from "@mui/material";
-import PageScreenBox from "../components/global-components/PageScreenBox";
+import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import {
   FlexBox,
   FlexColumnBox,

@@ -13,8 +13,8 @@ const OPTIONS_EMAIL_ADDRESS = [
  * 성별 옵션 - 여, 남
  */
 const OPTIONS_SEX = [
-  { value: "F", name: "여자" },
-  { value: "M", name: "남자" },
+  { value: "F", name: "여성" },
+  { value: "M", name: "남성" },
 ];
 
 /**

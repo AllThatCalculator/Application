@@ -45,6 +45,14 @@ function useSx() {
     WebkitBoxOrient: "vertical",
   };
 
+  // 로그인, 회원가입 박스 길이 정의
+  const widthSx = {
+    width: "100%",
+    maxWidth: "36rem", // 회원가입/상세내용 에서 따로 정의 해주기
+    justifyContent: "center",
+    gap: "1.6rem",
+  };
+
   return {
     WIDTH_CATEGORY_BAR,
     isWindowMdDown,
@@ -57,6 +65,7 @@ function useSx() {
     atcTextShadow,
     atcFilterShadow,
     ellipsis,
+    widthSx,
   };
 }
 export default useSx;

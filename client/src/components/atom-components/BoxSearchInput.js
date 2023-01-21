@@ -15,9 +15,8 @@ const Search = styled("div")(({ theme }) => ({
   width: "100%",
 
   [theme.breakpoints.up("sm")]: {
-    maxWidth: "44rem",
+    maxWidth: "36rem",
   },
-
   paddingRight: `calc(1em + ${theme.spacing(2)})`, // 글씨 쓴 거 없애는 X버튼을 위한 width
 }));
 
