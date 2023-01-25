@@ -76,7 +76,7 @@ router.post(
  *              schema:
  *                $ref: "#/components/schemas/getSpecificUser"
  */
-router.get("/me/profile", auth.firebase, errorHandler.dbWrapper(me.profile));
+router.get("/me/profile", [auth.firebase, auth.database], me.detail);
 
 /**
  * @swagger
@@ -93,6 +93,6 @@ router.get("/me/profile", auth.firebase, errorHandler.dbWrapper(me.profile));
  *              schema:
  *                $ref: "#/components/schemas/userSimpleInfo"
  */
-router.get("/me", auth.firebase, errorHandler.dbWrapper(me.default));
+router.get("/me", [auth.firebase, auth.database], me.default);
 
 module.exports = router;
