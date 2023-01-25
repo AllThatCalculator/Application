@@ -3,6 +3,16 @@ const { models } = require("../../models");
 const { bufferToString } = require("../../utils/bufferConverter");
 const { urlFormatter } = require("../../utils/urlFormatter");
 
+/**
+ * 계산기 조회수 늘리기
+ */
+function addViewCnt(req, res, next) {
+  models.calculetCount.findByPk(req.params.id).then((calculet) => {
+    calculet.increment("view_cnt", { by: 1 });
+  });
+  next();
+}
+
 async function getCalculetInfo(req, res) {
   // 계산기 정보 (유저와 카테고리 대분류, 소분류, 계산기 통계, 조회수)
   const calculetInfo = await models.calculetInfo.findOne({
@@ -14,19 +24,6 @@ async function getCalculetInfo(req, res) {
         attributes: ["user_name", "profile_img"],
         as: "contributor",
       },
-      // category
-      // {
-      //   model: models.categorySub,
-      //   required: true,
-      //   as: "category_sub",
-      //   include: [
-      //     {
-      //       model: models.categoryMain,
-      //       required: true,
-      //       as: "main",
-      //     },
-      //   ],
-      // },
       // statistics
       {
         model: models.calculetStatistics,
@@ -62,10 +59,6 @@ async function getCalculetInfo(req, res) {
     description: calculetInfo.description,
     mainId: calculetInfo.category_main_id,
     subId: calculetInfo.category_sub_id,
-    // category: {
-    //   main: calculetInfo.category_sub.main.main,
-    //   sub: calculetInfo.category_sub.sub,
-    // },
     contributor: {
       userName: calculetInfo.contributor.user_name,
       imgSrc: urlFormatter("profileImg", calculetInfo.contributor.profile_img),
@@ -83,4 +76,8 @@ async function getCalculetInfo(req, res) {
   res.status(200).send(responseData);
 }
 
-exports.getCalculetInfo = getCalculetInfo;
+// exports.getCalculetInfo = getCalculetInfo;
+module.exports = {
+  getCalculetInfo,
+  addViewCnt,
+};
