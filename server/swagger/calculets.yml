@@ -1,6 +1,24 @@
 # Calculet API
 
 components:
+  parameters:
+    calculetId:
+      in: path
+      type: string
+      required: true
+      name: calculetId
+      description: 계산기 UUID
+  responses:
+    putResult:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              likeCnt:
+                type: integer
+                description: 요청 수행 완료 후 계산기의 좋아요 수
+                example: 35
   schemas:
     getSpecificCalculet:
       $ref: "#/components/schemas/calculet"

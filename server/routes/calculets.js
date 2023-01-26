@@ -1,154 +1,47 @@
 const express = require("express");
 const router = express.Router();
-const { category } = require("./calculets/category");
 const { registerCalculet } = require("./calculets/register");
-
-const { models } = require("../models");
 const { auth } = require("../middleware/auth");
-const sequelize = require("sequelize");
 const { errorHandler } = require("../middleware/errorHandler");
 const { getCalculetInfo } = require("./calculets/getCalculetInfo");
+const { userLike } = require("./calculets/userLike");
+
+// /**
+//  * @swagger
+//  *  /api/calculets:
+//  *    get:
+//  *      tags: [calculets]
+//  *      summary: 계산기 전체 목록 불러오기
+//  *      description: DB에 저장된 계산기의 전체 목록을 카테고리별로 불러온다
+//  *      responses:
+//  *        200:
+//  *          description: 계산기 목록 불러오기 성공
+//  *          content:
+//  *            application/json:
+//  *              schema:
+//  *                $ref: "#/components/schemas/getCalculetLists"
+//  *        404:
+//  *          description: 계산기를 찾지 못함
+//  *          content:
+//  *            application/json:
+//  *        400:
+//  *          description: 요청 오류
+//  *          content:
+//  *            application/json:
+//  *              schema:
+//  *                $ref: "#/components/schemas/errorResult"
+//  */
+// router.get("/", errorHandler.dbWrapper(calculetList));
 
 /**
  * @swagger
- *  /api/calculets/:
- *    get:
- *      tags: [calculets]
- *      summary: 계산기 전체 목록 불러오기
- *      description: DB에 저장된 계산기의 전체 목록을 카테고리별로 불러온다
- *      responses:
- *        200:
- *          description: 계산기 목록 불러오기 성공
- *          content:
- *            application/json:
- *              schema:
- *                $ref: "#/components/schemas/getCalculetLists"
- *        404:
- *          description: 계산기를 찾지 못함
- *          content:
- *            application/json:
- *        400:
- *          description: 요청 오류
- *          content:
- *            application/json:
- *              schema:
- *                $ref: "#/components/schemas/errorResult"
- */
-router.get("/", async (req, res) => {
-  try {
-    // 기타 id
-    const etcId = 99999;
-    // 단위 변환기 id
-    const converterId = 0;
-
-    // 계산기 리스트
-    const calculetLists = [];
-
-    // 카테고리 대분류 리스트 얻어오기
-    const categoryMain = await models.categoryMain.findAll({
-      where: {
-        id: {
-          [sequelize.Op.lt]: 99999,
-        },
-      },
-      order: [["id", "ASC"]],
-    });
-
-    // 카테고리 소분류 리스트 얻어오기
-    const categorySub = await models.categorySub.findAll({
-      order: [
-        ["main_id", "ASC"],
-        ["id", "ASC"],
-      ],
-    });
-
-    // 대분류 만큼 dictionary 초기화
-    for (let i = 0; i < categoryMain.length; i++) {
-      calculetLists.push({
-        categoryMain: categoryMain[i].main,
-        mainItems: [],
-      });
-    }
-
-    // 소분류 채우는 함수
-    async function fillSub(mainId, sub, subId) {
-      try {
-        const subItemCalculets = await models.calculetInfo.findAll({
-          attributes: ["id", "title"],
-          where: {
-            category_main_id: {
-              [sequelize.Op.eq]: mainId,
-            },
-            category_sub_id: {
-              [sequelize.Op.eq]: subId,
-            },
-          },
-        });
-        calculetLists[mainId].mainItems.push({
-          categorySub: sub,
-          subItems: subItemCalculets,
-        });
-      } catch (error) {
-        res.status(400).send({
-          success: false,
-          message:
-            "request parameters was wrong. retry request after change parameters",
-          error,
-        });
-      }
-    }
-    // 각 대분류마다 단위 변환기 소분류 채우기
-    for (let i = 0; i < categoryMain.length - 1; i++) {
-      await fillSub(i, "단위 변환기", converterId);
-
-      if (i > 0) {
-        await fillSub(0, categoryMain[i].main, converterId);
-      }
-    }
-
-    // 각 대분류마다 단위 변환기, 기타 제외한 소분류 채우기
-    for (let i = 1; i < categorySub.length - 1; i++) {
-      const mainId = categorySub[i].main_id;
-      const subId = categorySub[i].id;
-      const sub = categorySub[i].sub;
-      await fillSub(mainId, sub, subId);
-    }
-
-    // 각 대분류마다 기타 소분류 채우기 (단위 변환기 제외)
-    for (let i = 1; i < categoryMain.length; i++) {
-      await fillSub(i, "기타", etcId);
-    }
-
-    // console.log(calculetLists);
-    res.status(200).send({ success: true, calculetLists: calculetLists });
-  } catch (error) {
-    res.status(400).send({
-      success: false,
-      message:
-        "request parameters was wrong. retry request after change parameters",
-      error: error,
-    });
-  }
-});
-
-/**
- * DB에 저장된 카테고리를 불러오는 API
- */
-router.get("/category", category);
-
-/**
- * @swagger
- *  /api/calculets/{id}:
+ *  /api/calculets/{calculetId}:
  *    get:
  *      tags: [calculets]
  *      summary: 계산기 불러오기
  *      description: id번 계산기를 DB에서 조회한 후 불러오기
  *      parameters:
- *        - in: path
- *          type: string
- *          required: true
- *          name: id
- *          description: 계산기 번호
+ *        - $ref: "#/components/parameters/calculetId"
  *      responses:
  *        200:
  *          description: 계산기 불러오기 성공
@@ -165,11 +58,11 @@ router.get("/category", category);
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.get("/:id", errorHandler.dbWrapper(getCalculetInfo));
+router.get("/:id", auth.checkFirebase, errorHandler.dbWrapper(getCalculetInfo));
 
 /**
  * @swagger
- *  /api/calculets/:
+ *  /api/calculets:
  *    post:
  *      tags: [calculets]
  *      summary: 계산기 임시 등록 <Auth>
@@ -200,5 +93,77 @@ router.post(
   [auth.firebase, auth.database],
   errorHandler.dbWrapper(registerCalculet)
 );
+
+/**
+ * @swagger
+ *   /api/calculets/like/{calculetId}:
+ *    put:
+ *      parameters:
+ *        - $ref: "#/components/parameters/calculetId"
+ *      tags: [calculets]
+ *      summary: 좋아요 등록 <Auth>
+ *      description: 로그인한 유저에 대해 계산기 "좋아요" 등록
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/putResult"
+ *        400:
+ *          $ref: "#/components/responses/putResult"
+ */
+router.put(
+  "/like/:calculetId",
+  [auth.firebase, auth.database],
+  errorHandler.dbWrapper(userLike.put)
+);
+
+/**
+ * @swagger
+ *   /api/calculets/unlike/{calculetId}:
+ *    put:
+ *      parameters:
+ *        - $ref: "#/components/parameters/calculetId"
+ *      tags: [calculets]
+ *      summary: 좋아요 등록 <Auth>
+ *      description: 로그인한 유저에 대해 계산기 "좋아요" 등록
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/putResult"
+ *        400:
+ *          $ref: "#/components/responses/putResult"
+ */
+router.put(
+  "/unlike/:calculetId",
+  [auth.firebase, auth.database],
+  errorHandler.dbWrapper(userLike.remove)
+);
+
+// /**
+//  * @swagger
+//  *   /api/calculets/like/{calculetId}:
+//  *    get:
+//  *      tags: [calculets]
+//  *      summary: 계산기 좋아요 여부 조회 <Auth>
+//  *      description: 사용자가 계산기에 좋아요를 눌렀는지 여부를 확인한다.
+//  *      parameters:
+//  *        - $ref: "#/components/parameters/calculetId"
+//  *      responses:
+//  *        200:
+//  *          description: 조회 성공
+//  *          content:
+//  *            schema:
+//  *              type: boolean
+//  *              description: 좋아요 여부
+//  *              example: true
+//  */
+// router.get(
+//   "/like/:calculetId",
+//   auth.firebase,
+//   errorHandler.dbWrapper(async (req, res) => {
+//     const result = await checkUserLikesCalculet(
+//       res.locals.userId,
+//       req.params.calculetId
+//     );
+//     res.status(200).send(result);
+//   })
+// );
 
 module.exports = router;
