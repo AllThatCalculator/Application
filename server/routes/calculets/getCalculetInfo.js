@@ -1,17 +1,8 @@
-const sequelize = require("sequelize");
+const { Op } = require("sequelize");
 const { models } = require("../../models");
 const { bufferToString } = require("../../utils/bufferConverter");
 const { urlFormatter } = require("../../utils/urlFormatter");
-
-/**
- * 계산기 조회수 늘리기
- */
-function addViewCnt(req, res, next) {
-  models.calculetCount.findByPk(req.params.id).then((calculet) => {
-    calculet.increment("view_cnt", { by: 1 });
-  });
-  next();
-}
+const { userLike } = require("./userLike");
 
 async function getCalculetInfo(req, res) {
   // 계산기 정보 (유저와 카테고리 대분류, 소분류, 계산기 통계, 조회수)
@@ -35,13 +26,13 @@ async function getCalculetInfo(req, res) {
       {
         model: models.calculetCount,
         required: true,
-        attributes: ["view_cnt", "calculation_cnt", "user_cnt"],
+        attributes: ["view_cnt", "calculation_cnt", "user_cnt", "calculet_id"],
         as: "calculet_count",
       },
     ],
     where: {
       id: {
-        [sequelize.Op.eq]: req.params.id,
+        [Op.eq]: req.params.id,
       },
     },
   });
@@ -50,6 +41,14 @@ async function getCalculetInfo(req, res) {
     res.status(404).send();
     return;
   }
+
+  // update view count of calculet
+  calculetInfo.calculet_count.increment("view_cnt");
+
+  // check if user liked
+  const userLiked = res.locals.userId
+    ? await userLike.check(res.locals.userId, req.params.id)
+    : false;
 
   const responseData = {
     id: calculetInfo.id,
@@ -71,13 +70,12 @@ async function getCalculetInfo(req, res) {
       user: calculetInfo.calculet_count.user_cnt,
       calculation: calculetInfo.calculet_count.calculation_cnt,
     },
+    liked: userLiked,
   };
 
   res.status(200).send(responseData);
 }
 
-// exports.getCalculetInfo = getCalculetInfo;
 module.exports = {
   getCalculetInfo,
-  addViewCnt,
 };
