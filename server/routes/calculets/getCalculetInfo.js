@@ -32,7 +32,7 @@ async function getCalculetInfo(req, res) {
     ],
     where: {
       id: {
-        [Op.eq]: req.params.id,
+        [Op.eq]: req.params.calculetId,
       },
     },
   });
@@ -47,7 +47,7 @@ async function getCalculetInfo(req, res) {
 
   // check if user liked
   const userLiked = res.locals.userId
-    ? await userLike.check(res.locals.userId, req.params.id)
+    ? await userLike.check(res.locals.userId, req.params.calculetId)
     : false;
 
   const responseData = {

@@ -58,7 +58,11 @@ const { userLike } = require("./calculets/userLike");
  *              schema:
  *                $ref: "#/components/schemas/errorResult"
  */
-router.get("/:id", auth.checkFirebase, errorHandler.dbWrapper(getCalculetInfo));
+router.get(
+  "/:calculetId",
+  auth.checkFirebase,
+  errorHandler.dbWrapper(getCalculetInfo)
+);
 
 /**
  * @swagger
@@ -122,8 +126,8 @@ router.put(
  *      parameters:
  *        - $ref: "#/components/parameters/calculetId"
  *      tags: [calculets]
- *      summary: 좋아요 등록 <Auth>
- *      description: 로그인한 유저에 대해 계산기 "좋아요" 등록
+ *      summary: 좋아요 취소 <Auth>
+ *      description: 로그인한 유저에 대해 계산기 "좋아요" 취소
  *      responses:
  *        200:
  *          $ref: "#/components/responses/putResult"
@@ -135,35 +139,5 @@ router.put(
   [auth.firebase, auth.database],
   errorHandler.dbWrapper(userLike.remove)
 );
-
-// /**
-//  * @swagger
-//  *   /api/calculets/like/{calculetId}:
-//  *    get:
-//  *      tags: [calculets]
-//  *      summary: 계산기 좋아요 여부 조회 <Auth>
-//  *      description: 사용자가 계산기에 좋아요를 눌렀는지 여부를 확인한다.
-//  *      parameters:
-//  *        - $ref: "#/components/parameters/calculetId"
-//  *      responses:
-//  *        200:
-//  *          description: 조회 성공
-//  *          content:
-//  *            schema:
-//  *              type: boolean
-//  *              description: 좋아요 여부
-//  *              example: true
-//  */
-// router.get(
-//   "/like/:calculetId",
-//   auth.firebase,
-//   errorHandler.dbWrapper(async (req, res) => {
-//     const result = await checkUserLikesCalculet(
-//       res.locals.userId,
-//       req.params.calculetId
-//     );
-//     res.status(200).send(result);
-//   })
-// );
 
 module.exports = router;
