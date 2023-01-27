@@ -2,7 +2,7 @@ module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     "categorySub",
     {
-      id: {
+      sub_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
@@ -29,7 +29,7 @@ module.exports = function (sequelize, DataTypes) {
           name: "PRIMARY",
           unique: true,
           using: "BTREE",
-          fields: [{ name: "id" }],
+          fields: [{ name: "main_id" }, { name: "sub_id" }],
         },
         {
           name: "main_id",
