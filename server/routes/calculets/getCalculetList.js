@@ -87,4 +87,30 @@ async function getCalculetList(req, res) {
   res.status(200).send(calculetLists);
 }
 
-exports = { getCalculetList };
+async function getConverters(req, res) {
+  // 카테고리 소분류 리스트 얻어오기
+  const categorySub = await models.categorySub.findAll({
+    order: [["main_id", "ASC"]],
+    where: {
+      sub_id: {
+        [Op.eq]: 0,
+      },
+    },
+  });
+
+  const calculetLists = {};
+  await Promise.all(
+    categorySub.map(async (element) => {
+      calculetLists[element.main_id] = await makeSubList(
+        element.main_id,
+        element.sub_id
+      );
+    })
+  );
+  res.status(200).send(calculetLists);
+}
+
+exports.getCalculetList = {
+  default: getCalculetList,
+  converters: getConverters,
+};

@@ -22,7 +22,22 @@ const { userLike } = require("./calculets/userLike");
  *        400:
  *          $ref: "#/components/responses/error"
  */
-router.get("/", errorHandler.dbWrapper(getCalculetList));
+router.get("/", errorHandler.dbWrapper(getCalculetList.default));
+
+/**
+ * @swagger
+ *  /api/calculets/converters:
+ *    get:
+ *      tags: [calculets]
+ *      summary: 단위변환기 목록 불러오기
+ *      description: 계산기 목록 중 소분류가 단위변환기에 속하는 계산기 목록
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/getCalculetList"
+ *        400:
+ *          $ref: "#/components/responses/error"
+ */
+router.get("/converters", errorHandler.dbWrapper(getCalculetList.converters));
 
 /**
  * @swagger
