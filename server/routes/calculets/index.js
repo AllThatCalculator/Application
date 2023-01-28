@@ -8,6 +8,7 @@ const { getCalculetList } = require("./getCalculetList");
 const { getCalculetInfo } = require("./getCalculetInfo");
 const { postCalculets } = require("./postCalculets");
 const { userLike } = require("./userLike");
+const { getUpdateLog } = require("./updateLog");
 // modules
 const bookmark = require("./bookmark");
 
@@ -66,6 +67,20 @@ router.get(
   auth.checkFirebase,
   errorHandler.dbWrapper(getCalculetInfo)
 );
+
+/**
+ * @swagger
+ *  /api/calculets/update-log/{calculetId}:
+ *    get:
+ *      tags: [calculets]
+ *      description: 계산기 업데이트 로그 불러오기
+ *      parameters:
+ *        - $ref: "#/components/parameters/calculetId"
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/updateLogList"
+ */
+router.get("/update-log/:calculetId", getUpdateLog);
 
 /**
  * @swagger

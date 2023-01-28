@@ -1,8 +1,11 @@
 const express = require("express");
+const router = express.Router();
+// middleware
 const { auth } = require("../../../middleware/auth");
 const { errorHandler } = require("../../../middleware/errorHandler");
+// api
 const { userBookmark } = require("./userBookmark");
-const router = express.Router();
+
 /**
  * @swagger
  *  /api/calculets/bookmark:

@@ -64,6 +64,7 @@ async function getCalculetInfo(req, res) {
     description: calculetInfo.description,
     categoryMainId: calculetInfo.category_main_id,
     categorySubId: calculetInfo.category_sub_id,
+    createdAt: calculetInfo.created_at,
     contributor: {
       userName: calculetInfo.contributor.user_name,
       profileImgSrc: urlFormatter(
