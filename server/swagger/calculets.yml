@@ -17,7 +17,7 @@ components:
       schema:
         $ref: "#/components/schemas/calculetId"
   responses:
-    putResult:
+    likeResult:
       content:
         application/json:
           schema:
@@ -26,7 +26,15 @@ components:
               likeCnt:
                 type: integer
                 description: 요청 수행 완료 후 계산기의 좋아요 수
-                example: 35
+    bookmarkResult:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              bookmarkCnt:
+                type: integer
+                description: 요청 수행 완료 후 계산기의 좋아요 수
     getCalculetInfo:
       description: 계산기 불러오기 성공
       content:
@@ -40,8 +48,8 @@ components:
                 $ref: "#/components/schemas/userSimpleInfo"
               statistics:
                 $ref: "#/components/schemas/statistics"
-              liked:
-                $ref: "#/components/schemas/liked"
+              userCalculet:
+                $ref: "#/components/schemas/userCalculet"
     getCalculetList:
       description: 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
       content:
@@ -62,10 +70,15 @@ components:
                 description: post 요청 후 리다이렉션 될 경로
                 example: "/"
   schemas:
-    liked:
-      type: boolean
-      description: 유저의 좋아요 여부 (로그인 안한 경우 false)
-      example: false
+    userCalculet:
+      type: object
+      properties:
+        liked:
+          type: boolean
+          description: 유저의 좋아요 여부 (로그인 안한 경우 false)
+        bookmarked:
+          type: boolean
+          description: 유저의 북마크 여부 (로그인 안한 경우 false)
     calculet:
       type: object
       properties:
@@ -88,11 +101,9 @@ components:
         categoryMainId:
           type: integer
           description: 카테고리 대분류
-          example: 1
         categorySubId:
           type: integer
           description: 카테고리 소분류
-          example: 1
     calculetId:
       type: string
       description: 계산기 UUID

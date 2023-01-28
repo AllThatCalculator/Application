@@ -8,6 +8,7 @@ const { getCalculetList } = require("./calculets/getCalculetList");
 const { getCalculetInfo } = require("./calculets/getCalculetInfo");
 const { postCalculets } = require("./calculets/postCalculets");
 const { userLike } = require("./calculets/userLike");
+const { userBookmark } = require("./calculets/userBookmark");
 
 /**
  * @swagger
@@ -56,11 +57,7 @@ router.get("/converters", errorHandler.dbWrapper(getCalculetList.converters));
  *        400:
  *          $ref: "#/components/responses/error"
  */
-router.get(
-  "/:calculetId",
-  auth.checkFirebase,
-  errorHandler.dbWrapper(getCalculetInfo)
-);
+router.get("/:calculetId", auth.checkFirebase, getCalculetInfo);
 
 /**
  * @swagger
@@ -94,9 +91,9 @@ router.post(
  *      description: 로그인한 유저에 대해 계산기 "좋아요" 등록
  *      responses:
  *        200:
- *          $ref: "#/components/responses/putResult"
+ *          $ref: "#/components/responses/likeResult"
  *        400:
- *          $ref: "#/components/responses/putResult"
+ *          $ref: "#/components/responses/likeResult"
  */
 router.put(
   "/like/:calculetId",
@@ -115,9 +112,9 @@ router.put(
  *      description: 로그인한 유저에 대해 계산기 "좋아요" 취소
  *      responses:
  *        200:
- *          $ref: "#/components/responses/putResult"
+ *          $ref: "#/components/responses/likeResult"
  *        400:
- *          $ref: "#/components/responses/putResult"
+ *          $ref: "#/components/responses/likeResult"
  */
 router.put(
   "/unlike/:calculetId",
@@ -125,4 +122,45 @@ router.put(
   errorHandler.dbWrapper(userLike.remove)
 );
 
+/**
+ * @swagger
+ *  /api/calculets/bookmark/{calculetId}:
+ *    put:
+ *      parameters:
+ *        - $ref: "#/components/parameters/calculetId"
+ *      tags: [calculets]
+ *      summary: 북마크 등록 <Auth>
+ *      description: 로그인한 유저에 대해 계산기 "북마크" 등록
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/bookmarkResult"
+ *        400:
+ *          $ref: "#/components/responses/bookmarkResult"
+ */
+router.put(
+  "/bookmark/:calculetId",
+  [auth.firebase, auth.database],
+  errorHandler.dbWrapper(userBookmark.mark)
+);
+
+/**
+ * @swagger
+ *  /api/calculets/removeBookmark/{calculetId}:
+ *    put:
+ *      parameters:
+ *        - $ref: "#/components/parameters/calculetId"
+ *      tags: [calculets]
+ *      summary: 북마크 취소 <Auth>
+ *      description: 로그인한 유저에 대해 계산기 "북마크" 취소
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/bookmarkResult"
+ *        400:
+ *          $ref: "#/components/responses/bookmarkResult"
+ */
+router.put(
+  "/removeBookmark/:calculetId",
+  [auth.firebase, auth.database],
+  errorHandler.dbWrapper(userBookmark.remove)
+);
 module.exports = router;

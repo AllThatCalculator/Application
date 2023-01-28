@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const { models } = require("../../models");
 const { bufferToString } = require("../../utils/bufferConverter");
 const { urlFormatter } = require("../../utils/urlFormatter");
+const { userBookmark } = require("./userBookmark");
 const { userLike } = require("./userLike");
 
 async function getCalculetInfo(req, res) {
@@ -50,6 +51,11 @@ async function getCalculetInfo(req, res) {
     ? await userLike.check(res.locals.userId, req.params.calculetId)
     : false;
 
+  // check if user bookmarked
+  const userBookmarked = res.locals.userId
+    ? await userBookmark.check(res.locals.userId, req.params.calculetId)
+    : false;
+
   const responseData = {
     id: calculetInfo.id,
     title: calculetInfo.title,
@@ -73,10 +79,13 @@ async function getCalculetInfo(req, res) {
       user: calculetInfo.calculet_count.user_cnt,
       calculation: calculetInfo.calculet_count.calculation_cnt,
     },
-    liked: userLiked,
+    userCalculet: {
+      liked: userLiked,
+      bookmarked: userBookmarked,
+    },
   };
 
   res.status(200).send(responseData);
 }
 
-exports = { getCalculetInfo };
+module.exports = { getCalculetInfo };

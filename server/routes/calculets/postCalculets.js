@@ -15,4 +15,4 @@ async function postCalculets(req, res) {
   });
 }
 
-exports = { postCalculets };
+module.exports = { postCalculets };
