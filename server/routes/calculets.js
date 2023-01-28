@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { postCalculet } = require("./calculets/register");
+// middleware
 const { auth } = require("../middleware/auth");
 const { errorHandler } = require("../middleware/errorHandler");
+// apis
+const { getCalculetList } = require("./calculets/getCalculetList");
 const { getCalculetInfo } = require("./calculets/getCalculetInfo");
+const { postCalculets } = require("./calculets/postCalculets");
 const { userLike } = require("./calculets/userLike");
-const { getCalculetList } = require("./calculets/calculetList");
 
 /**
  * @swagger
@@ -63,7 +65,7 @@ router.get(
 router.post(
   "/",
   [auth.firebase, auth.database],
-  errorHandler.dbWrapper(postCalculet)
+  errorHandler.dbWrapper(postCalculets)
 );
 
 /**

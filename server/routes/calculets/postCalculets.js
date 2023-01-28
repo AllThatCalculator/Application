@@ -1,4 +1,4 @@
-async function registerCalculet(req, res) {
+async function postCalculets(req, res) {
   // 데이터 생성
   await models.calculetInfoTemp.create({
     title: req.body.title,
@@ -15,4 +15,4 @@ async function registerCalculet(req, res) {
   });
 }
 
-exports.registerCalculet = registerCalculet;
+exports = { postCalculets };

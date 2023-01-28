@@ -56,11 +56,14 @@ async function getCalculetInfo(req, res) {
     srcCode: bufferToString(calculetInfo.src_code),
     manual: bufferToString(calculetInfo.manual),
     description: calculetInfo.description,
-    mainId: calculetInfo.category_main_id,
-    subId: calculetInfo.category_sub_id,
+    categoryMainId: calculetInfo.category_main_id,
+    categorySubId: calculetInfo.category_sub_id,
     contributor: {
       userName: calculetInfo.contributor.user_name,
-      imgSrc: urlFormatter("profileImg", calculetInfo.contributor.profile_img),
+      profileImgSrc: urlFormatter(
+        "profileImg",
+        calculetInfo.contributor.profile_img
+      ),
     },
     statistics: {
       bookmark: calculetInfo.calculet_statistic.bookmark_cnt,
@@ -76,6 +79,4 @@ async function getCalculetInfo(req, res) {
   res.status(200).send(responseData);
 }
 
-module.exports = {
-  getCalculetInfo,
-};
+exports = { getCalculetInfo };

@@ -87,4 +87,4 @@ async function getCalculetList(req, res) {
   res.status(200).send(calculetLists);
 }
 
-module.exports = { getCalculetList };
+exports = { getCalculetList };

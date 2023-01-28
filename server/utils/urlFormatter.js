@@ -10,5 +10,8 @@ const prefix = {
  * @returns full url to client
  */
 exports.urlFormatter = (type, uri) => {
+  if (uri === null) {
+    return null;
+  }
   return `${prefix[type]}/${uri}`;
 };
