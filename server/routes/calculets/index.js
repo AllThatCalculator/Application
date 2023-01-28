@@ -81,7 +81,7 @@ router.get(
  *        200:
  *          $ref: "#/components/responses/updateLogList"
  */
-router.get("/update-log/:calculetId", getUpdateLog);
+router.get("/update-log/:calculetId", errorHandler.dbWrapper(getUpdateLog));
 
 /**
  * @swagger
