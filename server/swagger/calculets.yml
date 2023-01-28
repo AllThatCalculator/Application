@@ -167,11 +167,6 @@ components:
           $ref: "#/components/schemas/statistics/properties/view"
         contributor:
           $ref: "#/components/schemas/userSimpleInfo"
-    createdAt:
-      type: string
-      description: 계산기 등록 시간
-      example: "2023-01-16 21:23:25"
-      format: date-time
     updateLog:
       type: object
       properties:

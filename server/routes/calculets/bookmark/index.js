@@ -46,7 +46,7 @@ router.put(
 
 /**
  * @swagger
- *  /api/calculets/removeBookmark/{calculetId}:
+ *  /api/calculets/remove-bookmark/{calculetId}:
  *    put:
  *      parameters:
  *        - $ref: "#/components/parameters/calculetId"
@@ -60,7 +60,7 @@ router.put(
  *          $ref: "#/components/responses/bookmarkResult"
  */
 router.put(
-  "/removeBookmark/:calculetId",
+  "/remove-bookmark/:calculetId",
   [auth.firebase, auth.database],
   errorHandler.dbWrapper(userBookmark.remove)
 );
