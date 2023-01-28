@@ -44,6 +44,8 @@ components:
             properties:
               id:
                 $ref: "#/components/schemas/calculetId"
+              createdAt:
+                $ref: "#/components/schemas/createdAt"
               contributor:
                 $ref: "#/components/schemas/userSimpleInfo"
               statistics:
@@ -63,12 +65,9 @@ components:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              url:
-                type: string
-                description: post 요청 후 리다이렉션 될 경로
-                example: "/"
+            type: string
+            description: post 요청 후 리다이렉션 될 경로
+            example: "/"
     bookMarkList:
       description: 북마크 리스트
       content:
@@ -82,6 +81,14 @@ components:
                   $ref: "#/components/schemas/calculetId"
                 title:
                   $ref: "#/components/schemas/calculet/properties/title"
+    updateLogList:
+      description: 업데이트 로그 배열
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/updateLog"
   schemas:
     userCalculet:
       type: object
@@ -98,7 +105,7 @@ components:
         title:
           type: string
           description: 계산기 이름
-          example: "사칙연산 계산기"
+          example: "테스트 계산기"
         srcCode:
           type: string
           description: 계산기 코드
@@ -121,7 +128,7 @@ components:
     calculetId:
       type: string
       description: 계산기 UUID
-      example: 1
+      example: 9dc33a8f-7647-4598-ac0b-2d1089c89404
     statistics:
       type: object
       properties:
@@ -160,42 +167,17 @@ components:
           $ref: "#/components/schemas/statistics/properties/view"
         contributor:
           $ref: "#/components/schemas/userSimpleInfo"
-    # calculetInfoPopup:
-    #   type: object
-    #   properties:
-    #     profileImgSrc:
-    #       type: string
-    #       description: 제작자 프로필 이미지 소스
-    #     contributorName:
-    #       type: string
-    #       description: 제작자 닉네임
-    #     calculationCnt:
-    #       type: integer
-    #       description: 누적 연산 수
-    #     userCnt:
-    #       type: integer
-    #       description: 누적 사용자 수
-    #     title:
-    #       type: string
-    #       description: 계산기 제목
-    #     categoryMain:
-    #       type: string
-    #       description: 계산기 대분류
-    #     categorySub:
-    #       type: string
-    #       description: 계산기 소분류
-    #     birthday:
-    #       type: string
-    #       description: 계산기 등록일
-    #     updateLog:
-    #       type: object
-    #       description: 업데이트 로그
-    #       properties:
-    #         updateDate:
-    #           type: string
-    #           description: 업데이트 날짜
-    #         message:
-    #           type: array
-    #           items:
-    #             type: string
-    #             description: 업데이트 메시지
+    createdAt:
+      type: string
+      description: 계산기 등록 시간
+      example: "2023-01-16 21:23:25"
+      format: date-time
+    updateLog:
+      type: object
+      properties:
+        calculetId:
+          $ref: "#/components/schemas/calculetId"
+        message:
+          type: string
+          description: 업데이트 메세지
+          example: 업데이트 로그

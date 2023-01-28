@@ -35,7 +35,3 @@ components:
       description: 기록된 시간
       example: "2023-01-16 21:23:25"
       format: date-time
-    calculetId:
-      type: string
-      description: 계산기 번호 (UUID)
-      example: "1"

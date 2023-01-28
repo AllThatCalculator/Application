@@ -73,6 +73,7 @@ router.get(
  *  /api/calculets/update-log/{calculetId}:
  *    get:
  *      tags: [calculets]
+ *      summary: 계산기 정보 팝업 - 업데이트 로그
  *      description: 계산기 업데이트 로그 불러오기
  *      parameters:
  *        - $ref: "#/components/parameters/calculetId"
