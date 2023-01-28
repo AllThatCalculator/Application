@@ -100,7 +100,7 @@ async function putLike(req, res) {
 }
 
 exports.userLike = {
-  put: putLike,
+  mark: putLike,
   remove: removeLike,
   check: checkUserLikesCalculet,
 };

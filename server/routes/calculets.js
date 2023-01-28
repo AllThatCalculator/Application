@@ -101,7 +101,7 @@ router.post(
 router.put(
   "/like/:calculetId",
   [auth.firebase, auth.database],
-  errorHandler.dbWrapper(userLike.put)
+  errorHandler.dbWrapper(userLike.mark)
 );
 
 /**
