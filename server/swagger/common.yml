@@ -1,0 +1,17 @@
+components:
+  responses:
+    error:
+      description: 오류
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: 에러 코드
+                example: 1
+              message:
+                type: string
+                description: 에러 메세지
+                example: "errorMessage"

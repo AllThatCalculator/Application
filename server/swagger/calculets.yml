@@ -1,13 +1,21 @@
 # Calculet API
 
 components:
+  requestBodies:
+    postCalculet:
+      description: 계산기 정보
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/calculet"
   parameters:
     calculetId:
       in: path
-      type: string
       required: true
       name: calculetId
-      description: 계산기 UUID
+      schema:
+        $ref: "#/components/schemas/calculetId"
   responses:
     putResult:
       content:
@@ -19,24 +27,45 @@ components:
                 type: integer
                 description: 요청 수행 완료 후 계산기의 좋아요 수
                 example: 35
+    getCalculetInfo:
+      description: 계산기 불러오기 성공
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/calculet"
+            properties:
+              id:
+                $ref: "#/components/schemas/calculetId"
+              contributor:
+                $ref: "#/components/schemas/userSimpleInfo"
+              statistics:
+                $ref: "#/components/schemas/statistics"
+              liked:
+                $ref: "#/components/schemas/liked"
+    getCalculetList:
+      description: 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/calculetPreview"
+    postCalculet:
+      description: 계산기 등록 완료 -> 루트로 디라이렉션
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              url:
+                type: string
+                description: post 요청 후 리다이렉션 될 경로
+                example: "/"
   schemas:
-    getSpecificCalculet:
-      $ref: "#/components/schemas/calculet"
-      properties:
-        id:
-          $ref: "#/components/schemas/calculetId"
-        statistics:
-          $ref: "#/components/schemas/statistics"
-    getCalculetLists:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 성공 여부
-        calculetLists:
-          $ref: "#components/schemas/calculetLists"
-
-    # objects
+    liked:
+      type: boolean
+      description: 유저의 좋아요 여부 (로그인 안한 경우 false)
+      example: false
     calculet:
       type: object
       properties:
@@ -56,11 +85,11 @@ components:
           type: string
           description: 계산기 한 줄 설명
           example: "이 계산기에 대한 한 줄 설명"
-        categoryMain:
+        categoryMainId:
           type: integer
           description: 카테고리 대분류
           example: 1
-        categorySub:
+        categorySubId:
           type: integer
           description: 카테고리 소분류
           example: 1
@@ -89,12 +118,23 @@ components:
         calculation:
           type: integer
           description: 누적 계산 횟수
-
-    # not using
-    # calculetLists:
-    #   type: array
-    #   items:
-    #     type: object
+    calculetPreview:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/calculetId"
+        title:
+          $ref: "#/components/schemas/calculet/properties/title"
+        description:
+          $ref: "#/components/schemas/calculet/properties/description"
+        categoryMainId:
+          $ref: "#/components/schemas/calculet/properties/categoryMainId"
+        categorySubId:
+          $ref: "#/components/schemas/calculet/properties/categorySubId"
+        viewCnt:
+          $ref: "#/components/schemas/statistics/properties/view"
+        contributor:
+          $ref: "#/components/schemas/userSimpleInfo"
     # calculetInfoPopup:
     #   type: object
     #   properties:
