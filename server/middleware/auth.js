@@ -6,6 +6,8 @@ const { errorHandler } = require("./errorHandler");
 
 /**
  * 미들웨어 - 인증이 필요한 api 앞단에서 클라이언트의 토큰 유효성 검사 (firebase)
+ * res.locals.userId - firebase uid
+ * res.locals.email - firebase email
  */
 async function authFirebase(req, res, next) {
   const idToken = getTokenFromHeader(req.headers);
@@ -55,7 +57,18 @@ async function verifyFirebase(req, res, next) {
   next();
 }
 /**
- * 미들웨어 - 인증이 필요한 api 앞단에서 가입된 유저인지 확인 (DB)
+ * 미들웨어 - 인증이 필요한 api 앞단에서 가입된 유저인지 확인 후 유저 정보 저장
+ * res.locals.userInfo 참조
+ *  - id
+ *  - email
+ *  - user_name
+ *  - profile_img
+ *  - bio
+ *  - sex
+ *  - birthdate
+ *  - job
+ *  - created_at
+ *  - updated_at
  */
 async function authDatabase(req, res, next) {
   const userInfo = await models.userInfo.findByPk(res.locals.userId);
@@ -66,7 +79,7 @@ async function authDatabase(req, res, next) {
       message: "can't find user",
     });
   } else {
-    res.locals.user = userInfo;
+    res.locals.userInfo = userInfo.dataValues;
     next();
   }
   return;

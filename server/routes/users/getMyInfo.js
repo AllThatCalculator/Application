@@ -4,7 +4,7 @@ const { urlFormatter } = require("../../utils/urlFormatter");
  * 유저 프로필(헤더 디스플레이 - userName, profileImg) 찾는 함수
  */
 function getUserSimpleInfo(req, res) {
-  const user = res.locals.user;
+  const user = res.locals.userInfo;
 
   // 데이터 가공
   const userInfo = {
@@ -20,7 +20,7 @@ function getUserSimpleInfo(req, res) {
  * 유저 프로필 정보 찾는 함수
  */
 function getUserInfo(req, res) {
-  const user = res.locals.user;
+  const user = res.locals.userInfo;
 
   // 데이터 가공
   const userInfo = {
