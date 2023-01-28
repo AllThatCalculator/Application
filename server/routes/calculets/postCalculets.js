@@ -1,3 +1,5 @@
+const { models } = require("../../models");
+
 async function postCalculets(req, res) {
   // 데이터 생성
   await models.calculetInfoTemp.create({

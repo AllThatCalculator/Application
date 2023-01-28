@@ -2,7 +2,7 @@ const { Op } = require("sequelize");
 const { models } = require("../../models");
 const { bufferToString } = require("../../utils/bufferConverter");
 const { urlFormatter } = require("../../utils/urlFormatter");
-const { userBookmark } = require("./userBookmark");
+const { userBookmark } = require("./bookmark/userBookmark");
 const { userLike } = require("./userLike");
 
 async function getCalculetInfo(req, res) {

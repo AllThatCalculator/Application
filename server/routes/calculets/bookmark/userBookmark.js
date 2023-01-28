@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { models, sequelize } = require("../../models");
+const { models, sequelize } = require("../../../models");
 
 /**
  * 유저/계산기에 대해 북마크 여부 리턴
@@ -94,8 +94,37 @@ async function removeBookMark(req, res) {
   }
 }
 
+async function listBookmark(req, res) {
+  const userId = res.locals.userId;
+
+  const bookmarkList = await models.userCalculetBookmark.findAll({
+    include: [
+      {
+        model: models.calculetInfo,
+        required: true,
+        attributes: ["title", "id"],
+        as: "calculet",
+      },
+    ],
+    where: {
+      user_id: {
+        [Op.eq]: userId,
+      },
+    },
+  });
+
+  const responseData = bookmarkList.map((element) => ({
+    title: element.calculet.title,
+    id: element.calculet.id,
+  }));
+
+  res.status(200).send(responseData);
+  return;
+}
+
 exports.userBookmark = {
   mark: putBookMark,
   remove: removeBookMark,
   check: checkBookmark,
+  list: listBookmark,
 };

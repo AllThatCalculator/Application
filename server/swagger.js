@@ -11,10 +11,6 @@ const options = {
     },
     servers: [
       {
-        url: "http://dev.allthatcalculator.net/",
-        description: "develop server (AWS)",
-      },
-      {
         url: "http://dev.localhost:8080/",
         description: "local Server",
       },
@@ -30,7 +26,12 @@ const options = {
     },
     security: [{ bearerAuth: [] }],
   },
-  apis: ["./routes/*.js", "./swagger/*"],
+  apis: [
+    "./routes/*.js",
+    "./routes/*/*.js",
+    "./routes/*/*/*.js",
+    "./swagger/*",
+  ],
 };
 
 const specs = swaggereJsdoc(options);
