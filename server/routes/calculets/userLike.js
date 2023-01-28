@@ -31,17 +31,17 @@ function checkUserLikesCalculet(userId, calculetId) {
  * 좋아요 취소 트랜잭션 수행
  */
 async function removeLike(req, res) {
+  const userId = res.locals.userId;
   const calculetId = req.params.calculetId;
   const calculet = await models.calculetStatistics.findByPk(calculetId);
 
+  // 좋아요 체크 되어있지 않은 경우
+  if (!(await checkUserLikesCalculet(userId, calculetId))) {
+    res.status(200).send({ likeCnt: calculet.like_cnt });
+    return;
+  }
+
   try {
-    if (calculet.like_cnt <= 0) {
-      console.log(
-        `calculetID = ${calculetId} have ${calculet.like_cnt} like count`
-      );
-      res.status(400).send({ likeCnt: calculet.like_cnt });
-      return;
-    }
     /**
      * transaction
      * 1. user_calculet_like에 행 삭제
@@ -49,7 +49,7 @@ async function removeLike(req, res) {
      */
     await sequelize.transaction(async (t) => {
       await models.userCalculetLike.destroy({
-        where: { user_id: res.locals.userId, calculet_id: calculetId },
+        where: { user_id: userId, calculet_id: calculetId },
         transaction: t,
       });
       await calculet.decrement("like_cnt", {
@@ -69,8 +69,15 @@ async function removeLike(req, res) {
  * 좋아요 등록 트랜잭션 수행
  */
 async function putLike(req, res) {
+  const userId = res.locals.userId;
   const calculetId = req.params.calculetId;
   const calculet = await models.calculetStatistics.findByPk(calculetId);
+
+  // 이미 좋아요 체크 되어있는 경우
+  if (await checkUserLikesCalculet(userId, calculetId)) {
+    res.status(200).send({ likeCnt: calculet.like_cnt });
+    return;
+  }
 
   try {
     /**
@@ -81,7 +88,7 @@ async function putLike(req, res) {
     await sequelize.transaction(async (t) => {
       await models.userCalculetLike.create(
         {
-          user_id: res.locals.userId,
+          user_id: userId,
           calculet_id: calculetId,
         },
         { transaction: t }
