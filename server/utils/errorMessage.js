@@ -1,6 +1,7 @@
 const message = {
   400: {
     code0: "request failed",
+    code1: "request information is invalid",
   },
   401: {
     "code-1": "can't find token",

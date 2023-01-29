@@ -15,3 +15,13 @@ components:
                 type: string
                 description: 에러 메세지
                 example: "errorMessage"
+  schemas:
+    dateTimeStr:
+      type: string
+      description: 기록된 시간 문자열
+      example: "2023-01-16 21:23:25"
+      format: date-time
+    dateTimeLive:
+      type: string
+      description: 기록한 시간
+      format: date-time

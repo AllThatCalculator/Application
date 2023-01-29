@@ -45,7 +45,7 @@ components:
               id:
                 $ref: "#/components/schemas/calculetId"
               createdAt:
-                $ref: "#/components/schemas/createdAt"
+                $ref: "#/components/schemas/dateTimeStr"
               contributor:
                 $ref: "#/components/schemas/userSimpleInfo"
               statistics:

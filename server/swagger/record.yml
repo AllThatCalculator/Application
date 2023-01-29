@@ -1,21 +1,54 @@
 # record API
 
 components:
-  schemas:
+  requestBodies:
     saveRecord:
-      $ref: "#/components/schemas/recordObject"
-      properties:
-        calculetId:
-          $ref: "#/components/schemas/calculetId"
+      description: 저장할 계산 이력 목록
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              recordArray:
+                type: array
+                items:
+                  $ref: "#/components/schemas/recordObject"
+                  properties:
+                    createdAt:
+                      $ref: "#/components/schemas/dateTimeLive"
+              calculetId:
+                $ref: "#/components/schemas/calculetId"
+    deleteRecord:
+      description: 삭제할 계산 이력 목록
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              calculetId:
+                $ref: "#/components/schemas/calculetId"
+              recordIdList:
+                type: array
+                items:
+                  $ref: "#/components/schemas/recordId"
 
+  responses:
     getRecord:
-      type: array
-      items:
-        $ref: "#/components/schemas/recordObject"
-        properties:
-          createdAt:
-            $ref: "#/components/schemas/createdAt"
-
+      description: 계산이력 조회 성공
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/recordObject"
+              properties:
+                createdAt:
+                  $ref: "#/components/schemas/dateTimeStr"
+                id:
+                  $ref: "#/components/schemas/recordId"
+  schemas:
     recordObject:
       type: object
       properties:
@@ -30,8 +63,7 @@ components:
           description: 계산기 출력값
           example:
             result: 3
-    createdAt:
+    recordId:
       type: string
-      description: 기록된 시간
-      example: "2023-01-16 21:23:25"
-      format: date-time
+      description: 기록 UUID
+      example: 20186b96-9ff9-11ed-8c8c-0a403e9fff5e
