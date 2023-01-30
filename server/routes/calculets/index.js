@@ -93,8 +93,8 @@ router.get("/update-log/:calculetId", errorHandler.dbWrapper(getUpdateLog));
  *      requestBody:
  *        $ref: "#/components/requestBodies/postCalculet"
  *      responses:
- *        301:
- *          $ref: "#/components/responses/postCalculet"
+ *        201:
+ *          $ref: "#/components/responses/success201"
  *        400:
  *          $ref: "#/components/responses/error"
  */

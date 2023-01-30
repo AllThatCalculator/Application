@@ -12,7 +12,7 @@ async function postCalculets(req, res) {
     contributor_id: res.locals.userId,
   });
 
-  res.status(301, "/");
+  res.status(201).send("/");
 }
 
 module.exports = { postCalculets };
