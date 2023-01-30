@@ -61,24 +61,26 @@ async function getRecords(req, res) {
 }
 
 async function deleteRecords(req, res) {
+  // check request body
   if (!req.body.calculetId || !req.body.recordIdList) {
     res.status(400).send(errorObject(400, 1));
     return;
   }
+  // delete records
   await models.calculetRecord.destroy({
     where: {
       user_id: {
-        [Op.eq]: res.locals.userId,
+        [Op.eq]: res.locals.userId, // for authorize
       },
       calculet_id: {
-        [Op.eq]: req.body.calculetId,
+        [Op.eq]: req.body.calculetId, // for double check
       },
       id: {
         [Op.in]: req.body.recordIdList,
       },
     },
   });
-  res.status(202).send();
+  res.status(204).send();
 }
 
 exports.record = {

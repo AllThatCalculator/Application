@@ -56,7 +56,7 @@ router.get(
  *      requestBody:
  *        $ref: "#/components/requestBodies/deleteRecord"
  *      responses:
- *        200:
+ *        204:
  *          description: 삭제 완료
  */
 router.delete(
