@@ -3,12 +3,13 @@ const { v4: uuidv4 } = require("uuid");
 const router = express.Router();
 const { auth } = require("../middleware/auth");
 const { models } = require("../models");
+const { errorObject } = require("../utils/errorMessage");
 
 /**
  * @swagger
  *  /api/test/update-log:
  *    post:
- *      tags: [TEST(Backend)]
+ *      tags: [TEST]
  *      summary: 업데이트 로그 더미 데이터 등록용
  *      description: 업데이트 로그 더미 데이터 등록용
  *      requestBody:
@@ -21,7 +22,12 @@ const { models } = require("../models");
  *        200:
  *          description: 등록 성공
  */
-router.post("/update-log", async (req, res) => {
+router.post("/update-log", [auth.firebase, auth.database], async (req, res) => {
+  const calculet = await models.calculetInfo.findByPk(req.body.calculetId);
+  if (calculet.user_id !== res.locals.userId) {
+    res.status(403).send(errorObject(403, 0));
+  }
+
   await models.calculetUpdateLog.create(
     {
       message: req.body.message,
@@ -36,7 +42,7 @@ router.post("/update-log", async (req, res) => {
  * @swagger
  *  /api/test/calculets:
  *    post:
- *      tags: [TEST(Backend)]
+ *      tags: [TEST]
  *      summary: 더미 계산기 등록용 API (임시 테이블 거치지 않음)
  *      description: 더미 계산기 등록용 API (임시 테이블 거치지 않음)
  *      requestBody:

@@ -9,6 +9,9 @@ const message = {
     code1: "invalid token",
     code2: "can't find user",
   },
+  403: {
+    code0: "access denied",
+  },
   500: {
     code0: "failed",
   },
