@@ -1,9 +1,11 @@
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
+const { admin } = require("../config/firebase");
 const router = express.Router();
 const { auth } = require("../middleware/auth");
 const { models } = require("../models");
 const { errorObject } = require("../utils/errorMessage");
+const { deleteUser } = require("./users/deleteUser");
 
 /**
  * @swagger
@@ -48,7 +50,7 @@ router.post("/update-log", [auth.firebase, auth.database], async (req, res) => {
  *      requestBody:
  *        $ref: "#/components/requestBodies/postCalculet"
  *      responses:
- *        308:
+ *        201:
  *          $ref: "#/components/responses/postCalculet"
  */
 router.post("/calculets", auth.firebase, async (req, res) => {
@@ -63,7 +65,54 @@ router.post("/calculets", auth.firebase, async (req, res) => {
     category_sub_id: req.body.categorySubId,
     contributor_id: res.locals.userId,
   });
-  res.send(308, `/${calculet.id}`);
+  res.send(201, `/${calculet.id}`);
 });
 
+/**
+ * @swagger
+ *  /api/test/users:
+ *    delete:
+ *      tags: [TEST]
+ *      summary: (주의!!!) 유저 삭제 API (complete)
+ *      description: firebase & database에서 모두 회원 정보를 삭제한다. 유저와 관련된 모든 정보 - 계산기, 계산이력, 좋아요, 북마크 등이 삭제된다.
+ *      responses:
+ *        200:
+ *          description: 회원 정보 삭제 완료
+ */
+router.delete("/users", auth.firebase, async (req, res) => {
+  try {
+    await deleteUser.database(res.locals.userId);
+    await deleteUser.firebase(res.locals.userId);
+    res
+      .status(200)
+      .send(`user "${res.locals.email}" deleted from firebase & database`);
+  } catch (error) {
+    console.log(error);
+    res.status(400).send("request failed");
+  }
+});
+
+/**
+ * @swagger
+ *  /api/test/users/database:
+ *    delete:
+ *      tags: [TEST]
+ *      summary: 유저 삭제 API (only database)
+ *      description: database에서 정보 삭제, firebase 회원은 유지된다.
+ *      responses:
+ *        200:
+ *          description: 회원 정보 삭제 완료
+ */
+router.delete(
+  "/users/database",
+  [auth.firebase, auth.database],
+  async (req, res) => {
+    try {
+      await deleteUser.database(res.locals.userId);
+      res.status(200).send(`user "${res.locals.email}" deleted from database`);
+    } catch (error) {
+      res.status(400).send("request failed");
+    }
+  }
+);
 module.exports = router;

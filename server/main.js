@@ -30,6 +30,8 @@ app.use(express.json({ limit: "1mb" }));
 // API 문서 path 등록하기
 const { swaggerUi, specs } = require("./swagger");
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+// 테스트용 API
+app.use("/test", test);
 
 // 계산기 관리 API
 app.use("/calculets", calculets);
@@ -39,9 +41,6 @@ app.use("/users", users);
 
 // 계산 이력 관리 API
 app.use("/records", records);
-
-// 테스트용 API
-app.use("/test", test);
 
 // default error handler
 app.use(errorHandler.default);
