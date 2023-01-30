@@ -1,7 +1,7 @@
 components:
   responses:
     error:
-      description: 오류
+      description: 오류 (오류 메세지 및 코드  - https://www.notion.so/Error-code-9e2aeb37404e48cda8dae8328556156a)
       content:
         application/json:
           schema:
@@ -15,6 +15,15 @@ components:
                 type: string
                 description: 에러 메세지
                 example: "errorMessage"
+    success201:
+      description: 등록 완료
+      content:
+        application/json:
+          schema:
+            type: string
+            example: "/"
+            description: 리다이렉션 위치
+
   schemas:
     dateTimeStr:
       type: string

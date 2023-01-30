@@ -12,6 +12,9 @@ const message = {
   403: {
     code0: "access denied",
   },
+  409: {
+    code0: "already exist",
+  },
   500: {
     code0: "failed",
   },

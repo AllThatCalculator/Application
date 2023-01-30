@@ -2,15 +2,20 @@
 
 # data
 components:
+  requestBodies:
+    userInfo:
+      description: 회원 정보
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              profileImg:
+                $ref: "#/components/schemas/profileImg"
+              userInfo:
+                $ref: "#/components/schemas/userInfo"
   schemas:
-    # response
-    postUser:
-      type: object
-      properties:
-        profileImg:
-          $ref: "#/components/schemas/profileImg"
-        userInfo:
-          $ref: "#/components/schemas/userInfo"
     userSimpleInfo:
       type: object
       properties:
@@ -18,7 +23,7 @@ components:
           $ref: "#/components/schemas/userInfo/properties/userName"
         profileImgSrc:
           $ref: "#/components/schemas/profileImgSrc"
-    getSpecificUser:
+    userProfile:
       $ref: "#/components/schemas/userInfo"
       properties:
         profileImgSrc:

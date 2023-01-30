@@ -1,7 +1,15 @@
 const { models } = require("../../models");
+const { errorObject } = require("../../utils/errorMessage");
 
 exports.signUp = async (req, res) => {
+  // to read multipart/form-data
   const userInfo = JSON.parse(req.body.userInfo);
+
+  if ((await models.userInfo.findByPk(res.locals.userId)) !== null) {
+    // already signed up
+    res.status(409).send(errorObject(409, 0));
+    return;
+  }
 
   await models.userInfo.create({
     id: res.locals.userId,
@@ -16,7 +24,5 @@ exports.signUp = async (req, res) => {
 
   console.log("successfully signed up");
 
-  res.status(301).send({
-    url: "/",
-  });
+  res.status(201).send("/");
 };

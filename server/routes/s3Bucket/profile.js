@@ -6,7 +6,7 @@ const { v4: uuidv4 } = require("uuid");
  * s3버킷에 프로필 사진 올리는 미들웨어 + 에러처리 포함
  */
 async function postProfile(req, res, next) {
-  if (req.file.fieldname) {
+  if (req.file) {
     if (
       req.file.mimetype !== "image/png" &&
       req.file.mimetype !== "image/jpeg"
@@ -63,4 +63,4 @@ async function putObjectToS3(profileImg) {
   };
 }
 
-module.exports = { postProfile, putObjectToS3 };
+module.exports = { postProfile };

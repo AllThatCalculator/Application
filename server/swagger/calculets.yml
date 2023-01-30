@@ -60,14 +60,6 @@ components:
             type: array
             items:
               $ref: "#/components/schemas/calculetPreview"
-    postCalculet:
-      description: 계산기 등록 완료 -> 루트로 디라이렉션
-      content:
-        application/json:
-          schema:
-            type: string
-            description: post 요청 후 리다이렉션 될 경로
-            example: "/"
     bookMarkList:
       description: 북마크 리스트
       content:

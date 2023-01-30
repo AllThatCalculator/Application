@@ -1,17 +1,16 @@
 const express = require("express");
-
-const { auth } = require("../middleware/auth");
-const { errorHandler } = require("../middleware/errorHandler");
-
-const { postProfile } = require("./s3Bucket/profile");
-
-const { signUp } = require("./users/signUp");
-const { me } = require("./users/getMyInfo");
-
+const router = express.Router();
+// middleware
+const { auth } = require("../../middleware/auth");
+const { errorHandler } = require("../../middleware/errorHandler");
+// api
+const { postProfile } = require("../s3Bucket/profile");
+const { signUp } = require("./signUp");
+const { me } = require("./getMyInfo");
+// resource
 const multer = require("multer");
 const upload = multer();
 
-const router = express.Router();
 /**
  * @swagger
  *  /api/users:
@@ -20,36 +19,14 @@ const router = express.Router();
  *      summary: 회원가입 <Auth>
  *      description: firebase 계정 등록 이후 회원 정보를 서버에 등록함
  *      requestBody:
- *        description: 회원 정보
- *        required: true
- *        content:
- *          multipart/form-data:
- *            schema:
- *              $ref: "#/components/schemas/postUser"
+ *        $ref: "#/components/requestBodies/userInfo"
  *      responses:
- *        301:
- *          description: 회원 등록 완료
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  url:
- *                    type: string
- *                    example: "/"
- *                    description: 루트로 이동
+ *        201:
+ *          $ref: "#/components/responses/success201"
  *        400:
- *          description: 회원 등록 오류 (failed)
- *          content:
- *            application/json:
- *              schema:
- *                $ref: "#/components/schemas/errorResult"
+ *          $ref: "#/components/responses/error"
  *        401:
- *          description: 인증 오류 (invalid token)
- *          content:
- *            application/json:
- *              schema:
- *                $ref: "#/components/schemas/errorResult"
+ *          $ref: "#/components/responses/error"
  */
 router.post(
   "/",
@@ -74,7 +51,7 @@ router.post(
  *          content:
  *            application/json:
  *              schema:
- *                $ref: "#/components/schemas/getSpecificUser"
+ *                $ref: "#/components/schemas/userProfile"
  */
 router.get("/me/profile", [auth.firebase, auth.database], me.detail);
 
