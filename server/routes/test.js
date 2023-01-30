@@ -12,8 +12,8 @@ const { deleteUser } = require("./users/deleteUser");
  *  /api/test/update-log:
  *    post:
  *      tags: [TEST]
- *      summary: 업데이트 로그 더미 데이터 등록용
- *      description: 업데이트 로그 더미 데이터 등록용
+ *      summary: 업데이트 로그 더미 데이터 등록용 <Auth>
+ *      description: 해당 유저가 작성한 계산기에 대한 업데이트 로그만 등록 가능
  *      requestBody:
  *        required: true
  *        content:
@@ -45,7 +45,7 @@ router.post("/update-log", [auth.firebase, auth.database], async (req, res) => {
  *  /api/test/calculets:
  *    post:
  *      tags: [TEST]
- *      summary: 더미 계산기 등록용 API (임시 테이블 거치지 않음)
+ *      summary: 더미 계산기 등록용 API (임시 테이블 거치지 않음) <Auth>
  *      description: 더미 계산기 등록용 API (임시 테이블 거치지 않음)
  *      requestBody:
  *        $ref: "#/components/requestBodies/postCalculet"
@@ -53,7 +53,7 @@ router.post("/update-log", [auth.firebase, auth.database], async (req, res) => {
  *        201:
  *          $ref: "#/components/responses/postCalculet"
  */
-router.post("/calculets", auth.firebase, async (req, res) => {
+router.post("/calculets", [auth.firebase, auth.database], async (req, res) => {
   console.log(uuidv4());
   const calculet = await models.calculetInfo.create({
     id: uuidv4(),
@@ -73,7 +73,7 @@ router.post("/calculets", auth.firebase, async (req, res) => {
  *  /api/test/users:
  *    delete:
  *      tags: [TEST]
- *      summary: (주의!!!) 유저 삭제 API (complete)
+ *      summary: (주의!!!) 유저 삭제 API (complete) <Auth>
  *      description: firebase & database에서 모두 회원 정보를 삭제한다. 유저와 관련된 모든 정보 - 계산기, 계산이력, 좋아요, 북마크 등이 삭제된다.
  *      responses:
  *        200:
@@ -97,7 +97,7 @@ router.delete("/users", auth.firebase, async (req, res) => {
  *  /api/test/users/database:
  *    delete:
  *      tags: [TEST]
- *      summary: 유저 삭제 API (only database)
+ *      summary: 유저 삭제 API (only database) <Auth>
  *      description: database에서 정보 삭제, firebase 회원은 유지된다.
  *      responses:
  *        200:
