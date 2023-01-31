@@ -5,6 +5,11 @@ import URL from "../components/PageUrls";
 function usePage() {
   const navigate = useNavigate();
 
+  // 메인 페이지
+  function calculetPage() {
+    navigate(URL.CALCULET);
+  }
+
   // 계산기 상세
   function calculetIdPage(id) {
     navigate(URL.CALCULET + id);
@@ -20,6 +25,22 @@ function usePage() {
     navigate(URL.CALCULET_LIST);
   }
 
-  return { calculetIdPage, registerPage, calculetListPage };
+  // 로그인
+  function loginPage() {
+    navigate(URL.LOGIN);
+  }
+  // 회원가입
+  function signUpPage() {
+    navigate(URL.SIGN_UP);
+  }
+
+  return {
+    calculetPage,
+    calculetIdPage,
+    registerPage,
+    calculetListPage,
+    loginPage,
+    signUpPage,
+  };
 }
 export default usePage;

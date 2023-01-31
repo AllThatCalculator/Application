@@ -9,7 +9,7 @@ function usePreventLeave(unload = () => {}) {
   /** beforunload는 window가 닫히기 전에 funtion이 실행되도록 함. */
   /** enablePrevent : beforeunload 이벤트 리스너로 listener 지정 */
   function enablePrevent() {
-    console.log("이벤트 지정");
+    // console.log("이벤트 지정");
     window.addEventListener("beforeunload", listener);
     /**
      * beforeunload 이벤트 리스너 지정되어 있을 때에 진짜로 나가면,
@@ -19,7 +19,7 @@ function usePreventLeave(unload = () => {}) {
   }
   /** disablePrevent : beforeunload 이벤트 제거 */
   function disablePrevent() {
-    console.log("이벤트 제거");
+    // console.log("이벤트 제거");
     window.removeEventListener("beforeunload", listener);
     window.removeEventListener("unload", unload);
   }

@@ -9,7 +9,7 @@ import {
 import FooterRecommend from "../components/global-components/FooterRecommend";
 import calculetInfo from "../user-actions/calculetInfo";
 import { Grid, Paper, Typography } from "@mui/material";
-import PageScreenBox from "../components/global-components/PageScreenBox";
+import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import LoadingPage from "../components/global-components/LoadingPage";
 import UploadIcon from "@mui/icons-material/Upload";
 import usePage from "../hooks/usePage";

@@ -1,7 +1,6 @@
 import Recommend from "./Recommend";
-import PageScreenBox from "./PageScreenBox";
-import { Box, Typography } from "@mui/material";
-import { TextButton } from "../atom-components/Buttons";
+import { PageScreenBox } from "./PageScreenBox";
+import { Box, ButtonBase, Typography } from "@mui/material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import useSx from "../../hooks/useSx";
 import usePage from "../../hooks/usePage";
@@ -13,7 +12,7 @@ function FooterRecommend() {
   return (
     <PageScreenBox sx={{ p: "3.2rem 0rem", gap: "2rem" }}>
       <Box sx={{ display: "flex", width: "100%" }}>
-        <TextButton onClick={calculetListPage}>
+        <ButtonBase onClick={calculetListPage}>
           <Box
             sx={{
               display: "flex",
@@ -48,7 +47,7 @@ function FooterRecommend() {
               다양한 계산기를 만나보세요.
             </Typography>
           </Box>
-        </TextButton>
+        </ButtonBase>
       </Box>
       <Recommend />
     </PageScreenBox>

@@ -19,6 +19,22 @@ let theme = createTheme({
     secondary: {
       main: "#C3EED2",
     },
+    // backgroundColor :
+    // (theme) => theme.palette.atcLinearBlue[100],
+    // 혹은, "atcBlue.100"
+    atcBlue: {
+      50: "#F6F8FD",
+      100: "#ECF2FF",
+      200: "#E6EBF4",
+    },
+    // background :
+    // (theme) => theme.palette.atcLinearBlue[100],
+    atcLinearBlue: {
+      100: `linear-gradient(#ECF2FF, transparent)`,
+    },
+    atcOrange: {
+      100: "#FB8C00",
+    },
   },
   typography: {
     fontFamily: "S-CoreDream-4Regular",

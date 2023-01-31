@@ -2,7 +2,6 @@ import {
   ExplanationInputBox,
   ExplanationSelectBox,
 } from "../global-components/Explanation";
-import { InformBox } from "../register/WriteInform";
 import { OPTIONS_SEX, OPTIONS_YEAR, OPTIONS_MONTH } from "./constants";
 
 /**
@@ -60,7 +59,7 @@ function UserInfoForm(props) {
     },
   ];
   return (
-    <InformBox>
+    <>
       <ExplanationInputBox
         isLine={true}
         ratioLeft="1"
@@ -102,7 +101,7 @@ function UserInfoForm(props) {
         defaultValue={props.bio}
         onChange={props.changeBio}
       />
-    </InformBox>
+    </>
   );
 }
 export default UserInfoForm;

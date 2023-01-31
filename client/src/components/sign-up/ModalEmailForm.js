@@ -1,24 +1,34 @@
-import { Font } from "../atom-components/StyledText";
-import styled from "styled-components";
-import { FlexColumnLayout } from "../Layout";
 import EmailForm from "./EmailForm";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import useSx from "../../hooks/useSx";
 
-// 임시 디자인
-const Wrapper = styled(FlexColumnLayout)`
-  background: #ffffff;
-  padding: 20px;
-  gap: 20px;
-`;
-
-function ModalEmailForm() {
+function ModalEmailForm({ handleClose }) {
+  const { isWindowSmDown } = useSx();
   return (
-    <Wrapper>
-      <Font font="text100">
-        동일한 메일로 계정이 이미 존재합니다. <br></br> 계정 연동을 원하시면
-        아래 이메일과 비밀번호를 입력해주세요.
-      </Font>
-      <EmailForm />
-    </Wrapper>
+    <Dialog fullScreen={isWindowSmDown} open={true} onClose={handleClose}>
+      <DialogTitle>동일한 메일로 계정이 이미 존재합니다.</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          계정 연동을 원하시면 아래 이메일과 비밀번호를 입력해주세요.
+        </DialogContentText>
+        <EmailForm />
+      </DialogContent>
+      <DialogActions>
+        <Button autoFocus onClick={handleClose} variant="outlined">
+          연동하지 않음
+        </Button>
+        <Button onClick={handleClose} autoFocus variant="contained">
+          연동
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

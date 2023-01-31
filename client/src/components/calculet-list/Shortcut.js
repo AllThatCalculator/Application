@@ -1,5 +1,4 @@
 import { Button, Divider, Typography } from "@mui/material";
-import useSx from "../../hooks/useSx";
 import { FlexColumnBox } from "../global-components/FlexBox";
 
 /**
@@ -9,7 +8,6 @@ import { FlexColumnBox } from "../global-components/FlexBox";
  * @param {function} setIsActive 바로가기 버튼 활성화 함수
  */
 function Shortcut({ contentsShortcut, isActive, setIsActive }) {
-  const { atcBlue } = useSx();
   /**
    * 바로가기 버튼에서 활성화된 값
    * - 각 버튼마다 id부여하여 index로 접근해서 활성화 여부 알기
@@ -27,8 +25,7 @@ function Shortcut({ contentsShortcut, isActive, setIsActive }) {
         <Button
           key={index}
           sx={{
-            backgroundColor: index === isActive && atcBlue[100],
-
+            backgroundColor: index === isActive && "atcBlue.100",
             color: index !== isActive && "grey.600",
           }}
           onClick={(event) => onClickShortcut(event, cont.itemRef)}

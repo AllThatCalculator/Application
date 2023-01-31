@@ -20,11 +20,6 @@ function useSx() {
   // 정보 컴포넌트 sx 정의
   const boxSx = { gap: "0.6rem", alignItems: "center" };
 
-  // 색 정의
-  const atcBlue = { 100: "#ECF2FF", 200: "#E6EBF4" };
-  const atcLinearBlue = {
-    100: "linear-gradient(#ECF2FF, transparent)",
-  };
   const atcLinearWhite = {
     100: "linear-gradient(to bottom right, #FFFFFF, #FFFFFFCC, transparent)",
   };
@@ -50,6 +45,20 @@ function useSx() {
     WebkitBoxOrient: "vertical",
   };
 
+  // 로그인, 회원가입 박스 길이 정의
+  const widthSx = {
+    width: "100%",
+    maxWidth: "36rem", // 회원가입/상세내용 에서 따로 정의 해주기
+    justifyContent: "center",
+    gap: "1.6rem",
+  };
+
+  // Sub Title Sx
+  const subTitleSx = {
+    typography: "h6",
+    fontWeight: "bold",
+  };
+
   return {
     WIDTH_CATEGORY_BAR,
     isWindowMdDown,
@@ -57,13 +66,13 @@ function useSx() {
     isWindowLgDown,
     isWindowXlDown,
     boxSx,
-    atcBlue,
-    atcLinearBlue,
     atcLinearWhite,
     transitionDuration,
     atcTextShadow,
     atcFilterShadow,
     ellipsis,
+    widthSx,
+    subTitleSx,
   };
 }
 export default useSx;

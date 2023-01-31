@@ -32,7 +32,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
  * -> update_log : <배열> 업데이트 날짜,메세지
  */
 function ModalCalculetInfo({ info, onClick }) {
-  const { isWindowSmDown, atcBlue } = useSx();
+  const { isWindowSmDown } = useSx();
   const dateSx = { xs: "10rem", sm: "11rem", md: "12rem" };
 
   // sm up
@@ -156,7 +156,7 @@ function ModalCalculetInfo({ info, onClick }) {
         sx={{
           display: "flex",
           flexDirection: isWindowSmDown ? "column" : "row",
-          backgroundColor: !isWindowSmDown && atcBlue[100],
+          backgroundColor: !isWindowSmDown && "atcBlue.100",
         }}
       >
         {/* 왼쪽 */}
@@ -230,7 +230,7 @@ function ModalCalculetInfo({ info, onClick }) {
             <Box
               sx={{
                 display: "flex",
-                backgroundColor: atcBlue[200],
+                backgroundColor: "atcBlue.200",
                 p: "0.8rem 1.6rem",
                 gap: "0.8rem",
               }}
