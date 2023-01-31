@@ -11,8 +11,8 @@ const options = {
     },
     servers: [
       {
-        url: "http://dev.localhost:8080/",
-        description: "local Server",
+        url: process.env.SWAGGER_SERVER,
+        description: process.env.SWAGGER_SERVER_DESC,
       },
     ],
     components: {
