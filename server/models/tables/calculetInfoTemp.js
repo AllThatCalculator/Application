@@ -29,8 +29,8 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "category_main",
-          key: "id",
+          model: "category_sub",
+          key: "main_id",
         },
       },
       category_sub_id: {
@@ -38,7 +38,7 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
         references: {
           model: "category_sub",
-          key: "id",
+          key: "sub_id",
         },
       },
       contributor_id: {

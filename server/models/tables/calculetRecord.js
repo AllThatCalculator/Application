@@ -32,7 +32,8 @@ module.exports = function (sequelize, DataTypes) {
     {
       sequelize,
       tableName: "calculet_record",
-      timestamps: false,
+      timestamps: true,
+      updatedAt: false,
       indexes: [
         {
           name: "user_id",

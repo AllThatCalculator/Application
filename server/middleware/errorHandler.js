@@ -15,7 +15,10 @@ function defaultErrorHandler(err, req, res, next) {
 
 const asyncWrapper = (asyncFunc) => {
   return (req, res, next) => {
-    asyncFunc(req, res, next).catch(next);
+    asyncFunc(req, res, next).catch((error) => {
+      console.log(error);
+      res.status(500).send(errorObject(500, 0));
+    });
   };
 };
 
