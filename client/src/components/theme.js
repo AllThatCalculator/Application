@@ -32,6 +32,9 @@ let theme = createTheme({
     atcLinearBlue: {
       100: `linear-gradient(#ECF2FF, transparent)`,
     },
+    atcOrange: {
+      100: "#FB8C00",
+    },
   },
   typography: {
     fontFamily: "S-CoreDream-4Regular",

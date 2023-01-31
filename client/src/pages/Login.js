@@ -245,8 +245,7 @@ function Login() {
   );
 }
 
-{
-  /* <WrapperPad gap="20px">
+/* <WrapperPad gap="20px">
 <BoxBorder gap="20px">
   <BoxTitle content="로그인" />
   <WrapperStretch gap="10px">
@@ -285,7 +284,7 @@ function Login() {
   </FlexRowLayout>
 </WrapperCursor>
 </WrapperPad> */
-}
+
 export default Login;
 
 // import { useState, useEffect } from "react";

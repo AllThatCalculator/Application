@@ -53,6 +53,12 @@ function useSx() {
     gap: "1.6rem",
   };
 
+  // Sub Title Sx
+  const subTitleSx = {
+    typography: "h6",
+    fontWeight: "bold",
+  };
+
   return {
     WIDTH_CATEGORY_BAR,
     isWindowMdDown,
@@ -66,6 +72,7 @@ function useSx() {
     atcFilterShadow,
     ellipsis,
     widthSx,
+    subTitleSx,
   };
 }
 export default useSx;

@@ -23,7 +23,7 @@ import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import usePage from "../../hooks/usePage";
-import useSx from "../../hooks/useSx";
+// import useSx from "../../hooks/useSx";
 
 /**
  * 로고 스타일 정의 (구글, 깃허브)
@@ -40,10 +40,10 @@ const Logo = styled.img`
  */
 function SignUpFirebase({ activateComponent }) {
   const { loginPage } = usePage();
-  const { widthSx } = useSx();
+  // const { widthSx } = useSx();
 
-  // 이메일&패스워드 입력 팝업창
-  const [modalEmailActive, setModalEmailActive] = useState(false);
+  // // 이메일&패스워드 입력 팝업창
+  // const [modalEmailActive, setModalEmailActive] = useState(false);
 
   const email = useInput("");
   const pw = useInput("");
@@ -53,10 +53,10 @@ function SignUpFirebase({ activateComponent }) {
   const [warningPw, setWarningPw] = useState("");
 
   // 주의 문구 여부 : 다 입력되었는지 여부 & 요청 정보 오류
-  const [warningAll, setWarningAll] = useState("");
+  // const [warningAll, setWarningAll] = useState("");
 
   // 주의 문구 여부 : 가입하기 버튼 클릭 후 (이미 존재 계정, 비밀번호 유효성, 이메일 형식)
-  const [warningSignUp, setWarningSignUp] = useState("");
+  // const [warningSignUp, setWarningSignUp] = useState("");
 
   // 비밀번호 & 비밀번호 확인 같은지 검사
   useEffect(() => {
@@ -65,9 +65,9 @@ function SignUpFirebase({ activateComponent }) {
     } else setWarningPw("");
   }, [pw.value, pwConfirmation.value]);
 
-  function modalEmailClose() {
-    setModalEmailActive(false);
-  }
+  // function modalEmailClose() {
+  //   // setModalEmailActive(false);
+  // }
 
   /**
    * 폼 제출
@@ -79,10 +79,10 @@ function SignUpFirebase({ activateComponent }) {
     if (warningPw) return;
     // 다 입력했는지 확인
     if (!email.value || !pw.value || !pwConfirmation.value) {
-      setWarningAll("모든 사항을 입력해 주세요.");
+      // setWarningAll("모든 사항을 입력해 주세요.");
       return;
     }
-    setWarningAll("");
+    // setWarningAll("");
 
     // firebase 통한 이메일&패스워드 회원가입 진행
     // const email = address.value + "@" + domain;
@@ -94,13 +94,13 @@ function SignUpFirebase({ activateComponent }) {
       } else {
         switch (result) {
           case "auth/email-already-in-use":
-            setWarningSignUp("이미 존재하는 계정입니다.");
+            // setWarningSignUp("이미 존재하는 계정입니다.");
             break;
           case "auth/weak-password":
-            setWarningSignUp("6자리 이상 비밀번호를 입력해주세요.");
+            // setWarningSignUp("6자리 이상 비밀번호를 입력해주세요.");
             break;
           case "auth/invalid-email":
-            setWarningSignUp("이메일 계정 형식을 올바르게 입력해주세요.");
+            // setWarningSignUp("이메일 계정 형식을 올바르게 입력해주세요.");
             break;
           default:
             break;
@@ -113,18 +113,18 @@ function SignUpFirebase({ activateComponent }) {
    * firebase google 회원가입
    */
   function googleSignUp(event) {
-    setWarningSignUp("");
+    // setWarningSignUp("");
     const request = firebaseAuth.signUpWithSocial("google");
     request.then((result) => {
       if (result === true) {
         // 정보 입력해야 하므로 정보 입력 페이지로 넘어감
         activateComponent();
       } else if (result === false) {
-        setWarningSignUp("이미 존재하는 계정입니다.");
+        // setWarningSignUp("이미 존재하는 계정입니다.");
       } else {
         switch (result) {
           case "auth/account-exists-with-different-credential":
-            setWarningSignUp("다른 인증 방식으로 존재하는 계정입니다.");
+            // setWarningSignUp("다른 인증 방식으로 존재하는 계정입니다.");
             break;
           default:
             break;
@@ -137,18 +137,18 @@ function SignUpFirebase({ activateComponent }) {
    * firebase github 회원가입
    */
   function githubSignUp(event) {
-    setWarningSignUp("");
+    // setWarningSignUp("");
     const request = firebaseAuth.signUpWithSocial("github");
     request.then((result) => {
       if (result === true) {
         // 정보 입력해야 하므로 정보 입력 페이지로 넘어감
         activateComponent();
       } else if (result === false) {
-        setWarningSignUp("이미 존재하는 계정입니다.");
+        // setWarningSignUp("이미 존재하는 계정입니다.");
       } else {
         switch (result) {
           case "auth/account-exists-with-different-credential":
-            setWarningSignUp("다른 인증 방식으로 존재하는 계정입니다.");
+            // setWarningSignUp("다른 인증 방식으로 존재하는 계정입니다.");
             break;
           default:
             break;

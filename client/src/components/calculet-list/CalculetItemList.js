@@ -4,6 +4,7 @@ import { ButtonBase, Divider, Grid, Typography } from "@mui/material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import usePage from "../../hooks/usePage";
 import { ItemButton } from "../atom-components/Buttons";
+import useSx from "../../hooks/useSx";
 
 /**
  * 대분류1, 소분류*, 계산기* 목록들을 나열하여 반환하는 컴포넌트
@@ -19,6 +20,8 @@ function CalculetItemList({
   scrollPosition,
 }) {
   const { calculetIdPage } = usePage();
+  const { subTitleSx } = useSx();
+
   function NoItem() {
     return (
       <Typography variant="body2" color="text.disabled">
@@ -152,14 +155,7 @@ function CalculetItemList({
             sx={{ maxWidth: "fit-content", gap: "1.2rem" }}
             ref={contentsShortcut[mainIndex].itemRef.element}
           >
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: "bold",
-              }}
-            >
-              {main.categoryMain}
-            </Typography>
+            <Typography sx={{ ...subTitleSx }}>{main.categoryMain}</Typography>
             <KeyboardArrowRightIcon />
           </ButtonBase>
           {

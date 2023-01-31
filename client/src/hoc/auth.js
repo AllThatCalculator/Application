@@ -8,7 +8,7 @@ import URL from "../components/PageUrls";
  * @param {function} authComponent 확인할 페이지 컴포넌트
  */
 function Auth({ isLoggedIn, authComponent }) {
-  console.log(isLoggedIn);
+  // console.log(isLoggedIn);
   const navigate = useNavigate();
   const [component, setComponent] = useState(null);
 
