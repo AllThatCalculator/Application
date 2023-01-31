@@ -6,8 +6,9 @@ const users = require("./routes/users");
 const records = require("./routes/records");
 const test = require("./routes/test");
 
-// 에러 처리
+// middleware
 const { errorHandler } = require("./middleware/errorHandler");
+const { logger } = require("./utils/logger");
 
 require("dotenv").config();
 const port = process.env.EXPRESS_PORT;
@@ -34,6 +35,9 @@ if (process.env.NODE_ENV === "development") {
   // 테스트용 API
   app.use("/test", test);
 }
+
+// 백엔드 로그 남기기
+app.use(logger);
 
 // 계산기 관리 API
 app.use("/calculets", calculets);
