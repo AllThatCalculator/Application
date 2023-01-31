@@ -40,7 +40,8 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
    * 직업 job
    * 자기소개 문구 bio
    */
-  const [profileImg, setProfileImg] = useState("/img/defaultProfile.png");
+  // const [profileImg, setProfileImg] = useState("/img/defaultProfile.png");
+  const profileImg = "/img/defaultProfile.png";
 
   /** 닉네임 최대 길이 */
   const USERNAME_LIMIT = 20;
@@ -76,11 +77,13 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
 
   // 주의 문구 여부: 다 입력되었는지 여부 & 요청 정보 오류
   // bio 빼고 모두 필수
-  const [warningAll, setWarningAll] = useState("");
+  // const [warningAll, setWarningAll] = useState("");
 
   // 년도와 월로 일수 구하기
-  const [dateEnd, setDateEnd] = useState(1);
-  const [dates, setDates] = useState([]);
+  // const [dateEnd, setDateEnd] = useState(1);
+  const dateEnd = 1;
+  // const [dates, setDates] = useState([]);
+  const dates = [];
 
   // 년도에 따른 월의 마지막 날 계산 & 일수 구하기 (년도와 월을 둘 다 선택해야 갱신)
   useEffect(() => {
@@ -95,7 +98,7 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
 
   // 입력 변경 사항 있을 시, 회원가입 후 경고 메세지 & 모든 사항 입력 경고 메세지 초기화
   useEffect(() => {
-    setWarningAll("");
+    // setWarningAll("");
   }, [
     profileImg,
     userName.value,
@@ -132,11 +135,11 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
 
     // 다 입력했는지 확인
     if (!userName.value || !sex || !year || !month || !date || !job.value) {
-      setWarningAll("필수 사항을 모두 입력해 주세요.");
+      // setWarningAll("필수 사항을 모두 입력해 주세요.");
       activateEvent();
       return;
     }
-    setWarningAll("");
+    // setWarningAll("");
 
     // DB 데이터 타입에 맞게 처리
     const sexDb = sex === "여성" ? "F" : "M";
@@ -159,7 +162,7 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
     request.then((result) => {
       // 회원 가입 실패
       if (result === 400) {
-        setWarningAll("올바른 정보를 입력해 주세요.");
+        // setWarningAll("올바른 정보를 입력해 주세요.");
         activateEvent();
       } else if (result.success) {
         // 회원 가입 성공 -> 자동 로그인 -> 메인화면

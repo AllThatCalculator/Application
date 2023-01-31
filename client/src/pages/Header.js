@@ -10,7 +10,6 @@ import {
   AppBar,
   Avatar,
   Box,
-  Button,
   Dialog,
   Divider,
   IconButton,
@@ -22,7 +21,6 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import PersonIcon from "@mui/icons-material/Person";
 import {
   InvertButton,
   InvertTextButton,
@@ -34,7 +32,6 @@ import useSx from "../hooks/useSx";
 import SearchIcon from "@mui/icons-material/Search";
 import { forwardRef } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { FlexBox } from "../components/global-components/FlexBox";
 import usePage from "../hooks/usePage";
 /**
  * 헤더에 있는 컴포넌트들

@@ -9,7 +9,6 @@ import { auth } from "../firebase";
 import { Grid } from "@mui/material";
 import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import Title from "../components/global-components/Title";
-// import { async } from "@firebase/util";
 
 /**
  * 계산기 등록 페이지 컴포넌트
@@ -83,7 +82,7 @@ function Register() {
   function changeCategorySub(event) {
     const targetValue = Number(event.target.value);
     if (categorySubOption) {
-      // const option = categorySubOption.filter((x) => x.value === targetValue);
+      const option = categorySubOption.filter((x) => x.value === targetValue);
       setCategorySub(targetValue);
       setCategorySubId(targetValue);
     }
