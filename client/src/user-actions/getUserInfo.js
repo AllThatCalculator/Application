@@ -1,10 +1,10 @@
 import axios from "axios";
 
-async function loadUserInfo(userId) {
+async function getUserInfo(userId) {
   let data;
   try {
     await axios
-      .get(`/api/users/me/`, {
+      .get(`/api/users/me/profile`, {
         headers: {
           Authorization: `Bearer ${userId}`,
         },
@@ -16,4 +16,4 @@ async function loadUserInfo(userId) {
   return data;
 }
 
-export default loadUserInfo;
+export default getUserInfo;

@@ -8,6 +8,7 @@ import {
   getAdditionalUserInfo,
   signOut,
   deleteUser,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 async function signUpWithEmail(email, password) {
@@ -105,6 +106,20 @@ async function signInWithSocial(social) {
   }
 }
 
+async function checkAuthState() {
+  try {
+    let result = false;
+    await onAuthStateChanged(auth, (user) => {
+      if (user) {
+        result = true;
+      }
+    });
+    return result;
+  } catch (error) {
+    return error.code;
+  }
+}
+
 const firebaseAuth = {
   signUpWithEmail,
   signInWithEmail,
@@ -112,5 +127,6 @@ const firebaseAuth = {
   deleteAuth,
   signUpWithSocial,
   signInWithSocial,
+  checkAuthState,
 };
 export default firebaseAuth;

@@ -14,6 +14,7 @@ import useSx from "../../hooks/useSx";
 import CloseIcon from "@mui/icons-material/Close";
 import CakeIcon from "@mui/icons-material/Cake";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import useGetCategoryName from "../../hooks/useGetCategoryName";
 
 /**
  * 계산기 정보 팝업창에 들어갈 내용
@@ -21,19 +22,35 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
  * @param {object} param0
  *
  * info : 계산기 정보 팝업창에 들어갈 내용
- * -> profile_img: 제작자 프로필 사진
- * -> contributor_id : 제작자 ID
- * -> calculation_cnt : 누적 연산 수
- * -> user_cnt : 누적 사용자 수
+ * -> contributorImgSrc: 제작자 프로필 사진
+ * -> contributor : 제작자 ID
+ * -> statistics
+ *    -> view : 조회수
+ *    -> user : 누적 사용자 수
+ *    -> calculation : 누적 연산 수
  * -> title : 계산기 이름
- * -> category_main : 대분류
- * -> category_sub : 소분류
- * -> birthday : 등록일
- * -> update_log : <배열> 업데이트 날짜,메세지
+ * -> categoryMainId : 대분류 ID
+ * -> categorySubId : 소분류 ID
+ * -> createdAt : 등록일
+ * -> updateLog : <배열> 업데이트 날짜,메세지
  */
-function ModalCalculetInfo({ info, onClick }) {
+function ModalCalculetInfo({
+  contributor,
+  contributorImgSrc,
+  statistics,
+  title,
+  categoryMainId,
+  categorySubId,
+  createdAt,
+  updateLog,
+  onClick,
+}) {
   const { isWindowSmDown } = useSx();
   const dateSx = { xs: "10rem", sm: "11rem", md: "12rem" };
+
+  const { getCategoryMainName, getCategorySubName } = useGetCategoryName();
+  const categoryMainName = getCategoryMainName(categoryMainId);
+  const categorySubName = getCategorySubName(categoryMainId, categorySubId);
 
   // sm up
   function CalculetProfileMd() {
@@ -47,7 +64,6 @@ function ModalCalculetInfo({ info, onClick }) {
           borderRight: 1,
           borderColor: "grey.300",
           backgroundColor: "white",
-
           width: "36rem", // 임의로 조절
         }}
       >
@@ -59,8 +75,8 @@ function ModalCalculetInfo({ info, onClick }) {
             alignItems: "center",
           }}
         >
-          <Avatar src={info.profileImg} sx={{ width: 56, height: 56 }} />
-          <Typography variant="body1">{info.contributorName}</Typography>
+          <Avatar src={contributorImgSrc} sx={{ width: 56, height: 56 }} />
+          <Typography variant="body1">{contributor}</Typography>
         </Box>
         <Divider />
         <Box
@@ -73,7 +89,7 @@ function ModalCalculetInfo({ info, onClick }) {
           <Typography variant="subtitle2" color="grey">
             누적 연산 수
           </Typography>
-          <Typography variant="body1">{info.calculationCnt}</Typography>
+          <Typography variant="body1">{statistics.calculation}</Typography>
         </Box>
         <Box
           sx={{
@@ -85,7 +101,7 @@ function ModalCalculetInfo({ info, onClick }) {
           <Typography variant="subtitle2" color="grey">
             누적 사용자 수
           </Typography>
-          <Typography variant="body1">{info.userCnt}</Typography>
+          <Typography variant="body1">{statistics.user}</Typography>
         </Box>
       </Box>
     );
@@ -117,8 +133,8 @@ function ModalCalculetInfo({ info, onClick }) {
               alignItems: "center",
             }}
           >
-            <Avatar src={info.profileImg} sx={{ width: 56, height: 56 }} />
-            <Typography variant="body1">{info.contributorName}</Typography>
+            <Avatar src={contributorImgSrc} sx={{ width: 56, height: 56 }} />
+            <Typography variant="body1">{contributor}</Typography>
           </Box>
           <Divider orientation="vertical" />
           <Box
@@ -131,7 +147,7 @@ function ModalCalculetInfo({ info, onClick }) {
             <Typography variant="subtitle2" color="grey">
               누적 연산 수
             </Typography>
-            <Typography variant="body1">{info.calculationCnt}</Typography>
+            <Typography variant="body1">{statistics.calculation}</Typography>
           </Box>
           <Box
             sx={{
@@ -143,7 +159,7 @@ function ModalCalculetInfo({ info, onClick }) {
             <Typography variant="subtitle2" color="grey">
               누적 사용자 수
             </Typography>
-            <Typography variant="body1">{info.userCnt}</Typography>
+            <Typography variant="body1">{statistics.user}</Typography>
           </Box>
         </Box>
       </>
@@ -195,10 +211,10 @@ function ModalCalculetInfo({ info, onClick }) {
               </Box>
             )}
             <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-              {info.title}
+              {title}
             </Typography>
             <Typography variant="subtitle1" color="primary">
-              {info.categoryMain} / {info.categorySub}
+              {categoryMainName} / {categorySubName}
             </Typography>
           </Box>
           <Card sx={{ width: "100%" }}>
@@ -217,7 +233,7 @@ function ModalCalculetInfo({ info, onClick }) {
                 color="primary"
                 sx={{ width: dateSx }}
               >
-                {info.birthday}
+                {createdAt.substr(0, 10)}
               </Typography>
               <Typography variant="body1" color="primary">
                 등록
@@ -268,7 +284,7 @@ function ModalCalculetInfo({ info, onClick }) {
                     flexDirection: "column",
                   }}
                 >
-                  {info.updateLog.length === 0 && (
+                  {updateLog.length === 0 && (
                     <Box
                       sx={{
                         display: "flex",
@@ -281,19 +297,20 @@ function ModalCalculetInfo({ info, onClick }) {
                       </Typography>
                     </Box>
                   )}
-                  {info.updateLog.map((conts, index) => (
+                  {updateLog.map((conts, index) => (
                     <Box
+                      key={index}
                       sx={{
                         display: "flex",
                         gap: "0.8rem",
                         p: "0.8rem 1.6rem",
-                        borderBottom: index !== info.updateLog.length - 1 && 1,
+                        borderBottom: index !== updateLog.length - 1 && 1,
                         borderColor: "grey.300",
                       }}
                     >
-                      {/* {updateDate : 시간,  업데이트LOg */}
+                      {/* {createdAt : 시간,  message : 업데이트 내역 */}
                       <Typography variant="body1" sx={{ width: dateSx }}>
-                        {conts.updateDate}
+                        {conts.createdAt.substr(0, 10)}
                       </Typography>
                       <Typography variant="body1">{conts.message}</Typography>
                     </Box>

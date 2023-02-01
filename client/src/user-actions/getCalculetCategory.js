@@ -1,6 +1,6 @@
 import axios from "axios";
 
-async function calculetCategory() {
+async function getCalculetCategory() {
   let data;
   try {
     await axios.get(`/file/utils/category.json`).then((response) => {
@@ -10,4 +10,4 @@ async function calculetCategory() {
   return data;
 }
 
-export default calculetCategory;
+export default getCalculetCategory;

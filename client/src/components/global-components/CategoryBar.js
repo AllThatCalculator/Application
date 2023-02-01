@@ -33,7 +33,7 @@ import usePage from "../../hooks/usePage";
 function CategoryBar({ contents, isActive, setIsActive }) {
   const { WIDTH_CATEGORY_BAR } = useSx();
   const { calculetIdPage } = usePage();
-
+  // console.log(contents);
   const gapSx = { gap: "0.8rem" };
 
   // < 카테고리 내용 >
@@ -44,7 +44,7 @@ function CategoryBar({ contents, isActive, setIsActive }) {
     const categoryToggleSet = [];
     for (let i = 0; i < categoryMainLength; i++) {
       // 소분류 개수
-      const categorySubLength = contents[i].mainItems.length;
+      const categorySubLength = contents[i].sub.length;
       const subToggle = [];
       for (let j = 0; j < categorySubLength; j++) {
         // 소분류 toggle 상태
@@ -56,7 +56,7 @@ function CategoryBar({ contents, isActive, setIsActive }) {
     setCategoryToggle(categoryToggleSet);
   }, [contents]);
 
-  const [categoryToggle, setCategoryToggle] = useState(null);
+  const [categoryToggle, setCategoryToggle] = useState([]);
   // 대분류 toggle 값을 반전시키는 버튼 이벤트 함수
   function onToggleMain(mainIndex) {
     const newCategoryToggle = [...categoryToggle];
@@ -70,7 +70,6 @@ function CategoryBar({ contents, isActive, setIsActive }) {
       !categoryToggle[mainIndex].subToggle[subIndex].toggle;
     setCategoryToggle(newCategoryToggle);
   }
-  // console.log(calculetId);
   /**
    * 계산기 바로가기 생성하는 함수
    * @param {object} calculet 계산기 id, title 포함하는 객체
@@ -164,7 +163,7 @@ function CategoryBar({ contents, isActive, setIsActive }) {
       </div>
     );
   }
-
+  // console.log(categoryToggle);
   return (
     <SwipeableDrawer
       anchor="left"
@@ -185,10 +184,14 @@ function CategoryBar({ contents, isActive, setIsActive }) {
       {/* 카테고리바 리스트 */}
       <StyledScrollbar>
         <Box sx={{ width: WIDTH_CATEGORY_BAR }}>
-          {categoryToggle &&
-            contents.map((main, mainIndex) =>
-              handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
-            )}
+          {categoryToggle.length !== 0 &&
+            // contents.map((main, mainIndex) =>
+            //   handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
+            // )
+            Object.keys(contents).map((main, mainIndex) => {
+              // handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
+              console.log(main);
+            })}
         </Box>
       </StyledScrollbar>
     </SwipeableDrawer>

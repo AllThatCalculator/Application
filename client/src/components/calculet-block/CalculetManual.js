@@ -161,7 +161,6 @@ function CalculetManual({ content, calculetId }) {
               background: (theme) =>
                 !isMorePanel && theme.palette.atcLinearBlue[100],
               backgroundColor: isMorePanel && "atcBlue.100",
-              p: "1.8rem 2.4rem",
               gap: "2.4rem",
             }}
           >

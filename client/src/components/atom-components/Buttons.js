@@ -33,6 +33,7 @@ function CountButton({ text, icon, clickedIcon, number, isClicked, onClick }) {
 const MainButton = styled(Button)(({ theme }) => ({
   fontWeight: "bold",
   padding: "1.2rem 2.0rem",
+  border: "1.2px solid",
   color: theme.palette.secondary.main,
   borderColor: theme.palette.secondary.main,
 }));
