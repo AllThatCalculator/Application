@@ -51,7 +51,7 @@ router.get("/converters", errorHandler.dbWrapper(getCalculetList.converters));
  *    get:
  *      tags: [calculets]
  *      summary: 계산기 불러오기
- *      description: id번 계산기를 DB에서 조회한 후 불러오기
+ *      description: 토큰 정보가 없는 경우 좋아요/북마크는 false로 반환
  *      parameters:
  *        - $ref: "#/components/parameters/calculetId"
  *      responses:
