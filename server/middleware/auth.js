@@ -50,11 +50,27 @@ async function verifyFirebase(req, res, next) {
     return;
   }
 
-  // verify token
-  const decodedIdToken = await admin.auth().verifyIdToken(idToken);
-  res.locals.userId = decodedIdToken.user_id;
-  res.locals.email = decodedIdToken.email;
-  next();
+  try {
+    // verify token
+    const decodedIdToken = await admin.auth().verifyIdToken(idToken);
+    res.locals.userId = decodedIdToken.user_id;
+    res.locals.email = decodedIdToken.email;
+    next();
+  } catch (error) {
+    console.log(error.code);
+    res.status(401);
+
+    switch (error.code) {
+      // expired token
+      case "auth/id-token-expired":
+        res.send(errorObject(401, 0));
+        break;
+      // invalid token
+      case "auth/argument-error":
+        res.send(errorObject(401, 1));
+        break;
+    }
+  }
 }
 /**
  * 미들웨어 - 인증이 필요한 api 앞단에서 가입된 유저인지 확인 후 유저 정보 저장
