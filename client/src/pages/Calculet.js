@@ -17,6 +17,31 @@ import { MainButton } from "../components/atom-components/Buttons";
 import getCalculetUpdateLog from "../user-actions/getCalculetUpdateLog";
 import getUserIdToken from "../utils/getUserIdToken";
 
+async function handleGetCalculetInfo(id, setCalculetObj) {
+  let calculetInfoRequest = null;
+  const userId = await getUserIdToken();
+
+  // 로그인한 유저 - 계산기 정보 요청
+  if (userId) {
+    calculetInfoRequest = await calculetInfo(id, userId);
+  }
+  // 로그인 안 한 유저 - 계산기 정보 요청
+  else {
+    calculetInfoRequest = await calculetInfo(id);
+  }
+
+  if (calculetInfoRequest !== null) {
+    setCalculetObj(calculetInfoRequest);
+  }
+}
+async function handleGetCalculetUpdateLog(id, setUpdateLog) {
+  // 계산기 업데이트 로그 내역 요청
+  const updateLogRequest = await getCalculetUpdateLog(id);
+  if (updateLogRequest !== null) {
+    setUpdateLog(updateLogRequest);
+  }
+}
+
 function Calculet() {
   const { registerPage } = usePage();
   // 계산기 객체
@@ -57,34 +82,34 @@ function Calculet() {
    */
   const loadCalculetObj = useCallback(() => {
     setIsLoading(true);
-    handleGetCalculetUpdateLog();
-    handleGetCalculetInfo();
+    handleGetCalculetUpdateLog(id, setUpdateLog);
+    handleGetCalculetInfo(id, setCalculetObj);
   }, [id]);
 
-  async function handleGetCalculetInfo() {
-    let calculetInfoRequest = null;
-    const userId = await getUserIdToken();
+  // async function handleGetCalculetInfo() {
+  //   let calculetInfoRequest = null;
+  //   const userId = await getUserIdToken();
 
-    // 로그인한 유저 - 계산기 정보 요청
-    if (userId) {
-      calculetInfoRequest = await calculetInfo(id, userId);
-    }
-    // 로그인 안 한 유저 - 계산기 정보 요청
-    else {
-      calculetInfoRequest = await calculetInfo(id);
-    }
+  //   // 로그인한 유저 - 계산기 정보 요청
+  //   if (userId) {
+  //     calculetInfoRequest = await calculetInfo(id, userId);
+  //   }
+  //   // 로그인 안 한 유저 - 계산기 정보 요청
+  //   else {
+  //     calculetInfoRequest = await calculetInfo(id);
+  //   }
 
-    if (calculetInfoRequest !== null) {
-      setCalculetObj(calculetInfoRequest);
-    }
-  }
-  async function handleGetCalculetUpdateLog() {
-    // 계산기 업데이트 로그 내역 요청
-    const updateLogRequest = await getCalculetUpdateLog(id);
-    if (updateLogRequest !== null) {
-      setUpdateLog(updateLogRequest);
-    }
-  }
+  //   if (calculetInfoRequest !== null) {
+  //     setCalculetObj(calculetInfoRequest);
+  //   }
+  // }
+  // async function handleGetCalculetUpdateLog() {
+  //   // 계산기 업데이트 로그 내역 요청
+  //   const updateLogRequest = await getCalculetUpdateLog(id);
+  //   if (updateLogRequest !== null) {
+  //     setUpdateLog(updateLogRequest);
+  //   }
+  // }
 
   const onHandlerLoadClaculetObj = useCallback(() => {
     loadCalculetObj();

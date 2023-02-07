@@ -1,5 +1,5 @@
 import AppRouter from "../Router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
@@ -18,13 +18,19 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   /** get calculet category json */
-  const handleGetCalculetCategory = (data) => {
-    dispatch(onGetCalculetCategory(data));
-  };
+  const handleGetCalculetCategory = useCallback(
+    (data) => {
+      dispatch(onGetCalculetCategory(data));
+    },
+    [dispatch]
+  );
   /** get user info */
-  const handleGetUserInfo = (data) => {
-    dispatch(onGetUserInfo(data));
-  };
+  const handleGetUserInfo = useCallback(
+    (data) => {
+      dispatch(onGetUserInfo(data));
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     // login state
@@ -43,7 +49,7 @@ function App() {
     });
 
     setInit(true);
-  }, []);
+  }, [handleGetCalculetCategory]);
 
   useEffect(() => {
     // user info
@@ -57,7 +63,7 @@ function App() {
       });
       setIsSuccess(true);
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, handleGetUserInfo]);
 
   return <>{init && isSuccess && <AppRouter isLoggedIn={isLoggedIn} />}</>;
 }

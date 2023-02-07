@@ -59,7 +59,7 @@ function CalculetHeader({ calculetObj, updateLog }) {
       number: statistics.bookmark,
       bookmarked: userCalculet.bookmarked,
     });
-  }, [statistics]);
+  }, [statistics, userCalculet.bookmarked, userCalculet.liked]);
 
   /**
    * 좋아요 버튼 이벤트 함수
@@ -71,15 +71,15 @@ function CalculetHeader({ calculetObj, updateLog }) {
     // console.log(userId);
     await putCalculetLike(likeObj.liked, calculetObj.id, userId)
       .then((result) => {
-        setLikeObj(() => ({
+        setLikeObj((prev) => ({
           number: result.likeCnt,
-          liked: !likeObj.liked,
+          liked: !prev.liked,
         }));
       })
       .catch((result) => {
-        setLikeObj(() => ({
+        setLikeObj((prev) => ({
           number: result.likeCnt,
-          liked: likeObj.liked,
+          liked: prev.liked,
         }));
       });
   }
@@ -93,15 +93,15 @@ function CalculetHeader({ calculetObj, updateLog }) {
     const userId = await getUserIdToken();
     await putCalculetBookmark(bookmarkObj.bookmarked, calculetObj.id, userId)
       .then((result) => {
-        setBookmarkObj(() => ({
+        setBookmarkObj((prev) => ({
           number: result.bookmarkCnt,
-          bookmarked: !bookmarkObj.bookmarked,
+          bookmarked: !prev.bookmarked,
         }));
       })
       .catch((result) => {
-        setBookmarkObj(() => ({
+        setBookmarkObj((prev) => ({
           number: result.bookmarkCnt,
-          bookmarked: bookmarkObj.bookmarked,
+          bookmarked: prev.bookmarked,
         }));
       });
   }

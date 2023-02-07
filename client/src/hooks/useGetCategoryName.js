@@ -34,6 +34,6 @@ function useGetCategoryName() {
     return subResult.name;
   }
 
-  return { getCategoryMainName, getCategorySubName };
+  return { calculetCategory, getCategoryMainName, getCategorySubName };
 }
 export default useGetCategoryName;

@@ -17,6 +17,7 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { useEffect } from "react";
 import useSx from "../../hooks/useSx";
 import usePage from "../../hooks/usePage";
+import useGetCategoryName from "../../hooks/useGetCategoryName";
 
 /**
  * 카테고리 바 구현
@@ -31,26 +32,27 @@ import usePage from "../../hooks/usePage";
  * setIsActive : isActive 관리 함수
  */
 function CategoryBar({ contents, isActive, setIsActive }) {
+  const { getCategoryMainName, getCategorySubName } = useGetCategoryName(); // 카테고리 가져오기
   const { WIDTH_CATEGORY_BAR } = useSx();
   const { calculetIdPage } = usePage();
-  // console.log(contents);
+
   const gapSx = { gap: "0.8rem" };
+
+  // calculetCategory 은 각 어떤 계산기를 갖고 있는 지에 대한 정보는 없기 때문에 기각!
+  // toggle에서만 사용하기
 
   // < 카테고리 내용 >
   useEffect(() => {
-    // 대분류 개수
-    const categoryMainLength = contents.length;
     // toggle 상태를 useState 로 관리하기 위한 초기 toggle 세팅 (대분류와 소분류의 각 toggle 상태)
+    // 01. 대분류
     const categoryToggleSet = [];
-    for (let i = 0; i < categoryMainLength; i++) {
-      // 소분류 개수
-      const categorySubLength = contents[i].sub.length;
+    for (let categoryMain of Object.values(contents)) {
+      // 02. 소분류
       const subToggle = [];
-      for (let j = 0; j < categorySubLength; j++) {
+      Object.values(categoryMain).map(() =>
         // 소분류 toggle 상태
-        subToggle.push({ toggle: false });
-      }
-      // 대분류 toggle + 소분류 toggle
+        subToggle.push({ toggle: false })
+      );
       categoryToggleSet.push({ toggle: false, subToggle });
     }
     setCategoryToggle(categoryToggleSet);
@@ -75,6 +77,13 @@ function CategoryBar({ contents, isActive, setIsActive }) {
    * @param {object} calculet 계산기 id, title 포함하는 객체
    */
   function handleLeaf(calculet) {
+    // categoryMainId
+    // categorySubId
+    // contributor: {userName: 'test', profileImgSrc: '/file/profile/7cd77f0ab16f4ab1aa0747996ad46e81'}
+    // description : "기타 계산기"
+    // id : "9dc33a8f-7647-4598-ac0b-2d1089c89404"
+    // title : "기타 계산기"
+    // viewCnt : 219
     return (
       <ListItem
         key={calculet.id}
@@ -97,14 +106,18 @@ function CategoryBar({ contents, isActive, setIsActive }) {
 
   /**
    * 계산기를 소분류로 묶어서 반환하는 함수
-   * @param {object} sub - 소분류 객체
+   * @param {object} sub - 소분류 객체 [key, value]
+   * @param {object} mainId - main id
    * @param {number} subIndex - 소분류 인덱스
    * @param {number} mainIndex - 대분류 인덱스
    * @param {boolean} toggle - 열려있는지 여부
    */
-  function handleSub(sub, subIndex, mainIndex, toggle) {
+  function handleSub(sub, mainId, subIndex, mainIndex, toggle) {
+    const subId = Number(sub[0]); // sub id
+    const subItems = sub[1]; // each sub's sub objects
+
     return (
-      <div key={sub.categorySub}>
+      <div key={"sub-id" + subId}>
         {
           /* 카테고리가 더 있는 경우 */
           sub.categorySub !== null && (
@@ -118,7 +131,7 @@ function CategoryBar({ contents, isActive, setIsActive }) {
                 ) : (
                   <KeyboardArrowRightIcon />
                 )}
-                <ListItemText primary={sub.categorySub} />
+                <ListItemText primary={getCategorySubName(mainId, subId)} />
               </ListItemButton>
             </ListItem>
           )
@@ -126,7 +139,7 @@ function CategoryBar({ contents, isActive, setIsActive }) {
         {
           /* 계산기인 경우 */
           <Collapse in={toggle} timeout="auto" unmountOnExit>
-            {sub.subItems.map(handleLeaf)}
+            {Object.values(subItems).map(handleLeaf)}
           </Collapse>
         }
       </div>
@@ -134,26 +147,30 @@ function CategoryBar({ contents, isActive, setIsActive }) {
   }
   /**
    * 계산기를 대분류로 묶어서 반환하는 함수
-   * @param {object} main - 대분류 객체
+   * @param {object} main - 대분류 객체 [key, value]
    * @param {number} mainIndex - 소분류 인덱스
    * @param {boolean} toggle - 열려있는지 여부
    */
   function handleMain(main, mainIndex, toggle) {
+    const mainId = Number(main[0]); // main id
+    const mainItems = main[1]; // each main's sub objects
+
     return (
-      <div key={main.categoryMain}>
+      <div key={"main-id" + mainId}>
         <ListItem disablePadding>
           <ListItemButton
             onClick={() => onToggleMain(mainIndex)}
             sx={{ ...gapSx }}
           >
             {toggle ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
-            <ListItemText primary={main.categoryMain} />
+            <ListItemText primary={getCategoryMainName(mainId)} />
           </ListItemButton>
         </ListItem>
         <Collapse in={toggle} timeout="auto" unmountOnExit>
-          {main.mainItems.map((sub, subIndex) =>
+          {Object.entries(mainItems).map((sub, subIndex) =>
             handleSub(
               sub,
+              mainId,
               subIndex,
               mainIndex,
               categoryToggle[mainIndex].subToggle[subIndex].toggle
@@ -163,7 +180,6 @@ function CategoryBar({ contents, isActive, setIsActive }) {
       </div>
     );
   }
-  // console.log(categoryToggle);
   return (
     <SwipeableDrawer
       anchor="left"
@@ -185,13 +201,10 @@ function CategoryBar({ contents, isActive, setIsActive }) {
       <StyledScrollbar>
         <Box sx={{ width: WIDTH_CATEGORY_BAR }}>
           {categoryToggle.length !== 0 &&
-            // contents.map((main, mainIndex) =>
-            //   handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
-            // )
-            Object.keys(contents).map((main, mainIndex) => {
-              // handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
-              console.log(main);
-            })}
+            Object.entries(contents).map((main, mainIndex) =>
+              // [key, value] 형태로 map
+              handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)
+            )}
         </Box>
       </StyledScrollbar>
     </SwipeableDrawer>
