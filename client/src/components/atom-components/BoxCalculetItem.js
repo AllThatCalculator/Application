@@ -93,7 +93,7 @@ function BoxCalculetItem({ onClick, calculet }) {
           <Grid item xs>
             <FlexBox sx={{ ...centerSx }}>
               <Avatar src={calculet.contributor.profileImgSrc} />
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              <Typography variant="caption" sx={{ color: "text.secondary" }}>
                 {calculet.contributor.userName}
               </Typography>
             </FlexBox>
@@ -101,7 +101,7 @@ function BoxCalculetItem({ onClick, calculet }) {
           <Grid item>
             <FlexBox sx={{ ...centerSx }}>
               <VisibilityIcon fontSize="small" color="action" />
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              <Typography variant="caption" sx={{ color: "text.secondary" }}>
                 {calculet.viewCnt}
               </Typography>
             </FlexBox>

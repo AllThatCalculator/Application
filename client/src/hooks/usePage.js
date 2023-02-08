@@ -30,10 +30,16 @@ function usePage() {
   function loginPage() {
     navigate(URL.LOGIN);
   }
+
   // 회원가입
   function signUpPage() {
     navigate(URL.SIGN_UP);
   }
+
+  // 뒤로가기
+  const backPage = () => {
+    navigate(-1, { replace: true });
+  };
 
   return {
     calculetPage,
@@ -42,6 +48,7 @@ function usePage() {
     calculetListPage,
     loginPage,
     signUpPage,
+    backPage,
   };
 }
 export default usePage;

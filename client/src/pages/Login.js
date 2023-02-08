@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { StyledImg } from "../components/atom-components/BoxIcon";
 import useInput from "../hooks/useInput";
-import { useNavigate } from "react-router-dom";
 import firebaseAuth from "../firebaseAuth";
 import {
   Button,
@@ -32,6 +31,8 @@ import {
 } from "../components/atom-components/Buttons";
 import usePage from "../hooks/usePage";
 import useSx from "../hooks/useSx";
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthError, setErrorType } from "../modules/error";
 
 /**
  * 로고 스타일 정의 (구글, 깃허브)
@@ -47,18 +48,34 @@ const Logo = styled.img`
  * 로그인 페이지
  */
 function Login() {
-  const { signUpPage } = usePage();
+  /** Redux State */
+  const dispatch = useDispatch();
+
+  const { signUpPage, backPage } = usePage();
   const { widthSx } = useSx();
 
   const email = useInput("");
   const pw = useInput("");
-  const [warning, setWarning] = useState("");
-  const navigate = useNavigate();
 
-  // 입력 변경 사항 있을 시, 회원가입 후 경고 메세지 초기화
-  useEffect(() => {
-    setWarning("");
-  }, [email.value, pw.value]);
+  // error state
+  const { authError, errorType, idToken } = useSelector((state) => ({
+    authError: state.error.authError,
+    errorType: state.error.errorType,
+    idToken: state.userInfo.idToken,
+  }));
+
+  // error id
+  const ERROR_EMAIL = "login-email";
+  const ERROR_PW = "login-pw";
+
+  /** set error */
+  function handleSetAuthError(data) {
+    dispatch(setAuthError(data));
+  }
+  // set error type
+  function handleSetErrorType(data) {
+    dispatch(setErrorType(data));
+  }
 
   /**
    * 폼 제출
@@ -66,24 +83,25 @@ function Login() {
    */
   function onSubmitHandler(event) {
     event.preventDefault();
-    if (!email.value || !pw.value) {
-      setWarning("이메일과 비밀번호를 입력해주세요.");
-      return;
-    }
 
     // firebase 통한 이메일&패스워드 로그인
     const request = firebaseAuth.signInWithEmail(email.value, pw.value);
     request.then((result) => {
       if (result === true) {
-        // 로그인 성공 시, 메인 화면으로
-        navigate("/");
+        // 로그인 성공 시, 바로 전 페이지에 있던 곳으로
+        backPage();
       } else {
+        // set error
+        handleSetAuthError(result);
         switch (result) {
-          case "auth/user-not-found":
-            setWarning("존재하지 않는 계정입니다.");
+          case "auth/invalid-email": // 이메일 형식
+            handleSetErrorType(ERROR_EMAIL);
             break;
-          case "auth/wrong-password":
-            setWarning("잘못된 비밀번호입니다.");
+          case "auth/user-not-found": // 존재하지 않는 계정
+            handleSetErrorType(ERROR_EMAIL);
+            break;
+          case "auth/wrong-password": // 잘못된 비밀번호
+            handleSetErrorType(ERROR_PW);
             break;
           default:
             break;
@@ -96,18 +114,19 @@ function Login() {
    * firebase google 로그인
    */
   function googleSignIn(event) {
-    setWarning("");
     const request = firebaseAuth.signInWithSocial("google");
     request.then((result) => {
       if (result === true) {
-        // 로그인 성공 시, 메인 화면으로
-        navigate("/");
-      } else if (result === false) {
-        setWarning("존재하지 않는 계정입니다.");
+        // 로그인 성공 시, 바로 전 페이지에 있던 곳으로
+        backPage();
       } else {
+        handleSetAuthError(result);
         switch (result) {
-          case "auth/account-exists-with-different-credential":
-            setWarning("다른 인증 방식으로 존재하는 계정입니다.");
+          case "auth/user-not-found": // 존재하지 않는 계정
+            handleSetErrorType(ERROR_EMAIL);
+            break;
+          case "auth/account-exists-with-different-credential": // 다른 인증방식으로
+            handleSetErrorType(ERROR_EMAIL);
             break;
           default:
             break;
@@ -120,18 +139,19 @@ function Login() {
    * firebase github 로그인
    */
   function githubSignIn(event) {
-    setWarning("");
     const request = firebaseAuth.signInWithSocial("github");
     request.then((result) => {
       if (result === true) {
         // 로그인 성공 시, 메인 화면으로
-        navigate("/");
-      } else if (result === false) {
-        setWarning("존재하지 않는 계정입니다.");
+        backPage();
       } else {
+        handleSetAuthError(result);
         switch (result) {
-          case "auth/account-exists-with-different-credential":
-            setWarning("다른 인증 방식으로 존재하는 계정입니다.");
+          case "auth/user-not-found": // 존재하지 않는 계정
+            handleSetErrorType(ERROR_EMAIL);
+            break;
+          case "auth/account-exists-with-different-credential": // 다른 인증방식으로
+            handleSetErrorType(ERROR_EMAIL);
             break;
           default:
             break;
@@ -170,6 +190,13 @@ function Login() {
     },
   ];
 
+  useEffect(() => {
+    // 이미 로그인 되어 있으면, 뒤로 가기
+    if (idToken !== null) {
+      backPage();
+    }
+  }, [idToken, backPage]);
+
   return (
     <PageWhiteScreenBox container sx={{ justifyContent: "center" }}>
       <FlexColumnBox sx={{ ...widthSx }}>
@@ -177,44 +204,53 @@ function Login() {
         <Card variant="outlined">
           <CardContent>
             <FlexColumnBox gap="1.6rem">
-              <form onSubmit={onSubmitHandler}>
-                <FlexColumnBox gap="1.6rem">
-                  <TextField
-                    // id="outlined-name"
-                    required
-                    fullWidth
-                    label="이메일"
-                    value={email.value}
-                    onChange={email.onChange}
+              <FlexColumnBox gap="1.6rem">
+                <TextField
+                  // id="outlined-name"
+                  required
+                  fullWidth
+                  label="이메일"
+                  value={email.value}
+                  onChange={email.onChange}
+                  error={errorType === ERROR_EMAIL}
+                  helperText={errorType === ERROR_EMAIL && authError}
+                />
+                <FormControl
+                  required
+                  fullWidth
+                  variant="outlined"
+                  error={errorType === ERROR_PW}
+                >
+                  <InputLabel>비밀번호</InputLabel>
+                  <OutlinedInput
+                    value={pw.value}
+                    onChange={pw.onChange}
+                    type={showPassword ? "text" : "password"}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="비밀번호"
                   />
-                  <FormControl required fullWidth variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password">
-                      비밀번호
-                    </InputLabel>
-                    <OutlinedInput
-                      id="outlined-adornment-password"
-                      value={pw.value}
-                      onChange={pw.onChange}
-                      type={showPassword ? "text" : "password"}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                      label="비밀번호"
-                    />
-                    <FormHelperText>{warning}</FormHelperText>
-                  </FormControl>
-                </FlexColumnBox>
-              </form>
+                  <FormHelperText>
+                    {errorType === ERROR_PW && authError}
+                  </FormHelperText>
+                </FormControl>
+              </FlexColumnBox>
               <CaptionButton text="비밀번호 찾기" onClick={onFindPw} />
-              <Button type="submit" variant="contained">
+              <Button
+                type="submit"
+                variant="contained"
+                disabled={email.value === "" || pw.value === ""}
+                onClick={onSubmitHandler}
+              >
                 로그인하기
               </Button>
               <FlexBox sx={{ justifyContent: "center" }}>
