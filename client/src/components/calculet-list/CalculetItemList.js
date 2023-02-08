@@ -6,6 +6,7 @@ import usePage from "../../hooks/usePage";
 import { ItemButton } from "../atom-components/Buttons";
 import useSx from "../../hooks/useSx";
 import useGetCategoryName from "../../hooks/useGetCategoryName";
+import BoxCalculetItem from "../atom-components/BoxCalculetItem";
 
 /**
  * 대분류1, 소분류*, 계산기* 목록들을 나열하여 반환하는 컴포넌트
@@ -82,7 +83,11 @@ function CalculetItemList({
   function handleCalculet(calculet) {
     return (
       <Grid key={calculet.id} item xs={1} sm={1} md={1}>
-        <ItemButton
+        <BoxCalculetItem
+          onClick={() => calculetIdPage(calculet.id)}
+          calculet={calculet}
+        />
+        {/* <ItemButton
           fullWidth
           sx={{
             height: "100%",
@@ -94,7 +99,7 @@ function CalculetItemList({
         >
           <Typography variant="body2">{calculet.title}</Typography>
           <KeyboardArrowRightIcon />
-        </ItemButton>
+        </ItemButton> */}
       </Grid>
     );
   }

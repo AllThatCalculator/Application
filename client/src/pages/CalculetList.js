@@ -117,7 +117,7 @@ function CalculetList() {
 
   return (
     <Grid container sx={{ backgroundColor: "white" }}>
-      <PageScreenBox sx={{ flexDirection: "row", mb: "8rem" }}>
+      <PageScreenBox sx={{ flexDirection: "row", mb: "16rem" }}>
         {/* 바로가기 */}
         <FlexBox sx={{ width: widthSx }}>
           <FlexBox sx={{ position: "fixed" }}>
