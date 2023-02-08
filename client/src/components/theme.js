@@ -63,6 +63,14 @@ let theme = createTheme({
         },
       },
     },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          minHeight: "4.4rem",
+          height: "4.4rem",
+        },
+      },
+    },
   },
 });
 

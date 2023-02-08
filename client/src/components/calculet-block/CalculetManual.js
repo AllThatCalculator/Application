@@ -6,16 +6,8 @@ import CalculateIcon from "@mui/icons-material/Calculate";
 // import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 //////
-import {
-  Tabs,
-  Box,
-  Tab,
-  Fab,
-  Zoom,
-  Collapse,
-  CardContent,
-} from "@mui/material";
-import HistoryIcon from "@mui/icons-material/History";
+import { Tabs, Box, Tab, Fab, Zoom, Collapse } from "@mui/material";
+// import HistoryIcon from "@mui/icons-material/History";
 import useSx from "../../hooks/useSx";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -70,23 +62,19 @@ function CalculetManual({ content, calculetId }) {
       label: "계산기 설명",
       icon: <CalculateIcon />,
     },
-    {
-      label: "내 계산 내역",
-      icon: <HistoryIcon />,
-    },
+    // {
+    //   label: "내 계산 내역",
+    //   icon: <HistoryIcon />,
+    // },
   ];
 
   // 계산기 설명 더보기
   const [isMorePanel, setIsMorePanel] = useState(false);
-  function handleOpenIsMorePanel() {
-    setIsMorePanel(!isMorePanel);
+  function handleOpenIsMorePanel(state) {
+    setIsMorePanel(state);
   }
 
   const { transitionDuration } = useSx();
-
-  // // 계산기 설명 더미
-  // const dummyContent =
-  //   "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 
   // 더보기 버튼sx
   const fabAtcBlueStyle = {
@@ -105,7 +93,6 @@ function CalculetManual({ content, calculetId }) {
       icon: <KeyboardArrowDownIcon />,
       label: "더보기",
       isMore: false, //현재 펼쳐져 있지 않음
-      onClick: handleOpenIsMorePanel,
     },
     {
       color: "secondary",
@@ -114,7 +101,6 @@ function CalculetManual({ content, calculetId }) {
       icon: <KeyboardArrowUpIcon />,
       label: "접기",
       isMore: true, //현재 펼쳐져 있음
-      onClick: handleOpenIsMorePanel,
     },
   ];
 
@@ -122,6 +108,26 @@ function CalculetManual({ content, calculetId }) {
   function CalculetMarkdownCode() {
     return (
       <>
+        <Box>
+          <Collapse
+            in={isMorePanel}
+            // timeout="auto"
+            // unmountOnExit
+            collapsedSize="24rem" // 일부 먼저 보여주기
+            sx={{
+              background: (theme) =>
+                !isMorePanel && theme.palette.atcLinearBlue[100],
+              WebkitMaskImage:
+                !isMorePanel &&
+                `-webkit-linear-gradient(
+                rgba(0, 0, 0, 1),
+                rgba(0, 0, 0, 0)
+              )`,
+            }}
+          >
+            <MarkdownCode content={content} />
+          </Collapse>
+        </Box>
         {fabs.map((fab, index) => (
           <Box
             key={index}
@@ -146,7 +152,7 @@ function CalculetManual({ content, calculetId }) {
                 variant="extended"
                 sx={fab.sx}
                 color={fab.color}
-                onClick={fab.onClick}
+                onClick={() => handleOpenIsMorePanel(!fab.isMore)}
               >
                 {fab.label}
                 {fab.icon}
@@ -154,21 +160,6 @@ function CalculetManual({ content, calculetId }) {
             </Zoom>
           </Box>
         ))}
-
-        <Collapse in={isMorePanel} timeout="auto" unmountOnExit>
-          <Box
-            sx={{
-              background: (theme) =>
-                !isMorePanel && theme.palette.atcLinearBlue[100],
-              backgroundColor: isMorePanel && "atcBlue.100",
-              gap: "2.4rem",
-            }}
-          >
-            <CardContent>
-              <MarkdownCode content={content} />
-            </CardContent>
-          </Box>
-        </Collapse>
       </>
     );
   }
@@ -201,10 +192,6 @@ function CalculetManual({ content, calculetId }) {
                 label={data.label}
                 icon={data.icon}
                 iconPosition="start"
-                sx={{
-                  minHeight: "4.4rem",
-                  height: "4.4rem",
-                }}
               />
             ))}
           </Tabs>

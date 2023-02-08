@@ -103,10 +103,6 @@ function WriteCode(props) {
                     label={data.label}
                     icon={data.icon}
                     iconPosition="start"
-                    sx={{
-                      minHeight: "4.4rem",
-                      height: "4.4rem",
-                    }}
                   />
                 ))}
               </Tabs>
