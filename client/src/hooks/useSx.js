@@ -4,7 +4,7 @@ import { useTheme } from "@mui/material/styles";
  * sx hook
  */
 function useSx() {
-  const WIDTH_CATEGORY_BAR = 250;
+  const WIDTH_CATEGORY_BAR = 280;
 
   const theme = useTheme();
   /** is window md down? */
