@@ -103,7 +103,6 @@ function CategoryBar({ contents, isActive, setIsActive }) {
       </ListItem>
     );
   }
-
   /**
    * 계산기를 소분류로 묶어서 반환하는 함수
    * @param {object} sub - 소분류 객체 [key, value]
@@ -200,7 +199,7 @@ function CategoryBar({ contents, isActive, setIsActive }) {
       {/* 카테고리바 리스트 */}
       <StyledScrollbar>
         <Box sx={{ width: WIDTH_CATEGORY_BAR }}>
-          {categoryToggle.length !== 0 &&
+          {categoryToggle.length === Object.keys(contents).length &&
             Object.entries(contents).map((main, mainIndex) =>
               // [key, value] 형태로 map
               handleMain(main, mainIndex, categoryToggle[mainIndex].toggle)

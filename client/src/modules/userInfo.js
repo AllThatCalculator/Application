@@ -17,7 +17,7 @@ const initialState = {
 };
 
 /** Action Creator Function ( 액션 생성 함수 ) */
-export function onGetUserInfo(data) {
+export function onSetUserInfo(data) {
   return { type: USER_INFO, data };
 }
 

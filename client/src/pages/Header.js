@@ -4,7 +4,6 @@ import CategoryBar from "../components/global-components/CategoryBar";
 import { useCallback, useState } from "react";
 import { useEffect } from "react";
 import URL from "../components/PageUrls";
-import calculetsUser from "../user-actions/calculetsUser";
 import firebaseAuth from "../firebaseAuth";
 import {
   AppBar,
@@ -33,7 +32,14 @@ import SearchIcon from "@mui/icons-material/Search";
 import { forwardRef } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import usePage from "../hooks/usePage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import getCalculetList from "../user-actions/getCalculetList";
+import {
+  onSetCalculetConverters,
+  onSetCalculetList,
+} from "../modules/calculetList";
+import useGetCategoryList from "../hooks/useGetCategoryList";
+import getCalculetConverters from "../user-actions/getCalculetConverters";
 /**
  * 헤더에 있는 컴포넌트들
  * -> 카테고리바, 로고, 검색창, 로그인/아웃 버튼
@@ -224,6 +230,26 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
   );
 }
 
+async function getAllCalculetList(setLoading) {
+  await setLoading(false);
+
+  let result = { calculetList: null, calculetConverters: null };
+  await getCalculetList().then((data) => {
+    /** set category list */
+    result.calculetList = data;
+    // dispatch(onSetCalculetList(data));
+  });
+  await getCalculetConverters().then((data) => {
+    /** set category converter */
+    result.calculetConverters = data;
+
+    // dispatch(onSetCalculetConverters(data));
+  });
+  await setLoading(true);
+
+  return result;
+}
+
 /**
  * 헤더
  * -> 스크롤 내리면 색 바뀜
@@ -231,7 +257,10 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
  *
  */
 function Header({ isLoggedIn }) {
-  // 카테고리
+  /** Redux State */
+  const dispatch = useDispatch();
+  // calculet list
+  const { calculetList } = useGetCategoryList();
 
   /**
    * 카테고리바 영역을 ref로 지정
@@ -240,8 +269,6 @@ function Header({ isLoggedIn }) {
    * -> isActive : 카테고리바 열 때 slideIn, 닫을 때 slideInOut 으로 작동할 수 있도록 animation의 mode를 제어하는 state
    * -> setIsActive : 카테고리바 활성화 관리 함수
    */
-  // const categoryBarRef = useClickOutside();
-
   const [categoryState, setCategoryState] = useState(false);
   const setIsActive = (open) => (event) => {
     if (
@@ -258,16 +285,18 @@ function Header({ isLoggedIn }) {
    * 카테고리바 정보 (대분류, 소분류에 따른 계산기) 서버에서 불러오기
    * 페이지 렌더시 한 번만
    */
-  const [contentsCategory, setContentsCategory] = useState(null);
-  const onHandlerSetContentsCategory = useCallback(() => {
-    calculetsUser().then((res) => {
-      // 카테고리바 정보 불러오기 성공
-      if (res) setContentsCategory(res);
+  const [loading, setLoading] = useState(false);
+
+  const onGetAllCalculetList = useCallback(() => {
+    getAllCalculetList(setLoading).then((result) => {
+      dispatch(onSetCalculetList(result.calculetList));
+      dispatch(onSetCalculetConverters(result.calculetConverters));
     });
-  }, []);
+  }, [dispatch]);
+
   useEffect(() => {
-    onHandlerSetContentsCategory();
-  }, [onHandlerSetContentsCategory]);
+    onGetAllCalculetList();
+  }, [onGetAllCalculetList]);
 
   /**
    * 로그인 페이지로 이동 이벤트
@@ -302,31 +331,14 @@ function Header({ isLoggedIn }) {
           </Toolbar>
         </AppBar>
       </Box>
-      {contentsCategory && (
+      {Object.keys(calculetList).length !== 0 && loading && (
         <CategoryBar
-          contents={contentsCategory}
+          contents={calculetList}
           isActive={categoryState}
           setIsActive={setIsActive}
         />
       )}
     </>
-    // <Wrapper ref={categoryBarRef.elementRef}>
-    //   <Positioner isChange={isChange}>
-    //     <Contents
-    //       isLoggedIn={isLoggedIn}
-    //       onIsOpen={() => categoryBarRef.setIsActive(!categoryBarRef.isActive)}
-    //       onLogin={onHandlerLogin}
-    //       onLogout={onHandlerLogout}
-    //     />
-    //   </Positioner>
-    //   {contentsCategory && (
-    //     <CategoryBar
-    //       contents={contentsCategory}
-    //       isActive={categoryBarRef.isActive}
-    //       setIsActive={categoryBarRef.setIsActive}
-    //     />
-    //   )}
-    // </Wrapper>
   );
 }
 

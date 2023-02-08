@@ -3,9 +3,9 @@ import { useState, useEffect, useCallback } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { onGetCalculetCategory } from "../modules/calculetCategory";
+import { onSetCalculetCategory } from "../modules/calculetCategory";
 import getCalculetCategory from "../user-actions/getCalculetCategory";
-import { onGetUserInfo } from "../modules/userInfo";
+import { onSetUserInfo } from "../modules/userInfo";
 import getUserInfo from "../user-actions/getUserInfo";
 import getUserIdToken from "../utils/getUserIdToken";
 
@@ -17,17 +17,17 @@ function App() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  /** get calculet category json */
+  /** set calculet category json */
   const handleGetCalculetCategory = useCallback(
     (data) => {
-      dispatch(onGetCalculetCategory(data));
+      dispatch(onSetCalculetCategory(data));
     },
     [dispatch]
   );
-  /** get user info */
-  const handleGetUserInfo = useCallback(
+  /** set user info */
+  const handleSetUserInfo = useCallback(
     (data) => {
-      dispatch(onGetUserInfo(data));
+      dispatch(onSetUserInfo(data));
     },
     [dispatch]
   );
@@ -57,13 +57,13 @@ function App() {
       getUserIdToken().then((token) => {
         if (token !== null) {
           getUserInfo(token).then((data) => {
-            handleGetUserInfo(data);
+            handleSetUserInfo(data);
           });
         }
       });
       setIsSuccess(true);
     }
-  }, [isLoggedIn, handleGetUserInfo]);
+  }, [isLoggedIn, handleSetUserInfo]);
 
   return <>{init && isSuccess && <AppRouter isLoggedIn={isLoggedIn} />}</>;
 }
