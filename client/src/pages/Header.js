@@ -33,6 +33,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { forwardRef } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import usePage from "../hooks/usePage";
+import { useSelector } from "react-redux";
 /**
  * 헤더에 있는 컴포넌트들
  * -> 카테고리바, 로고, 검색창, 로그인/아웃 버튼
@@ -43,6 +44,10 @@ import usePage from "../hooks/usePage";
 function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
   const { isWindowSmDown } = useSx();
   const { loginPage, signUpPage } = usePage();
+
+  const { userInfo } = useSelector((state) => ({
+    userInfo: state.userInfo,
+  }));
 
   // 내 계정 팝업 리스트
   const myAccountList = [
@@ -72,14 +77,8 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
     <Box
       sx={{ display: "flex", gap: "1rem", p: "1.6rem", alignItems: "center" }}
     >
-      <Avatar src="/file/profile/08d59851303d4eb3a198fb4974b60978" />
-      <Typography variant="body1">
-        {/* {
-          // 닉네임
-          userNickname
-        } */}
-        닉네임
-      </Typography>
+      <Avatar src={isLoggedIn ? userInfo.profileImgSrc : ""} />
+      <Typography variant="body1">{isLoggedIn && userInfo.userName}</Typography>
     </Box>
   );
 
@@ -103,9 +102,7 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
     // 내 계정
     {
       isMd: true,
-      popupIcon: (
-        <Avatar src="/file/profile/08d59851303d4eb3a198fb4974b60978" />
-      ),
+      popupIcon: <Avatar src={isLoggedIn ? userInfo.profileImgSrc : ""} />,
       popupTitle: "내 계정",
       popupListData: myAccountList,
       popupContent: userInfoComponent,
@@ -234,6 +231,8 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
  *
  */
 function Header({ isLoggedIn }) {
+  // 카테고리
+
   /**
    * 카테고리바 영역을 ref로 지정
    * categoryBarRef
@@ -263,7 +262,7 @@ function Header({ isLoggedIn }) {
   const onHandlerSetContentsCategory = useCallback(() => {
     calculetsUser().then((res) => {
       // 카테고리바 정보 불러오기 성공
-      if (res.success) setContentsCategory(res.calculetLists);
+      if (res) setContentsCategory(res);
     });
   }, []);
   useEffect(() => {

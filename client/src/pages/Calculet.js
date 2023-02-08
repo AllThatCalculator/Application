@@ -14,6 +14,33 @@ import LoadingPage from "../components/global-components/LoadingPage";
 import UploadIcon from "@mui/icons-material/Upload";
 import usePage from "../hooks/usePage";
 import { MainButton } from "../components/atom-components/Buttons";
+import getCalculetUpdateLog from "../user-actions/getCalculetUpdateLog";
+import getUserIdToken from "../utils/getUserIdToken";
+
+async function handleGetCalculetInfo(id, setCalculetObj) {
+  let calculetInfoRequest = null;
+  const userId = await getUserIdToken();
+
+  // 로그인한 유저 - 계산기 정보 요청
+  if (userId) {
+    calculetInfoRequest = await calculetInfo(id, userId);
+  }
+  // 로그인 안 한 유저 - 계산기 정보 요청
+  else {
+    calculetInfoRequest = await calculetInfo(id);
+  }
+
+  if (calculetInfoRequest !== null) {
+    setCalculetObj(calculetInfoRequest);
+  }
+}
+async function handleGetCalculetUpdateLog(id, setUpdateLog) {
+  // 계산기 업데이트 로그 내역 요청
+  const updateLogRequest = await getCalculetUpdateLog(id);
+  if (updateLogRequest !== null) {
+    setUpdateLog(updateLogRequest);
+  }
+}
 
 function Calculet() {
   const { registerPage } = usePage();
@@ -36,13 +63,9 @@ function Calculet() {
   //   {integer} calculationCnt: 10, - 연산수
   //   {integer} userCnt: 10,      - 사용자 수
   // },
-  const [statistics, setStatistics] = useState(null);
 
-  // 계산기 정보 팝업창에 들어가는 내용
-  const [info, setInfo] = useState(null);
-
-  // 계산기 저작자 프로필 이미지
-  const [contributorImgSrc, setContributorImgSrc] = useState(null);
+  // 계산기 정보 팝업창에 들어가는 로그 내용
+  const [updateLog, setUpdateLog] = useState(null);
 
   // 현재 페이지에 로딩할 계산기 id
   let { id } = useParams();
@@ -59,22 +82,34 @@ function Calculet() {
    */
   const loadCalculetObj = useCallback(() => {
     setIsLoading(true);
-
-    const request = calculetInfo(id);
-    request.then((data) => {
-      if (data.calculet) {
-        setCalculetObj(data.calculet);
-        setStatistics(data.statistics);
-        setContributorImgSrc(data.calculet.contributorImgSrc);
-        setInfo(data.info);
-
-        console.log(data.calculet.manual);
-      } else {
-        // 계산기 못 가져옴
-        // setErrorText(data);
-      }
-    });
+    handleGetCalculetUpdateLog(id, setUpdateLog);
+    handleGetCalculetInfo(id, setCalculetObj);
   }, [id]);
+
+  // async function handleGetCalculetInfo() {
+  //   let calculetInfoRequest = null;
+  //   const userId = await getUserIdToken();
+
+  //   // 로그인한 유저 - 계산기 정보 요청
+  //   if (userId) {
+  //     calculetInfoRequest = await calculetInfo(id, userId);
+  //   }
+  //   // 로그인 안 한 유저 - 계산기 정보 요청
+  //   else {
+  //     calculetInfoRequest = await calculetInfo(id);
+  //   }
+
+  //   if (calculetInfoRequest !== null) {
+  //     setCalculetObj(calculetInfoRequest);
+  //   }
+  // }
+  // async function handleGetCalculetUpdateLog() {
+  //   // 계산기 업데이트 로그 내역 요청
+  //   const updateLogRequest = await getCalculetUpdateLog(id);
+  //   if (updateLogRequest !== null) {
+  //     setUpdateLog(updateLogRequest);
+  //   }
+  // }
 
   const onHandlerLoadClaculetObj = useCallback(() => {
     loadCalculetObj();
@@ -102,11 +137,10 @@ function Calculet() {
               }}
             >
               <CalculetHeader
-                title={calculetObj.title}
-                contributor={calculetObj.contributor}
-                contributorImgSrc={contributorImgSrc}
-                statistics={statistics}
-                info={info}
+                // 계산기 블록 정보 & 팝업창 정보
+                calculetObj={calculetObj}
+                // 업데이트 로그
+                updateLog={updateLog}
               />
               <CalculetBlock
                 srcCode={calculetObj.srcCode}
@@ -116,7 +150,7 @@ function Calculet() {
             </PageScreenBox>
           </Grid>
           <Paper elevation={5}>
-            <Grid container sx={{ backgroundColor: "#ECF2FF" }}>
+            <Grid container sx={{ backgroundColor: "atcBlue.100" }}>
               <PageScreenBox
                 sx={{
                   width: 1,
@@ -141,7 +175,6 @@ function Calculet() {
                       variant="contained"
                       startIcon={<UploadIcon />}
                       onClick={registerPage}
-                      sx={{ border: 1.2 }}
                     >
                       계산기 등록
                     </MainButton>

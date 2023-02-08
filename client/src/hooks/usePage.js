@@ -13,6 +13,7 @@ function usePage() {
   // 계산기 상세
   function calculetIdPage(id) {
     navigate(URL.CALCULET + id);
+    window.location.reload();
   }
 
   // 계산기 등록

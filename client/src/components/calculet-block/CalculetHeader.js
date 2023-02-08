@@ -16,23 +16,29 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ShareIcon from "@mui/icons-material/Share";
 import PopupList from "../global-components/PopupList";
 import Title from "../global-components/Title";
+import getUserIdToken from "../../utils/getUserIdToken";
+import putCalculetLike from "../../user-actions/putCalculetLike";
+import putCalculetBookmark from "../../user-actions/putCalculetBookmark";
 
-function CalculetHeader({
-  title,
-  contributor,
-  contributorImgSrc,
-  statistics,
-  info,
-}) {
+function CalculetHeader({ calculetObj, updateLog }) {
   const { boxSx } = useSx();
+
+  const statistics = calculetObj.statistics;
+  const userCalculet = calculetObj.userCalculet;
+  const contributor = calculetObj.contributor;
+  const title = calculetObj.title;
+  // const [statistics, setStatistics] = useState(calculetObj.statistics);
+  // const [userCalculet, setUserCalculet] = useState(calculetObj.userCalculet);
+  // const [contributor, setContributor] = useState(calculetObj.contributor);
+  // const [title, setTitle] = useState(calculetObj.title);
   /**
    * 좋아요 관련 정보
    * {int} number: 해당 계산기의 좋아요 수
    * {boolean} liked: 현재 유저가 좋아요를 눌렀는지 여부
    */
   const [likeObj, setLikeObj] = useState({
-    number: statistics.likeCnt,
-    liked: statistics.liked,
+    number: statistics.like,
+    liked: userCalculet.liked,
   });
   /**
    * 북마크 관련 정보
@@ -40,20 +46,20 @@ function CalculetHeader({
    * {boolean} bookmarked: 현재 유저가 북마크로 설정했는지 여부
    */
   const [bookmarkObj, setBookmarkObj] = useState({
-    number: statistics.bookmarkCnt,
-    bookmarked: statistics.bookmarked,
+    number: statistics.bookmark,
+    bookmarked: userCalculet.bookmarked,
   });
 
   /**
    * 확률 정보 바뀌면 좋아요 수와 북마크 수 다시 변경되도록
    */
   useEffect(() => {
-    setLikeObj({ number: statistics.likeCnt, liked: statistics.liked });
+    setLikeObj({ number: statistics.like, liked: userCalculet.liked });
     setBookmarkObj({
-      number: statistics.bookmarkCnt,
-      bookmarked: statistics.bookmarked,
+      number: statistics.bookmark,
+      bookmarked: userCalculet.bookmarked,
     });
-  }, [statistics]);
+  }, [statistics, userCalculet.bookmarked, userCalculet.liked]);
 
   /**
    * 좋아요 버튼 이벤트 함수
@@ -61,29 +67,43 @@ function CalculetHeader({
    * - 추후 DB 갱신을 위한 백엔드와의 통신 필요
    */
   async function toggleLike() {
-    if (likeObj.liked) {
-      setLikeObj((prev) => ({ number: prev.number - 1, liked: !prev.liked }));
-    } else {
-      setLikeObj((prev) => ({ number: prev.number + 1, liked: !prev.liked }));
-    }
+    const userId = await getUserIdToken();
+    // console.log(userId);
+    await putCalculetLike(likeObj.liked, calculetObj.id, userId)
+      .then((result) => {
+        setLikeObj((prev) => ({
+          number: result.likeCnt,
+          liked: !prev.liked,
+        }));
+      })
+      .catch((result) => {
+        setLikeObj((prev) => ({
+          number: result.likeCnt,
+          liked: prev.liked,
+        }));
+      });
   }
+
   /**
    * 북마크 버튼 이벤트 함수
    * - 북마크 수 변경, 아이콘 색 채움 여부 변경
    * - 추후 DB 갱신을 위한 백엔드와의 통신 필요
    */
   async function toggleBookmark() {
-    if (bookmarkObj.bookmarked) {
-      setBookmarkObj((prev) => ({
-        number: prev.number - 1,
-        bookmarked: !prev.bookmarked,
-      }));
-    } else {
-      setBookmarkObj((prev) => ({
-        number: prev.number + 1,
-        bookmarked: !prev.bookmarked,
-      }));
-    }
+    const userId = await getUserIdToken();
+    await putCalculetBookmark(bookmarkObj.bookmarked, calculetObj.id, userId)
+      .then((result) => {
+        setBookmarkObj((prev) => ({
+          number: result.bookmarkCnt,
+          bookmarked: !prev.bookmarked,
+        }));
+      })
+      .catch((result) => {
+        setBookmarkObj((prev) => ({
+          number: result.bookmarkCnt,
+          bookmarked: prev.bookmarked,
+        }));
+      });
   }
   /**
    * {bool} modalOpen 계산기 정보 팝업창 불러오기 상태
@@ -132,8 +152,8 @@ function CalculetHeader({
   // 프로필, 계산기 본 사람 수
   const infoList = [
     {
-      icon: contributorImgSrc,
-      text: contributor,
+      icon: contributor.profileImgSrc,
+      text: contributor.userName,
       isProfile: true,
       number: null,
     },
@@ -141,7 +161,7 @@ function CalculetHeader({
       icon: <VisibilityIcon color="primary" />,
       text: "조회수",
       isProfile: false,
-      number: statistics.viewCnt,
+      number: statistics.view,
     },
   ];
   // =================계산기 이름, 정보=================
@@ -177,7 +197,7 @@ function CalculetHeader({
       text: "신고",
       icon: <FlagOutlinedIcon />,
       clickedIcon: <></>,
-      number: statistics.reportCnt,
+      number: statistics.report,
       isClicked: false,
       onClick: () => null,
     },
@@ -212,8 +232,19 @@ function CalculetHeader({
 
   return (
     <>
-      {modalOpen && <ModalCalculetInfo info={info} onClick={onModalClose} />}
-
+      {modalOpen && (
+        <ModalCalculetInfo
+          contributor={contributor.userName}
+          contributorImgSrc={contributor.profileImgSrc}
+          statistics={statistics}
+          title={title}
+          categoryMainId={calculetObj.categoryMainId}
+          categorySubId={calculetObj.categorySubId}
+          createdAt={calculetObj.createdAt}
+          updateLog={updateLog}
+          onClick={onModalClose}
+        />
+      )}
       {/* 계산기 타이틀, 계산기 정보 */}
       <Grid container>
         <CalculetTitle />
@@ -247,7 +278,6 @@ function CalculetHeader({
                 onClick={data.onClick}
               />
             ))}
-
             {MorePopupLists.map((popupData, index) => (
               <PopupList
                 key={index}
