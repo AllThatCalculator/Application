@@ -28,7 +28,6 @@ function makeSubList(mainId, subId) {
           required: true,
           attributes: ["view_cnt"],
           as: "calculet_count",
-          order: [["view_cnt", "DESC"]],
         },
       ],
       where: {
@@ -40,6 +39,13 @@ function makeSubList(mainId, subId) {
         },
       },
       limit: PREVIEW_CNT,
+      order: [
+        [
+          { model: models.calculetCount, as: "calculet_count" },
+          "view_cnt",
+          "DESC",
+        ],
+      ],
     })
     .then((data) => {
       const subList = data.map((calculet) => ({
