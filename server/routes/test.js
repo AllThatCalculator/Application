@@ -51,7 +51,7 @@ router.post("/update-log", [auth.firebase, auth.database], async (req, res) => {
  *        $ref: "#/components/requestBodies/postCalculet"
  *      responses:
  *        201:
- *          $ref: "#/components/responses/postCalculet"
+ *          $ref: "#/components/responses/success201"
  */
 router.post("/calculets", [auth.firebase, auth.database], async (req, res) => {
   console.log(uuidv4());
