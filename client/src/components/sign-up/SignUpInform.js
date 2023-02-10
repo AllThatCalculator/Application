@@ -33,7 +33,7 @@ import checkSpecialSymbols from "../../utils/checkSpecialSymbols";
  * 회원가입 페이지
  */
 function SignUpInform({ activateEvent, deactivateEvent }) {
-  const { calculetPage, backRefreshPage } = usePage();
+  const { backPage } = usePage();
 
   // loading state
   const { handleOnLoading, handleOffLoading } = useLoading();
@@ -157,16 +157,16 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
       // 가입 실패
       if (result["code"] !== undefined) {
         if (result.code === 0) {
-          // 이미 있는 계정이라 홈으로 가면 됨
-          backRefreshPage();
+          // 이미 있는 계정이어서 발생한 error라서 홈으로 가면 됨
+          backPage();
         } else {
           activateEvent();
         }
       }
       // 회원 가입 성공
-      if (result == "/") {
+      if (result === "/") {
         // 전에 있던 페이지로 돌아가기
-        backRefreshPage();
+        backPage();
       }
     });
   }

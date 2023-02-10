@@ -267,10 +267,6 @@ function Header({ isLoggedIn }) {
   // calculet list
   const { calculetList } = useGetCategoryList();
 
-  const { userInfo } = useSelector((state) => ({
-    userInfo: state.userInfo,
-  }));
-
   /**
    * 카테고리바 영역을 ref로 지정
    * categoryBarRef

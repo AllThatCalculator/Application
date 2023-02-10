@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import useInput from "../../hooks/useInput";
 import firebaseAuth from "../../firebaseAuth";
@@ -23,8 +23,7 @@ import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import usePage from "../../hooks/usePage";
-import { useDispatch, useSelector } from "react-redux";
-import { setAuthError, setErrorType } from "../../modules/error";
+import { useSelector } from "react-redux";
 import useLoading from "../../hooks/useLoading";
 import useError from "../../hooks/useError";
 // import useSx from "../../hooks/useSx";
@@ -51,10 +50,9 @@ function SignUpFirebase({ activateComponent }) {
   const { handleSetAuthError, handleSetErrorType } = useError();
 
   // redux state
-  const { authError, errorType, idToken } = useSelector((state) => ({
+  const { authError, errorType } = useSelector((state) => ({
     authError: state.error.authError,
     errorType: state.error.errorType,
-    idToken: state.userInfo.idToken,
   }));
 
   // error id

@@ -15,7 +15,6 @@ import {
   InputAdornment,
   InputLabel,
   LinearProgress,
-  Modal,
   OutlinedInput,
   TextField,
   Typography,
