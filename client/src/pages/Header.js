@@ -48,13 +48,12 @@ import getCalculetConverters from "../user-actions/getCalculetConverters";
  * @param {function} onLogout 로그아웃 이벤트 (로그아웃 버튼 이벤트)
  */
 function Contents({ isLoggedIn, onIsOpen, onLogout }) {
-  const { isWindowSmDown } = useSx();
+  const { isWindowMdDown } = useSx();
   const { loginPage, signUpPage } = usePage();
 
   const { userInfo } = useSelector((state) => ({
     userInfo: state.userInfo,
   }));
-
   // 내 계정 팝업 리스트
   const myAccountList = [
     // [
@@ -146,7 +145,7 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
             <BoxSearchInput />
           </Toolbar>
         </AppBar>
-        <List>
+        {/* <List>
           <ListItem button>
             <ListItemText primary="Phone ringtone" secondary="Titania" />
           </ListItem>
@@ -157,10 +156,15 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
               secondary="Tethys"
             />
           </ListItem>
-        </List>
+        </List> */}
       </Dialog>
     );
   }
+
+  const sizeSx = { fontSize: { xs: "2rem", sm: "2.2rem", md: "2.4rem" } };
+  const buttonSizeSx = {
+    fontSize: { xs: "1.1rem", sm: "1.3rem", md: "1.4rem" },
+  };
 
   return (
     <Box
@@ -173,12 +177,12 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <IconButton
-          size="large"
+          sx={{ ...sizeSx }}
           edge="start"
           color="inherit"
           onClick={onIsOpen}
         >
-          <MenuIcon />
+          <MenuIcon fontSize="inherit" />
         </IconButton>
         <LogoHeader />
       </Box>
@@ -186,16 +190,19 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: "2.4rem",
+          gap: { xs: "0.4rem", sm: "1.8rem", md: "2.4rem" },
           width: "100%",
           justifyContent: "flex-end",
         }}
       >
         {/* 검색창 */}
-        {isWindowSmDown ? (
+        {isWindowMdDown ? (
           <>
-            <IconButton size="large" onClick={handleIsSearchOpen}>
-              <SearchIcon sx={{ color: "white" }} />
+            <IconButton sx={{ ...sizeSx }} onClick={handleIsSearchOpen}>
+              <SearchIcon
+                sx={{ color: "white", ...sizeSx }}
+                fontSize="inherit"
+              />
             </IconButton>
             <SearchScreen />
           </>
@@ -223,8 +230,17 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
             )
           ) : (
             <>
-              <InvertTextButton onClick={loginPage}>로그인</InvertTextButton>
-              <InvertButton variant="contained" onClick={signUpPage}>
+              <InvertTextButton
+                sx={{ ...buttonSizeSx, mr: "0.4rem" }}
+                onClick={loginPage}
+              >
+                로그인
+              </InvertTextButton>
+              <InvertButton
+                sx={{ ...buttonSizeSx }}
+                variant="contained"
+                onClick={signUpPage}
+              >
                 회원가입
               </InvertButton>
             </>

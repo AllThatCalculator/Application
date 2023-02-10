@@ -1,5 +1,5 @@
 import AppRouter from "../Router";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
@@ -16,62 +16,54 @@ function App() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  /** set calculet category json */
-  const handleGetCalculetCategory = useCallback(
-    (data) => {
-      dispatch(onSetCalculetCategory(data));
-    },
-    [dispatch]
-  );
-  /** set user id token */
-  const handleSetUserIdToken = useCallback(
-    (data) => {
-      dispatch(onSetUserIdToken(data));
-    },
-    [dispatch]
-  );
-  /** set user info */
-  const handleSetUserInfo = useCallback(
-    (data) => {
-      dispatch(onSetUserInfo(data));
-    },
-    [dispatch]
-  );
-
   useEffect(() => {
     setInit(false);
     setIsSuccess(false);
 
     // login state
     onAuthStateChanged(auth, (user) => {
-      if (user) {
+      // 회원가입 시, 이미 가입한 계정으로 회원가입하면 로그인되는 상황을 막고자 update막음
+      // or off login
+      if (user === null) {
+        setIsLoggedIn(false);
+        /** set token null */
+        dispatch(onSetUserIdToken(null));
+        dispatch(
+          onSetUserInfo({
+            userName: "",
+            bio: "",
+            sex: "",
+            birthdate: "",
+            job: "",
+            profileImgSrc: "",
+            email: "",
+          })
+        );
+        setIsSuccess(true);
+      } else if (user) {
         // on login
         setIsLoggedIn(true);
         const token = user.accessToken;
 
         if (token !== null) {
-          // me
+          /** set user info */
           getUserInfo(token).then((data) => {
-            handleSetUserInfo(data);
+            dispatch(onSetUserInfo(data));
           });
-          handleSetUserIdToken(token);
+          /** set user id token */
+          dispatch(onSetUserIdToken(token));
         }
-        setIsSuccess(true);
-      }
-      // off login
-      else {
-        setIsLoggedIn(false);
-        handleSetUserIdToken(null);
         setIsSuccess(true);
       }
     });
 
     // calculet category
     getCalculetCategory().then((data) => {
-      handleGetCalculetCategory(data);
+      /** set calculet category json */
+      dispatch(onSetCalculetCategory(data));
       setInit(true);
     });
-  }, [handleGetCalculetCategory, handleSetUserIdToken]);
+  }, [auth, dispatch]);
 
   return <>{init && isSuccess && <AppRouter isLoggedIn={isLoggedIn} />}</>;
 }

@@ -14,7 +14,7 @@ const Search = styled("div")(({ theme }) => ({
   marginLeft: 0,
   width: "100%",
 
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up("md")]: {
     maxWidth: "36rem",
   },
   paddingRight: `calc(1em + ${theme.spacing(2)})`, // 글씨 쓴 거 없애는 X버튼을 위한 width

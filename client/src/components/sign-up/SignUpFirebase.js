@@ -42,7 +42,7 @@ const Logo = styled.img`
  * 회원가입 페이지
  */
 function SignUpFirebase({ activateComponent }) {
-  const { loginPage } = usePage();
+  const { loginPage, signUpPage } = usePage();
 
   // loading state
   const { handleOnLoading, handleOffLoading } = useLoading();
@@ -191,8 +191,8 @@ function SignUpFirebase({ activateComponent }) {
       onClick: googleSignUp,
     },
     {
-      icon: <Logo src="/img/GitHub-Mark-32px.png" />,
-      text: "Github 계정으로 회원가입",
+      icon: <Logo src="/svgs/github-mark.svg" />,
+      text: "GitHub 계정으로 회원가입",
       onClick: githubSignUp,
     },
   ];

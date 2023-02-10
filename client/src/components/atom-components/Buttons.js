@@ -97,6 +97,7 @@ function BasicButton({ icon, text, onClick }) {
       sx={{
         borderColor: "divider",
         padding: "1.6rem 0 1.6rem 3.2rem",
+        textTransform: "none",
       }}
       onClick={onClick}
     >

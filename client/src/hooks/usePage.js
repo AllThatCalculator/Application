@@ -38,6 +38,7 @@ function usePage() {
 
   // 뒤로가기
   const backPage = () => {
+    // window.history.back();
     navigate(-1, { replace: true });
   };
   // 뒤로가기 & 새로고침

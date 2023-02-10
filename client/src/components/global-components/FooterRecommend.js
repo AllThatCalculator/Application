@@ -10,7 +10,7 @@ function FooterRecommend() {
   const { calculetListPage } = usePage();
 
   return (
-    <PageScreenBox sx={{ p: "3.2rem 0rem", gap: "2rem" }}>
+    <PageScreenBox sx={{ pt: "3.2rem", pb: "6.4rem", gap: "2rem" }}>
       <Box sx={{ display: "flex", width: "100%" }}>
         <ButtonBase onClick={calculetListPage}>
           <Box

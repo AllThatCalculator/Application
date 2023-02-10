@@ -43,6 +43,7 @@ function FindPwFormDialog({
             비밀번호를 찾고자하는 이메일을 입력해주세요.
           </DialogContentText>
           <TextField
+            required
             autoFocus
             margin="normal"
             label="이메일"

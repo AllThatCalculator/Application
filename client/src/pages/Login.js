@@ -210,8 +210,8 @@ function Login({ isLoggedIn }) {
       onClick: googleSignIn,
     },
     {
-      icon: <Logo src="/img/GitHub-Mark-32px.png" />,
-      text: "Github 계정으로 로그인",
+      icon: <Logo src="/svgs/github-mark.svg" />,
+      text: "GitHub 계정으로 로그인",
       onClick: githubSignIn,
     },
   ];
@@ -219,9 +219,10 @@ function Login({ isLoggedIn }) {
   useEffect(() => {
     // login 상태면, 튕겨내기
     if (isLoggedIn) {
+      // window.history.back();
       backPage();
     }
-  }, []);
+  }, [isLoggedIn]);
 
   return (
     <>
@@ -251,7 +252,6 @@ function Login({ isLoggedIn }) {
                   <FormControl
                     required
                     fullWidth
-                    variant="outlined"
                     error={errorType === ERROR_PW}
                   >
                     <InputLabel>비밀번호</InputLabel>

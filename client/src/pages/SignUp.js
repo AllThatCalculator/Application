@@ -8,19 +8,22 @@ import { PageWhiteScreenBox } from "../components/global-components/PageScreenBo
 import { FlexColumnBox } from "../components/global-components/FlexBox";
 import useSx from "../hooks/useSx";
 import { useSelector } from "react-redux";
-import usePage from "../hooks/usePage";
 import { LinearProgress } from "@mui/material";
+import usePage from "../hooks/usePage";
 
 /**
  * 회원가입 페이지
  */
 function SignUp({ isLoggedIn }) {
   const { widthSx } = useSx();
+
   const { backPage } = usePage();
 
   // redux state
-  const { isLoading } = useSelector((state) => ({
+  const { isLoading, userName, idToken } = useSelector((state) => ({
     isLoading: state.loading.isLoading,
+    userName: state.userInfo.userName,
+    idToken: state.userInfo.idToken,
   }));
 
   // 훅 관리하는 state
@@ -46,9 +49,9 @@ function SignUp({ isLoggedIn }) {
     const request = firebaseAuth.deleteAuth();
     request.then((result) => {
       if (result === true) {
-        console.log("회원 정보 삭제");
+        // console.log("회원 정보 삭제");
       } else {
-        console.log("오류");
+        // console.log("오류");
       }
     });
   }, []);
@@ -66,10 +69,10 @@ function SignUp({ isLoggedIn }) {
 
   useEffect(() => {
     // login 상태면, 튕겨내기
-    if (isLoggedIn) {
+    if (isLoggedIn && userName !== "" && idToken !== null) {
       backPage();
     }
-  }, []);
+  }, [isLoggedIn, userName, idToken]);
 
   return (
     <PageWhiteScreenBox
