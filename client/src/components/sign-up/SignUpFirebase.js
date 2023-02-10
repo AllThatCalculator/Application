@@ -42,7 +42,7 @@ const Logo = styled.img`
  * 회원가입 페이지
  */
 function SignUpFirebase({ activateComponent }) {
-  const { loginPage, signUpPage } = usePage();
+  const { loginPage } = usePage();
 
   // loading state
   const { handleOnLoading, handleOffLoading } = useLoading();

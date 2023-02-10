@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     setInit(false);
     setIsSuccess(false);
-
+    // console.log(auth);
     // login state
     onAuthStateChanged(auth, (user) => {
       // 회원가입 시, 이미 가입한 계정으로 회원가입하면 로그인되는 상황을 막고자 update막음
@@ -63,7 +63,7 @@ function App() {
       dispatch(onSetCalculetCategory(data));
       setInit(true);
     });
-  }, [auth, dispatch]);
+  }, [dispatch]);
 
   return <>{init && isSuccess && <AppRouter isLoggedIn={isLoggedIn} />}</>;
 }

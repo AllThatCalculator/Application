@@ -10,11 +10,7 @@ import {
   Avatar,
   Box,
   Dialog,
-  Divider,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
   Slide,
   Toolbar,
   Typography,
@@ -87,6 +83,12 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
     </Box>
   );
 
+  const sizeSx = { fontSize: { xs: "2rem", sm: "2.4rem", md: "2.8rem" } };
+  const buttonSizeSx = {
+    fontSize: { xs: "1.1rem", sm: "1.3rem", md: "1.4rem" },
+  };
+  const avatarSizeSx = { xs: "2.8rem", sm: "3.6rem", md: "4rem" };
+
   const HeaderPopupLists = [
     // // 저작
     // {
@@ -107,7 +109,12 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
     // 내 계정
     {
       isMd: true,
-      popupIcon: <Avatar src={isLoggedIn ? userInfo.profileImgSrc : ""} />,
+      popupIcon: (
+        <Avatar
+          src={isLoggedIn ? userInfo.profileImgSrc : ""}
+          sx={{ width: avatarSizeSx, height: avatarSizeSx }}
+        />
+      ),
       popupTitle: "내 계정",
       popupListData: myAccountList,
       popupContent: userInfoComponent,
@@ -160,11 +167,6 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
       </Dialog>
     );
   }
-
-  const sizeSx = { fontSize: { xs: "2rem", sm: "2.2rem", md: "2.4rem" } };
-  const buttonSizeSx = {
-    fontSize: { xs: "1.1rem", sm: "1.3rem", md: "1.4rem" },
-  };
 
   return (
     <Box

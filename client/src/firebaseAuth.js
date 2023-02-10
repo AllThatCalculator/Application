@@ -62,13 +62,14 @@ async function signUpWithSocial(social) {
   }
 
   try {
-    const result = await signInWithPopup(auth, provider);
+    await signInWithPopup(auth, provider);
     // !! (로그인한 사람은 login, signup 페이지에 들어오면 튕겨내기)
     // 이 사람이 이미 가입한 사람인지 확인하기 위해선
     // 암튼 로그인이 진행 될 것임.
     // 근데 이 로그인 된 찰나의 순간에 이 사람은 로그인을 했다고 생각해버려서
     // 튕겨내버리는 문제 때문에, 우선 로그인 진행되도록 하기
     return true;
+    // const result = await signInWithPopup(auth, provider);
     // const { isNewUser } = getAdditionalUserInfo(result);
     // if (isNewUser) {
     //   // 새로운 유저 -> 회원가입 가능!

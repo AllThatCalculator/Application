@@ -9,15 +9,12 @@ import { FlexColumnBox } from "../components/global-components/FlexBox";
 import useSx from "../hooks/useSx";
 import { useSelector } from "react-redux";
 import { LinearProgress } from "@mui/material";
-import usePage from "../hooks/usePage";
 
 /**
  * 회원가입 페이지
  */
 function SignUp({ isLoggedIn }) {
   const { widthSx } = useSx();
-
-  const { backPage } = usePage();
 
   // redux state
   const { isLoading, userName, idToken } = useSelector((state) => ({
@@ -70,7 +67,8 @@ function SignUp({ isLoggedIn }) {
   useEffect(() => {
     // login 상태면, 튕겨내기
     if (isLoggedIn && userName !== "" && idToken !== null) {
-      backPage();
+      // warning solve
+      window.history.back();
     }
   }, [isLoggedIn, userName, idToken]);
 
