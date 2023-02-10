@@ -40,14 +40,14 @@ import {
 } from "../modules/calculetList";
 import useGetCategoryList from "../hooks/useGetCategoryList";
 import getCalculetConverters from "../user-actions/getCalculetConverters";
+
 /**
  * 헤더에 있는 컴포넌트들
  * -> 카테고리바, 로고, 검색창, 로그인/아웃 버튼
  * @param {function} onIsOpen 버튼 이벤트 (카테고리바 버튼 이벤트)
- * @param {function} onLogin 로그인 페이지로 이동 이벤트 (로그인 버튼 이벤트)
  * @param {function} onLogout 로그아웃 이벤트 (로그아웃 버튼 이벤트)
  */
-function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
+function Contents({ isLoggedIn, onIsOpen, onLogout }) {
   const { isWindowSmDown } = useSx();
   const { loginPage, signUpPage } = usePage();
 
@@ -202,29 +202,34 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
         ) : (
           <BoxSearchInput />
         )}
-
-        {/* 로그인 상태 ? 프로필 : 로그인 버튼 */}
-        {isLoggedIn ? (
-          HeaderPopupLists.map(
-            (popupData, index) =>
-              popupData.isMd && (
-                <PopupList
-                  key={index}
-                  popupIcon={popupData.popupIcon}
-                  popupTitle={popupData.popupTitle}
-                  popupListData={popupData.popupListData}
-                  popupContent={popupData.popupContent}
-                />
-              )
+        {
+          // 로그인, 회원가입 제외하고 팝업 렌더
+          window.location.pathname.includes(URL.LOGIN) ||
+          window.location.pathname.includes(URL.SIGN_UP) ? (
+            <></>
+          ) : /* 로그인 상태 ? 프로필 : 로그인 버튼 */
+          isLoggedIn ? (
+            HeaderPopupLists.map(
+              (popupData, index) =>
+                popupData.isMd && (
+                  <PopupList
+                    key={index}
+                    popupIcon={popupData.popupIcon}
+                    popupTitle={popupData.popupTitle}
+                    popupListData={popupData.popupListData}
+                    popupContent={popupData.popupContent}
+                  />
+                )
+            )
+          ) : (
+            <>
+              <InvertTextButton onClick={loginPage}>로그인</InvertTextButton>
+              <InvertButton variant="contained" onClick={signUpPage}>
+                회원가입
+              </InvertButton>
+            </>
           )
-        ) : (
-          <>
-            <InvertTextButton onClick={loginPage}>로그인</InvertTextButton>
-            <InvertButton variant="contained" onClick={signUpPage}>
-              회원가입
-            </InvertButton>
-          </>
-        )}
+        }
       </Box>
     </Box>
   );
@@ -261,6 +266,10 @@ function Header({ isLoggedIn }) {
   const dispatch = useDispatch();
   // calculet list
   const { calculetList } = useGetCategoryList();
+
+  const { userInfo } = useSelector((state) => ({
+    userInfo: state.userInfo,
+  }));
 
   /**
    * 카테고리바 영역을 ref로 지정
@@ -299,12 +308,6 @@ function Header({ isLoggedIn }) {
   }, [onGetAllCalculetList]);
 
   /**
-   * 로그인 페이지로 이동 이벤트
-   */
-  function onHandlerLogin(event) {
-    window.location.href = URL.LOGIN;
-  }
-  /**
    * 로그아웃
    */
   function onHandlerLogout(event) {
@@ -325,7 +328,6 @@ function Header({ isLoggedIn }) {
             <Contents
               isLoggedIn={isLoggedIn}
               onIsOpen={setIsActive(true)}
-              onLogin={onHandlerLogin}
               onLogout={onHandlerLogout}
             />
           </Toolbar>

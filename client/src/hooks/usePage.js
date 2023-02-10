@@ -40,6 +40,11 @@ function usePage() {
   const backPage = () => {
     navigate(-1, { replace: true });
   };
+  // 뒤로가기 & 새로고침
+  const backRefreshPage = () => {
+    navigate(-1, { replace: true });
+    window.location.reload(true);
+  };
 
   return {
     calculetPage,
@@ -49,6 +54,7 @@ function usePage() {
     loginPage,
     signUpPage,
     backPage,
+    backRefreshPage,
   };
 }
 export default usePage;

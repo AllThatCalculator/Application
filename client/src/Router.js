@@ -37,8 +37,11 @@ function AppRouter({ isLoggedIn }) {
             <Auth isLoggedIn={isLoggedIn} authComponent={<Register />} />
           }
         /> */}
-        <Route path={URL.LOGIN} element={<Login />} />
-        <Route path={URL.SIGN_UP} element={<SignUp />} />
+        <Route path={URL.LOGIN} element={<Login isLoggedIn={isLoggedIn} />} />
+        <Route
+          path={URL.SIGN_UP}
+          element={<SignUp isLoggedIn={isLoggedIn} />}
+        />
         <Route path={URL.WRITE_USER_INFO} element={<WriteUserInfo />} />
         <Route path={URL.SEARCH} element={<Search />} />
         <Route path={URL.CALCULET_LIST} element={<CalculetList />} />

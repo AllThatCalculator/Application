@@ -11,12 +11,14 @@ const ERROR_TOO_MANY_REQUESTS = "error/ERROR_TOO_MANY_REQUESTS";
 const ERROR_PROVIDER_ALREADY_LINKED = "error/ERROR_PROVIDER_ALREADY_LINKED";
 const ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL =
   "error/ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL";
+const ERROR_INVALID_DATE = "error/ERROR_INVALID_DATE";
+const ERROR_SPECIAL_SYMBOLS = "error/ERROR_SPECIAL_SYMBOLS";
 
 // init State ( 초기 상태 )
 const initialState = {
   isError: false,
   errorType: "",
-  authError: "",
+  authError: "", // login, signup 관련 error
 };
 
 // Action Creator Function ( 액션 생성 함수 )
@@ -40,7 +42,9 @@ export const setAuthError = (data) => ({
     (data === "auth/provider-already-linked" &&
       ERROR_PROVIDER_ALREADY_LINKED) ||
     (data === "auth/account-exists-with-different-credential" &&
-      ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL),
+      ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL) ||
+    (data === "invalid-date" && ERROR_INVALID_DATE) ||
+    (data === "special-symbols" && ERROR_SPECIAL_SYMBOLS),
 });
 
 export default function error(state = initialState, action) {
@@ -50,6 +54,7 @@ export default function error(state = initialState, action) {
       return {
         ...state,
         isError: false,
+        errorType: "",
       };
     case ERROR_TYPE:
       return {
@@ -116,6 +121,18 @@ export default function error(state = initialState, action) {
       return {
         ...state,
         authError: "다른 인증 방식으로 존재하는 계정입니다.",
+        isError: true,
+      };
+    case ERROR_INVALID_DATE:
+      return {
+        ...state,
+        authError: "유효한 날짜가 아닙니다.",
+        isError: true,
+      };
+    case ERROR_SPECIAL_SYMBOLS:
+      return {
+        ...state,
+        authError: "공백 혹은 특수문자를 제거해주세요.",
         isError: true,
       };
     default:

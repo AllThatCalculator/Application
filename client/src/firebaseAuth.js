@@ -9,6 +9,7 @@ import {
   signOut,
   deleteUser,
   onAuthStateChanged,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 async function signUpWithEmail(email, password) {
@@ -120,6 +121,19 @@ async function checkAuthState() {
   }
 }
 
+/**
+ * find passward (비밀번호 재설정)
+ * @param {*} email
+ */
+async function findPassword(email) {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return true;
+  } catch (error) {
+    return error.code;
+  }
+}
+
 const firebaseAuth = {
   signUpWithEmail,
   signInWithEmail,
@@ -128,5 +142,6 @@ const firebaseAuth = {
   signUpWithSocial,
   signInWithSocial,
   checkAuthState,
+  findPassword,
 };
 export default firebaseAuth;
