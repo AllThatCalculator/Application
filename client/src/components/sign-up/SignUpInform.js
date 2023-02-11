@@ -183,8 +183,8 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
             아래 내용을 작성해 주세요.
           </Typography>
           <FlexColumnBox gap="1.6rem">
-            {/* 프로필 사진 */}
             <FlexBox
+              // 프로필 사진
               sx={{
                 width: "100%",
                 justifyContent: "center",

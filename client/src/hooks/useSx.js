@@ -52,6 +52,7 @@ function useSx() {
     justifyContent: "center",
     gap: "1.6rem",
     paddingTop: "8rem",
+    // paddingBottom: "16rem",
   };
 
   // Sub Title Sx

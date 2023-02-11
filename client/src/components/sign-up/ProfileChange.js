@@ -6,7 +6,6 @@ import {
   ClickAwayListener,
   Dialog,
   DialogTitle,
-  Grid,
   ListItem,
   ListItemButton,
   ListItemText,

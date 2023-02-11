@@ -81,7 +81,10 @@ function SignUp({ isLoggedIn }) {
       }}
     >
       <FlexColumnBox
-        sx={{ ...widthSx, maxWidth: !isActiveInform ? "40rem" : "48rem" }}
+        sx={{
+          ...widthSx,
+          maxWidth: !isActiveInform ? "40rem" : "48rem",
+        }}
       >
         <StyledImg src="/ATCLogoBlueImgText.png" width="214px" />
         {isLoading && <LinearProgress />}
