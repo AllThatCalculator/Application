@@ -1,29 +1,69 @@
-import { useRef, useState } from "react";
-import styled from "styled-components";
-import { StyledCircleImg } from "../atom-components/BoxIcon";
-import { BtnText } from "../atom-components/ButtonTemplate";
-import { FlexColumnLayout, FlexRowLayout } from "../Layout";
-
-/**
- * 가운데 정렬
- */
-const Wrapper = styled(FlexColumnLayout)`
-  align-items: center;
-`;
+import {
+  Avatar,
+  Badge,
+  Box,
+  ButtonBase,
+  ClickAwayListener,
+  Dialog,
+  DialogTitle,
+  Grid,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Paper,
+} from "@mui/material";
+import { useRef } from "react";
+import useSx from "../../hooks/useSx";
+import EditIcon from "@mui/icons-material/Edit";
 
 /**
  * 프로필 이미지 컴포넌트
  * 사진 변경 함수 포함
  *
  * @param {string, funtion}
- * profileImg : 이미지 state
+ * profileImg : 이미지 state { url: "", file: null }
  * setProfileImg : 이미지 state 변경하는 함수
+ * isPopUpOpen : 이미지 변경하는 popup state
+ * setIsPopUpOpen : 이미지 변경하는 popup state 변경하는 함수
  */
-function ProfileChange({ profileImg, setProfileImg }) {
-  /**
-   * 사용자가 프로필 사진 변경했는지 여부
-   */
-  const [isUserImg, setIsUserImg] = useState(false);
+function ProfileChange({
+  profileImg,
+  setProfileImg,
+  isPopUpOpen,
+  setIsPopUpOpen,
+}) {
+  const { isWindowSmDown } = useSx();
+
+  function handleOnIsPopUpOpen() {
+    setIsPopUpOpen(true);
+  }
+  function handleOffIsPopUpOpen() {
+    setIsPopUpOpen(false);
+  }
+
+  /** 프로필 사진 크기 */
+  const profileSize = { xs: "6.4rem", sm: "7.2rem", md: "8.0rem" };
+  /** 프로필 뱃지 버튼 크기 */
+  const EditSize = { xs: "2.2rem", sm: "2.4rem", md: "2.8rem" };
+  /** 프로필 뱃지 아이콘 크기 */
+  const EditIconSize = {
+    fontSize: { xs: "1.6rem", sm: "1.8rem", md: "2.2rem" },
+  };
+  /** 프로필 선택 팝업 스타일 */
+  const popupLayoutStyles = {
+    position: "absolute",
+    zIndex: 2000,
+    bgcolor: "white",
+  };
+  const popupStyles = {
+    position: "relative",
+  };
+
+  // 이미지 파일 -> url 생성
+  function createImageUrl(fileBlob) {
+    return URL.createObjectURL(fileBlob);
+  }
+
   /**
    * Ref를 사용해서 input태그 참조
    * -> 사진 번경 버튼 누르면, 사진 선택 가능
@@ -36,81 +76,121 @@ function ProfileChange({ profileImg, setProfileImg }) {
    * 이미지 제거
    * -> 기본이미지로 변경
    */
-  function removeImage() {
-    setIsUserImg(false);
-    setProfileImg("/img/defaultProfile.png");
+  function changeDefaultProfileImage() {
+    handleOffIsPopUpOpen();
+    setProfileImg({ url: "", file: null });
+  }
+  /** 이미지 추가 버튼 눌렀을 때 ref에서 일어나는 일 */
+  function onAddImageChange(event) {
+    event.preventDefault();
+    changeDefaultProfileImage(); // init
+
+    // 파일이 있는 경우
+    if (event.target.files.length !== 0) {
+      const file = event.target.files[0];
+      setProfileImg({ url: createImageUrl(file), file: file });
+    }
   }
 
-  /**
-   * 이미지를 인코딩하여 이미지 state를 변경하는 함수
-   *
-   * <FileReader>
-   * File, Blob 객체를 사용해 특정 파일을 읽어들여 자바스크립트에서 파일에 접근할 수 있도록 도와주는 도구
-   *
-   * <readAsDataURL>
-   * File, Blob 을 읽은 뒤 base64로 인코딩한 문자열을 FileReader 인스턴스의 result라는 속성에 담아줌.
-   * -> 사용자가 선택한 이미지를 base64로 인코딩하여 profileImg 라는 state 안에 넣어줌.
-   *
-   * <FileReader.onload>
-   * FileReader가 성공적으로 파일을 읽어들였을 때 트리거 되는 이벤트 핸들러
-   * -> 이 핸들러 내부에 우리가 원하는 이미지 프리뷰 로직을 넣어줌.
-   *
-   * resolve를 호출하여 Promise를 이행상태로 만들어줌.
-   *
-   * @param {Blob}
-   *
-   * fileBlob : 인코딩할 File
-   */
-  function encodeFileToBase64(fileBlob) {
-    setIsUserImg(true);
+  /** 프로필 사진 선택 목록 */
+  const listData = [
+    {
+      name: "사진 선택",
+      onClickFuntion: changeImageSrc,
+    },
+    {
+      name: "기본 이미지로 변경",
+      onClickFuntion: changeDefaultProfileImage,
+    },
+  ];
 
-    const reader = new FileReader();
-    reader.readAsDataURL(fileBlob);
-    return new Promise((resolve) => {
-      reader.onload = () => {
-        // 미리보기를 위한 갱신
-        setProfileImg(reader.result);
-        resolve();
-      };
-    });
-  }
-  /**
-   * 변경한 이미지 미리 보기
-   * -> 기본 이미지면, 이미지 추가
-   * -> 이미지 추가했으면, 이미지 변경 & 이미지 제거
-   * @param {*} event
-   *
-   * event : 선택된 이미지를 참조하기 위한 event
-   */
-  function onChange(event) {
-    encodeFileToBase64(event.target.files[0]);
-  }
+  /** 사진 선택 | 기본 이미지 변경 list component */
+  const StyledListItem = ({ data }) => {
+    return (
+      <ListItem disablePadding>
+        <ListItemButton
+          onClick={data.onClickFuntion}
+          sx={{
+            paddingY: "1.2rem",
+            paddingLeft: "2.0rem",
+            paddingRight: "8rem",
+          }}
+        >
+          <ListItemText primary={data.name} sx={{ ml: "1.6rem" }} />
+        </ListItemButton>
+      </ListItem>
+    );
+  };
+
+  const compontList = (
+    <>
+      {listData.map((data) => (
+        <StyledListItem key={data.name} data={data} />
+      ))}
+    </>
+  );
+
+  /** sm down에서의 popup 컴포넌트 */
+  const SmPopup = () => {
+    return (
+      <Dialog onClose={handleOffIsPopUpOpen} open={isPopUpOpen}>
+        <DialogTitle>프로필 사진</DialogTitle>
+        {compontList}
+      </Dialog>
+    );
+  };
+  /** md up에서의 popup 컴포넌트 */
+  const MdPopup = () => {
+    return (
+      <Paper sx={popupLayoutStyles} elevation={3}>
+        <Box sx={popupStyles}>{compontList}</Box>
+      </Paper>
+    );
+  };
+
   return (
-    <FlexRowLayout>
-      <Wrapper gap="10px">
-        <StyledCircleImg src={profileImg} width="64px" height="64px" />
-        {!isUserImg ? (
-          <BtnText
-            text="이미지 추가"
-            icon="PencilFill"
-            onClick={changeImageSrc}
-          />
-        ) : (
-          <FlexRowLayout gap="10px">
-            <BtnText text="변경" icon="PencilFill" onClick={changeImageSrc} />
-            <BtnText text="제거" icon="Trash3Fill" onClick={removeImage} />
-          </FlexRowLayout>
-        )}
-
-        <input
-          type="file"
-          accept="image/*"
-          style={{ display: "none" }}
-          ref={imageInput}
-          onChange={onChange}
-        />
-      </Wrapper>
-    </FlexRowLayout>
+    <>
+      <ClickAwayListener
+        mouseEvent="onMouseDown"
+        touchEvent="onTouchStart"
+        onClickAway={handleOffIsPopUpOpen}
+      >
+        <Box>
+          <ButtonBase onClick={handleOnIsPopUpOpen} disableRipple>
+            <Badge
+              overlap="circular"
+              anchorOrigin={{ vertical: "top", horizontal: "right" }}
+              badgeContent={
+                <Avatar
+                  sx={{
+                    bgcolor: "info.main",
+                    width: EditSize,
+                    height: EditSize,
+                  }}
+                >
+                  <EditIcon sx={{ ...EditIconSize }} />
+                </Avatar>
+              }
+            >
+              <Avatar
+                component={Paper}
+                elevation={2}
+                src={profileImg.url || ""} // 링크
+                sx={{ width: profileSize, height: profileSize }}
+              />
+            </Badge>
+          </ButtonBase>
+          {isWindowSmDown ? <SmPopup /> : isPopUpOpen ? <MdPopup /> : null}
+        </Box>
+      </ClickAwayListener>
+      <input
+        type="file" // input 타입을 file로 지정하면 파일을 가져올 수 있는 형태의 input이 생성됨.
+        accept="image/*"
+        style={{ display: "none" }}
+        ref={imageInput}
+        onChange={onAddImageChange}
+      />
+    </>
   );
 }
 export default ProfileChange;

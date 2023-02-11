@@ -21,13 +21,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { FlexColumnBox } from "../global-components/FlexBox";
+import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import usePage from "../../hooks/usePage";
 import { useSelector } from "react-redux";
 import useLoading from "../../hooks/useLoading";
 import checkValidDate from "../../utils/checkValidDate";
 import useError from "../../hooks/useError";
 import checkSpecialSymbols from "../../utils/checkSpecialSymbols";
+import ProfileChange from "./ProfileChange";
 
 /**
  * 회원가입 페이지
@@ -63,8 +64,9 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
    * 직업 job
    * 자기소개 문구 bio
    */
-  // const [profileImg, setProfileImg] = useState("/img/defaultProfile.png");
-  // const profileImg = "/img/defaultProfile.png";
+
+  /** 프로필 사진 */
+  const [profileImg, setProfileImg] = useState({ url: "", file: null });
 
   /** 닉네임 최대 길이 */
   const USERNAME_LIMIT = 20;
@@ -141,7 +143,7 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
     // 서버에 보낼 정보 => body
     let body = {
       // profileImg: profileImg,
-      profileImg: null,
+      profileImg: profileImg.file,
       userInfo: {
         userName: userName.value,
         bio: bio.value,
@@ -171,6 +173,8 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
     });
   }
 
+  const [isOpenProfileImgPopUp, setIsOpenProfileImgPopUp] = useState(false);
+
   return (
     <Card variant="outlined">
       <CardContent>
@@ -179,6 +183,20 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
             아래 내용을 작성해 주세요.
           </Typography>
           <FlexColumnBox gap="1.6rem">
+            {/* 프로필 사진 */}
+            <FlexBox
+              sx={{
+                width: "100%",
+                justifyContent: "center",
+              }}
+            >
+              <ProfileChange
+                profileImg={profileImg}
+                setProfileImg={setProfileImg}
+                isPopUpOpen={isOpenProfileImgPopUp}
+                setIsPopUpOpen={setIsOpenProfileImgPopUp}
+              />
+            </FlexBox>
             <TextField
               required
               fullWidth

@@ -9,8 +9,8 @@ import URL from "../components/PageUrls";
  */
 async function signUpUser(dataToSubmit = {}, userId) {
   const formData = new FormData(); // 서버에 보내기 위한 form
-  // img
-  if (dataToSubmit.profileImg === null || dataToSubmit.profileImg === "") {
+  // img file
+  if (dataToSubmit.profileImg === null) {
     formData.append("profileImg", "");
   } else {
     formData.append("profileImg", dataToSubmit.profileImg);
@@ -21,9 +21,10 @@ async function signUpUser(dataToSubmit = {}, userId) {
   let data;
   try {
     await axios
-      .post(`/api/users/`, formData, {
+      .post(`/api/users`, formData, {
         headers: {
           Authorization: `Bearer ${userId}`,
+          "Content-Type": "multipart/form-data",
         },
       })
       .then((response) => {
@@ -31,6 +32,7 @@ async function signUpUser(dataToSubmit = {}, userId) {
       });
     return data;
   } catch (error) {
+    console.log(error);
     switch (error.response.status) {
       case 409: // 이미 등록된 상태에서 한 번 더 요청 보냄 error
         window.location.href = URL.CALCULET;

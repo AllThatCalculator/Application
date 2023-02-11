@@ -197,54 +197,60 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
           justifyContent: "flex-end",
         }}
       >
-        {/* 검색창 */}
-        {isWindowMdDown ? (
-          <>
-            <IconButton sx={{ ...sizeSx }} onClick={handleIsSearchOpen}>
-              <SearchIcon
-                sx={{ color: "white", ...sizeSx }}
-                fontSize="inherit"
-              />
-            </IconButton>
-            <SearchScreen />
-          </>
-        ) : (
-          <BoxSearchInput />
-        )}
         {
           // 로그인, 회원가입 제외하고 팝업 렌더
           window.location.pathname.includes(URL.LOGIN) ||
           window.location.pathname.includes(URL.SIGN_UP) ? (
             <></>
-          ) : /* 로그인 상태 ? 프로필 : 로그인 버튼 */
-          isLoggedIn ? (
-            HeaderPopupLists.map(
-              (popupData, index) =>
-                popupData.isMd && (
-                  <PopupList
-                    key={index}
-                    popupIcon={popupData.popupIcon}
-                    popupTitle={popupData.popupTitle}
-                    popupListData={popupData.popupListData}
-                    popupContent={popupData.popupContent}
-                  />
-                )
-            )
           ) : (
             <>
-              <InvertTextButton
-                sx={{ ...buttonSizeSx, mr: "0.4rem" }}
-                onClick={loginPage}
-              >
-                로그인
-              </InvertTextButton>
-              <InvertButton
-                sx={{ ...buttonSizeSx }}
-                variant="contained"
-                onClick={signUpPage}
-              >
-                회원가입
-              </InvertButton>
+              {isWindowMdDown ? (
+                <>
+                  <IconButton sx={{ ...sizeSx }} onClick={handleIsSearchOpen}>
+                    <SearchIcon
+                      sx={{ color: "white", ...sizeSx }}
+                      fontSize="inherit"
+                    />
+                  </IconButton>
+                  <SearchScreen />
+                </>
+              ) : (
+                <BoxSearchInput />
+              )}
+              {
+                /* 로그인 상태 ? 프로필 : 로그인 버튼 */
+                isLoggedIn ? (
+                  HeaderPopupLists.map(
+                    (popupData, index) =>
+                      popupData.isMd && (
+                        <PopupList
+                          key={index}
+                          popupIcon={popupData.popupIcon}
+                          popupTitle={popupData.popupTitle}
+                          popupListData={popupData.popupListData}
+                          popupContent={popupData.popupContent}
+                        />
+                      )
+                  )
+                ) : (
+                  // 로그인 | 회원가입 버튼
+                  <>
+                    <InvertTextButton
+                      sx={{ ...buttonSizeSx, mr: "0.4rem" }}
+                      onClick={loginPage}
+                    >
+                      로그인
+                    </InvertTextButton>
+                    <InvertButton
+                      sx={{ ...buttonSizeSx }}
+                      variant="contained"
+                      onClick={signUpPage}
+                    >
+                      회원가입
+                    </InvertButton>
+                  </>
+                )
+              }
             </>
           )
         }
