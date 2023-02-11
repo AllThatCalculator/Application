@@ -4,18 +4,13 @@ import CategoryBar from "../components/global-components/CategoryBar";
 import { useCallback, useState } from "react";
 import { useEffect } from "react";
 import URL from "../components/PageUrls";
-import calculetsUser from "../user-actions/calculetsUser";
 import firebaseAuth from "../firebaseAuth";
 import {
   AppBar,
   Avatar,
   Box,
   Dialog,
-  Divider,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
   Slide,
   Toolbar,
   Typography,
@@ -33,22 +28,28 @@ import SearchIcon from "@mui/icons-material/Search";
 import { forwardRef } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import usePage from "../hooks/usePage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import getCalculetList from "../user-actions/getCalculetList";
+import {
+  onSetCalculetConverters,
+  onSetCalculetList,
+} from "../modules/calculetList";
+import useGetCategoryList from "../hooks/useGetCategoryList";
+import getCalculetConverters from "../user-actions/getCalculetConverters";
+
 /**
  * 헤더에 있는 컴포넌트들
  * -> 카테고리바, 로고, 검색창, 로그인/아웃 버튼
  * @param {function} onIsOpen 버튼 이벤트 (카테고리바 버튼 이벤트)
- * @param {function} onLogin 로그인 페이지로 이동 이벤트 (로그인 버튼 이벤트)
  * @param {function} onLogout 로그아웃 이벤트 (로그아웃 버튼 이벤트)
  */
-function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
-  const { isWindowSmDown } = useSx();
+function Contents({ isLoggedIn, onIsOpen, onLogout }) {
+  const { isWindowMdDown } = useSx();
   const { loginPage, signUpPage } = usePage();
 
   const { userInfo } = useSelector((state) => ({
     userInfo: state.userInfo,
   }));
-
   // 내 계정 팝업 리스트
   const myAccountList = [
     // [
@@ -82,6 +83,12 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
     </Box>
   );
 
+  const sizeSx = { fontSize: { xs: "2rem", sm: "2.4rem", md: "2.8rem" } };
+  const buttonSizeSx = {
+    fontSize: { xs: "1.1rem", sm: "1.3rem", md: "1.4rem" },
+  };
+  const avatarSizeSx = { xs: "2.8rem", sm: "3.6rem", md: "4rem" };
+
   const HeaderPopupLists = [
     // // 저작
     // {
@@ -102,7 +109,12 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
     // 내 계정
     {
       isMd: true,
-      popupIcon: <Avatar src={isLoggedIn ? userInfo.profileImgSrc : ""} />,
+      popupIcon: (
+        <Avatar
+          src={isLoggedIn ? userInfo.profileImgSrc : ""}
+          sx={{ width: avatarSizeSx, height: avatarSizeSx }}
+        />
+      ),
       popupTitle: "내 계정",
       popupListData: myAccountList,
       popupContent: userInfoComponent,
@@ -140,7 +152,7 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
             <BoxSearchInput />
           </Toolbar>
         </AppBar>
-        <List>
+        {/* <List>
           <ListItem button>
             <ListItemText primary="Phone ringtone" secondary="Titania" />
           </ListItem>
@@ -151,7 +163,7 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
               secondary="Tethys"
             />
           </ListItem>
-        </List>
+        </List> */}
       </Dialog>
     );
   }
@@ -167,12 +179,12 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
     >
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <IconButton
-          size="large"
+          sx={{ ...sizeSx }}
           edge="start"
           color="inherit"
           onClick={onIsOpen}
         >
-          <MenuIcon />
+          <MenuIcon fontSize="inherit" />
         </IconButton>
         <LogoHeader />
       </Box>
@@ -180,48 +192,91 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: "2.4rem",
+          gap: { xs: "0.4rem", sm: "1.8rem", md: "2.4rem" },
           width: "100%",
           justifyContent: "flex-end",
         }}
       >
-        {/* 검색창 */}
-        {isWindowSmDown ? (
-          <>
-            <IconButton size="large" onClick={handleIsSearchOpen}>
-              <SearchIcon sx={{ color: "white" }} />
-            </IconButton>
-            <SearchScreen />
-          </>
-        ) : (
-          <BoxSearchInput />
-        )}
-
-        {/* 로그인 상태 ? 프로필 : 로그인 버튼 */}
-        {isLoggedIn ? (
-          HeaderPopupLists.map(
-            (popupData, index) =>
-              popupData.isMd && (
-                <PopupList
-                  key={index}
-                  popupIcon={popupData.popupIcon}
-                  popupTitle={popupData.popupTitle}
-                  popupListData={popupData.popupListData}
-                  popupContent={popupData.popupContent}
-                />
-              )
+        {
+          // 로그인, 회원가입 제외하고 팝업 렌더
+          window.location.pathname.includes(URL.LOGIN) ||
+          window.location.pathname.includes(URL.SIGN_UP) ? (
+            <></>
+          ) : (
+            <>
+              {isWindowMdDown ? (
+                <>
+                  <IconButton sx={{ ...sizeSx }} onClick={handleIsSearchOpen}>
+                    <SearchIcon
+                      sx={{ color: "white", ...sizeSx }}
+                      fontSize="inherit"
+                    />
+                  </IconButton>
+                  <SearchScreen />
+                </>
+              ) : (
+                <BoxSearchInput />
+              )}
+              {
+                /* 로그인 상태 ? 프로필 : 로그인 버튼 */
+                isLoggedIn ? (
+                  HeaderPopupLists.map(
+                    (popupData, index) =>
+                      popupData.isMd && (
+                        <PopupList
+                          key={index}
+                          popupIcon={popupData.popupIcon}
+                          popupTitle={popupData.popupTitle}
+                          popupListData={popupData.popupListData}
+                          popupContent={popupData.popupContent}
+                        />
+                      )
+                  )
+                ) : (
+                  // 로그인 | 회원가입 버튼
+                  <>
+                    <InvertTextButton
+                      sx={{ ...buttonSizeSx, mr: "0.4rem" }}
+                      onClick={loginPage}
+                    >
+                      로그인
+                    </InvertTextButton>
+                    <InvertButton
+                      sx={{ ...buttonSizeSx }}
+                      variant="contained"
+                      onClick={signUpPage}
+                    >
+                      회원가입
+                    </InvertButton>
+                  </>
+                )
+              }
+            </>
           )
-        ) : (
-          <>
-            <InvertTextButton onClick={loginPage}>로그인</InvertTextButton>
-            <InvertButton variant="contained" onClick={signUpPage}>
-              회원가입
-            </InvertButton>
-          </>
-        )}
+        }
       </Box>
     </Box>
   );
+}
+
+async function getAllCalculetList(setLoading) {
+  await setLoading(false);
+
+  let result = { calculetList: null, calculetConverters: null };
+  await getCalculetList().then((data) => {
+    /** set category list */
+    result.calculetList = data;
+    // dispatch(onSetCalculetList(data));
+  });
+  await getCalculetConverters().then((data) => {
+    /** set category converter */
+    result.calculetConverters = data;
+
+    // dispatch(onSetCalculetConverters(data));
+  });
+  await setLoading(true);
+
+  return result;
 }
 
 /**
@@ -231,7 +286,10 @@ function Contents({ isLoggedIn, onIsOpen, onLogin, onLogout }) {
  *
  */
 function Header({ isLoggedIn }) {
-  // 카테고리
+  /** Redux State */
+  const dispatch = useDispatch();
+  // calculet list
+  const { calculetList } = useGetCategoryList();
 
   /**
    * 카테고리바 영역을 ref로 지정
@@ -240,8 +298,6 @@ function Header({ isLoggedIn }) {
    * -> isActive : 카테고리바 열 때 slideIn, 닫을 때 slideInOut 으로 작동할 수 있도록 animation의 mode를 제어하는 state
    * -> setIsActive : 카테고리바 활성화 관리 함수
    */
-  // const categoryBarRef = useClickOutside();
-
   const [categoryState, setCategoryState] = useState(false);
   const setIsActive = (open) => (event) => {
     if (
@@ -258,23 +314,19 @@ function Header({ isLoggedIn }) {
    * 카테고리바 정보 (대분류, 소분류에 따른 계산기) 서버에서 불러오기
    * 페이지 렌더시 한 번만
    */
-  const [contentsCategory, setContentsCategory] = useState(null);
-  const onHandlerSetContentsCategory = useCallback(() => {
-    calculetsUser().then((res) => {
-      // 카테고리바 정보 불러오기 성공
-      if (res) setContentsCategory(res);
-    });
-  }, []);
-  useEffect(() => {
-    onHandlerSetContentsCategory();
-  }, [onHandlerSetContentsCategory]);
+  const [loading, setLoading] = useState(false);
 
-  /**
-   * 로그인 페이지로 이동 이벤트
-   */
-  function onHandlerLogin(event) {
-    window.location.href = URL.LOGIN;
-  }
+  const onGetAllCalculetList = useCallback(() => {
+    getAllCalculetList(setLoading).then((result) => {
+      dispatch(onSetCalculetList(result.calculetList));
+      dispatch(onSetCalculetConverters(result.calculetConverters));
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    onGetAllCalculetList();
+  }, [onGetAllCalculetList]);
+
   /**
    * 로그아웃
    */
@@ -296,37 +348,19 @@ function Header({ isLoggedIn }) {
             <Contents
               isLoggedIn={isLoggedIn}
               onIsOpen={setIsActive(true)}
-              onLogin={onHandlerLogin}
               onLogout={onHandlerLogout}
             />
           </Toolbar>
         </AppBar>
       </Box>
-      {contentsCategory && (
+      {Object.keys(calculetList).length !== 0 && loading && (
         <CategoryBar
-          contents={contentsCategory}
+          contents={calculetList}
           isActive={categoryState}
           setIsActive={setIsActive}
         />
       )}
     </>
-    // <Wrapper ref={categoryBarRef.elementRef}>
-    //   <Positioner isChange={isChange}>
-    //     <Contents
-    //       isLoggedIn={isLoggedIn}
-    //       onIsOpen={() => categoryBarRef.setIsActive(!categoryBarRef.isActive)}
-    //       onLogin={onHandlerLogin}
-    //       onLogout={onHandlerLogout}
-    //     />
-    //   </Positioner>
-    //   {contentsCategory && (
-    //     <CategoryBar
-    //       contents={contentsCategory}
-    //       isActive={categoryBarRef.isActive}
-    //       setIsActive={categoryBarRef.setIsActive}
-    //     />
-    //   )}
-    // </Wrapper>
   );
 }
 

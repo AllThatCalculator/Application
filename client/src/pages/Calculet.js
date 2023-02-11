@@ -154,7 +154,8 @@ function Calculet() {
               <PageScreenBox
                 sx={{
                   width: 1,
-                  p: "1.2rem 0",
+                  pt: "1.2rem",
+                  pb: "1.2rem",
                 }}
               >
                 <Grid

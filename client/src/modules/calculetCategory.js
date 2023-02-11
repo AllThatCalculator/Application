@@ -45,10 +45,11 @@ const initialState = {
     //     ]
     //   },
   ],
+  updated_at: "",
 };
 
 /** Action Creator Function ( 액션 생성 함수 ) */
-export function onGetCalculetCategory(data) {
+export function onSetCalculetCategory(data) {
   return { type: CALCULET_CATEGORY, data };
 }
 

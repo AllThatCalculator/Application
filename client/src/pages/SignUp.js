@@ -7,17 +7,26 @@ import firebaseAuth from "../firebaseAuth";
 import { PageWhiteScreenBox } from "../components/global-components/PageScreenBox";
 import { FlexColumnBox } from "../components/global-components/FlexBox";
 import useSx from "../hooks/useSx";
+import { useSelector } from "react-redux";
+import { LinearProgress } from "@mui/material";
 
 /**
  * 회원가입 페이지
  */
-function SignUp() {
+function SignUp({ isLoggedIn }) {
   const { widthSx } = useSx();
+
+  // redux state
+  const { isLoading, userName, idToken } = useSelector((state) => ({
+    isLoading: state.loading.isLoading,
+    userName: state.userInfo.userName,
+    idToken: state.userInfo.idToken,
+  }));
 
   // 훅 관리하는 state
   const [isActive, setIsActive] = useState(false);
 
-  // 정보 입력 컴포넌트 활성화 여부
+  // 이메일|소셜 회원가입 후, 정보 입력 컴포넌트 활성화 여부
   const [isActiveInform, setIsActiveInform] = useState(false);
 
   function activateEvent() {
@@ -37,9 +46,9 @@ function SignUp() {
     const request = firebaseAuth.deleteAuth();
     request.then((result) => {
       if (result === true) {
-        console.log("회원 정보 삭제");
+        // console.log("회원 정보 삭제");
       } else {
-        console.log("오류");
+        // console.log("오류");
       }
     });
   }, []);
@@ -55,12 +64,31 @@ function SignUp() {
     }
   }, [isActive, preventLeave]);
 
+  useEffect(() => {
+    // login 상태면, 튕겨내기
+    if (isLoggedIn && userName !== "" && idToken !== null) {
+      // warning solve
+      window.history.back();
+    }
+  }, [isLoggedIn, userName, idToken]);
+
   return (
-    <PageWhiteScreenBox container sx={{ justifyContent: "center" }}>
+    <PageWhiteScreenBox
+      container
+      sx={{
+        justifyContent: "center",
+        pointerEvents: isLoading ? "none" : "auto",
+      }}
+    >
       <FlexColumnBox
-        sx={{ ...widthSx, maxWidth: !isActiveInform ? "36rem" : "48rem" }}
+        sx={{
+          ...widthSx,
+          maxWidth: !isActiveInform ? "40rem" : "48rem",
+        }}
       >
         <StyledImg src="/ATCLogoBlueImgText.png" width="214px" />
+        {isLoading && <LinearProgress />}
+
         {!isActiveInform && (
           <SignUpFirebase activateComponent={activateComponent} />
         )}
@@ -70,13 +98,6 @@ function SignUp() {
             deactivateEvent={deactivateEvent}
           />
         )}
-        {/* {false && <SignUpFirebase activateComponent={activateComponent} />}
-        {true && (
-          <SignUpInform
-            activateEvent={activateEvent}
-            deactivateEvent={deactivateEvent}
-          />
-        )} */}
       </FlexColumnBox>
     </PageWhiteScreenBox>
   );

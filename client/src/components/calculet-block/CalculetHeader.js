@@ -16,12 +16,14 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ShareIcon from "@mui/icons-material/Share";
 import PopupList from "../global-components/PopupList";
 import Title from "../global-components/Title";
-import getUserIdToken from "../../utils/getUserIdToken";
 import putCalculetLike from "../../user-actions/putCalculetLike";
 import putCalculetBookmark from "../../user-actions/putCalculetBookmark";
+import { useSelector } from "react-redux";
+import usePage from "../../hooks/usePage";
 
 function CalculetHeader({ calculetObj, updateLog }) {
   const { boxSx } = useSx();
+  const { loginPage } = usePage();
 
   const statistics = calculetObj.statistics;
   const userCalculet = calculetObj.userCalculet;
@@ -31,6 +33,12 @@ function CalculetHeader({ calculetObj, updateLog }) {
   // const [userCalculet, setUserCalculet] = useState(calculetObj.userCalculet);
   // const [contributor, setContributor] = useState(calculetObj.contributor);
   // const [title, setTitle] = useState(calculetObj.title);
+
+  // user id token
+  const { idToken } = useSelector((state) => ({
+    idToken: state.userInfo.idToken,
+  }));
+
   /**
    * 좋아요 관련 정보
    * {int} number: 해당 계산기의 좋아요 수
@@ -67,9 +75,13 @@ function CalculetHeader({ calculetObj, updateLog }) {
    * - 추후 DB 갱신을 위한 백엔드와의 통신 필요
    */
   async function toggleLike() {
-    const userId = await getUserIdToken();
-    // console.log(userId);
-    await putCalculetLike(likeObj.liked, calculetObj.id, userId)
+    // idToken 없으면, 로그인하러 가기
+    if (!idToken) {
+      loginPage();
+      return;
+    }
+
+    await putCalculetLike(likeObj.liked, calculetObj.id, idToken)
       .then((result) => {
         setLikeObj((prev) => ({
           number: result.likeCnt,
@@ -90,8 +102,12 @@ function CalculetHeader({ calculetObj, updateLog }) {
    * - 추후 DB 갱신을 위한 백엔드와의 통신 필요
    */
   async function toggleBookmark() {
-    const userId = await getUserIdToken();
-    await putCalculetBookmark(bookmarkObj.bookmarked, calculetObj.id, userId)
+    // idToken 없으면, 로그인하러 가기
+    if (!idToken) {
+      loginPage();
+      return;
+    }
+    await putCalculetBookmark(bookmarkObj.bookmarked, calculetObj.id, idToken)
       .then((result) => {
         setBookmarkObj((prev) => ({
           number: result.bookmarkCnt,

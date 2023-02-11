@@ -51,6 +51,8 @@ function useSx() {
     maxWidth: "36rem", // 회원가입/상세내용 에서 따로 정의 해주기
     justifyContent: "center",
     gap: "1.6rem",
+    paddingTop: "8rem",
+    // paddingBottom: "16rem",
   };
 
   // Sub Title Sx

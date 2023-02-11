@@ -3,7 +3,6 @@ import Shortcut from "../components/calculet-list/Shortcut";
 import useMoveScroll from "../hooks/useMoveScroll";
 import { useEffect } from "react";
 import { useState } from "react";
-import calculetsUser from "../user-actions/calculetsUser";
 import ImportExportIcon from "@mui/icons-material/ImportExport";
 import IsoIcon from "@mui/icons-material/Iso";
 import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
@@ -18,6 +17,7 @@ import {
 } from "../components/global-components/FlexBox";
 import Title from "../components/global-components/Title";
 import useSx from "../hooks/useSx";
+import useGetCategoryList from "../hooks/useGetCategoryList";
 
 const BTN_CONVERSION = `단위
 변환기`;
@@ -83,17 +83,8 @@ function CalculetList() {
     },
   ];
 
-  /**
-   * 계산기 전체 목록 정보 (대분류, 소분류에 따른 계산기) 서버에서 불러오기
-   * 페이지 렌더시 한 번만
-   */
-  const [contentsCalculetList, setContentsCalculetList] = useState(null);
-  useEffect(() => {
-    calculetsUser().then((res) => {
-      // 전체 목록 정보 불러오기 성공
-      if (res.success) setContentsCalculetList(res.calculetLists);
-    });
-  }, []);
+  // calculet list
+  const { calculetList } = useGetCategoryList();
 
   /**
    * 스크롤 위치
@@ -125,66 +116,43 @@ function CalculetList() {
   const widthSx = "12rem";
 
   return (
-    <>
-      <Grid container sx={{ backgroundColor: "white" }}>
-        <PageScreenBox sx={{ flexDirection: "row", mb: "8rem" }}>
-          {/* 바로가기 */}
-          <FlexBox sx={{ width: widthSx }}>
-            <FlexBox sx={{ position: "fixed" }}>
+    <Grid container sx={{ backgroundColor: "white" }}>
+      <PageScreenBox sx={{ flexDirection: "row", mb: "16rem" }}>
+        {/* 바로가기 */}
+        <FlexBox sx={{ width: widthSx }}>
+          <FlexBox sx={{ position: "fixed" }}>
+            {Object.keys(calculetList).length !== 0 && (
               <Shortcut
                 contentsShortcut={contentsShortcut}
                 isActive={isActive}
                 setIsActive={setIsActive}
               />
-            </FlexBox>
+            )}
           </FlexBox>
-          {/* 계산기 전체 목록 */}
-          <FlexColumnBox
-            sx={{
-              width: "100%",
-              gap: "2.8rem",
-            }}
-          >
-            <Grid container>
-              <Title content="계산기 전체 목록" />
-            </Grid>
-            <Grid container>
-              {contentsCalculetList && (
-                <CalculetItemList
-                  item={contentsCalculetList}
-                  contentsShortcut={contentsShortcut}
-                  setIsActive={setIsActive}
-                  scrollPosition={scrollPosition}
-                />
-              )}
-            </Grid>
-          </FlexColumnBox>
-        </PageScreenBox>
-      </Grid>
-      {/* <StyledWhite300 />
-      <CalculetListLayout>
-        <Wrapper phone="56px" tablet="78px" desktop="72px">
-          <WrapperFix>
-            <Shortcut
-              contentsShortcut={contentsShortcut}
-              isActive={isActive}
-              setIsActive={setIsActive}
-            />
-          </WrapperFix>
-        </Wrapper>
-        <Wrapper phone="284px" tablet="669px" desktop="988px" gap="28px">
-          <BigTitle content="계산기 전체 목록" />
-          {contentsCalculetList && (
-            <CalculetItemList
-              item={contentsCalculetList}
-              contentsShortcut={contentsShortcut}
-              setIsActive={setIsActive}
-              scrollPosition={scrollPosition}
-            />
-          )}
-        </Wrapper>
-      </CalculetListLayout> */}
-    </>
+        </FlexBox>
+        {/* 계산기 전체 목록 */}
+        <FlexColumnBox
+          sx={{
+            width: "100%",
+            gap: "2.8rem",
+          }}
+        >
+          <Grid container>
+            <Title content="계산기 전체 목록" />
+          </Grid>
+          <Grid container>
+            {Object.keys(calculetList).length !== 0 && (
+              <CalculetItemList
+                item={calculetList}
+                contentsShortcut={contentsShortcut}
+                setIsActive={setIsActive}
+                scrollPosition={scrollPosition}
+              />
+            )}
+          </Grid>
+        </FlexColumnBox>
+      </PageScreenBox>
+    </Grid>
   );
 }
 export default CalculetList;

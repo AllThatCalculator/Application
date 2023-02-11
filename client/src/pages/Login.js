@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { StyledImg } from "../components/atom-components/BoxIcon";
 import useInput from "../hooks/useInput";
-import { useNavigate } from "react-router-dom";
 import firebaseAuth from "../firebaseAuth";
 import {
   Button,
@@ -15,6 +14,7 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  LinearProgress,
   OutlinedInput,
   TextField,
   Typography,
@@ -32,6 +32,10 @@ import {
 } from "../components/atom-components/Buttons";
 import usePage from "../hooks/usePage";
 import useSx from "../hooks/useSx";
+import { useSelector } from "react-redux";
+import useLoading from "../hooks/useLoading";
+import useError from "../hooks/useError";
+import FindPwFormDialog from "../components/login/FindPwFormDialog";
 
 /**
  * 로고 스타일 정의 (구글, 깃허브)
@@ -46,19 +50,32 @@ const Logo = styled.img`
 /**
  * 로그인 페이지
  */
-function Login() {
-  const { signUpPage } = usePage();
+function Login({ isLoggedIn }) {
+  // loading state
+  const { handleOnLoading, handleOffLoading } = useLoading();
+
+  // error state
+  const { handleSetAuthError, handleSetErrorType } = useError();
+
+  const { signUpPage, backPage } = usePage();
   const { widthSx } = useSx();
 
   const email = useInput("");
   const pw = useInput("");
-  const [warning, setWarning] = useState("");
-  const navigate = useNavigate();
+  /** find passward */
+  const inputEmailToFindPw = useInput("");
 
-  // 입력 변경 사항 있을 시, 회원가입 후 경고 메세지 초기화
-  useEffect(() => {
-    setWarning("");
-  }, [email.value, pw.value]);
+  // redux state
+  const { authError, errorType, isLoading } = useSelector((state) => ({
+    authError: state.error.authError,
+    errorType: state.error.errorType,
+    isLoading: state.loading.isLoading,
+  }));
+
+  // error id
+  const ERROR_EMAIL = "login-email";
+  const ERROR_PW = "login-pw";
+  const ERROR_EMAIL_FIND_PW = "login-email-find-pw";
 
   /**
    * 폼 제출
@@ -66,29 +83,32 @@ function Login() {
    */
   function onSubmitHandler(event) {
     event.preventDefault();
-    if (!email.value || !pw.value) {
-      setWarning("이메일과 비밀번호를 입력해주세요.");
-      return;
-    }
+    handleOnLoading(); // loading start
 
     // firebase 통한 이메일&패스워드 로그인
     const request = firebaseAuth.signInWithEmail(email.value, pw.value);
     request.then((result) => {
       if (result === true) {
-        // 로그인 성공 시, 메인 화면으로
-        navigate("/");
+        // 로그인 성공 시, 바로 전 페이지에 있던 곳으로
+        backPage();
       } else {
+        // set error
+        handleSetAuthError(result);
         switch (result) {
-          case "auth/user-not-found":
-            setWarning("존재하지 않는 계정입니다.");
+          case "auth/invalid-email": // 이메일 형식
+            handleSetErrorType(ERROR_EMAIL);
             break;
-          case "auth/wrong-password":
-            setWarning("잘못된 비밀번호입니다.");
+          case "auth/user-not-found": // 존재하지 않는 계정
+            handleSetErrorType(ERROR_EMAIL);
+            break;
+          case "auth/wrong-password": // 잘못된 비밀번호
+            handleSetErrorType(ERROR_PW);
             break;
           default:
             break;
         }
       }
+      handleOffLoading(); // loading stop
     });
   }
 
@@ -96,23 +116,26 @@ function Login() {
    * firebase google 로그인
    */
   function googleSignIn(event) {
-    setWarning("");
     const request = firebaseAuth.signInWithSocial("google");
     request.then((result) => {
+      handleOnLoading(); // loading start
       if (result === true) {
-        // 로그인 성공 시, 메인 화면으로
-        navigate("/");
+        // 로그인 성공 시, 바로 전 페이지에 있던 곳으로
+        backPage();
       } else if (result === false) {
-        setWarning("존재하지 않는 계정입니다.");
+        handleSetAuthError("auth/user-not-found"); // 존재하지 않는 계정
+        handleSetErrorType(ERROR_EMAIL);
       } else {
+        handleSetAuthError(result);
         switch (result) {
-          case "auth/account-exists-with-different-credential":
-            setWarning("다른 인증 방식으로 존재하는 계정입니다.");
+          case "auth/account-exists-with-different-credential": // 다른 인증방식으로
+            handleSetErrorType(ERROR_EMAIL);
             break;
           default:
             break;
         }
       }
+      handleOffLoading(); // loading stop
     });
   }
 
@@ -120,31 +143,54 @@ function Login() {
    * firebase github 로그인
    */
   function githubSignIn(event) {
-    setWarning("");
     const request = firebaseAuth.signInWithSocial("github");
     request.then((result) => {
+      handleOnLoading(); // loading start
+
       if (result === true) {
         // 로그인 성공 시, 메인 화면으로
-        navigate("/");
+        backPage();
       } else if (result === false) {
-        setWarning("존재하지 않는 계정입니다.");
+        handleSetAuthError("auth/user-not-found"); // 존재하지 않는 계정
+        handleSetErrorType(ERROR_EMAIL);
       } else {
+        handleSetAuthError(result);
         switch (result) {
-          case "auth/account-exists-with-different-credential":
-            setWarning("다른 인증 방식으로 존재하는 계정입니다.");
+          case "auth/account-exists-with-different-credential": // 다른 인증방식으로
+            handleSetErrorType(ERROR_EMAIL);
             break;
           default:
             break;
         }
       }
+      handleOffLoading(); // loading stop
     });
   }
 
+  const [isOpenFindPwModal, setIsOpenFindPwModal] = useState(false);
   /**
-   * 비밀번호 찾기 버튼 이벤트
+   * 비밀번호 찾기 버튼 이벤트 - modal 띄우기
    */
-  function onFindPw() {
-    //console.log("비밀번호 찾으러 가기");
+  function onFindPwModal() {
+    setIsOpenFindPwModal(true);
+  }
+  /**
+   * 입력한 email로 비밀번호 찾기
+   */
+  function handleOnFindPw() {
+    const request = firebaseAuth.findPassword(inputEmailToFindPw.value);
+    request.then((result) => {
+      handleOnLoading(); // loading start
+      if (result === true) {
+        // 메일 보냄 성공
+        alert("메일을 성공적으로 보냈습니다. 메일을 확인해주세요.");
+        setIsOpenFindPwModal(false);
+      } else {
+        handleSetAuthError(result);
+        handleSetErrorType(ERROR_EMAIL_FIND_PW);
+      }
+      handleOffLoading(); // loading stop
+    });
   }
 
   /** 비밀번호 숨김 상태 */
@@ -164,35 +210,53 @@ function Login() {
       onClick: googleSignIn,
     },
     {
-      icon: <Logo src="/img/GitHub-Mark-32px.png" />,
-      text: "Github 계정으로 로그인",
+      icon: <Logo src="/svgs/github-mark.svg" />,
+      text: "GitHub 계정으로 로그인",
       onClick: githubSignIn,
     },
   ];
 
+  useEffect(() => {
+    // login 상태면, 튕겨내기
+    if (isLoggedIn) {
+      // warning solve
+      // window.history.back();
+      backPage();
+    }
+  }, [isLoggedIn, backPage]);
+
   return (
-    <PageWhiteScreenBox container sx={{ justifyContent: "center" }}>
-      <FlexColumnBox sx={{ ...widthSx }}>
-        <StyledImg src={"/ATCLogoBlueImgText.png"} width="214px" />
-        <Card variant="outlined">
-          <CardContent>
-            <FlexColumnBox gap="1.6rem">
-              <form onSubmit={onSubmitHandler}>
+    <>
+      <PageWhiteScreenBox
+        container
+        sx={{
+          justifyContent: "center",
+          pointerEvents: isLoading ? "none" : "auto",
+        }}
+      >
+        <FlexColumnBox sx={{ ...widthSx }}>
+          <StyledImg src={"/ATCLogoBlueImgText.png"} width="214px" />
+          {isLoading && <LinearProgress />}
+          <Card variant="outlined">
+            <CardContent>
+              <FlexColumnBox gap="1.6rem">
                 <FlexColumnBox gap="1.6rem">
                   <TextField
-                    // id="outlined-name"
                     required
                     fullWidth
                     label="이메일"
                     value={email.value}
                     onChange={email.onChange}
+                    error={errorType === ERROR_EMAIL}
+                    helperText={errorType === ERROR_EMAIL && authError}
                   />
-                  <FormControl required fullWidth variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password">
-                      비밀번호
-                    </InputLabel>
+                  <FormControl
+                    required
+                    fullWidth
+                    error={errorType === ERROR_PW}
+                  >
+                    <InputLabel>비밀번호</InputLabel>
                     <OutlinedInput
-                      id="outlined-adornment-password"
                       value={pw.value}
                       onChange={pw.onChange}
                       type={showPassword ? "text" : "password"}
@@ -209,39 +273,55 @@ function Login() {
                       }
                       label="비밀번호"
                     />
-                    <FormHelperText>{warning}</FormHelperText>
+                    <FormHelperText>
+                      {errorType === ERROR_PW && authError}
+                    </FormHelperText>
                   </FormControl>
                 </FlexColumnBox>
-              </form>
-              <CaptionButton text="비밀번호 찾기" onClick={onFindPw} />
-              <Button type="submit" variant="contained">
-                로그인하기
-              </Button>
-              <FlexBox sx={{ justifyContent: "center" }}>
-                <Typography variant="caption" sx={{ mr: "0.8rem" }}>
-                  계정이 없으신가요?
-                </Typography>
-                <CaptionButton text="회원가입하기" onClick={signUpPage} />
-              </FlexBox>
-            </FlexColumnBox>
-          </CardContent>
-        </Card>
-        <Grid container>
-          <Grid item xs>
-            <Divider>또는</Divider>
+                <CaptionButton text="비밀번호 찾기" onClick={onFindPwModal} />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  disabled={!email.value || !pw.value}
+                  onClick={onSubmitHandler}
+                >
+                  로그인하기
+                </Button>
+                <FlexBox sx={{ justifyContent: "center" }}>
+                  <Typography variant="caption" sx={{ mr: "0.8rem" }}>
+                    계정이 없으신가요?
+                  </Typography>
+                  <CaptionButton text="회원가입하기" onClick={signUpPage} />
+                </FlexBox>
+              </FlexColumnBox>
+            </CardContent>
+          </Card>
+          <Grid container>
+            <Grid item xs>
+              <Divider>또는</Divider>
+            </Grid>
           </Grid>
-        </Grid>
-        {/* 소셜 로그인 버튼 */}
-        {socailLoginList.map((item) => (
-          <BasicButton
-            key={item.text}
-            icon={item.icon}
-            text={item.text}
-            onClick={item.onClick}
-          />
-        ))}
-      </FlexColumnBox>
-    </PageWhiteScreenBox>
+          {/* 소셜 로그인 버튼 */}
+          {socailLoginList.map((item) => (
+            <BasicButton
+              key={item.text}
+              icon={item.icon}
+              text={item.text}
+              onClick={item.onClick}
+            />
+          ))}
+        </FlexColumnBox>
+      </PageWhiteScreenBox>
+      {/* find passward */}
+      <FindPwFormDialog
+        isOpen={isOpenFindPwModal}
+        setIsOpen={setIsOpenFindPwModal}
+        value={inputEmailToFindPw.value}
+        onChange={inputEmailToFindPw.onChange}
+        handleOnSubmit={handleOnFindPw}
+        inputId={ERROR_EMAIL_FIND_PW}
+      />
+    </>
   );
 }
 

@@ -1,23 +1,5 @@
-import styled from "styled-components";
-import styles from "../styles.js";
-const StyledButton = styled.button`
-  display: flex;
-  min-width: max-content;
-  background: transparent;
-  color: ${styles.styleColor.white300};
-  ${styles.sytleText.LogoTitle}
+import { ButtonBase } from "@mui/material";
 
-  border: none;
-  ${styles.styleEffect.opacity200};
-
-  cursor: pointer;
-
-  -ms-user-select: none;
-  -moz-user-select: -moz-none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  user-select: none;
-`;
 /**
  *
  * 헤더에 놓을 로고를 반환하는 함수
@@ -25,8 +7,17 @@ const StyledButton = styled.button`
  */
 export default function LogoHeader() {
   return (
-    <StyledButton onClick={() => (window.location.href = "/")}>
+    <ButtonBase
+      disableRipple
+      sx={{
+        fontFamily: "S-CoreDream-7ExtraBold",
+        minWidth: "max-content",
+        textShadow: "0px 4px 4px rgba(0, 0, 0, 0.3)",
+        fontSize: { xs: 16, sm: 20, md: 24 },
+      }}
+      onClick={() => (window.location.href = "/")}
+    >
       All That Calculator
-    </StyledButton>
+    </ButtonBase>
   );
 }

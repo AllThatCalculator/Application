@@ -29,5 +29,15 @@ const OPTIONS_YEAR = fillOptionsList(
  * 생년월일 옵션 - 월 01~12
  */
 const OPTIONS_MONTH = fillOptionsList(1, 12);
+/**
+ * 생년월일 옵션 - 일 01~31
+ */
+const OPTIONS_DATE = fillOptionsList(1, 31);
 
-export { OPTIONS_EMAIL_ADDRESS, OPTIONS_SEX, OPTIONS_MONTH, OPTIONS_YEAR };
+export {
+  OPTIONS_EMAIL_ADDRESS,
+  OPTIONS_SEX,
+  OPTIONS_MONTH,
+  OPTIONS_YEAR,
+  OPTIONS_DATE,
+};

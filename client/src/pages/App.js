@@ -1,13 +1,12 @@
 import AppRouter from "../Router";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { onGetCalculetCategory } from "../modules/calculetCategory";
+import { onSetCalculetCategory } from "../modules/calculetCategory";
 import getCalculetCategory from "../user-actions/getCalculetCategory";
-import { onGetUserInfo } from "../modules/userInfo";
+import { onSetUserInfo, onSetUserIdToken } from "../modules/userInfo";
 import getUserInfo from "../user-actions/getUserInfo";
-import getUserIdToken from "../utils/getUserIdToken";
 
 function App() {
   /** Redux State */
@@ -17,53 +16,55 @@ function App() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  /** get calculet category json */
-  const handleGetCalculetCategory = useCallback(
-    (data) => {
-      dispatch(onGetCalculetCategory(data));
-    },
-    [dispatch]
-  );
-  /** get user info */
-  const handleGetUserInfo = useCallback(
-    (data) => {
-      dispatch(onGetUserInfo(data));
-    },
-    [dispatch]
-  );
-
   useEffect(() => {
+    setInit(false);
+    setIsSuccess(false);
+    // console.log(auth);
     // login state
     onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsLoggedIn(true);
-      } else {
+      // 회원가입 시, 이미 가입한 계정으로 회원가입하면 로그인되는 상황을 막고자 update막음
+      // or off login
+      if (user === null) {
         setIsLoggedIn(false);
+        /** set token null */
+        dispatch(onSetUserIdToken(null));
+        dispatch(
+          onSetUserInfo({
+            userName: "",
+            bio: "",
+            sex: "",
+            birthdate: "",
+            job: "",
+            profileImgSrc: "",
+            email: "",
+          })
+        );
+        setIsSuccess(true);
+      } else if (user) {
+        // on login
+        setIsLoggedIn(true);
+        const token = user.accessToken;
+
+        if (token !== null) {
+          /** set user info */
+          getUserInfo(token).then((data) => {
+            console.log(data);
+            dispatch(onSetUserInfo(data));
+          });
+          /** set user id token */
+          dispatch(onSetUserIdToken(token));
+        }
         setIsSuccess(true);
       }
     });
 
     // calculet category
     getCalculetCategory().then((data) => {
-      handleGetCalculetCategory(data);
+      /** set calculet category json */
+      dispatch(onSetCalculetCategory(data));
+      setInit(true);
     });
-
-    setInit(true);
-  }, [handleGetCalculetCategory]);
-
-  useEffect(() => {
-    // user info
-    if (isLoggedIn) {
-      getUserIdToken().then((token) => {
-        if (token !== null) {
-          getUserInfo(token).then((data) => {
-            handleGetUserInfo(data);
-          });
-        }
-      });
-      setIsSuccess(true);
-    }
-  }, [isLoggedIn, handleGetUserInfo]);
+  }, [dispatch]);
 
   return <>{init && isSuccess && <AppRouter isLoggedIn={isLoggedIn} />}</>;
 }

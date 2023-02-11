@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import useInput from "../../hooks/useInput";
 import firebaseAuth from "../../firebaseAuth";
@@ -23,6 +23,9 @@ import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
 import usePage from "../../hooks/usePage";
+import { useSelector } from "react-redux";
+import useLoading from "../../hooks/useLoading";
+import useError from "../../hooks/useError";
 // import useSx from "../../hooks/useSx";
 
 /**
@@ -40,34 +43,27 @@ const Logo = styled.img`
  */
 function SignUpFirebase({ activateComponent }) {
   const { loginPage } = usePage();
-  // const { widthSx } = useSx();
 
-  // // 이메일&패스워드 입력 팝업창
-  // const [modalEmailActive, setModalEmailActive] = useState(false);
+  // loading state
+  const { handleOnLoading, handleOffLoading } = useLoading();
+  // error state
+  const { handleSetAuthError, handleSetErrorType } = useError();
 
+  // redux state
+  const { authError, errorType } = useSelector((state) => ({
+    authError: state.error.authError,
+    errorType: state.error.errorType,
+  }));
+
+  // error id
+  const ERROR_EMAIL = "sign-up-email";
+  const ERROR_PW = "sign-up-pw";
+  const ERROR_PW_CONFIRM = "sign-up-pw-confirm";
+
+  // input state
   const email = useInput("");
   const pw = useInput("");
   const pwConfirmation = useInput("");
-
-  // 주의 문구 여부 : 비밀번호 & 비밀번호 확인 비교
-  const [warningPw, setWarningPw] = useState("");
-
-  // 주의 문구 여부 : 다 입력되었는지 여부 & 요청 정보 오류
-  // const [warningAll, setWarningAll] = useState("");
-
-  // 주의 문구 여부 : 가입하기 버튼 클릭 후 (이미 존재 계정, 비밀번호 유효성, 이메일 형식)
-  // const [warningSignUp, setWarningSignUp] = useState("");
-
-  // 비밀번호 & 비밀번호 확인 같은지 검사
-  useEffect(() => {
-    if (pw.value !== pwConfirmation.value) {
-      setWarningPw("비밀번호가 일치하지 않습니다.");
-    } else setWarningPw("");
-  }, [pw.value, pwConfirmation.value]);
-
-  // function modalEmailClose() {
-  //   // setModalEmailActive(false);
-  // }
 
   /**
    * 폼 제출
@@ -75,37 +71,42 @@ function SignUpFirebase({ activateComponent }) {
    */
   function onSubmitHandler(event) {
     event.preventDefault();
+    handleOnLoading(); // loading start
+
     // 비밀번호 & 비밀번호 확인 비교
-    if (warningPw) return;
-    // 다 입력했는지 확인
-    if (!email.value || !pw.value || !pwConfirmation.value) {
-      // setWarningAll("모든 사항을 입력해 주세요.");
+    if (pw.value !== pwConfirmation.value) {
+      handleSetAuthError("invalid-password");
+      handleSetErrorType(ERROR_PW_CONFIRM);
+      handleOffLoading(); // loading stop
       return;
     }
-    // setWarningAll("");
 
     // firebase 통한 이메일&패스워드 회원가입 진행
-    // const email = address.value + "@" + domain;
     const request = firebaseAuth.signUpWithEmail(email.value, pw.value);
     request.then((result) => {
       if (result === true) {
         // 성공 시, 정보 입력해야 하므로 정보 입력 페이지로 넘어감
         activateComponent();
       } else {
+        handleSetAuthError(result);
         switch (result) {
-          case "auth/email-already-in-use":
-            // setWarningSignUp("이미 존재하는 계정입니다.");
+          case "auth/invalid-email": // 이메일 형식 아님
+            handleSetErrorType(ERROR_EMAIL);
             break;
-          case "auth/weak-password":
-            // setWarningSignUp("6자리 이상 비밀번호를 입력해주세요.");
+          case "auth/email-already-in-use": // 이미 사용중인 계정
+            handleSetErrorType(ERROR_EMAIL);
             break;
-          case "auth/invalid-email":
-            // setWarningSignUp("이메일 계정 형식을 올바르게 입력해주세요.");
+          case "auth/provider-already-linked":
+            handleSetErrorType(ERROR_EMAIL);
+            break;
+          case "auth/weak-password": // 비밀번호 보안 취약
+            handleSetErrorType(ERROR_PW);
             break;
           default:
             break;
         }
       }
+      handleOffLoading(); // loading stop
     });
   }
 
@@ -113,23 +114,27 @@ function SignUpFirebase({ activateComponent }) {
    * firebase google 회원가입
    */
   function googleSignUp(event) {
-    // setWarningSignUp("");
     const request = firebaseAuth.signUpWithSocial("google");
     request.then((result) => {
+      handleOnLoading(); // loading start
+
       if (result === true) {
         // 정보 입력해야 하므로 정보 입력 페이지로 넘어감
         activateComponent();
       } else if (result === false) {
-        // setWarningSignUp("이미 존재하는 계정입니다.");
+        handleSetAuthError("auth/provider-already-linked"); //이미 있는 계정
+        handleSetErrorType(ERROR_EMAIL);
       } else {
+        handleSetAuthError(result);
         switch (result) {
-          case "auth/account-exists-with-different-credential":
-            // setWarningSignUp("다른 인증 방식으로 존재하는 계정입니다.");
+          case "auth/account-exists-with-different-credential": // 다른 인증 방식
+            handleSetErrorType(ERROR_EMAIL);
             break;
           default:
             break;
         }
       }
+      handleOffLoading(); // loading stop
     });
   }
 
@@ -137,23 +142,27 @@ function SignUpFirebase({ activateComponent }) {
    * firebase github 회원가입
    */
   function githubSignUp(event) {
-    // setWarningSignUp("");
     const request = firebaseAuth.signUpWithSocial("github");
     request.then((result) => {
+      handleOnLoading(); // loading start
+
       if (result === true) {
         // 정보 입력해야 하므로 정보 입력 페이지로 넘어감
         activateComponent();
       } else if (result === false) {
-        // setWarningSignUp("이미 존재하는 계정입니다.");
+        handleSetAuthError("auth/provider-already-linked"); //이미 있는 계정
+        handleSetErrorType(ERROR_EMAIL);
       } else {
+        handleSetAuthError(result);
         switch (result) {
-          case "auth/account-exists-with-different-credential":
-            // setWarningSignUp("다른 인증 방식으로 존재하는 계정입니다.");
+          case "auth/account-exists-with-different-credential": // 다른 인증 방식
+            handleSetErrorType(ERROR_EMAIL);
             break;
           default:
             break;
         }
       }
+      handleOffLoading(); // loading stop
     });
   }
 
@@ -182,8 +191,8 @@ function SignUpFirebase({ activateComponent }) {
       onClick: googleSignUp,
     },
     {
-      icon: <Logo src="/img/GitHub-Mark-32px.png" />,
-      text: "Github 계정으로 회원가입",
+      icon: <Logo src="/svgs/github-mark.svg" />,
+      text: "GitHub 계정으로 회원가입",
       onClick: githubSignUp,
     },
   ];
@@ -191,95 +200,102 @@ function SignUpFirebase({ activateComponent }) {
   return (
     <>
       {/* {modalEmailActive && <ModalEmailForm handleClose={modalEmailClose} />} */}
-      <form onSubmit={onSubmitHandler}>
-        <Card variant="outlined">
-          <CardContent>
+      <Card variant="outlined">
+        <CardContent>
+          <FlexColumnBox gap="1.6rem">
             <FlexColumnBox gap="1.6rem">
-              {/* <form onSubmit={onSubmitHandler}> */}
-              <FlexColumnBox gap="1.6rem">
-                <TextField
-                  // id="outlined-name"
-                  required
-                  fullWidth
-                  label="이메일"
-                  value={email.value}
-                  onChange={email.onChange}
-                />
-                <FormControl
-                  required
-                  fullWidth
-                  variant="outlined"
-                  error={warningPw !== ""}
-                >
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    비밀번호
-                  </InputLabel>
-                  <OutlinedInput
-                    value={pw.value}
-                    onChange={pw.onChange}
-                    type={showPassword ? "text" : "password"}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="비밀번호"
-                  />
-                  <FormHelperText error>{warningPw}</FormHelperText>
-                </FormControl>
-                <FormControl required fullWidth variant="outlined">
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    비밀번호 확인
-                  </InputLabel>
-                  <OutlinedInput
-                    value={pwConfirmation.value}
-                    onChange={pwConfirmation.onChange}
-                    type={showPasswordConfirm ? "text" : "password"}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          onClick={handleClickShowPasswordConfirm}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPasswordConfirm ? (
-                            <VisibilityOff />
-                          ) : (
-                            <Visibility />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="비밀번호 확인"
-                  />
-                  {/* <FormHelperText error>{warningAll}</FormHelperText> */}
-                </FormControl>
-              </FlexColumnBox>
-              {/* </form> */}
-
-              <Button
-                type="submit"
-                variant="contained"
-                onClick={onSubmitHandler}
+              <TextField
+                // id="outlined-name"
+                required
+                fullWidth
+                label="이메일"
+                value={email.value}
+                onChange={email.onChange}
+                error={errorType === ERROR_EMAIL}
+                helperText={errorType === ERROR_EMAIL && authError}
+              />
+              <FormControl
+                required
+                fullWidth
+                variant="outlined"
+                error={errorType === ERROR_PW}
               >
-                회원가입하기
-              </Button>
-              <FlexBox sx={{ justifyContent: "center" }}>
-                <Typography variant="caption" sx={{ mr: "0.8rem" }}>
-                  계정이 이미 있으신가요?
-                </Typography>
-                <CaptionButton text="로그인하기" onClick={loginPage} />
-              </FlexBox>
+                <InputLabel htmlFor="outlined-adornment-password">
+                  비밀번호
+                </InputLabel>
+                <OutlinedInput
+                  value={pw.value}
+                  onChange={pw.onChange}
+                  type={showPassword ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="비밀번호"
+                />
+                <FormHelperText error>
+                  {errorType === ERROR_PW && authError}
+                </FormHelperText>
+              </FormControl>
+              <FormControl
+                required
+                fullWidth
+                variant="outlined"
+                error={errorType === ERROR_PW_CONFIRM}
+              >
+                <InputLabel htmlFor="outlined-adornment-password">
+                  비밀번호 확인
+                </InputLabel>
+                <OutlinedInput
+                  value={pwConfirmation.value}
+                  onChange={pwConfirmation.onChange}
+                  type={showPasswordConfirm ? "text" : "password"}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleClickShowPasswordConfirm}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPasswordConfirm ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="비밀번호 확인"
+                />
+                <FormHelperText error>
+                  {errorType === ERROR_PW_CONFIRM && authError}
+                </FormHelperText>
+              </FormControl>
             </FlexColumnBox>
-          </CardContent>
-        </Card>
-      </form>
+            <Button
+              type="submit"
+              variant="contained"
+              onClick={onSubmitHandler}
+              disabled={!email.value || !pw.value || !pwConfirmation.value}
+            >
+              회원가입하기
+            </Button>
+            <FlexBox sx={{ justifyContent: "center" }}>
+              <Typography variant="caption" sx={{ mr: "0.8rem" }}>
+                계정이 이미 있으신가요?
+              </Typography>
+              <CaptionButton text="로그인하기" onClick={loginPage} />
+            </FlexBox>
+          </FlexColumnBox>
+        </CardContent>
+      </Card>
 
       <Grid container>
         <Grid item xs>
