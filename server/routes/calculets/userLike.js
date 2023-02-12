@@ -60,7 +60,7 @@ async function removeLike(req, res) {
     res.status(200).send({ likeCnt: calculet.like_cnt - 1 });
   } catch (error) {
     // failed
-    console.log(error);
+    console.error(error);
     res.status(400).send({ likeCnt: calculet.like_cnt });
   }
 }
@@ -101,7 +101,7 @@ async function putLike(req, res) {
     res.status(200).send({ likeCnt: calculet.like_cnt + 1 });
   } catch (error) {
     // failed
-    console.log(error);
+    console.error(error);
     res.status(400).send({ likeCnt: calculet.like_cnt });
   }
 }

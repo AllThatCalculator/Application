@@ -55,12 +55,19 @@ async function putObjectToS3(profileImg) {
     ContentType: profileImg.mimetype,
   };
   const command = new PutObjectCommand(params);
-  const response = await s3Client.send(command);
 
-  return {
-    code: response.$metadata.httpStatusCode,
-    uuid: newUUID,
-  };
+  try {
+    const response = await s3Client.send(command);
+    return {
+      code: response.$metadata.httpStatusCode,
+      uuid: newUUID,
+    };
+  } catch (error) {
+    return {
+      code: 400,
+      uuid: null,
+    };
+  }
 }
 
 module.exports = { postProfile };
