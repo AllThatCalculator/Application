@@ -54,7 +54,6 @@ router.post("/update-log", [auth.firebase, auth.database], async (req, res) => {
  *          $ref: "#/components/responses/success201"
  */
 router.post("/calculets", [auth.firebase, auth.database], async (req, res) => {
-  console.log(uuidv4());
   const calculet = await models.calculetInfo.create({
     id: uuidv4(),
     title: req.body.title,
@@ -66,6 +65,8 @@ router.post("/calculets", [auth.firebase, auth.database], async (req, res) => {
     contributor_id: res.locals.userId,
   });
   res.send(201, `/${calculet.id}`);
+
+  console.log(`${calculet.id} registered complete`);
 });
 
 /**
@@ -87,7 +88,7 @@ router.delete("/users", auth.firebase, async (req, res) => {
       .status(200)
       .send(`user "${res.locals.email}" deleted from firebase & database`);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).send("request failed");
   }
 });

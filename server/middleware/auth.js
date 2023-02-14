@@ -25,7 +25,7 @@ async function authFirebase(req, res, next) {
     res.locals.email = decodedIdToken.email;
     next();
   } catch (error) {
-    console.log(error.code);
+    console.error(error.code);
 
     res.status(401);
 
@@ -57,7 +57,7 @@ async function verifyFirebase(req, res, next) {
     res.locals.email = decodedIdToken.email;
     next();
   } catch (error) {
-    console.log(error.code);
+    console.error(error.code);
     res.status(401);
 
     switch (error.code) {

@@ -57,7 +57,7 @@ async function putBookMark(req, res) {
     });
     res.status(200).send({ bookmarkCnt: calculet.bookmark_cnt + 1 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).send({ bookmarkCnt: calculet.bookmark_cnt });
   }
 }
@@ -89,7 +89,7 @@ async function removeBookMark(req, res) {
     });
     res.status(200).send({ bookmarkCnt: calculet.bookmark_cnt - 1 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).send({ bookmarkCnt: calculet.bookmark_cnt });
   }
 }
