@@ -116,7 +116,58 @@ async function getConverters(req, res) {
   res.status(200).send(calculetLists);
 }
 
+/**
+ * 추천 리스트 뽑아주는 함수 - 우선 조회수 가장 높은 계산기 추천
+ */
+async function recommendation(req, res) {
+  const PREVIEW_CNT = 6;
+
+  const calculetList = await models.calculetInfo.findAll({
+    attributes: ["id", "title", "description"],
+    include: [
+      // contributor
+      {
+        model: models.userInfo,
+        required: true,
+        attributes: ["user_name", "profile_img"],
+        as: "contributor",
+      },
+      // count
+      {
+        model: models.calculetCount,
+        required: true,
+        attributes: ["view_cnt"],
+        as: "calculet_count",
+      },
+    ],
+    limit: PREVIEW_CNT,
+    order: [
+      [
+        { model: models.calculetCount, as: "calculet_count" },
+        "view_cnt",
+        "DESC",
+      ],
+    ],
+  });
+
+  const response = calculetList.map((calculet) => ({
+    id: calculet.id,
+    title: calculet.title,
+    description: calculet.description,
+    contributor: {
+      userName: calculet.contributor.user_name,
+      profileImgSrc: urlFormatter(
+        "profileImg",
+        calculet.contributor.profile_img
+      ),
+    },
+  }));
+
+  res.status(200).send(response);
+}
+
 exports.getCalculetList = {
   default: getCalculetList,
   converters: getConverters,
+  recommendation: recommendation,
 };

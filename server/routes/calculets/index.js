@@ -47,6 +47,24 @@ router.get("/converters", errorHandler.dbWrapper(getCalculetList.converters));
 
 /**
  * @swagger
+ *  /api/calculets/recommendation:
+ *    get:
+ *      tags: [calculets]
+ *      summary: 추천계산기 목록 불러오기
+ *      description: (임시) 조회수 높은 top 15 계산기
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/getRecommendationList"
+ *        400:
+ *          $ref: "#/components/responses/error"
+ */
+router.get(
+  "/recommendation",
+  errorHandler.dbWrapper(getCalculetList.recommendation)
+);
+
+/**
+ * @swagger
  *  /api/calculets/{calculetId}:
  *    get:
  *      tags: [calculets]
