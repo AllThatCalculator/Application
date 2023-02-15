@@ -16,6 +16,24 @@ components:
       name: calculetId
       schema:
         $ref: "#/components/schemas/calculetId"
+    mainId:
+      in: query
+      required: false
+      name: categoryMainId
+      schema:
+        $ref: "#/components/schemas/calculet/properties/categoryMainId"
+    subId:
+      in: query
+      required: false
+      name: categorySubId
+      schema:
+        $ref: "#/components/schemas/calculet/properties/categorySubId"
+    title:
+      in: query
+      required: false
+      name: title
+      schema:
+        $ref: "#/components/schemas/calculet/properties/title"
   responses:
     likeResult:
       content:
@@ -125,6 +143,7 @@ components:
         categorySubId:
           type: integer
           description: 카테고리 소분류
+          example: 1
     calculetId:
       type: string
       description: 계산기 UUID

@@ -2,8 +2,26 @@ const { Op } = require("sequelize");
 const { models } = require("../../models");
 const { urlFormatter } = require("../../utils/urlFormatter");
 
-function makeSubList(mainId, subId) {
+function makeSubList(keyword) {
   const PREVIEW_CNT = 6;
+
+  // complete where condition
+  const filter = {};
+  if (typeof keyword.mainId === "number") {
+    filter.category_main_id = {
+      [Op.eq]: keyword.mainId,
+    };
+  }
+  if (typeof keyword.subId === "number") {
+    filter.category_sub_id = {
+      [Op.eq]: keyword.subId,
+    };
+  }
+  if (typeof keyword.title === "string") {
+    filter.title = {
+      [Op.substring]: keyword.title,
+    };
+  }
 
   return models.calculetInfo
     .findAll({
@@ -30,14 +48,7 @@ function makeSubList(mainId, subId) {
           as: "calculet_count",
         },
       ],
-      where: {
-        category_main_id: {
-          [Op.eq]: mainId,
-        },
-        category_sub_id: {
-          [Op.eq]: subId,
-        },
-      },
+      where: filter,
       limit: PREVIEW_CNT,
       order: [
         [
@@ -52,8 +63,8 @@ function makeSubList(mainId, subId) {
         id: calculet.id,
         title: calculet.title,
         description: calculet.description,
-        categoryMainId: mainId,
-        categorySubId: subId,
+        categoryMainId: calculet.category_main_id,
+        categorySubId: calculet.category_sub_id,
         viewCnt: calculet.calculet_count.view_cnt,
         contributor: {
           userName: calculet.contributor.user_name,
@@ -83,10 +94,10 @@ async function getCalculetList(req, res) {
       if (calculetLists[element.main_id] === undefined) {
         calculetLists[element.main_id] = {};
       }
-      calculetLists[element.main_id][element.sub_id] = await makeSubList(
-        element.main_id,
-        element.sub_id
-      );
+      calculetLists[element.main_id][element.sub_id] = await makeSubList({
+        mainId: element.main_id,
+        subId: element.sub_id,
+      });
     })
   );
 
@@ -107,10 +118,10 @@ async function getConverters(req, res) {
   const calculetLists = {};
   await Promise.all(
     categorySub.map(async (element) => {
-      calculetLists[element.main_id] = await makeSubList(
-        element.main_id,
-        element.sub_id
-      );
+      calculetLists[element.main_id] = await makeSubList({
+        mainId: element.main_id,
+        subId: element.sub_id,
+      });
     })
   );
   res.status(200).send(calculetLists);
@@ -120,54 +131,38 @@ async function getConverters(req, res) {
  * 추천 리스트 뽑아주는 함수 - 우선 조회수 가장 높은 계산기 추천
  */
 async function recommendation(req, res) {
-  const PREVIEW_CNT = 6;
-
-  const calculetList = await models.calculetInfo.findAll({
-    attributes: ["id", "title", "description"],
-    include: [
-      // contributor
-      {
-        model: models.userInfo,
-        required: true,
-        attributes: ["user_name", "profile_img"],
-        as: "contributor",
-      },
-      // count
-      {
-        model: models.calculetCount,
-        required: true,
-        attributes: ["view_cnt"],
-        as: "calculet_count",
-      },
-    ],
-    limit: PREVIEW_CNT,
-    order: [
-      [
-        { model: models.calculetCount, as: "calculet_count" },
-        "view_cnt",
-        "DESC",
-      ],
-    ],
-  });
+  const calculetList = await makeSubList({});
 
   const response = calculetList.map((calculet) => ({
     id: calculet.id,
     title: calculet.title,
     description: calculet.description,
-    contributor: {
-      userName: calculet.contributor.user_name,
-      profileImgSrc: urlFormatter(
-        "profileImg",
-        calculet.contributor.profile_img
-      ),
-    },
+    contributor: calculet.contributor,
   }));
 
   res.status(200).send(response);
+}
+
+/**
+ * 계산기 검색 함수 ( 대분류 | 소분류 | 제목 )
+ */
+async function searchCalculets(req, res) {
+  // set keyword from query string
+  const keyword = {
+    mainId: req.query.categoryMainId
+      ? parseInt(req.query.categoryMainId)
+      : null,
+    subId: req.query.categorySubId ? parseInt(req.query.categorySubId) : null,
+    title: req.query.title,
+  };
+  const calculetList = await makeSubList(keyword);
+
+  res.status(200).send(calculetList);
 }
 
 exports.getCalculetList = {
   default: getCalculetList,
   converters: getConverters,
   recommendation: recommendation,
+  search: searchCalculets,
 };
