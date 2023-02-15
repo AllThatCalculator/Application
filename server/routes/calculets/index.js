@@ -71,6 +71,7 @@ router.get(
  *        - $ref: "#/components/parameters/mainId"
  *        - $ref: "#/components/parameters/subId"
  *        - $ref: "#/components/parameters/title"
+ *        - $ref: "#/components/parameters/limit"
  *      tags: [calculets]
  *      summary: 계산기 검색 (대분류 / 소분류 / 제목)
  *      description: 대분류 | 소분류 | 계산기 제목으로 검색 필터 설정 가능 (모든 쿼리 파라미터는 필수X)

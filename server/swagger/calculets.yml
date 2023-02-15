@@ -34,6 +34,13 @@ components:
       name: title
       schema:
         $ref: "#/components/schemas/calculet/properties/title"
+    limit:
+      in: query
+      required: false
+      name: limit
+      description: 최대 개수 - 미지정시 조건에 해당하는 모든 계산기 불러옴
+      schema:
+        type: integer
   responses:
     likeResult:
       content:

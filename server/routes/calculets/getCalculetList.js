@@ -1,25 +1,24 @@
 const { Op } = require("sequelize");
 const { models } = require("../../models");
 const { urlFormatter } = require("../../utils/urlFormatter");
+const PREVIEW_CNT = 6;
 
-function makeSubList(keyword) {
-  const PREVIEW_CNT = 6;
-
+function makeSubList(condition) {
   // complete where condition
   const filter = {};
-  if (typeof keyword.mainId === "number") {
+  if (typeof condition.mainId === "number") {
     filter.category_main_id = {
-      [Op.eq]: keyword.mainId,
+      [Op.eq]: condition.mainId,
     };
   }
-  if (typeof keyword.subId === "number") {
+  if (typeof condition.subId === "number") {
     filter.category_sub_id = {
-      [Op.eq]: keyword.subId,
+      [Op.eq]: condition.subId,
     };
   }
-  if (typeof keyword.title === "string") {
+  if (typeof condition.title === "string") {
     filter.title = {
-      [Op.substring]: keyword.title,
+      [Op.substring]: condition.title,
     };
   }
 
@@ -49,7 +48,7 @@ function makeSubList(keyword) {
         },
       ],
       where: filter,
-      limit: PREVIEW_CNT,
+      limit: condition.limit,
       order: [
         [
           { model: models.calculetCount, as: "calculet_count" },
@@ -97,6 +96,7 @@ async function getCalculetList(req, res) {
       calculetLists[element.main_id][element.sub_id] = await makeSubList({
         mainId: element.main_id,
         subId: element.sub_id,
+        limit: PREVIEW_CNT,
       });
     })
   );
@@ -121,6 +121,7 @@ async function getConverters(req, res) {
       calculetLists[element.main_id] = await makeSubList({
         mainId: element.main_id,
         subId: element.sub_id,
+        limit: PREVIEW_CNT,
       });
     })
   );
@@ -131,7 +132,7 @@ async function getConverters(req, res) {
  * 추천 리스트 뽑아주는 함수 - 우선 조회수 가장 높은 계산기 추천
  */
 async function recommendation(req, res) {
-  const calculetList = await makeSubList({});
+  const calculetList = await makeSubList({ limit: 15 });
 
   const response = calculetList.map((calculet) => ({
     id: calculet.id,
@@ -148,14 +149,15 @@ async function recommendation(req, res) {
  */
 async function searchCalculets(req, res) {
   // set keyword from query string
-  const keyword = {
+  const condition = {
     mainId: req.query.categoryMainId
       ? parseInt(req.query.categoryMainId)
       : null,
     subId: req.query.categorySubId ? parseInt(req.query.categorySubId) : null,
     title: req.query.title,
+    limit: req.query.limit ? parseInt(req.query.limit) : null,
   };
-  const calculetList = await makeSubList(keyword);
+  const calculetList = await makeSubList(condition);
 
   res.status(200).send(calculetList);
 }
