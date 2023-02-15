@@ -4,7 +4,6 @@ const app = express();
 const calculets = require("./routes/calculets");
 const users = require("./routes/users");
 const records = require("./routes/records");
-const test = require("./routes/test");
 
 // middleware
 const { errorHandler } = require("./middleware/errorHandler");
@@ -33,6 +32,7 @@ if (process.env.NODE_ENV === "development") {
   const { swaggerUi, specs } = require("./swagger");
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
   // 테스트용 API
+  const test = require("./routes/test");
   app.use("/test", test);
 }
 
