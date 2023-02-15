@@ -36,6 +36,7 @@ import { useSelector } from "react-redux";
 import useLoading from "../hooks/useLoading";
 import useError from "../hooks/useError";
 import FindPwFormDialog from "../components/login/FindPwFormDialog";
+import useSnackbar from "../hooks/useSnackbar";
 
 /**
  * 로고 스타일 정의 (구글, 깃허브)
@@ -55,10 +56,14 @@ function Login({ isLoggedIn }) {
   const { handleOnLoading, handleOffLoading } = useLoading();
 
   // error state
-  const { handleSetAuthError, handleSetErrorType } = useError();
+  const { handleSetAuthError, handleSetErrorType, handleSetClearError } =
+    useError();
 
   const { signUpPage, backPage } = usePage();
   const { widthSx } = useSx();
+
+  // snackbar
+  const { openSnackbar } = useSnackbar();
 
   const email = useInput("");
   const pw = useInput("");
@@ -84,6 +89,7 @@ function Login({ isLoggedIn }) {
   function onSubmitHandler(event) {
     event.preventDefault();
     handleOnLoading(); // loading start
+    handleSetClearError();
 
     // firebase 통한 이메일&패스워드 로그인
     const request = firebaseAuth.signInWithEmail(email.value, pw.value);
@@ -116,6 +122,7 @@ function Login({ isLoggedIn }) {
    * firebase google 로그인
    */
   function googleSignIn(event) {
+    handleSetClearError();
     const request = firebaseAuth.signInWithSocial("google");
     request.then((result) => {
       handleOnLoading(); // loading start
@@ -143,6 +150,7 @@ function Login({ isLoggedIn }) {
    * firebase github 로그인
    */
   function githubSignIn(event) {
+    handleSetClearError();
     const request = firebaseAuth.signInWithSocial("github");
     request.then((result) => {
       handleOnLoading(); // loading start
@@ -178,12 +186,20 @@ function Login({ isLoggedIn }) {
    * 입력한 email로 비밀번호 찾기
    */
   function handleOnFindPw() {
+    handleSetClearError();
     const request = firebaseAuth.findPassword(inputEmailToFindPw.value);
     request.then((result) => {
       handleOnLoading(); // loading start
       if (result === true) {
         // 메일 보냄 성공
-        alert("메일을 성공적으로 보냈습니다. 메일을 확인해주세요.");
+        openSnackbar(
+          "basic",
+          "메일을 성공적으로 보냈습니다. 메일을 확인해주세요.",
+          false,
+          "bottom",
+          "left",
+          2400 // 지속시간
+        );
         setIsOpenFindPwModal(false);
       } else {
         handleSetAuthError(result);

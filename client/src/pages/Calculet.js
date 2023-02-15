@@ -8,14 +8,14 @@ import {
 } from "../components/calculet-block/oftenUsedCalculet";
 import FooterRecommend from "../components/global-components/FooterRecommend";
 import calculetInfo from "../user-actions/calculetInfo";
-import { Grid, Paper, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import LoadingPage from "../components/global-components/LoadingPage";
 import UploadIcon from "@mui/icons-material/Upload";
 import usePage from "../hooks/usePage";
-import { MainButton } from "../components/atom-components/Buttons";
 import getCalculetUpdateLog from "../user-actions/getCalculetUpdateLog";
 import getUserIdToken from "../utils/getUserIdToken";
+import PageScreenBottom from "../components/global-components/PageScreenBottom";
 
 async function handleGetCalculetInfo(id, setCalculetObj) {
   let calculetInfoRequest = null;
@@ -86,31 +86,6 @@ function Calculet() {
     handleGetCalculetInfo(id, setCalculetObj);
   }, [id]);
 
-  // async function handleGetCalculetInfo() {
-  //   let calculetInfoRequest = null;
-  //   const userId = await getUserIdToken();
-
-  //   // 로그인한 유저 - 계산기 정보 요청
-  //   if (userId) {
-  //     calculetInfoRequest = await calculetInfo(id, userId);
-  //   }
-  //   // 로그인 안 한 유저 - 계산기 정보 요청
-  //   else {
-  //     calculetInfoRequest = await calculetInfo(id);
-  //   }
-
-  //   if (calculetInfoRequest !== null) {
-  //     setCalculetObj(calculetInfoRequest);
-  //   }
-  // }
-  // async function handleGetCalculetUpdateLog() {
-  //   // 계산기 업데이트 로그 내역 요청
-  //   const updateLogRequest = await getCalculetUpdateLog(id);
-  //   if (updateLogRequest !== null) {
-  //     setUpdateLog(updateLogRequest);
-  //   }
-  // }
-
   const onHandlerLoadClaculetObj = useCallback(() => {
     loadCalculetObj();
     updateCalculetCount(id);
@@ -149,41 +124,12 @@ function Calculet() {
               />
             </PageScreenBox>
           </Grid>
-          <Paper elevation={5}>
-            <Grid container sx={{ backgroundColor: "atcBlue.100" }}>
-              <PageScreenBox
-                sx={{
-                  width: 1,
-                  pt: "1.2rem",
-                  pb: "1.2rem",
-                }}
-              >
-                <Grid
-                  container
-                  sx={{
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    gap: "1.6rem",
-                  }}
-                >
-                  <Grid item>
-                    <Typography color="grey.600">
-                      자신만의 계산기를 만드세요!
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <MainButton
-                      variant="contained"
-                      startIcon={<UploadIcon />}
-                      onClick={registerPage}
-                    >
-                      계산기 등록
-                    </MainButton>
-                  </Grid>
-                </Grid>
-              </PageScreenBox>
-            </Grid>
-          </Paper>
+          <PageScreenBottom
+            helpText="자신만의 계산기를 만드세요!"
+            buttonText="계산기 등록"
+            handleButton={registerPage}
+            buttonIcon={<UploadIcon />}
+          />
           <FooterRecommend />
         </>
       )}

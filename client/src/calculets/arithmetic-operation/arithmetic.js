@@ -293,10 +293,10 @@ function changePostfixNotation(expression) {
  * @returns int
  */
 function calculate(expression) {
-  console.log(expression);
+  // console.log(expression);
   //후위 표기식 변환
   const postfixNotation = changePostfixNotation(expression);
-  console.log(postfixNotation);
+  // console.log(postfixNotation);
   //후위 표기식 연산
   return postfixNotationCalculate(postfixNotation);
 }
@@ -308,14 +308,14 @@ function calculate(expression) {
  */
 function main(input) {
   const isValid = validate(input);
-  console.log(isValid);
+  // console.log(isValid);
   //식이 유효하지 않음
   if (!isValid) {
     return false;
   }
   const result = parsing(input);
   const output = calculate(result);
-  console.log(output);
+  // console.log(output);
   return output;
 }
 

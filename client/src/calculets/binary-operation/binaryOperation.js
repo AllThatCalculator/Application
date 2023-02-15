@@ -109,7 +109,7 @@ function onClick() {
  */
 function onKeyEvent(event) {
   if (event.key === "Enter") {
-    console.log(_from, _to);
+    // console.log(_from, _to);
     if (_to === "10") {
       output.value = changeToDecimal(_from, input.value).toString();
     } else if (_from === "10") {

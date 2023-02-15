@@ -23,7 +23,7 @@ async function putCalculetLike(state, calculetId, userId) {
         data = response.data;
       });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
   return data;
 }

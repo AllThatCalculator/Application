@@ -64,7 +64,7 @@ function WriteUserInfo() {
   // 회원가입한 사람의 이메일
   const userEmail = auth.currentUser.email;
 
-  console.log(userUid);
+  // console.log(userUid);
 
   /**
    * 프로필 사진 profileImg - type : Blob

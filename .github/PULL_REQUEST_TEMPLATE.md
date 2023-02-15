@@ -10,4 +10,5 @@
 
 - FE
   - [ ] warning 해결
+  - [ ] console 주석
 - BE

@@ -1,20 +1,69 @@
 import { useState } from "react";
-import { Box, Grid, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Tab,
+  Tabs,
+  Typography,
+  Alert,
+  Paper,
+  IconButton,
+  Tooltip,
+  Button,
+} from "@mui/material";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import useSx from "../../hooks/useSx";
 import CodeIcon from "@mui/icons-material/Code";
 import DescriptionIcon from "@mui/icons-material/Description";
-import CalculetBlock from "../calculet-block/CalculetBlock";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CodeEditor from "./CodeEditor";
-import { CustomPanel } from "./CustomPanel";
+import CustomPanel from "./CustomPanel";
+
+/**
+ * 언어 도움말
+ * @param {string} language : 지원 언어
+ * @param {string} helpText : 도움말
+ */
+function LanguageHelp({ language, helpText }) {
+  return (
+    <FlexBox gap="0.8rem" sx={{ alignItems: "center", m: "0.8rem 0" }}>
+      <Tooltip title={helpText}>
+        <IconButton disableRipple color="info">
+          <HelpOutlineIcon />
+        </IconButton>
+      </Tooltip>
+      <Typography variant="subtitle1">Language</Typography>
+      <Paper
+        variant="outlined"
+        sx={{
+          p: "0.2rem 0.6rem",
+          minWidth: "16rem",
+          WebkitUserSelect: "none",
+          MozUserSelect: "none",
+          MsUserSelect: "none",
+          userSelect: "none",
+        }}
+      >
+        <Typography
+          variant="subtitle1"
+          sx={{ fontWeight: "bold", pointerEvents: "none" }}
+        >
+          {language}
+        </Typography>
+      </Paper>
+    </FlexBox>
+  );
+}
 
 /**
  * 계산기 코드 작성 컴포넌트
  * - HTML, MARKDOWN, 미리 보기
  * @param {*} props
+ * - handleIsPreview : 미리 보기 컨트롤 함수
  */
 function WriteCode(props) {
-  const { subTitleSx, isWindowSmDown } = useSx();
+  const { HEIGHT_CODE_EDITOR, subTitleSx, isWindowSmDown } = useSx();
 
   /** tab 컨트롤 : 계산기 마크다운 정보, 계산 내역 */
   const [tabValue, setTabValue] = useState(0);
@@ -33,61 +82,62 @@ function WriteCode(props) {
       label: "계산기 설명",
       icon: <DescriptionIcon />,
     },
-    {
-      label: "미리 보기",
-      icon: <DescriptionIcon />,
-    },
   ];
+
   // 탭 콘텐츠 컴포넌트
   const tapContentList = [
-    // 계산기 코드
-    // <FlexBox sx={{ minHeight: "48.6rem" }}>
-    //   <FlexBox sx={{ height: "100%" }}>
-    //     <CodeEditor
-    //       defaultLanguage="html"
-    //       defaultValue={props.srcCode}
-    //       setData={props.setSrcCode}
-    //     />
-    //   </FlexBox>
-    //   <CustomPanel />
-    // </FlexBox>
+    // 01. 계산기 코드
+    <>
+      <LanguageHelp
+        language="HTML"
+        helpText="직접 구현한 계산기 코드를 아래에 HTML로 작성해주세요."
+      />
 
-    // <ResponsiveTabletLayout rowGap="20px" columnGap="20px">
-
-    <Grid container spacing={4} columns={{ sm: 2, md: 2 }}>
-      <Grid item sm={1.15} md={1.2} sx={{ width: "100%" }}>
+      <Grid container spacing={2}>
+        {/* 열 너비(각 차지하는 열 수) : 1 ~ 12 */}
+        <Grid item xs={8}>
+          <FlexBox sx={{ height: HEIGHT_CODE_EDITOR }}>
+            <CodeEditor
+              defaultLanguage="html"
+              defaultValue={props.srcCode}
+              setData={props.setSrcCode}
+            />
+          </FlexBox>
+        </Grid>
+        <Grid item xs={4}>
+          <CustomPanel />
+        </Grid>
+      </Grid>
+    </>,
+    // 02. 계산기 설명
+    <>
+      <LanguageHelp
+        language="Markdown"
+        helpText="계산기에 대한 설명을 Markdown 문법으로 작성해주세요."
+      />
+      <FlexBox sx={{ height: HEIGHT_CODE_EDITOR }}>
         <CodeEditor
-          defaultLanguage="html"
-          defaultValue={props.srcCode}
-          setData={props.setSrcCode}
+          defaultLanguage="markdown"
+          defaultValue={props.manual}
+          setData={props.setManual}
         />
-      </Grid>
-      <Grid item sm={0.85} md={0.8}>
-        <CustomPanel />
-      </Grid>
-    </Grid>,
-    // </ResponsiveTabletLayout>
-    // 계산기 설명
-    <CodeEditor
-      defaultLanguage="markdown"
-      defaultValue={props.manual}
-      setData={props.setManual}
-    />,
-    <CalculetBlock srcCode={props.srcCode} manual={props.manual} />,
+      </FlexBox>
+    </>,
   ];
 
-  // 모바일 접속 시, "PC환경에서만 가능한 기능입니다." 띄우기
-
+  // 모바일 접속 시, "스크린 크기를 키워주세요." 보여주기
   return (
     <Grid container spacing={4}>
       <Grid item sx={{ width: "100%" }}>
-        <FlexColumnBox gap="1.6rem">
+        <FlexColumnBox gap="1.6rem" sx={{ width: "100%" }}>
           <Typography sx={{ ...subTitleSx }}>계산기 코드 입력</Typography>
-          <Box sx={{ width: "100%" }}>
-            <Box
+          <FlexColumnBox sx={{ width: "100%" }}>
+            <FlexBox
               sx={{
                 borderBottom: 1,
                 borderColor: "divider",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
               {/* 탭 메뉴 */}
@@ -106,19 +156,31 @@ function WriteCode(props) {
                   />
                 ))}
               </Tabs>
-            </Box>
+              {!isWindowSmDown && (
+                <Button
+                  variant="contained"
+                  endIcon={<ArrowForwardIcon />}
+                  onClick={() => props.handleIsPreview()}
+                  sx={{ width: "fit-content", height: "fit-content" }}
+                >
+                  미리보기
+                </Button>
+              )}
+            </FlexBox>
             {/* 계산기 설명, 내 계산 내역 */}
-            <FlexBox sx={{ width: "100%" }}>
+            <Box sx={{ flexGrow: 1 }}>
               {isWindowSmDown && (
-                <Typography>스크린 크기를 키워주세요.</Typography>
+                <Alert severity="warning" sx={{ m: "1.2rem 0.8rem" }}>
+                  스크린 크기를 키워주세요.
+                </Alert>
               )}
               {!isWindowSmDown &&
                 tapContentList.map(
                   (data, index) =>
                     index === tabValue && <div key={index}>{data}</div>
                 )}
-            </FlexBox>
-          </Box>
+            </Box>
+          </FlexColumnBox>
         </FlexColumnBox>
       </Grid>
     </Grid>

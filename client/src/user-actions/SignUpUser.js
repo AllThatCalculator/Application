@@ -32,7 +32,7 @@ async function signUpUser(dataToSubmit = {}, userId) {
       });
     return data;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     switch (error.response.status) {
       case 409: // 이미 등록된 상태에서 한 번 더 요청 보냄 error
         window.location.href = URL.CALCULET;
