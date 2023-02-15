@@ -18,6 +18,7 @@ import CalculetList from "./pages/CalculetList";
 
 // google-analytics
 import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
+import Snackbars from "./components/global-components/Snackbars";
 
 function AppRouter({ isLoggedIn }) {
   const PATH_CALCULET_ID = ":" + URL.CALCULET_ID;
@@ -26,6 +27,7 @@ function AppRouter({ isLoggedIn }) {
     <BrowserRouter>
       <RouteChangeTracker />
       <Header isLoggedIn={isLoggedIn} />
+      <Snackbars />
       <Routes>
         <Route path={URL.CALCULET} element={<Calculet />}>
           <Route path={PATH_CALCULET_ID} element={<Calculet />} />

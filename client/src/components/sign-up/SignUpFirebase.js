@@ -47,7 +47,8 @@ function SignUpFirebase({ activateComponent }) {
   // loading state
   const { handleOnLoading, handleOffLoading } = useLoading();
   // error state
-  const { handleSetAuthError, handleSetErrorType } = useError();
+  const { handleSetAuthError, handleSetErrorType, handleSetClearError } =
+    useError();
 
   // redux state
   const { authError, errorType } = useSelector((state) => ({
@@ -72,6 +73,7 @@ function SignUpFirebase({ activateComponent }) {
   function onSubmitHandler(event) {
     event.preventDefault();
     handleOnLoading(); // loading start
+    handleSetClearError();
 
     // 비밀번호 & 비밀번호 확인 비교
     if (pw.value !== pwConfirmation.value) {
@@ -114,6 +116,7 @@ function SignUpFirebase({ activateComponent }) {
    * firebase google 회원가입
    */
   function googleSignUp(event) {
+    handleSetClearError();
     const request = firebaseAuth.signUpWithSocial("google");
     request.then((result) => {
       handleOnLoading(); // loading start
@@ -142,6 +145,7 @@ function SignUpFirebase({ activateComponent }) {
    * firebase github 회원가입
    */
   function githubSignUp(event) {
+    handleSetClearError();
     const request = firebaseAuth.signUpWithSocial("github");
     request.then((result) => {
       handleOnLoading(); // loading start

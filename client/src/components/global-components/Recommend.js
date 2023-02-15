@@ -80,7 +80,7 @@ function Recommend() {
                 name={item.title}
                 nickName="닉네임"
                 description={item.body}
-                profile="/img/ori.png"
+                profile=""
               />
             </Grid>
           ))

@@ -17,7 +17,7 @@ async function postRegisterCalculetTemp(dataToSubmit = {}, userId) {
       });
     return data;
   } catch (error) {
-    console.log("계산기 등록 에러", error);
+    // console.log("계산기 등록 에러", error);
     switch (error.response.status) {
       case 409: // 이미 등록된 상태에서 한 번 더 요청 보냄 error
         window.location.href = URL.CALCULET;

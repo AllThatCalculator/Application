@@ -4,6 +4,7 @@ import userInfo from "./userInfo";
 import calculetList from "./calculetList";
 import error from "./error";
 import loading from "./loading";
+import snackbar from "./snackbar";
 
 const rootReducer = combineReducers({
   calculetCategory,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   calculetList,
   error,
   loading,
+  snackbar,
 });
 
 export default rootReducer;

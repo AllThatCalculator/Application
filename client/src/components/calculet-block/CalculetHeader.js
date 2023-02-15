@@ -20,10 +20,12 @@ import putCalculetLike from "../../user-actions/putCalculetLike";
 import putCalculetBookmark from "../../user-actions/putCalculetBookmark";
 import { useSelector } from "react-redux";
 import usePage from "../../hooks/usePage";
+import useSnackbar from "../../hooks/useSnackbar";
 
 function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
   const { boxSx } = useSx();
   const { loginPage } = usePage();
+  const { openSnackbar } = useSnackbar();
 
   const statistics = calculetObj.statistics;
   const userCalculet = calculetObj.userCalculet;
@@ -228,7 +230,14 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
   function handleUrlShare() {
     const currUrl = window.location.href; // 현재 url
     navigator.clipboard.writeText(currUrl).then(() => {
-      alert("링크를 복사하였습니다.");
+      openSnackbar(
+        "basic",
+        "링크가 복사되었습니다.",
+        false,
+        "bottom",
+        "left",
+        1600 // 지속시간
+      );
     });
   }
 
