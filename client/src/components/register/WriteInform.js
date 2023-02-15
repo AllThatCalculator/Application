@@ -1,6 +1,3 @@
-import styled from "styled-components";
-import styles from "../styles";
-import { FlexColumnLayout, ResponsiveTabletLayout } from "../Layout";
 import {
   FormControl,
   Grid,
@@ -14,6 +11,8 @@ import {
 import useSx from "../../hooks/useSx";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import BoxRecCalculator from "../atom-components/BoxRecCalculator";
+import { useSelector } from "react-redux";
+import useGetCategoryName from "../../hooks/useGetCategoryName";
 
 /**
  * 계산기 정보 입력창 컴포넌트 (정보 입력 + 배너 미리보기)
@@ -22,26 +21,10 @@ import BoxRecCalculator from "../atom-components/BoxRecCalculator";
  */
 function WriteInform(props) {
   const { subTitleSx } = useSx();
-  const gapSx = { gap: "0.8rem" };
-
-  // 대분류, 소분류 SelectBox 필요한 정보들
-  const categorys = [
-    {
-      options: props.mainOption,
-      placeholder: "대분류",
-      selected: props.categoryMain,
-      onChange: props.changeCategoryMain,
-      isLine: true,
-    },
-    {
-      options: props.categorySubOption,
-      placeholder: "소분류",
-      selected: props.categorySub,
-      onChange: props.changeCategorySub,
-      isLine: false,
-      isValid: props.isValidSub,
-    },
-  ];
+  const { calculetCategory } = useGetCategoryName();
+  const { userInfo } = useSelector((state) => ({
+    userInfo: state.userInfo,
+  }));
 
   return (
     <Grid container spacing={4} columns={{ xs: 1, sm: 2 }}>
@@ -61,16 +44,16 @@ function WriteInform(props) {
             required
           />
           <Grid container gap="0.8rem">
-            {/* <Grid item xs>
+            <Grid item xs>
               <FormControl fullWidth required>
                 <InputLabel>대분류</InputLabel>
                 <Select
                   label="대분류"
-                  value={props.categoryMain || ""}
+                  value={props.categoryMainId}
                   onChange={props.changeCategoryMain}
                 >
-                  {props.mainOption &&
-                    props.mainOption.map((data) => (
+                  {calculetCategory &&
+                    calculetCategory.map((data) => (
                       <MenuItem key={data.value} value={data.value}>
                         {data.name}
                       </MenuItem>
@@ -79,47 +62,30 @@ function WriteInform(props) {
               </FormControl>
             </Grid>
             <Grid item xs>
-              <FormControl fullWidth required>
+              <FormControl
+                fullWidth
+                required
+                disabled={props.categoryMainId === ""}
+              >
                 <InputLabel>소분류</InputLabel>
                 <Select
                   label="소분류"
-                  value={props.categorySub || ""}
+                  value={props.categorySubId}
                   onChange={props.changeCategorySub}
                 >
-                  {props.categorySubOption &&
-                    props.categorySubOption.map((data) => (
-                      <MenuItem key={data.value} value={data.value}>
-                        {data.name}
-                      </MenuItem>
-                    ))}
+                  {calculetCategory &&
+                    calculetCategory.map(
+                      (mainData) =>
+                        mainData.value === props.categoryMainId &&
+                        mainData.sub.map((subData) => (
+                          <MenuItem key={subData.value} value={subData.value}>
+                            {subData.name}
+                          </MenuItem>
+                        ))
+                    )}
                 </Select>
               </FormControl>
-            </Grid> */}
-            {categorys.map((data) => (
-              <Grid item xs key={data.placeholder}>
-                <FormControl
-                  fullWidth
-                  required
-                  disabled={
-                    data.placeholder === "소분류" && !props.categoryMain
-                  }
-                >
-                  <InputLabel>{data.placeholder}</InputLabel>
-                  <Select
-                    label={data.placeholder}
-                    value={data.selected || ""}
-                    onChange={data.onChange}
-                  >
-                    {data.options &&
-                      data.options.map((data) => (
-                        <MenuItem key={data.value} value={data.value}>
-                          {data.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-              </Grid>
-            ))}
+            </Grid>
           </Grid>
         </FlexColumnBox>
       </Grid>
@@ -136,16 +102,15 @@ function WriteInform(props) {
             elevation={4}
             sx={{
               pointerEvents: "none",
-              // width: "32rem",
               width: "100%",
               margin: { xs: "0 5.8rem", sm: "0 2.4rem", md: "0 5.8rem" },
             }}
           >
             <BoxRecCalculator
               name={props.title}
-              nickName={props.userName}
+              nickName={userInfo.userName}
               description={props.description}
-              profile={props.profileImgSrc}
+              profile={userInfo.profileImgSrc}
             />
           </Paper>
         </FlexBox>

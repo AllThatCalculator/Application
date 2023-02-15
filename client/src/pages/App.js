@@ -48,7 +48,7 @@ function App() {
         if (token !== null) {
           /** set user info */
           getUserInfo(token).then((data) => {
-            console.log(data);
+            // console.log(data);
             dispatch(onSetUserInfo(data));
           });
           /** set user id token */

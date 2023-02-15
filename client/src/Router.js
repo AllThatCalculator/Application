@@ -5,11 +5,11 @@ import URL from "./components/PageUrls";
 import Header from "./pages/Header";
 // import BookmarkBar from "./components/global-component/BookmarkBar";
 
-// import Auth from "./hoc/auth";
+import Auth from "./hoc/auth";
 
 // 페이지
 import Calculet from "./pages/Calculet";
-// import Register from "./pages/Register";
+import Register from "./pages/Register";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Search from "./pages/Search";
@@ -31,12 +31,12 @@ function AppRouter({ isLoggedIn }) {
           <Route path={PATH_CALCULET_ID} element={<Calculet />} />
         </Route>
 
-        {/* <Route
+        <Route
           path={URL.REGISTER}
           element={
             <Auth isLoggedIn={isLoggedIn} authComponent={<Register />} />
           }
-        /> */}
+        />
         <Route path={URL.LOGIN} element={<Login isLoggedIn={isLoggedIn} />} />
         <Route
           path={URL.SIGN_UP}

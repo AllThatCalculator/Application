@@ -21,7 +21,7 @@ import putCalculetBookmark from "../../user-actions/putCalculetBookmark";
 import { useSelector } from "react-redux";
 import usePage from "../../hooks/usePage";
 
-function CalculetHeader({ calculetObj, updateLog }) {
+function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
   const { boxSx } = useSx();
   const { loginPage } = usePage();
 
@@ -29,10 +29,6 @@ function CalculetHeader({ calculetObj, updateLog }) {
   const userCalculet = calculetObj.userCalculet;
   const contributor = calculetObj.contributor;
   const title = calculetObj.title;
-  // const [statistics, setStatistics] = useState(calculetObj.statistics);
-  // const [userCalculet, setUserCalculet] = useState(calculetObj.userCalculet);
-  // const [contributor, setContributor] = useState(calculetObj.contributor);
-  // const [title, setTitle] = useState(calculetObj.title);
 
   // user id token
   const { idToken } = useSelector((state) => ({
@@ -75,6 +71,11 @@ function CalculetHeader({ calculetObj, updateLog }) {
    * - 추후 DB 갱신을 위한 백엔드와의 통신 필요
    */
   async function toggleLike() {
+    // 미리보기면 return
+    if (isPreview) {
+      return;
+    }
+
     // idToken 없으면, 로그인하러 가기
     if (!idToken) {
       loginPage();
@@ -102,6 +103,11 @@ function CalculetHeader({ calculetObj, updateLog }) {
    * - 추후 DB 갱신을 위한 백엔드와의 통신 필요
    */
   async function toggleBookmark() {
+    // 미리보기면 return
+    if (isPreview) {
+      return;
+    }
+
     // idToken 없으면, 로그인하러 가기
     if (!idToken) {
       loginPage();
@@ -248,7 +254,7 @@ function CalculetHeader({ calculetObj, updateLog }) {
 
   return (
     <>
-      {modalOpen && (
+      {!isPreview && modalOpen && (
         <ModalCalculetInfo
           contributor={contributor.userName}
           contributorImgSrc={contributor.profileImgSrc}
@@ -294,15 +300,16 @@ function CalculetHeader({ calculetObj, updateLog }) {
                 onClick={data.onClick}
               />
             ))}
-            {MorePopupLists.map((popupData, index) => (
-              <PopupList
-                key={index}
-                popupIcon={popupData.popupIcon}
-                popupTitle={popupData.popupTitle}
-                popupListData={popupData.popupListData}
-                popupContent={popupData.popupContent}
-              />
-            ))}
+            {!isPreview &&
+              MorePopupLists.map((popupData, index) => (
+                <PopupList
+                  key={index}
+                  popupIcon={popupData.popupIcon}
+                  popupTitle={popupData.popupTitle}
+                  popupListData={popupData.popupListData}
+                  popupContent={popupData.popupContent}
+                />
+              ))}
           </FlexBox>
         </Grid>
       </Grid>
