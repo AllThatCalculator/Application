@@ -8,12 +8,11 @@ import {
 } from "../components/calculet-block/oftenUsedCalculet";
 import FooterRecommend from "../components/global-components/FooterRecommend";
 import calculetInfo from "../user-actions/calculetInfo";
-import { Grid, Paper, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import LoadingPage from "../components/global-components/LoadingPage";
 import UploadIcon from "@mui/icons-material/Upload";
 import usePage from "../hooks/usePage";
-import { MainButton } from "../components/atom-components/Buttons";
 import getCalculetUpdateLog from "../user-actions/getCalculetUpdateLog";
 import getUserIdToken from "../utils/getUserIdToken";
 import PageScreenBottom from "../components/global-components/PageScreenBottom";

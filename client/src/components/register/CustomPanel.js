@@ -17,6 +17,8 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
+import { Box } from "@mui/system";
+import useSx from "../../hooks/useSx";
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -95,10 +97,9 @@ function DefaultCustomPanel({ panelList }) {
  */
 function ScrollCustomPanel({ panelList }) {
   return (
-    // <FlexColumnBox sx={{ height: "100%", overflow: "auto" }}>
-    <FlexColumnBox sx={{ height: "36rem", overflow: "auto" }}>
+    <FlexColumnBox sx={{ height: "100%", overflow: "auto" }}>
       <StyledScrollbar>
-        <FlexColumnBox sx={{ width: "100%", height: "100%" }}>
+        <FlexColumnBox sx={{ width: "100%" }}>
           <CardHeader
             avatar={<EditIcon />}
             sx={{ color: "success.light" }}
@@ -112,6 +113,8 @@ function ScrollCustomPanel({ panelList }) {
 }
 
 function CustomPanel() {
+  const { HEIGHT_CODE_EDITOR } = useSx();
+
   // 필수 절차
   const defaultList = [
     { guide: GUIDES["InputOutput"], designs: InputOutput },
@@ -121,75 +124,13 @@ function CustomPanel() {
   const selectList = [{ guide: GUIDES["Design"], designs: Design }];
 
   return (
-    <FlexColumnBox gap="1.6rem">
-      <DefaultCustomPanel panelList={defaultList} />
+    <FlexColumnBox gap="1.6rem" sx={{ height: HEIGHT_CODE_EDITOR }}>
+      <Box sx={{ position: "relative" }}>
+        <DefaultCustomPanel panelList={defaultList} />
+      </Box>
       <ScrollCustomPanel panelList={selectList} />
     </FlexColumnBox>
   );
 }
 
 export default CustomPanel;
-
-// import styled from "styled-components";
-// import StyledScrollbar from "../atom-components/StyledScrollbar";
-// import { FlexColumnLayout } from "../Layout";
-// import BoxClassName from "./BoxClassName";
-// import { Design, InputOutput } from "./Designs";
-// import { GUIDES } from "./constants";
-// import GuideText from "./GuideText";
-
-// /**
-//  * 패널을 감싸는 최상위 컴포넌트 스타일 정의
-//  */
-// const Wrapper = styled(FlexColumnLayout)`
-//   width: 100%;
-// `;
-
-// /**
-//  * 스크롤 있는 패널 스타일 정의
-//  */
-// const ScrollWrapper = styled(StyledScrollbar)`
-//   height: 300px;
-// `;
-
-// /**
-//  * 기본 커스텀 패널 컴포넌트
-//  * @param {string, array}
-//  * guide: 패널에 대한 설명
-//  * designs: BoxClassName에 대한 정보 배열
-//  */
-// function DefaultCustomPanel({ guide, designs }) {
-//   return (
-//     <Wrapper>
-//       <GuideText content={guide} />
-//       <BoxClassName designs={designs} />
-//     </Wrapper>
-//   );
-// }
-
-// /**
-//  * 스크롤 되는 커스텀 패널 컴포넌트
-//  * @param {string, array}
-//  * guide: 패널에 대한 설명
-//  * designs: BoxClassName에 대한 정보 배열
-//  */
-// function ScrollCustomPanel({ guide, designs }) {
-//   return (
-//     <Wrapper>
-//       <ScrollWrapper>
-//         <DefaultCustomPanel guide={guide} designs={designs} />
-//       </ScrollWrapper>
-//     </Wrapper>
-//   );
-// }
-
-// function CustomPanel() {
-//   return (
-//     <>
-//       <DefaultCustomPanel guide={GUIDES["InputOutput"]} designs={InputOutput} />
-//       <ScrollCustomPanel guide={GUIDES["Design"]} designs={Design} />
-//     </>
-//   );
-// }
-
-// export { DefaultCustomPanel, CustomPanel };

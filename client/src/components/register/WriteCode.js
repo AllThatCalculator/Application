@@ -63,7 +63,7 @@ function LanguageHelp({ language, helpText }) {
  * - handleIsPreview : 미리 보기 컨트롤 함수
  */
 function WriteCode(props) {
-  const { subTitleSx, isWindowSmDown } = useSx();
+  const { HEIGHT_CODE_EDITOR, subTitleSx, isWindowSmDown } = useSx();
 
   /** tab 컨트롤 : 계산기 마크다운 정보, 계산 내역 */
   const [tabValue, setTabValue] = useState(0);
@@ -92,14 +92,17 @@ function WriteCode(props) {
         language="HTML"
         helpText="직접 구현한 계산기 코드를 아래에 HTML로 작성해주세요."
       />
+
       <Grid container spacing={2}>
         {/* 열 너비(각 차지하는 열 수) : 1 ~ 12 */}
         <Grid item xs={8}>
-          <CodeEditor
-            defaultLanguage="html"
-            defaultValue={props.srcCode}
-            setData={props.setSrcCode}
-          />
+          <FlexBox sx={{ height: HEIGHT_CODE_EDITOR }}>
+            <CodeEditor
+              defaultLanguage="html"
+              defaultValue={props.srcCode}
+              setData={props.setSrcCode}
+            />
+          </FlexBox>
         </Grid>
         <Grid item xs={4}>
           <CustomPanel />
@@ -112,7 +115,7 @@ function WriteCode(props) {
         language="Markdown"
         helpText="계산기에 대한 설명을 Markdown 문법으로 작성해주세요."
       />
-      <FlexBox sx={{ height: "64rem" }}>
+      <FlexBox sx={{ height: HEIGHT_CODE_EDITOR }}>
         <CodeEditor
           defaultLanguage="markdown"
           defaultValue={props.manual}
