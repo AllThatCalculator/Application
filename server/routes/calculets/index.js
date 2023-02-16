@@ -47,6 +47,44 @@ router.get("/converters", errorHandler.dbWrapper(getCalculetList.converters));
 
 /**
  * @swagger
+ *  /api/calculets/recommendation:
+ *    get:
+ *      tags: [calculets]
+ *      summary: 추천계산기 목록 불러오기
+ *      description: (임시) 조회수 높은 top 15 계산기
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/getRecommendationList"
+ *        400:
+ *          $ref: "#/components/responses/error"
+ */
+router.get(
+  "/recommendation",
+  errorHandler.dbWrapper(getCalculetList.recommendation)
+);
+
+/**
+ * @swagger
+ *  /api/calculets/find:
+ *    get:
+ *      parameters:
+ *        - $ref: "#/components/parameters/mainId"
+ *        - $ref: "#/components/parameters/subId"
+ *        - $ref: "#/components/parameters/title"
+ *        - $ref: "#/components/parameters/limit"
+ *      tags: [calculets]
+ *      summary: 계산기 검색 (대분류 / 소분류 / 제목)
+ *      description: 대분류 | 소분류 | 계산기 제목으로 검색 필터 설정 가능 (모든 쿼리 파라미터는 필수X)
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/getCalculetList"
+ *        400:
+ *          $ref: "#/components/responses/error"
+ */
+router.get("/find", errorHandler.dbWrapper(getCalculetList.search));
+
+/**
+ * @swagger
  *  /api/calculets/{calculetId}:
  *    get:
  *      tags: [calculets]

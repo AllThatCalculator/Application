@@ -16,6 +16,31 @@ components:
       name: calculetId
       schema:
         $ref: "#/components/schemas/calculetId"
+    mainId:
+      in: query
+      required: false
+      name: categoryMainId
+      schema:
+        $ref: "#/components/schemas/calculet/properties/categoryMainId"
+    subId:
+      in: query
+      required: false
+      name: categorySubId
+      schema:
+        $ref: "#/components/schemas/calculet/properties/categorySubId"
+    title:
+      in: query
+      required: false
+      name: title
+      schema:
+        $ref: "#/components/schemas/calculet/properties/title"
+    limit:
+      in: query
+      required: false
+      name: limit
+      description: 최대 개수 - 미지정시 조건에 해당하는 모든 계산기 불러옴
+      schema:
+        type: integer
   responses:
     likeResult:
       content:
@@ -60,6 +85,14 @@ components:
             type: array
             items:
               $ref: "#/components/schemas/calculetPreview"
+    getRecommendationList:
+      description: 추천 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/calculetBanner"
     bookMarkList:
       description: 북마크 리스트
       content:
@@ -117,6 +150,7 @@ components:
         categorySubId:
           type: integer
           description: 카테고리 소분류
+          example: 1
     calculetId:
       type: string
       description: 계산기 UUID
@@ -157,6 +191,17 @@ components:
           $ref: "#/components/schemas/calculet/properties/categorySubId"
         viewCnt:
           $ref: "#/components/schemas/statistics/properties/view"
+        contributor:
+          $ref: "#/components/schemas/userSimpleInfo"
+    calculetBanner:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/calculetId"
+        title:
+          $ref: "#/components/schemas/calculet/properties/title"
+        description:
+          $ref: "#/components/schemas/calculet/properties/description"
         contributor:
           $ref: "#/components/schemas/userSimpleInfo"
     updateLog:
