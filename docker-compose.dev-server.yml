@@ -2,8 +2,8 @@
 version: "3"
 
 services:
-  frontend_dev-server:
-    container_name: frontend_dev-server
+  frontend:
+    container_name: frontend
     restart: unless-stopped
     stdin_open: true
     build: nginx
@@ -16,11 +16,11 @@ services:
     networks:
       - app-tier
     depends_on:
-      - backend_dev-server
+      - api
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
 
-  backend_dev-server:
-    container_name: backend_dev-server
+  api:
+    container_name: api
     build:
       context: ./server
       dockerfile: Dockerfile.dev-server
