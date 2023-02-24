@@ -77,6 +77,7 @@ function Recommend() {
                   nickName={item.contributor.userName}
                   description={item.description}
                   profile={item.contributor.profileImgSrc}
+                  calculetId={item.id}
                 />
               </Grid>
             ))}

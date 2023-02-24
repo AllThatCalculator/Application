@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox.js";
 import useSx from "../../hooks/useSx.js";
+import usePage from "../../hooks/usePage.js";
 
 /**
  *
@@ -17,10 +18,17 @@ import useSx from "../../hooks/useSx.js";
  * nickName : 계산기 저작한 사용자 닉네임
  * description : 계산기에 대한 간단한 설명
  * profile : 프로필 이미지 경로
- *
+ * calculetId : 계산기 ID
  */
-function BoxRecCalculator({ name, nickName, description, profile }) {
+function BoxRecCalculator({
+  name,
+  nickName,
+  description,
+  profile,
+  calculetId,
+}) {
   const { atcLinearWhite, ellipsis } = useSx();
+  const { calculetIdPage } = usePage();
 
   return (
     <ButtonBase
@@ -31,7 +39,7 @@ function BoxRecCalculator({ name, nickName, description, profile }) {
         display: "flex",
         justifyContent: "flex-start",
       }}
-      // onClick={() => handleIdPage(Id)}
+      onClick={() => calculetIdPage(calculetId)}
     >
       <Card
         sx={{

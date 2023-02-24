@@ -118,7 +118,7 @@ function CustomPanel() {
   // 필수 절차
   const defaultList = [
     { guide: GUIDES["InputOutput"], designs: InputOutput },
-    { guide: GUIDES["Save"], designs: Save },
+    // { guide: GUIDES["Save"], designs: Save },
   ];
   // 선택 절차
   const selectList = [{ guide: GUIDES["Design"], designs: Design }];
