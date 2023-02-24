@@ -2,8 +2,8 @@
 version: "3"
 
 services:
-  frontend_dev-server:
-    container_name: frontend_dev-server
+  frontend:
+    container_name: frontend
     restart: unless-stopped
     stdin_open: true
     build: nginx
@@ -11,16 +11,28 @@ services:
       - ./nginx/nginx.dev-server:/etc/nginx/conf.d
       - ./client/src/css:/static-files/css
       - ./client/build:/usr/share/nginx/html
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     ports:
       - 80:80
+      - 443:443
     networks:
       - app-tier
     depends_on:
-      - backend_dev-server
+      - api
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
 
-  backend_dev-server:
-    container_name: backend_dev-server
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:latest
+    restart: unless-stopped
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  api:
+    container_name: api
     build:
       context: ./server
       dockerfile: Dockerfile.dev-server
