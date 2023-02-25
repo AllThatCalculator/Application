@@ -60,6 +60,6 @@ app.listen(port, () => {
   );
 });
 
-// // auto deploy test!!!
-// var randomstring = require("randomstring");
-// console.log(randomstring.generate());
+// auto deploy test!!!
+var randomstring = require("randomstring");
+console.log(randomstring.generate());
