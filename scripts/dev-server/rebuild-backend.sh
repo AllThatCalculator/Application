@@ -17,7 +17,7 @@ fi
 # Start container A and stop container B
 echo "Deploy $CONTAINER_A..."
 
-docker compose -f ./docker-compose.dev-server.yml --force-recreate build $CONTAINER_A
+docker compose -f ./docker-compose.dev-server.yml build $CONTAINER_A
 docker compose -f ./docker-compose.dev-server.yml up -d $CONTAINER_A
 
 while [ 1 == 1 ]; do
@@ -37,3 +37,5 @@ log_path="./log/$(TZ="Asia/Seoul" date '+%Y-%m-%d-%H-%M')-$CONTAINER_B.out"
 docker logs $CONTAINER_B > $log_path
 
 docker compose -f ./docker-compose.dev-server.yml stop $CONTAINER_B
+docker image prune -af
+docker system prune -f
