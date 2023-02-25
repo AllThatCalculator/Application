@@ -53,5 +53,9 @@ app.use(errorHandler.default);
 
 // 서버 시작
 app.listen(port, () => {
-  console.log(`listening ${port}`);
+  console.log(
+    `${new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Seoul",
+    })} | listening ${port}`
+  );
 });
