@@ -9,7 +9,6 @@ services:
     build: nginx
     volumes:
       - ./nginx/nginx.dev-server:/etc/nginx/conf.d
-      - ./client/src/css:/static-files/css
       - ./client/build:/usr/share/nginx/html
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
@@ -31,8 +30,21 @@ services:
       - ./certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
-  api:
-    container_name: api
+  api_blue:
+    container_name: api_blue
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev-server
+    env_file: ./server/.env
+    volumes:
+      - /server/node_modules
+      - ./server/:/server
+    networks:
+      - app-tier
+    restart: always
+
+  api_green:
+    container_name: api_green
     build:
       context: ./server
       dockerfile: Dockerfile.dev-server
