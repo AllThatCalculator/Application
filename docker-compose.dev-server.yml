@@ -34,9 +34,6 @@ services:
       context: ./server
       dockerfile: Dockerfile.dev-server
     env_file: ./server/.env
-    volumes:
-      - /server/node_modules
-      - ./server/:/server
     networks:
       - app-tier
     restart: always
@@ -47,9 +44,6 @@ services:
       context: ./server
       dockerfile: Dockerfile.dev-server
     env_file: ./server/.env
-    volumes:
-      - /server/node_modules
-      - ./server/:/server
     networks:
       - app-tier
     restart: always
