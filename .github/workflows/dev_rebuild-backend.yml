@@ -5,8 +5,7 @@ on:
     branches:
       - develop
     paths:
-      - server/package*.json
-      - server/Dockerfile.dev-server
+      - server/*
 jobs:
   rebuild-backend-container:
     runs-on: ubuntu-20.04
