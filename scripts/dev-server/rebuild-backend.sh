@@ -16,7 +16,8 @@ fi
 
 # Start container A and stop container B
 echo "Deploy $CONTAINER_A..."
-docker compose -f ./docker-compose.dev-server.yml build $CONTAINER_A
+
+docker compose -f ./docker-compose.dev-server.yml --force-recreate build $CONTAINER_A
 docker compose -f ./docker-compose.dev-server.yml up -d $CONTAINER_A
 
 while [ 1 == 1 ]; do
