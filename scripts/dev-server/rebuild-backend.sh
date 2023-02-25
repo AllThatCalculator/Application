@@ -31,4 +31,8 @@ done;
 
 sed -i "s/$CONTAINER_B/$CONTAINER_A/g" $DEFAULT_CONF
 docker exec frontend nginx -s reload
+
+log_path="./log/$(TZ="Asia/Seoul" date '+%Y-%m-%d-%H-%M')-$CONTAINER_B.out"
+docker logs $CONTAINER_B > $log_path
+
 docker compose -f ./docker-compose.dev-server.yml stop $CONTAINER_B

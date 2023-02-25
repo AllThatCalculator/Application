@@ -39,3 +39,4 @@ certbot
 
 # 서버 로그 파일
 nohup.out
+log
