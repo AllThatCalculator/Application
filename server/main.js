@@ -59,7 +59,3 @@ app.listen(port, () => {
     })} | listening ${port}`
   );
 });
-
-// auto deploy test!!!
-var randomstring = require("randomstring");
-console.log(randomstring.generate());
