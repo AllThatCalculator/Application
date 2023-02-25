@@ -21,7 +21,7 @@ docker compose -f ./docker-compose.dev-server.yml up -d $CONTAINER_A
 
 while [ 1 == 1 ]; do
   echo "$CONTAINER_A health check...."
-  REQUEST=$(docker exec nginx curl http://$CONTAINER_A:5000)
+  REQUEST=$(docker exec frontend curl http://$CONTAINER_A:5000)
   echo $REQUEST
   if [ -n "$REQUEST" ]; then
     break ;
