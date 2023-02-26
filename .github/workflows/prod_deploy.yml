@@ -1,14 +1,11 @@
-name: (PROD) build react app
+name: (PROD) deploy frontend and backend
 
 on:
   push:
     branches:
       - prod # for temporary
-    paths:
-      - client/src/*
-      - client/public/*
 jobs:
-  build-and-deploy-react-app-for-production:
+  production-deploy:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -44,4 +41,4 @@ jobs:
           host: ${{ secrets.PROD_EC2_IP_ADDRESS }}
           username: ${{ secrets.PROD_EC2_USER }}
           key: ${{ secrets.PROD_EC2_PRIVATE_KEY }}
-          script: "cd /home/ubuntu/project/application; ./scripts/dev-server/deploy-build-file.sh"
+          script: "cd /home/ubuntu/project/application; ./scripts/prod/deploy-production.sh"
