@@ -25,12 +25,7 @@ components:
             description: 리다이렉션 위치
 
   schemas:
-    dateTimeStr:
-      type: string
-      description: 기록된 시간 문자열
-      example: "2023-01-16 21:23:25"
-      format: date-time
     dateTimeLive:
       type: string
-      description: 기록한 시간
+      description: 기록한 시간 (UTC)
       format: date-time
