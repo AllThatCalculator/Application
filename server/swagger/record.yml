@@ -45,7 +45,7 @@ components:
               $ref: "#/components/schemas/recordObject"
               properties:
                 createdAt:
-                  $ref: "#/components/schemas/dateTimeStr"
+                  $ref: "#/components/schemas/dateTimeLive"
                 id:
                   $ref: "#/components/schemas/recordId"
   schemas:

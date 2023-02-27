@@ -70,7 +70,7 @@ components:
               id:
                 $ref: "#/components/schemas/calculetId"
               createdAt:
-                $ref: "#/components/schemas/dateTimeStr"
+                $ref: "#/components/schemas/dateTimeLive"
               contributor:
                 $ref: "#/components/schemas/userSimpleInfo"
               statistics:
