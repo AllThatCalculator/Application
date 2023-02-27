@@ -1,9 +1,11 @@
 #!/bin/bash
 
+# unzip frontend build file
 git pull
+sudo tar -xzvf ./client/build.tar.gz -C ./client/
 
 IS_BLUE_RUNNING=$(docker ps | grep api_blue)
-NGINX_CONFIG_FILE="./nginx/nginx.dev-server/nginx.conf"
+NGINX_CONFIG_FILE="./nginx/nginx.prod/nginx.conf"
 
 ##### BLUE RUNNING...
 if [ -n "$IS_BLUE_RUNNING"  ];then
@@ -16,8 +18,8 @@ fi
 
 # Start container A
 echo "Deploy $CONTAINER_A..."
-docker compose -f ./docker-compose.dev-server.yml build $CONTAINER_A
-docker compose -f ./docker-compose.dev-server.yml up -d $CONTAINER_A
+docker compose -f ./docker-compose.prod.yml build $CONTAINER_A
+docker compose -f ./docker-compose.prod.yml up -d $CONTAINER_A
 
 # wait until backend server starts
 while [ 1 == 1 ]; do
@@ -39,7 +41,7 @@ log_path="./log/$(TZ="Asia/Seoul" date '+%Y-%m-%d-%H-%M')-$CONTAINER_B.out"
 docker logs $CONTAINER_B > $log_path
 
 # stop container B
-docker compose -f ./docker-compose.dev-server.yml stop $CONTAINER_B
+docker compose -f ./docker-compose.prod.yml stop $CONTAINER_B
 
 # clear unusing docker
 docker image prune -af

@@ -1,6 +1,5 @@
 #!/bin/sh
 
 git pull
-cd ./client
-sudo tar -xzvf build.tar.gz
+sudo tar -xzvf ./client/build.tar.gz -C ./client/
 docker exec frontend nginx -s reload
