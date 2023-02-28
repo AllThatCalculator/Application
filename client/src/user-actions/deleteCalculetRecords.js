@@ -19,7 +19,7 @@ async function deleteCalculetRecords(dataToSubmit = {}, userId = "") {
       });
     return data;
   } catch (error) {
-    console.log("계산 이력 삭제 error", error);
+    // console.log("계산 이력 삭제 error", error);
     return null;
   }
 }

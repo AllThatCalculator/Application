@@ -4,10 +4,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  TextField,
   Button,
 } from "@mui/material";
-import { useSelector } from "react-redux";
 
 /**
  * 비밀번호 찾기 form
