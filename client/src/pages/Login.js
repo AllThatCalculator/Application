@@ -232,14 +232,14 @@ function Login({ isLoggedIn }) {
     },
   ];
 
-  useEffect(() => {
-    // login 상태면, 튕겨내기
-    if (isLoggedIn) {
-      // warning solve
-      // window.history.back();
-      backPage();
-    }
-  }, [isLoggedIn, backPage]);
+  // useEffect(() => {
+  //   // login 상태면, 튕겨내기
+  //   if (isLoggedIn) {
+  //     // warning solve
+  //     // window.history.back();
+  //     backPage();
+  //   }
+  // }, [isLoggedIn, backPage]);
 
   return (
     <>

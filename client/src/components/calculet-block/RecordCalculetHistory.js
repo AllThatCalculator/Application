@@ -17,21 +17,14 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { visuallyHidden } from "@mui/utils";
 import deleteCalculetRecords from "../../user-actions/deleteCalculetRecords";
 import { Button } from "@mui/material";
 import RecordDeleteWarningDialog from "./RecordDeleteWarningDialog";
 import useSnackbar from "../../hooks/useSnackbar";
-import {
-  onSetCalculetObj,
-  onSetCalculetRecent,
-  onSetCalculetRecord,
-} from "../../modules/calculetRecord";
 import useCalculetRecord from "../../hooks/useCalculetRecord";
 import postCalculetRecords from "../../user-actions/postCalculetRecords";
 import usePage from "../../hooks/usePage";
-import formatTime from "../../utils/formatTime";
-import { blueGrey } from "@mui/material/colors";
+import { formatDayTime } from "../../utils/formatTime";
 
 // orderBy key constant
 const KEY_CREATED_AT = "createdAt";
@@ -636,7 +629,7 @@ function RecordCalculetHistory({ calculetId }) {
                               component="th"
                               scope="row"
                             >
-                              {formatTime(row.createdAt)}
+                              {formatDayTime(row.createdAt)}
                             </TableCell>
                             {row.inputObj &&
                               Object.values(row.inputObj).map((data, index) => (
