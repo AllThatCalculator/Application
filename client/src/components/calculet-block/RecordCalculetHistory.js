@@ -233,7 +233,7 @@ function EnhancedTableToolbar(props) {
       ) : (
         <Tooltip title="수정사항 저장하기">
           <Button variant="contained" onClick={onSaveCalculetRecords}>
-            저장하기
+            수정 사항 저장하기
           </Button>
         </Tooltip>
       )}
@@ -288,6 +288,7 @@ function RecordCalculetHistory({ calculetId }) {
    */
   function makeObject(data) {
     const obj = {};
+    // console.log(data);
     for (let i = 0; i < data.length; i++) {
       const desc = data[i].attributes.atcDesc.value;
       const value = data[i].value;
