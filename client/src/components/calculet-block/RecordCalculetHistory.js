@@ -30,6 +30,8 @@ import {
 import useCalculetRecord from "../../hooks/useCalculetRecord";
 import postCalculetRecords from "../../user-actions/postCalculetRecords";
 import usePage from "../../hooks/usePage";
+import formatTime from "../../utils/formatTime";
+import { blueGrey } from "@mui/material/colors";
 
 // orderBy key constant
 const KEY_CREATED_AT = "createdAt";
@@ -384,7 +386,15 @@ function RecordCalculetHistory({ calculetId }) {
     setPage(0);
   };
 
-  const isSelected = (id) => selected.indexOf(id) !== -1;
+  // 해당 id가 선택되었는지 handling
+  function isSelected(id) {
+    return selected.indexOf(id) !== -1;
+  }
+
+  // 최근 저장 내역인지 handling
+  function isRecentData(id) {
+    return id.includes(KEY_RECENT_CALCULATION);
+  }
 
   // Avoid a layout jump when reaching the last page with empty rows.
   // const emptyRows =
@@ -409,8 +419,8 @@ function RecordCalculetHistory({ calculetId }) {
     }
 
     // ====== record calculation ======
-    let recordSelected = selected.filter(function (data) {
-      return !data.includes(KEY_RECENT_CALCULATION);
+    let recordSelected = selected.filter(function (id) {
+      return !isRecentData(id);
     });
 
     if (recordSelected.length > 0) {
@@ -482,21 +492,14 @@ function RecordCalculetHistory({ calculetId }) {
 
   // (임시) 현재 입력, 출력 긁어와서 row 추가하는 함수
   function onClick() {
-    const today = new Date();
+    const createTime = new Date().toISOString();
 
     let data = {
-      // 브라우저에 보여줄 용
-      createdAt: new Date(today.getTime() - today.getTimezoneOffset() * 60000)
-        .toISOString()
-        .replace("T", " ")
-        .replace(/\..*/, ""),
-      // db에 보내는 용
-      dbCreatedAt: new Date().toISOString(),
-      id: `${KEY_RECENT_CALCULATION}-${calculetId}-${new Date().toISOString()}`,
+      createdAt: createTime,
+      id: `${KEY_RECENT_CALCULATION}-${calculetId}-${createTime}`,
       inputObj: headCells.inputObj,
       outputObj: headCells.outputObj,
     };
-
     handleAppendCalculetRecent(data);
   }
 
@@ -526,7 +529,7 @@ function RecordCalculetHistory({ calculetId }) {
       recordArray.push({
         inputObj: item.inputObj,
         outputObj: item.outputObj,
-        createdAt: item.dbCreatedAt,
+        createdAt: item.createdAt,
       });
     });
 
@@ -592,6 +595,8 @@ function RecordCalculetHistory({ calculetId }) {
                         const labelId = row.id;
                         // id로 식별해서 selected
                         const isItemSelected = isSelected(labelId);
+                        const isItemRecentData = isRecentData(labelId);
+
                         return (
                           // createdAt - inputObj - outputObj 나열
                           <TableRow
@@ -602,6 +607,19 @@ function RecordCalculetHistory({ calculetId }) {
                             aria-checked={isItemSelected}
                             tabIndex={-1}
                             selected={isItemSelected}
+                            sx={{
+                              // 최근 저장 내역인 경우 구분
+                              backgroundColor:
+                                isItemRecentData && "atcGreen.50",
+                              "&.Mui-selected": {
+                                backgroundColor:
+                                  isItemRecentData && "atcGreen.100",
+                              },
+                              "&.Mui-selected:hover": {
+                                backgroundColor:
+                                  isItemRecentData && "atcGreen.200",
+                              },
+                            }}
                           >
                             <TableCell padding="checkbox">
                               <Checkbox
@@ -618,7 +636,7 @@ function RecordCalculetHistory({ calculetId }) {
                               component="th"
                               scope="row"
                             >
-                              {row.createdAt}
+                              {formatTime(row.createdAt)}
                             </TableCell>
                             {row.inputObj &&
                               Object.values(row.inputObj).map((data, index) => (
