@@ -17,14 +17,19 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import deleteCalculetRecords from "../../user-actions/deleteCalculetRecords";
-import { Button } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import RecordDeleteWarningDialog from "./RecordDeleteWarningDialog";
 import useSnackbar from "../../hooks/useSnackbar";
 import useCalculetRecord from "../../hooks/useCalculetRecord";
 import postCalculetRecords from "../../user-actions/postCalculetRecords";
 import usePage from "../../hooks/usePage";
 import { formatDayTime } from "../../utils/formatTime";
+import { FlexBox } from "../global-components/FlexBox";
+import RecordSelectedOption from "./RecordSelectedOption";
+import usePreventLeave from "../../hooks/usePreventLeave";
+import setCalculetInOutputObj from "../../utils/setCalculetInOutputObj";
 
 // orderBy key constant
 const KEY_CREATED_AT = "createdAt";
@@ -114,15 +119,24 @@ function TableHeadCellBox({
  */
 function EnhancedTableHead(props) {
   const {
+    onSelectAll,
     onSelectAllClick,
+    onSelectRecentClick,
+    onSelectRecordClick,
     order,
-    orderBy,
     numSelected,
     rowCount,
     onRequestSort,
     headCells,
   } = props;
 
+  // 계산 내역 선택 팝업창
+  const [isRecordSelectedOption, setIsRecordSelectedOption] = useState(false);
+  const clickFunctionList = {
+    onSelectAllClick: onSelectAll,
+    onSelectRecentClick: onSelectRecentClick,
+    onSelectRecordClick: onSelectRecordClick,
+  };
   /*
     headCells = {
       inputObj: {
@@ -146,16 +160,23 @@ function EnhancedTableHead(props) {
               // 체크박스 - 전체 선택
               padding="checkbox"
             >
-              <Checkbox
-                color="primary"
-                indeterminate={numSelected > 0 && numSelected < rowCount}
-                checked={rowCount > 0 && numSelected === rowCount}
-                onChange={onSelectAllClick}
-                inputProps={{
-                  "aria-label": "select all desserts",
-                }}
-                size="small"
-              />
+              <FlexBox sx={{ alignItems: "center" }}>
+                <Checkbox
+                  color="primary"
+                  indeterminate={numSelected > 0 && numSelected < rowCount}
+                  checked={rowCount > 0 && numSelected === rowCount}
+                  onChange={onSelectAllClick}
+                  inputProps={{
+                    "aria-label": "select all desserts",
+                  }}
+                  size="small"
+                />
+                <RecordSelectedOption
+                  isPopUpOpen={isRecordSelectedOption}
+                  setIsPopUpOpen={setIsRecordSelectedOption}
+                  clickFunctionList={clickFunctionList}
+                />
+              </FlexBox>
             </TableCell>
             <TableHeadCellBox
               // createAt
@@ -188,8 +209,17 @@ function EnhancedTableHead(props) {
   );
 }
 
+/**
+ * 테이블 헤더 Toolbar : 저장, 삭제 등
+ * @param {*} props
+ */
 function EnhancedTableToolbar(props) {
-  const { numSelected, onDeleteCalculetRecords, onSaveCalculetRecords } = props;
+  const {
+    numSelected,
+    onDeleteCalculetRecords,
+    onSaveCalculetRecords,
+    onAddCalculetRecords,
+  } = props;
 
   return (
     <Toolbar
@@ -205,40 +235,51 @@ function EnhancedTableToolbar(props) {
         }),
       }}
     >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          선택 {numSelected} 개
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          내 계산 내역
-        </Typography>
-      )}
-      {numSelected > 0 ? (
-        <Tooltip title="삭제">
-          <IconButton onClick={onDeleteCalculetRecords}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="수정사항 저장하기">
-          <Button variant="contained" onClick={onSaveCalculetRecords}>
-            수정 사항 저장하기
-          </Button>
-        </Tooltip>
-      )}
+      <Grid container>
+        <Grid item xs>
+          {numSelected > 0 ? (
+            <FlexBox sx={{ alignItems: "center", gap: "0.4rem" }}>
+              <Tooltip title="저장">
+                <IconButton onClick={onSaveCalculetRecords}>
+                  <SaveAltIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="삭제">
+                <IconButton onClick={onDeleteCalculetRecords}>
+                  <DeleteIcon />
+                </IconButton>
+              </Tooltip>
+              <Typography
+                sx={{ fontWeight: "bold", ml: "0.4rem" }}
+                color="info.main"
+                variant="button"
+                component="div"
+              >
+                선택 {numSelected} 개
+              </Typography>
+            </FlexBox>
+          ) : (
+            <Typography
+              sx={{ flex: "1 1 100%", m: "0.8rem" }}
+              variant="h6"
+              component="div"
+            >
+              내 계산 내역
+            </Typography>
+          )}
+        </Grid>
+        <Button onClick={onAddCalculetRecords}>현재 결과 추가하기</Button>
+      </Grid>
     </Toolbar>
   );
+
+  // : (
+  //   <Tooltip title="수정사항 저장하기">
+  //     <Button variant="contained" onClick={onSaveCalculetRecords}>
+  //       수정 사항 저장하기
+  //     </Button>
+  //   </Tooltip>
+  // )
 }
 
 /**
@@ -255,6 +296,7 @@ function RecordCalculetHistory({ calculetId }) {
     handleAppendCalculetRecent,
     handleSetCellRecentDatas,
   } = useCalculetRecord();
+  const preventLeave = usePreventLeave();
 
   // user id token
   const {
@@ -271,59 +313,6 @@ function RecordCalculetHistory({ calculetId }) {
   // table cell padding sx
   const paddingSx = { padding: "1.4rem 1.6rem" };
 
-  /**
-   * iframe내의 태그를 찾아서 반환해주는 함수
-   * @param {string}
-   * className: iframe내에 찾고자 하는 클래스 네임
-   * @returns 태그 배열
-   */
-  function approachIframeTag(className) {
-    return window.frames[0].document.querySelectorAll(`.${className}`);
-  }
-
-  /**
-   * 태그 리스트 내의 값에 접근해서 object로 가공시키는 함수
-   * @param {nodelist} data 태그 리스트
-   * @returns object
-   */
-  function makeObject(data) {
-    const obj = {};
-    // console.log(data);
-    for (let i = 0; i < data.length; i++) {
-      const desc = data[i].attributes.atcDesc.value;
-      const value = data[i].value;
-      obj[desc] = value;
-    }
-    return obj;
-  }
-
-  /**
-   * 태그 리스트 내의 값에 접근, object onchange handling
-   * @param {nodelist} data 태그 리스트
-   */
-  function handleOnChangeObject(data) {
-    for (let i = 0; i < data.length; i++) {
-      const desc = data[i].attributes.atcDesc.value;
-    }
-  }
-
-  /**
-   * 저장하기 버튼 클릭 시 input, output 정보 object로 가공하고 서버에 보낼 데이터 가공 및 요청 보내는 함수
-   */
-  const [userInputObj, setUserInputObj] = useState("");
-  const [userOutputTag, setUserOutputTag] = useState("");
-
-  function getCalculetObj(tagName) {
-    const tag = approachIframeTag(tagName);
-    const obj = makeObject(tag);
-
-    // // output onchange
-    // if (tagName === "atc-calculet-input") {
-    //   setUserOutputTag(obj);
-    // }
-    return obj;
-  }
-
   // 시간 default 최근순 (내림차순)
   const [order, setOrder] = useState("desc");
   // 선택한 list
@@ -338,17 +327,37 @@ function RecordCalculetHistory({ calculetId }) {
     setOrder(isAsc ? "desc" : "asc");
   };
 
-  // 전체 선택 handling
+  // (option) 전체 선택 handling
+  const handleSelectAll = () => {
+    const newSelected = [...cellRecordDatas, ...cellRecentDatas]
+      .map((n) => n.id)
+      .filter((n) => n);
+    setSelected(newSelected); // update
+  };
+
+  // (checkBox) 전체 선택 handling
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      // id로 식별해서 selected
-      const newSelected = [...cellRecordDatas, ...cellRecentDatas].map(
-        (n) => n.id
-      );
-      setSelected(newSelected);
+      handleSelectAll();
       return;
     }
     setSelected([]);
+  };
+
+  // 최근 계산 내역 선택 handling
+  const handleSelectRecentClick = () => {
+    const newSelected = [...cellRecordDatas, ...cellRecentDatas]
+      .map((n) => isRecentData(n.id) && n.id)
+      .filter((n) => n);
+    setSelected(newSelected); // update
+  };
+
+  // 과거 계산 내역 선택 handling
+  const handleSelectRecordClick = () => {
+    const newSelected = [...cellRecordDatas, ...cellRecentDatas]
+      .map((n) => !isRecentData(n.id) && n.id)
+      .filter((n) => n);
+    setSelected(newSelected); // update
   };
 
   // 하나씩 선택 handling
@@ -371,10 +380,12 @@ function RecordCalculetHistory({ calculetId }) {
     setSelected(newSelected);
   };
 
+  // page change
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
+  // per page row
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -444,49 +455,10 @@ function RecordCalculetHistory({ calculetId }) {
     );
   }
 
-  useEffect(() => {
-    // Header | input, output 열 이름 접근
-    handleSetCalculetObj({
-      calculetId: calculetId,
-      inputObj: getCalculetObj("atc-calculet-input"),
-      outputObj: getCalculetObj("atc-calculet-output"),
-    });
-  }, []);
-
-  useEffect(() => {
-    // (init) row | 계산 내역 가져오기
-    handleGetCalculetRecords(calculetId);
-  }, [idToken]);
-
-  // useEffect(() => {
-  //   Object.values(userOutputTag).map((data) =>
-  //     console.log(`Input value changed: ${data}`)
-  //   );
-  // }, [userOutputTag]);
-  /////////////////////////////////////////////
-
-  // console.log("userOutputTag", userOutputTag);
-
-  // useEffect(() => {
-  //   const inputs = approachIframeTag("atc-calculet-input");
-  //   // console.log(inputs);
-  //   inputs.forEach((input) => {
-  //     input.onchange = (event) => {
-  //       console.log(`Input value changed: ${event.target.value}`);
-  //       setUserOutputTag(1111);
-  //     };
-  //   });
-  //   // console.log(inputs);
-
-  //   // input.onchange = (event) => {
-  //   //   console.log("Input value changed:", event.target.value);
-  //   // };
-  // }, []);
-  // console.log(approachIframeTag("atc-calculet-input"));
-
   // (임시) 현재 입력, 출력 긁어와서 row 추가하는 함수
-  function onClick() {
+  function handleAddCalculetRecords() {
     const createTime = new Date().toISOString();
+    setCalculetInOutputObj(calculetId, handleSetCalculetObj);
 
     let data = {
       createdAt: createTime,
@@ -499,27 +471,40 @@ function RecordCalculetHistory({ calculetId }) {
 
   // 계산 내역 저장하기
   async function handleSaveCalculetRecords() {
+    if (selected.length <= 0) return;
+
     // 로그인 안 했으면 로그인 화면으로
     if (idToken === "") {
       loginPage();
       return;
     }
 
-    if (cellRecentDatas.length <= 0) {
+    // ====== recent calculation ======
+    // id가 selected에서 같은 것만 남긴다
+    let recentSelected = cellRecentDatas.filter(
+      (item) => selected.indexOf(item.id) >= 0
+    );
+    // id가 selected에서 같은 것들을 제외한 것만 남긴다
+    let recentNotSelected = cellRecentDatas.filter(
+      (item) => selected.indexOf(item.id) < 0
+    );
+    handleSetCellRecentDatas(recentNotSelected);
+
+    if (recentSelected.length <= 0) {
       openSnackbar(
         "basic",
-        "저장할 이력이 없습니다.",
+        "선택한 항목 중, 최근에 계산한 이력이 없어 저장할 내용이 없습니다.",
         false,
         "bottom",
         "left",
-        1600 // 지속시간
+        3600 // 지속시간
       );
       return;
     }
 
     // 저장할 이력
     let recordArray = [];
-    cellRecentDatas.forEach((item) => {
+    recentSelected.forEach((item) => {
       recordArray.push({
         inputObj: item.inputObj,
         outputObj: item.outputObj,
@@ -534,8 +519,9 @@ function RecordCalculetHistory({ calculetId }) {
     await postCalculetRecords(body, idToken);
     // (update) row | 계산 내역 가져오기
     await handleGetCalculetRecords(calculetId);
-    // (init) 최근 계산 이력 초기화
-    await handleSetCellRecentDatas([]);
+
+    // (init)
+    setSelected([]);
     openSnackbar(
       "basic",
       "저장되었습니다.",
@@ -546,22 +532,49 @@ function RecordCalculetHistory({ calculetId }) {
     );
   }
 
+  // 저장할 계산 내역이 남았는데, 페이지 나가려고 할 때 주의문
+  useEffect(() => {
+    if (cellRecentDatas.length > 0) {
+      preventLeave.enablePrevent();
+    } else {
+      preventLeave.disablePrevent();
+    }
+  }, [cellRecentDatas, preventLeave]);
+
+  // useEffect(() => {
+  //   // (init) Header | input, output 열 이름 접근
+  //   handleSetCalculetObj({
+  //     calculetId: calculetId,
+  //     inputObj: getCalculetObj("atc-calculet-input"),
+  //     outputObj: getCalculetObj("atc-calculet-output"),
+  //   });
+  // }, []);
+
+  // useEffect(() => {
+  //   console.log("asdf");
+  //   // (init) row | 계산 내역 가져오기
+  //   handleGetCalculetRecords(calculetId);
+  // }, []);
+
   return (
     <>
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
-          <Button onClick={onClick}>현재 결과 추가하기</Button>
           <EnhancedTableToolbar
             numSelected={selected.length}
             onDeleteCalculetRecords={handleOnDeleteWarning}
             onSaveCalculetRecords={handleSaveCalculetRecords}
+            onAddCalculetRecords={handleAddCalculetRecords}
           />
           <TableContainer>
             <Table>
               <EnhancedTableHead
                 numSelected={selected.length}
                 order={order}
+                onSelectAll={handleSelectAll}
                 onSelectAllClick={handleSelectAllClick}
+                onSelectRecentClick={handleSelectRecentClick}
+                onSelectRecordClick={handleSelectRecordClick}
                 onRequestSort={handleRequestSort}
                 rowCount={
                   cellRecordDatas &&
@@ -574,7 +587,6 @@ function RecordCalculetHistory({ calculetId }) {
                 {
                   // 로그인 or 비로그인 유저가 계산했던 계산 내역 보여주기
                   // 로그인 유저가 계산했던 계산 내역 가져오기
-
                   cellRecordDatas &&
                     cellRecentDatas &&
                     stableSort(
@@ -590,7 +602,6 @@ function RecordCalculetHistory({ calculetId }) {
                         // id로 식별해서 selected
                         const isItemSelected = isSelected(labelId);
                         const isItemRecentData = isRecentData(labelId);
-
                         return (
                           // createdAt - inputObj - outputObj 나열
                           <TableRow
@@ -626,7 +637,10 @@ function RecordCalculetHistory({ calculetId }) {
                               />
                             </TableCell>
                             <TableCell
-                              sx={{ ...paddingSx }}
+                              sx={{
+                                ...paddingSx,
+                                fontWeight: isItemRecentData && "bold",
+                              }}
                               component="th"
                               scope="row"
                             >
@@ -636,7 +650,10 @@ function RecordCalculetHistory({ calculetId }) {
                               Object.values(row.inputObj).map((data, index) => (
                                 <TableCell
                                   key={index}
-                                  sx={{ ...paddingSx }}
+                                  sx={{
+                                    ...paddingSx,
+                                    fontWeight: isItemRecentData && "bold",
+                                  }}
                                   component="th"
                                   scope="row"
                                   align="left"
@@ -649,7 +666,10 @@ function RecordCalculetHistory({ calculetId }) {
                                 (data, index) => (
                                   <TableCell
                                     key={index}
-                                    sx={{ ...paddingSx }}
+                                    sx={{
+                                      ...paddingSx,
+                                      fontWeight: isItemRecentData && "bold",
+                                    }}
                                     component="th"
                                     scope="row"
                                     align="right"

@@ -1,6 +1,6 @@
 import StyledScrollbar from "../atom-components/StyledScrollbar";
 import BoxClassName from "./BoxClassName";
-import { Design, InputOutput, Save } from "./Designs";
+import { Design, InputOutput } from "./Designs";
 import { GUIDES } from "./constants";
 import GuideText from "./GuideText";
 import { FlexColumnBox } from "../global-components/FlexBox";

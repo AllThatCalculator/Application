@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import useCalculetRecord from "../../hooks/useCalculetRecord";
+import setCalculetInOutputObj from "../../utils/setCalculetInOutputObj";
 import CalculetManual from "./CalculetManual";
 
 const Wrapper = styled.div`
@@ -16,6 +18,8 @@ const Wrapper = styled.div`
  * @returns
  */
 function CalculetBlock({ srcCode, manual, calculetId }) {
+  const { handleSetCalculetObj, handleGetCalculetRecords } =
+    useCalculetRecord();
   /**
    * 받아온 html을 넣는 iframe의 크기를 원본 html 크기 맞게 조절하는 함수
    * @param {event object} e
@@ -25,16 +29,9 @@ function CalculetBlock({ srcCode, manual, calculetId }) {
     frame.style.width = "100%";
     frame.style.height = `${frame.contentDocument.body.scrollHeight}px`;
 
-    // 계산 내역
-    const outputs =
-      window.frames[0].document.querySelectorAll(`.atc-calculet-output`);
-    // console.log(outputs);
-    outputs.forEach((output) => {
-      output.oninput = (event) => {
-        // input.oninput() 덮어씌워지는 것을 방지하기 위해, 기존 oninput 실행
-        // console.log(`Input value changed: ${event.target.value}`);
-      };
-    });
+    // get input&output object and record list
+    setCalculetInOutputObj(calculetId, handleSetCalculetObj);
+    handleGetCalculetRecords(calculetId);
   }
 
   return (

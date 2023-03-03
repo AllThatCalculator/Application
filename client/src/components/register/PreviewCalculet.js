@@ -1,6 +1,5 @@
-import { Button, Divider, IconButton, Typography } from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
 import CalculetBlock from "../calculet-block/CalculetBlock";
-import { FlexBox } from "../global-components/FlexBox";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CalculetHeader from "../calculet-block/CalculetHeader";
 import useSx from "../../hooks/useSx";
