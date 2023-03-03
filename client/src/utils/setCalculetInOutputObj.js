@@ -25,7 +25,7 @@ function makeObject(data) {
       (data[i].innerText !== "" && data[i].innerText) ||
       (data[i].innerHtml !== "" && data[i].innerHtml);
 
-    console.log("desc : ", desc, "\nvalue : ", value);
+    // console.log("desc : ", desc, "\nvalue : ", value);
 
     obj[desc] = value !== undefined ? value : "";
   }
