@@ -20,8 +20,14 @@ function makeObject(data) {
   const obj = {};
   for (let i = 0; i < data.length; i++) {
     const desc = data[i].attributes.atcDesc.value;
-    const value = data[i].value;
-    obj[desc] = value;
+    const value =
+      (data[i].value !== "" && data[i].value) ||
+      (data[i].innerText !== "" && data[i].innerText) ||
+      (data[i].innerHtml !== "" && data[i].innerHtml);
+
+    console.log("desc : ", desc, "\nvalue : ", value);
+
+    obj[desc] = value !== undefined ? value : "";
   }
   return obj;
 }
@@ -38,4 +44,11 @@ function setCalculetInOutputObj(id, handleSetCalculetObj) {
     outputObj: getCalculetObj(KEY_OUTPUT),
   });
 }
-export default setCalculetInOutputObj;
+function getCalculetInOutputObj() {
+  return {
+    inputObj: getCalculetObj(KEY_INPUT),
+    outputObj: getCalculetObj(KEY_OUTPUT),
+  };
+}
+
+export { setCalculetInOutputObj, getCalculetInOutputObj };

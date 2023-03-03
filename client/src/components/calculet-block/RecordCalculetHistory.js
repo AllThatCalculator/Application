@@ -29,7 +29,10 @@ import { formatDayTime } from "../../utils/formatTime";
 import { FlexBox } from "../global-components/FlexBox";
 import RecordSelectedOption from "./RecordSelectedOption";
 import usePreventLeave from "../../hooks/usePreventLeave";
-import setCalculetInOutputObj from "../../utils/setCalculetInOutputObj";
+import {
+  getCalculetInOutputObj,
+  setCalculetInOutputObj,
+} from "../../utils/setCalculetInOutputObj";
 
 // orderBy key constant
 const KEY_CREATED_AT = "createdAt";
@@ -78,7 +81,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-// table head cell
+// table head cell : orderBy.시간
 function TableHeadCellBox({
   order = null,
   onRequestSort = () => {},
@@ -137,19 +140,6 @@ function EnhancedTableHead(props) {
     onSelectRecentClick: onSelectRecentClick,
     onSelectRecordClick: onSelectRecordClick,
   };
-  /*
-    headCells = {
-      inputObj: {
-        value1: 10,
-        value2: 20,
-      },
-      outputObj: {
-        result: 300000,
-      },
-      createdAt: "2023-02-16 17:10:08",
-      id: "7e4cbcdd-add1-11ed-8c8c-0a403e9fff5e",
-    },
-    */
 
   return (
     <>
@@ -268,18 +258,16 @@ function EnhancedTableToolbar(props) {
             </Typography>
           )}
         </Grid>
-        <Button onClick={onAddCalculetRecords}>현재 결과 추가하기</Button>
+        <Button
+          variant="contained"
+          onClick={onAddCalculetRecords}
+          sx={{ height: "fit-content", alignSelf: "center" }}
+        >
+          현재 결과 추가하기
+        </Button>
       </Grid>
     </Toolbar>
   );
-
-  // : (
-  //   <Tooltip title="수정사항 저장하기">
-  //     <Button variant="contained" onClick={onSaveCalculetRecords}>
-  //       수정 사항 저장하기
-  //     </Button>
-  //   </Tooltip>
-  // )
 }
 
 /**
@@ -459,12 +447,13 @@ function RecordCalculetHistory({ calculetId }) {
   function handleAddCalculetRecords() {
     const createTime = new Date().toISOString();
     setCalculetInOutputObj(calculetId, handleSetCalculetObj);
+    const { inputObj, outputObj } = getCalculetInOutputObj();
 
     let data = {
       createdAt: createTime,
       id: `${KEY_RECENT_CALCULATION}-${calculetId}-${createTime}`,
-      inputObj: headCells.inputObj,
-      outputObj: headCells.outputObj,
+      inputObj: inputObj,
+      outputObj: outputObj,
     };
     handleAppendCalculetRecent(data);
   }
@@ -540,21 +529,6 @@ function RecordCalculetHistory({ calculetId }) {
       preventLeave.disablePrevent();
     }
   }, [cellRecentDatas, preventLeave]);
-
-  // useEffect(() => {
-  //   // (init) Header | input, output 열 이름 접근
-  //   handleSetCalculetObj({
-  //     calculetId: calculetId,
-  //     inputObj: getCalculetObj("atc-calculet-input"),
-  //     outputObj: getCalculetObj("atc-calculet-output"),
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log("asdf");
-  //   // (init) row | 계산 내역 가져오기
-  //   handleGetCalculetRecords(calculetId);
-  // }, []);
 
   return (
     <>

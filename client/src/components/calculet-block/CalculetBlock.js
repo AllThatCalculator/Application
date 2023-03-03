@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import useCalculetRecord from "../../hooks/useCalculetRecord";
-import setCalculetInOutputObj from "../../utils/setCalculetInOutputObj";
+import { setCalculetInOutputObj } from "../../utils/setCalculetInOutputObj";
 import CalculetManual from "./CalculetManual";
 
 const Wrapper = styled.div`
