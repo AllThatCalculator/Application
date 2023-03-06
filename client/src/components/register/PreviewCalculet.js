@@ -20,6 +20,7 @@ function PreviewCalculet({
   srcCode,
   manual,
   handleIsPreview,
+  isPreview,
 }) {
   const { subTitleSx } = useSx();
 
@@ -59,7 +60,7 @@ function PreviewCalculet({
         calculetObj={calculetObj}
         isPreview={true}
       />
-      <CalculetBlock srcCode={srcCode} manual={manual} />
+      <CalculetBlock srcCode={srcCode} manual={manual} isPreview={isPreview} />
     </>
   );
 }

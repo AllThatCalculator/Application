@@ -15,9 +15,10 @@ const Wrapper = styled.div`
  * @param {string} srcCode - 계산기 소스코드
  * @param {string} manual - 계산기 설명 마크다운
  * @param {string} calculetId - 계산기 번호
- * @returns
+ * @param {bool} isPreview - 미리보기인지
  */
-function CalculetBlock({ srcCode, manual, calculetId }) {
+function CalculetBlock({ srcCode, manual, calculetId, isPreview = false }) {
+  // console.log(srcCode);
   const { handleSetCalculetObj, handleGetCalculetRecords } =
     useCalculetRecord();
   /**
@@ -31,21 +32,28 @@ function CalculetBlock({ srcCode, manual, calculetId }) {
 
     // get input&output object and record list
     setCalculetInOutputObj(calculetId, handleSetCalculetObj);
-    handleGetCalculetRecords(calculetId);
+    // 미리보기면 return
+    if (!isPreview) {
+      handleGetCalculetRecords(calculetId);
+    }
   }
 
   return (
     <Wrapper>
       <iframe
         srcDoc={
-          `<link href="/file/css/calculet.css" rel="stylesheet">` + srcCode
+          `<link href="/static/css/calculet.css" rel="stylesheet">` + srcCode
         }
         style={{ width: "100%", border: "none", overflow: "auto" }}
         onLoad={(e) => adjustHeight(e)}
         scrolling="no"
         title="calculet"
       />
-      <CalculetManual content={manual} calculetId={calculetId} />
+      <CalculetManual
+        content={manual}
+        calculetId={calculetId}
+        isPreview={isPreview}
+      />
     </Wrapper>
   );
 }

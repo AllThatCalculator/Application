@@ -275,7 +275,7 @@ function EnhancedTableToolbar(props) {
  * - 저장하기 버튼 누르면 먼저 iframe에 접근해서 값을 가져온 후, /record POST 요청으로 계산 이력 저장
  * @param {string} calculetId 계산기 번호
  */
-function RecordCalculetHistory({ calculetId }) {
+function RecordCalculetHistory({ calculetId, isPreview }) {
   const { openSnackbar } = useSnackbar();
   const { loginPage } = usePage();
   const {
@@ -396,10 +396,18 @@ function RecordCalculetHistory({ calculetId }) {
   // 삭제 시, 경고 popup
   const [isDeleteWarning, setIsDeleteWarning] = useState(false);
   function handleOnDeleteWarning() {
+    // 미리보기면 return
+    if (isPreview) {
+      return;
+    }
     setIsDeleteWarning(true);
   }
   // 계산 이력 삭제하기
   async function handleDeleteCalculetRecords() {
+    // 미리보기면 return
+    if (isPreview) {
+      return;
+    }
     if (selected.length <= 0) return;
 
     // ====== recent calculation ======
@@ -460,6 +468,11 @@ function RecordCalculetHistory({ calculetId }) {
 
   // 계산 내역 저장하기
   async function handleSaveCalculetRecords() {
+    // 미리보기면 return
+    if (isPreview) {
+      return;
+    }
+
     if (selected.length <= 0) return;
 
     // 로그인 안 했으면 로그인 화면으로

@@ -3,6 +3,7 @@ import { Box, Divider, Grid, IconButton, Typography } from "@mui/material";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import useSnackbar from "../../hooks/useSnackbar";
+import "../../css/calculet.css";
 
 /**
  * 클래스 네임에 대한 설명, 예시 디자인, 코드 복사기가 모여있는 컴포넌트

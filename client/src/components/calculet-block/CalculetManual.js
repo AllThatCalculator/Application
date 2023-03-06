@@ -48,7 +48,7 @@ function MarkdownCode({ content }) {
  * @param {string} content 마크다운 문법으로 이루어진 string
  * @param {string} calculetId 계산기 번호
  */
-function CalculetManual({ content, calculetId }) {
+function CalculetManual({ content, calculetId, isPreview }) {
   /** tab 컨트롤 : 계산기 마크다운 정보, 계산 내역 */
   const [tabValue, setTabValue] = useState(0);
   /** tab state */
@@ -165,7 +165,9 @@ function CalculetManual({ content, calculetId }) {
   }
   // 계산 내역 저장
   function CalculetSaveRecord() {
-    return <RecordCalculetHistory calculetId={calculetId} />;
+    return (
+      <RecordCalculetHistory calculetId={calculetId} isPreview={isPreview} />
+    );
   }
   // 탭 콘텐츠 컴포넌트
   const tapContentList = [<CalculetMarkdownCode />, <CalculetSaveRecord />];
