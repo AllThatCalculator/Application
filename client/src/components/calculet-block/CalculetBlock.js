@@ -37,12 +37,19 @@ function CalculetBlock({ srcCode, manual, calculetId, isPreview = false }) {
       handleGetCalculetRecords(calculetId);
     }
   }
-
+  // console.log(srcCode);
   return (
     <Wrapper>
       <iframe
         srcDoc={
-          `<link href="/static/css/calculet.css" rel="stylesheet">` + srcCode
+          `<link href="/static-files/css/calculet.css" rel="stylesheet">
+          <style>
+          * {
+            padding: 0px;
+            margin: 0px;
+          }
+          </style>
+          ` + srcCode
         }
         style={{ width: "100%", border: "none", overflow: "auto" }}
         onLoad={(e) => adjustHeight(e)}
