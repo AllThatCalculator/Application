@@ -1,7 +1,7 @@
 const GUIDES = {
   InputOutput: `실제로 계산기를 사용 시, 계산 이력을 남기기 위한 절차입니다.
 
-  1. 아래 입·출력 컴포넌트의 Class Name 복사
+  1. 아래에 있는 입·출력 Class Name 복사
   2. 본인 입·출력 컴포넌트의 Class에 추가
   3. 입력, 결과 태그에 atcDesc=”” 입력`,
 

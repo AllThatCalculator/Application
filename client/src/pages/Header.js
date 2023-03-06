@@ -334,8 +334,8 @@ function Header({ isLoggedIn }) {
     const request = firebaseAuth.signOutAuth();
     request.then((result) => {
       if (result === true) {
-        // 로그아웃 성공하면 메인 화면으로 새로고침
-        window.location.href = URL.CALCULET;
+        // 로그아웃 성공하면 새로고침
+        window.location.reload();
       }
     });
   }

@@ -1,6 +1,6 @@
 import StyledScrollbar from "../atom-components/StyledScrollbar";
 import BoxClassName from "./BoxClassName";
-import { Design, InputOutput, Save } from "./Designs";
+import { Design, InputOutput } from "./Designs";
 import { GUIDES } from "./constants";
 import GuideText from "./GuideText";
 import { FlexColumnBox } from "../global-components/FlexBox";
@@ -118,7 +118,7 @@ function CustomPanel() {
   // 필수 절차
   const defaultList = [
     { guide: GUIDES["InputOutput"], designs: InputOutput },
-    { guide: GUIDES["Save"], designs: Save },
+    // { guide: GUIDES["Save"], designs: Save },
   ];
   // 선택 절차
   const selectList = [{ guide: GUIDES["Design"], designs: Design }];

@@ -27,7 +27,7 @@ function App() {
       if (user === null) {
         setIsLoggedIn(false);
         /** set token null */
-        dispatch(onSetUserIdToken(null));
+        dispatch(onSetUserIdToken(""));
         dispatch(
           onSetUserInfo({
             userName: "",

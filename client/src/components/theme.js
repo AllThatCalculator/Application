@@ -32,6 +32,11 @@ let theme = createTheme({
     atcLinearBlue: {
       100: `linear-gradient(#ECF2FF, transparent)`,
     },
+    atcGreen: {
+      50: "#f2f7f4",
+      100: "#E2f7E9",
+      200: "#D2F2DD",
+    },
     atcOrange: {
       100: "#FB8C00",
     },

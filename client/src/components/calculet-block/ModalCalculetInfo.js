@@ -15,6 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import CakeIcon from "@mui/icons-material/Cake";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import useGetCategoryName from "../../hooks/useGetCategoryName";
+import { formatDay } from "../../utils/formatTime";
 
 /**
  * 계산기 정보 팝업창에 들어갈 내용
@@ -233,7 +234,7 @@ function ModalCalculetInfo({
                 color="primary"
                 sx={{ width: dateSx }}
               >
-                {createdAt.substr(0, 10)}
+                {formatDay(createdAt)}
               </Typography>
               <Typography variant="body1" color="primary">
                 등록
@@ -310,7 +311,7 @@ function ModalCalculetInfo({
                     >
                       {/* {createdAt : 시간,  message : 업데이트 내역 */}
                       <Typography variant="body1" sx={{ width: dateSx }}>
-                        {conts.createdAt.substr(0, 10)}
+                        {formatDay(conts.createdAt)}
                       </Typography>
                       <Typography variant="body1">{conts.message}</Typography>
                     </Box>

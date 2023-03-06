@@ -1,6 +1,5 @@
-import { Divider, IconButton, Typography } from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
 import CalculetBlock from "../calculet-block/CalculetBlock";
-import { FlexBox } from "../global-components/FlexBox";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CalculetHeader from "../calculet-block/CalculetHeader";
 import useSx from "../../hooks/useSx";
@@ -21,6 +20,7 @@ function PreviewCalculet({
   srcCode,
   manual,
   handleIsPreview,
+  isPreview,
 }) {
   const { subTitleSx } = useSx();
 
@@ -45,21 +45,22 @@ function PreviewCalculet({
   };
   return (
     <>
-      <FlexBox sx={{ alignItems: "center" }}>
-        <IconButton onClick={handleIsPreview}>
-          <ArrowBackIcon />
-        </IconButton>
-        <Typography sx={{ ...subTitleSx, color: "text.secondary" }}>
-          편집 하기
-        </Typography>
-      </FlexBox>
+      <Button
+        sx={{ maxWidth: "fit-content" }}
+        startIcon={<ArrowBackIcon />}
+        onClick={handleIsPreview}
+        size="large"
+      >
+        <Typography sx={{ ...subTitleSx }}>편집 하기</Typography>
+      </Button>
+
       <Divider />
       <CalculetHeader
         // 계산기 블록 정보 & 팝업창 정보
         calculetObj={calculetObj}
         isPreview={true}
       />
-      <CalculetBlock srcCode={srcCode} manual={manual} />
+      <CalculetBlock srcCode={srcCode} manual={manual} isPreview={isPreview} />
     </>
   );
 }
