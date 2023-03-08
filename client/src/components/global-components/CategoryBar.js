@@ -2,7 +2,6 @@ import {
   Box,
   Collapse,
   Divider,
-  IconButton,
   ListItem,
   ListItemButton,
   ListItemText,
@@ -192,11 +191,14 @@ function CategoryBar({ contents, isActive, setIsActive }) {
       <Toolbar
         sx={{
           justifyContent: "flex-end",
+          "&:hover": {
+            cursor: "pointer",
+            backgroundColor: "grey.100",
+          },
         }}
+        onClick={setIsActive(false)}
       >
-        <IconButton onClick={setIsActive(false)}>
-          <ChevronLeftIcon />
-        </IconButton>
+        <ChevronLeftIcon sx={{ color: "text.secondary" }} />
       </Toolbar>
       <Divider />
       {/* 카테고리바 리스트 */}
