@@ -3,7 +3,7 @@
 git pull
 
 IS_BLUE_RUNNING=$(docker ps | grep api_blue)
-NGINX_CONFIG_FILE="./nginx/nginx.dev-server/nginx.conf"
+NGINX_CONFIG_FILE="./nginx/nginx.dev-server/green-blue.conf"
 
 ##### BLUE RUNNING...
 if [ -n "$IS_BLUE_RUNNING"  ];then
