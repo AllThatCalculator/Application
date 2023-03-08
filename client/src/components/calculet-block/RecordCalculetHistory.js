@@ -236,7 +236,7 @@ function EnhancedTableToolbar(props) {
             variant="button"
             component="div"
           >
-            선택 {numSelected} 개
+            선택 {numSelected}개
           </Typography>
         </FlexBox>
       ) : (
