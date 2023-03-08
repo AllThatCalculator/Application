@@ -34,11 +34,11 @@ jobs:
           username: ${{ secrets.PROD_EC2_USER }}
           key: ${{ secrets.PROD_EC2_PRIVATE_KEY }}
           source: client/build.tar.gz
-          target: ~/project/application/
+          target: ~/projects/application/
       - name: execute shell script
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.PROD_EC2_IP_ADDRESS }}
           username: ${{ secrets.PROD_EC2_USER }}
           key: ${{ secrets.PROD_EC2_PRIVATE_KEY }}
-          script: "cd /home/ubuntu/project/application; ./scripts/prod/deploy-production.sh"
+          script: "cd /home/ubuntu/projects/application; ./scripts/prod/deploy-production.sh"
