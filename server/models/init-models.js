@@ -108,22 +108,6 @@ function initModels(sequelize) {
     as: "user_calculet_likes",
     foreignKey: "calculet_id",
   });
-  calculetInfo.belongsTo(categoryMain, {
-    as: "category_main",
-    foreignKey: "category_main_id",
-  });
-  categoryMain.hasMany(calculetInfo, {
-    as: "calculet_infos",
-    foreignKey: "category_main_id",
-  });
-  calculetInfoTemp.belongsTo(categoryMain, {
-    as: "category_main",
-    foreignKey: "category_main_id",
-  });
-  categoryMain.hasMany(calculetInfoTemp, {
-    as: "calculet_info_temps",
-    foreignKey: "category_main_id",
-  });
   categorySub.belongsTo(categoryMain, { as: "main", foreignKey: "main_id" });
   categoryMain.hasMany(categorySub, {
     as: "category_subs",
@@ -131,19 +115,19 @@ function initModels(sequelize) {
   });
   calculetInfo.belongsTo(categorySub, {
     as: "category_sub",
-    foreignKey: "category_sub_id",
+    foreignKey: ["category_main_id", "category_sub_id"],
   });
   categorySub.hasMany(calculetInfo, {
     as: "calculet_infos",
-    foreignKey: "category_sub_id",
+    foreignKey: ["category_main_id", "category_sub_id"],
   });
   calculetInfoTemp.belongsTo(categorySub, {
     as: "category_sub",
-    foreignKey: "category_sub_id",
+    foreignKey: ["category_main_id", "category_sub_id"],
   });
   categorySub.hasMany(calculetInfoTemp, {
     as: "calculet_info_temps",
-    foreignKey: "category_sub_id",
+    foreignKey: ["category_main_id", "category_sub_id"],
   });
   calculetInfo.belongsTo(userInfo, {
     as: "contributor",

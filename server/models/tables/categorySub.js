@@ -14,6 +14,7 @@ module.exports = function (sequelize, DataTypes) {
       main_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        primaryKey: true,
         references: {
           model: "category_main",
           key: "id",
