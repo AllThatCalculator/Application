@@ -17,7 +17,7 @@ import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
-import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import UploadIcon from "@mui/icons-material/Upload";
 import deleteCalculetRecords from "../../user-actions/deleteCalculetRecords";
 import { Button, Grid } from "@mui/material";
 import RecordDeleteWarningDialog from "./RecordDeleteWarningDialog";
@@ -228,17 +228,9 @@ function EnhancedTableToolbar(props) {
       <Grid container>
         <Grid item xs>
           {numSelected > 0 ? (
-            <FlexBox sx={{ alignItems: "center", gap: "0.4rem" }}>
-              <Tooltip title="저장">
-                <IconButton onClick={onSaveCalculetRecords}>
-                  <SaveAltIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="삭제">
-                <IconButton onClick={onDeleteCalculetRecords}>
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
+            <FlexBox sx={{ alignItems: "center", gap: "0.8rem" }}>
+              <Button onClick={onSaveCalculetRecords}>저장</Button>
+              <Button onClick={onDeleteCalculetRecords}>삭제</Button>
               <Typography
                 sx={{ fontWeight: "bold", ml: "0.4rem" }}
                 color="info.main"
