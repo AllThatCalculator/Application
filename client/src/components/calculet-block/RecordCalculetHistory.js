@@ -14,12 +14,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import DeleteIcon from "@mui/icons-material/Delete";
-import SaveAltIcon from "@mui/icons-material/SaveAlt";
 import deleteCalculetRecords from "../../user-actions/deleteCalculetRecords";
-import { Button, Grid } from "@mui/material";
+import { Button } from "@mui/material";
 import RecordDeleteWarningDialog from "./RecordDeleteWarningDialog";
 import useSnackbar from "../../hooks/useSnackbar";
 import useCalculetRecord from "../../hooks/useCalculetRecord";
@@ -225,47 +221,42 @@ function EnhancedTableToolbar(props) {
         }),
       }}
     >
-      <Grid container>
-        <Grid item xs>
-          {numSelected > 0 ? (
-            <FlexBox sx={{ alignItems: "center", gap: "0.4rem" }}>
-              <Tooltip title="저장">
-                <IconButton onClick={onSaveCalculetRecords}>
-                  <SaveAltIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="삭제">
-                <IconButton onClick={onDeleteCalculetRecords}>
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-              <Typography
-                sx={{ fontWeight: "bold", ml: "0.4rem" }}
-                color="info.main"
-                variant="button"
-                component="div"
-              >
-                선택 {numSelected} 개
-              </Typography>
-            </FlexBox>
-          ) : (
-            <Typography
-              sx={{ flex: "1 1 100%", m: "0.8rem" }}
-              variant="h6"
-              component="div"
-            >
-              내 계산 내역
-            </Typography>
-          )}
-        </Grid>
-        <Button
-          variant="contained"
-          onClick={onAddCalculetRecords}
-          sx={{ height: "fit-content", alignSelf: "center" }}
-        >
-          현재 결과 추가하기
-        </Button>
-      </Grid>
+      {numSelected > 0 ? (
+        <FlexBox sx={{ alignItems: "center", gap: "0.8rem" }}>
+          <Button variant="text" onClick={onSaveCalculetRecords}>
+            저장
+          </Button>
+          <></>
+          <Button variant="text" onClick={onDeleteCalculetRecords}>
+            삭제
+          </Button>
+          <Typography
+            sx={{ fontWeight: "bold", ml: "0.4rem" }}
+            color="info.main"
+            variant="button"
+            component="div"
+          >
+            선택 {numSelected}개
+          </Typography>
+        </FlexBox>
+      ) : (
+        <FlexBox width={1}>
+          <Typography
+            sx={{ flex: "1 1 100%", m: "0.8rem" }}
+            variant="h6"
+            component="div"
+          >
+            내 계산 내역
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={onAddCalculetRecords}
+            sx={{ height: "fit-content", alignSelf: "center" }}
+          >
+            현재 결과 추가하기
+          </Button>
+        </FlexBox>
+      )}
     </Toolbar>
   );
 }
