@@ -11,12 +11,27 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:5000",
-        description: "local Server",
+        url: process.env.SWAGGER_SERVER,
+        description: process.env.SWAGGER_SERVER_DESC,
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [{ bearerAuth: [] }],
   },
-  apis: ["./routes/*.js", "./swagger/*"],
+  apis: [
+    "./routes/*.js",
+    "./routes/*/*.js",
+    "./routes/*/*/*.js",
+    "./swagger/*",
+  ],
 };
 
 const specs = swaggereJsdoc(options);

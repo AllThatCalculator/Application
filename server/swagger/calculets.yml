@@ -1,168 +1,215 @@
 # Calculet API
 
 components:
+  requestBodies:
+    postCalculet:
+      description: 계산기 정보
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/calculet"
+  parameters:
+    calculetId:
+      in: path
+      required: true
+      name: calculetId
+      schema:
+        $ref: "#/components/schemas/calculetId"
+    mainId:
+      in: query
+      required: false
+      name: categoryMainId
+      schema:
+        $ref: "#/components/schemas/calculet/properties/categoryMainId"
+    subId:
+      in: query
+      required: false
+      name: categorySubId
+      schema:
+        $ref: "#/components/schemas/calculet/properties/categorySubId"
+    title:
+      in: query
+      required: false
+      name: title
+      schema:
+        $ref: "#/components/schemas/calculet/properties/title"
+    limit:
+      in: query
+      required: false
+      name: limit
+      description: 최대 개수 - 미지정시 조건에 해당하는 모든 계산기 불러옴
+      schema:
+        type: integer
+  responses:
+    likeResult:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              likeCnt:
+                type: integer
+                description: 요청 수행 완료 후 계산기의 좋아요 수
+    bookmarkResult:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              bookmarkCnt:
+                type: integer
+                description: 요청 수행 완료 후 계산기의 좋아요 수
+    getCalculetInfo:
+      description: 계산기 불러오기 성공
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/calculet"
+            properties:
+              id:
+                $ref: "#/components/schemas/calculetId"
+              createdAt:
+                $ref: "#/components/schemas/dateTimeLive"
+              contributor:
+                $ref: "#/components/schemas/userSimpleInfo"
+              statistics:
+                $ref: "#/components/schemas/statistics"
+              userCalculet:
+                $ref: "#/components/schemas/userCalculet"
+    getCalculetList:
+      description: 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/calculetPreview"
+    getRecommendationList:
+      description: 추천 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/calculetBanner"
+    bookMarkList:
+      description: 북마크 리스트
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  $ref: "#/components/schemas/calculetId"
+                title:
+                  $ref: "#/components/schemas/calculet/properties/title"
+    updateLogList:
+      description: 업데이트 로그 배열
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/updateLog"
   schemas:
-    getSpecificCalculet:
+    userCalculet:
       type: object
       properties:
-        success:
+        liked:
           type: boolean
-          description: 성공 여부
-        calculet:
-          $ref: "#components/schemas/calculet"
-        statistics:
-          $ref: "#components/schemas/statistics"
-        info:
-          $ref: "#components/schemas/calculetInfoPopup"
-    getCalculetLists:
-      type: object
-      properties:
-        success:
+          description: 유저의 좋아요 여부 (로그인 안한 경우 false)
+        bookmarked:
           type: boolean
-          description: 성공 여부
-        calculetLists:
-          $ref: "#components/schemas/calculetLists"
-    registerCalculetTemp:
-      type: object
-      properties:
-        title:
-          type: string
-          description: 계산기 이름
-        srcCode:
-          type: string
-          description: 계산기 코드
-        manual:
-          type: string
-          description: 계산기 설명 마크다운
-        description:
-          type: string
-          description: 계산기 한 줄 설명
-        categoryMainId:
-          type: integer
-          description: 카테고리 대분류 ID
-        categorySubId:
-          type: integer
-          description: 카테고리 소분류 ID
-        email:
-          type: string
-          description: 계산기 제작자 닉네임
-      example:
-        title: 테스트 계산기
-        srcCode: <html></html>
-        manual: "### markdown"
-        description: 계산기 한 줄 설명
-        categoryMainId: 1
-        categorySubId: 2
-        email: bsa0322@ewhain.net
+          description: 유저의 북마크 여부 (로그인 안한 경우 false)
     calculet:
       type: object
       properties:
-        id:
-          type: integer
-          description: 계산기 ID
         title:
           type: string
           description: 계산기 이름
+          example: "테스트 계산기"
         srcCode:
           type: string
           description: 계산기 코드
+          example: "<html>hello world</html>"
         manual:
           type: string
           description: 계산기 설명 마크다운
+          example: "### hello, world"
         description:
           type: string
           description: 계산기 한 줄 설명
-        categoryMain:
-          type: string
+          example: "이 계산기에 대한 한 줄 설명"
+        categoryMainId:
+          type: integer
           description: 카테고리 대분류
-        categorySub:
-          type: string
+          example: 1
+        categorySubId:
+          type: integer
           description: 카테고리 소분류
-        contributor:
-          type: string
-          description: 계산기 제작자 닉네임
-        contributorImgSrc:
-          type: string
-          description: 계산기 제작자 프로필 이미지 소스
+          example: 1
+    calculetId:
+      type: string
+      description: 계산기 UUID
+      example: 9dc33a8f-7647-4598-ac0b-2d1089c89404
     statistics:
       type: object
       properties:
-        bookmarkCnt:
+        bookmark:
           type: integer
           description: 북마크 횟수
-        bookmarked:
-          type: boolean
-          description: 북마크 여부
-        likeCnt:
+        like:
           type: integer
           description: 좋아요 횟수
-        liked:
-          type: integer
-          description: 좋아요 여부
-        reportCnt:
+        report:
           type: integer
           description: 신고 횟수
-        viewCnt:
+        view:
           type: integer
           description: 누적 접속 수
-    calculetLists:
-      type: array
-      items:
-        type: object
-    calculetInfoPopup:
+        user:
+          type: integer
+          description: 사용자 수
+        calculation:
+          type: integer
+          description: 누적 계산 횟수
+    calculetPreview:
       type: object
       properties:
-        profileImg:
-          type: string
-          description: 제작자 프로필 이미지 소스
-        contributorName:
-          type: string
-          description: 제작자 닉네임
-        calculationCnt:
-          type: integer
-          description: 누적 연산 수
-        userCnt:
-          type: integer
-          description: 누적 사용자 수
+        id:
+          $ref: "#/components/schemas/calculetId"
         title:
-          type: string
-          description: 계산기 제목
-        categoryMain:
-          type: string
-          description: 계산기 대분류
-        categorySub:
-          type: string
-          description: 계산기 소분류
-        birthday:
-          type: string
-          description: 계산기 등록일
-        updateLog:
-          type: object
-          description: 업데이트 로그
-          properties:
-            updateDate:
-              type: string
-              description: 업데이트 날짜
-            message:
-              type: array
-              items:
-                type: string
-                description: 업데이트 메시지
-    postResult:
+          $ref: "#/components/schemas/calculet/properties/title"
+        description:
+          $ref: "#/components/schemas/calculet/properties/description"
+        categoryMainId:
+          $ref: "#/components/schemas/calculet/properties/categoryMainId"
+        categorySubId:
+          $ref: "#/components/schemas/calculet/properties/categorySubId"
+        viewCnt:
+          $ref: "#/components/schemas/statistics/properties/view"
+        contributor:
+          $ref: "#/components/schemas/userSimpleInfo"
+    calculetBanner:
       type: object
       properties:
-        success:
-          type: boolean
-          description: 성공 여부
-        location:
-          type: string
-          description: 등록된 경로
-    errorResult:
+        id:
+          $ref: "#/components/schemas/calculetId"
+        title:
+          $ref: "#/components/schemas/calculet/properties/title"
+        description:
+          $ref: "#/components/schemas/calculet/properties/description"
+        contributor:
+          $ref: "#/components/schemas/userSimpleInfo"
+    updateLog:
       type: object
       properties:
-        success:
-          type: boolean
-          description: 성공 여부
+        calculetId:
+          $ref: "#/components/schemas/calculetId"
         message:
           type: string
-          description: 에러 메세지
+          description: 업데이트 메세지
+          example: 업데이트 로그

@@ -3,12 +3,18 @@ import axios from "axios";
 /**
  * 계산기 정보 get 요청 함수
  */
-async function calculetInfo(id) {
+async function calculetInfo(id, userId = "") {
   try {
     let data;
-    await axios.get(`/api/calculets/${id}`).then((response) => {
-      data = response.data;
-    });
+    await axios
+      .get(`/api/calculets/${id}`, {
+        headers: {
+          Authorization: `Bearer ${userId}`,
+        },
+      })
+      .then((response) => {
+        data = response.data;
+      });
     return data;
   } catch (error) {
     switch (error.response.status) {

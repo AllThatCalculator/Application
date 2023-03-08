@@ -5,23 +5,18 @@ services:
     container_name: frontend
     restart: unless-stopped
     stdin_open: true
-    build:
-      context: ./client
-      dockerfile: Dockerfile.prod
+    build: nginx
     volumes:
-      - ./client/nginx:/etc/nginx/conf.d
+      - ./nginx/nginx.prod:/etc/nginx/conf.d
+      - ./client/build:/usr/share/nginx/html
       - ./client/src/css:/static-files/css
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    env_file: ./client/.env
     ports:
       - 80:80
       - 443:443
     networks:
       - app-tier
-    depends_on:
-      - backend
-    tty: true
     command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
 
   certbot:
@@ -33,35 +28,22 @@ services:
       - ./certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
-  backend:
-    container_name: backend
+  api_blue:
+    container_name: api_blue
     build:
       context: ./server
       dockerfile: Dockerfile.prod
-    env_file: .env
-    ports:
-      - 5000:5000
-    volumes:
-      - /server/node_modules
-      - ./server/:/server
+    env_file: ./server/.env
     networks:
       - app-tier
     restart: always
-    depends_on:
-      - mariadb
 
-  mariadb:
-    container_name: mariadb
-    image: mariadb:10.5
-    ports:
-      - 3306:3306
-    volumes:
-      - ./database/mariaDB/conf.d:/etc/mysql/conf.d
-      - ./database/mariaDB/data:/var/lib/mysql
-      - ./database/mariaDB/initdb.d:/docker-entrypoint-initdb.d:ro
-    env_file: .env
-    environment:
-      TZ: Asia/Seoul
+  api_green:
+    container_name: api_green
+    build:
+      context: ./server
+      dockerfile: Dockerfile.prod
+    env_file: ./server/.env
     networks:
       - app-tier
     restart: always

@@ -26,6 +26,8 @@
 
 # DB Key등 설정 파일
 .env
+*.pem
+
 # 로컬에 저장되는 DB파일
 database/mariaDB/data
 
@@ -34,3 +36,7 @@ database/mariaDB/data
 
 # certbot 관련
 certbot
+
+# 서버 로그 파일
+nohup.out
+log

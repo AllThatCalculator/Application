@@ -1,60 +1,47 @@
-import styled from "styled-components";
-import styles from "../components/styles";
 import WriteCode from "../components/register/WriteCode";
-import { WriteInform } from "../components/register/WriteInform";
-import UploadDoneBtn from "../components/register/UploadDoneBtn";
-import { useState, useEffect, useCallback } from "react";
-import { ContentLayout, White300Layout } from "../components/Layout";
+import WriteInform from "../components/register/WriteInform";
+import { useState } from "react";
 import useInput from "../hooks/useInput";
-import { useNavigate } from "react-router-dom";
-import loadUserInfo from "../user-actions/userInfo";
-import calculetCategory from "../user-actions/calculetCategory";
-import AuthUser from "../user-actions/AuthUser";
-import URL from "../components/PageUrls";
-
-/**
- * ContentLayout을 상속하는 RegisterLayout
- * - flex와 gap, padding 설정을 새로 함
- */
-const RegisterLayout = styled(ContentLayout)`
-  display: flex;
-  flex-direction: column;
-  gap: ${styles.styleLayout.basic300};
-  padding: ${styles.styleLayout.basic350};
-`;
+import { Box, Grid } from "@mui/material";
+import { PageScreenBox } from "../components/global-components/PageScreenBox";
+import Title from "../components/global-components/Title";
+import PageScreenBottom from "../components/global-components/PageScreenBottom";
+import CheckIcon from "@mui/icons-material/Check";
+import postRegisterCalculetTemp from "../user-actions/postRegisterCalculetTemp";
+import usePage from "../hooks/usePage";
+import PreviewCalculet from "../components/register/PreviewCalculet";
+import { useSelector } from "react-redux";
+import useSnackbar from "../hooks/useSnackbar";
 
 /**
  * 계산기 등록 페이지 컴포넌트
  * - 여러 컴포넌트에서 관리하는 state들을 관리
  */
 function Register() {
-  const navigate = useNavigate();
+  const { loginPage, calculetPage } = usePage();
+  const { openSnackbar } = useSnackbar();
+
+  const { idToken, userInfo } = useSelector((state) => ({
+    idToken: state.userInfo.idToken,
+    userInfo: state.userInfo,
+  }));
 
   const title = useInput("");
+  // markdown
   const description = useInput("");
 
-  // 대분류 옵션
-  const [mainOption, setMainOption] = useState(null);
-
-  // 소분류 옵션
-  const [subOption, setSubOption] = useState(null);
-
-  // 선택한 대분류 종류에 맞는 소분류 옵션 배열
-  const [categorySubOption, setCategorySubOption] = useState(null);
-
-  // 선택된 대분류, 소분류 네임
-  const [categoryMain, setCategoryMain] = useState("");
-  const [categorySub, setCategorySub] = useState("");
-
   // 선택된 대분류, 소분류 id
-  const [categoryMainId, setCategoryMainId] = useState(null);
-  const [categorySubId, setCategorySubId] = useState(null);
+  const [categoryMainId, setCategoryMainId] = useState("");
+  const [categorySubId, setCategorySubId] = useState("");
 
-  // 소분류 선택 활성 여부
-  const [isValidSub, setIsValidSub] = useState(false);
+  const [srcCode, setSrcCode] = useState(
+    `<!DOCTYPE html>\n<html lang="ko">\n<head>\n  <meta charset="UTF-8">\n  <title>계산기 이름</title>\n</head>\n<body>\n  <h1>본인이 구현한 계산기 코드를 작성해주세요.</h1>\n  <input id="input" type="text" class="atc-input atc-calculet-input" atcDesc="입력" value="입력 예시"/>\n  <div id="output" class="atc-output atc-calculet-output" atcDesc="결과">결과 예시</div>\n  <button id="button" class="atc-button">버튼 예시</button>\n</body>\n</html>`
+  );
 
-  const [srcCode, setSrcCode] = useState("<!DOCTYPE html>");
-  const [manual, setManual] = useState("### write detail!");
+  // const [srcCode, setSrcCode] = useState(`<!DOCTYPE html>`);
+  const [manual, setManual] = useState(
+    "# 계산기 이름\n본인이 구현한 계산기에 대한 설명을 작성해주세요."
+  );
 
   /**
    * 계산기 대분류 change 함수
@@ -65,28 +52,8 @@ function Register() {
   function changeCategoryMain(event) {
     // 대분류 타겟 value 값
     const targetValue = Number(event.target.value);
-    // 대분류 옵션 네임
-    const main = mainOption[targetValue].name;
-    // 소분류 옵션 리스트
-    const subOptionList = subOption[targetValue];
-
-    setCategoryMain(main);
     setCategoryMainId(targetValue);
-    setCategorySubOption(subOptionList);
-
-    // 대분류가 단위변환기이거나 기타라면
-    if (
-      targetValue === subOptionList[0].value ||
-      targetValue === mainOption.length - 1
-    ) {
-      setCategorySub(subOptionList[0].name);
-      setCategorySubId(subOptionList[0].value);
-      setIsValidSub(false);
-    } else {
-      setCategorySub(null);
-      setCategorySubId(null);
-      setIsValidSub(true);
-    }
+    setCategorySubId(""); // 초기화
   }
 
   /**
@@ -96,96 +63,134 @@ function Register() {
    */
   function changeCategorySub(event) {
     const targetValue = Number(event.target.value);
-    if (categorySubOption) {
-      const option = categorySubOption.filter((x) => x.value === targetValue);
-      setCategorySub(option[0].name);
-      setCategorySubId(targetValue);
+    setCategorySubId(targetValue);
+  }
+
+  // 미리보기 활성화
+  const [isPreview, setPreview] = useState(false);
+  function handleIsPreview() {
+    setPreview((prev) => !prev);
+  }
+
+  /**
+   * 계산기 등록
+   */
+  function registerCalculet() {
+    if (!idToken) {
+      loginPage();
+      return;
     }
-  }
 
-  // 유저 정보
-  const [userInfo, setUserInfo] = useState(null);
+    if (
+      !title.value ||
+      !description.value ||
+      !categoryMainId ||
+      !categorySubId
+    ) {
+      openSnackbar(
+        "error",
+        "모든 사항을 입력해주세요.",
+        true,
+        "top",
+        "center",
+        2400 // 지속시간
+      );
+      return;
+    }
 
-  /**
-   * 사용자 정보 서버에 요청
-   */
-  function requestUserInfo(userEmail) {
-    const request = loadUserInfo(userEmail);
+    let body = {
+      title: title.value,
+      srcCode: srcCode,
+      manual: manual,
+      description: description.value,
+      categoryMainId: categoryMainId,
+      categorySubId: categorySubId,
+    };
+
+    const request = postRegisterCalculetTemp(body, idToken);
     request.then((res) => {
-      setUserInfo(res);
-    });
-  }
-
-  /**
-   * 백엔드에서 사용자 정보 불러오는 함수
-   */
-  const loadUserEmail = useCallback(() => {
-    const request = AuthUser();
-    request.then((res) => {
-      if (res.success) {
-        requestUserInfo(res.userEmail);
+      // console.log(res);
+      if (res === "/") {
+        // 안내 팝업창
+        calculetPage();
+        // console.log("성공!");
+        openSnackbar(
+          "success",
+          "성공적으로 임시 등록되었습니다.",
+          true,
+          "top",
+          "center",
+          2400 // 지속시간
+        );
       } else {
-        navigate(URL.LOGIN);
+        // 실패 팝업 처리
+        openSnackbar(
+          "error",
+          "계산기 등록에 실패했습니다. 다시 시도해 주세요.",
+          true,
+          "top",
+          "center",
+          2400 // 지속시간
+        );
       }
     });
-  }, [navigate]);
-
-  /**
-   * 카테고리 서버에 요청 후, 데이터 가공
-   */
-  const loadCategory = useCallback(() => {
-    const request = calculetCategory();
-    request.then((res) => {
-      setMainOption(res.categoryMain);
-      setSubOption(res.categorySub);
-    });
-  }, []);
-
-  /**
-   * 현재 로그인한 사용자 계정 가져오기
-   */
-  useEffect(() => {
-    loadUserEmail();
-    loadCategory();
-  }, [loadUserEmail, loadCategory]);
+  }
 
   return (
-    <White300Layout>
-      <RegisterLayout>
-        {userInfo && (
+    <>
+      <Grid container sx={{ backgroundColor: "white" }}>
+        <PageScreenBox
+          // 계산기 정보 입력 | 배너 미리보기
+          gap="2.4rem"
+          sx={{ display: isPreview ? "none" : "" }}
+        >
+          <Title content="계산기 저작" />
           <WriteInform
             title={title.value}
             description={description.value}
-            mainOption={mainOption}
-            categoryMain={categoryMain}
-            categorySubOption={categorySubOption}
-            categorySub={categorySub}
-            isValidSub={isValidSub}
-            profileImg={userInfo.profileImg}
+            categoryMainId={categoryMainId}
+            categorySubId={categorySubId}
             changeTitle={title.onChange}
             changeDescription={description.onChange}
             changeCategoryMain={changeCategoryMain}
             changeCategorySub={changeCategorySub}
           />
-        )}
-        <WriteCode
-          srcCode={srcCode}
-          manual={manual}
-          setSrcCode={setSrcCode}
-          setManual={setManual}
-        />
-        {userInfo && (
-          <UploadDoneBtn
-            title={title.value}
-            description={description.value}
-            categoryMainId={categoryMainId}
-            categorySubId={categorySubId}
+          <WriteCode
+            // 계산기 코드 입력
             srcCode={srcCode}
             manual={manual}
+            setSrcCode={setSrcCode}
+            setManual={setManual}
+            handleIsPreview={handleIsPreview}
           />
+        </PageScreenBox>
+        {isPreview && (
+          <PageScreenBox
+            // 미리보기
+            gap="2.4rem"
+            // sx={{ display:  "none" }}
+          >
+            <PreviewCalculet
+              title={title.value}
+              userName={userInfo.userName}
+              profileImgSrc={userInfo.profileImgSrc}
+              srcCode={srcCode}
+              manual={manual}
+              handleIsPreview={handleIsPreview}
+              isPreview={isPreview}
+            />
+          </PageScreenBox>
         )}
-      </RegisterLayout>
-    </White300Layout>
+      </Grid>
+      <Box sx={{ pb: "24rem" }}>
+        <PageScreenBottom
+          helpText="계산기를 등록하세요!"
+          buttonText="계산기 등록"
+          handleButton={registerCalculet}
+          buttonIcon={<CheckIcon />}
+        />
+      </Box>
+    </>
   );
 }
 

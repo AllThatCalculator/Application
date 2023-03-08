@@ -3,11 +3,14 @@ FROM node:16.16
 WORKDIR /server
 ENV PATH /server/node_modules/.bin:$PATH
 
-COPY package*.json ./
+# install package
+COPY ["package*.json", "./"]
 
-RUN npm install --silent
+RUN ["npm", "install", "--silent"]
 
-COPY . .
+COPY [".", "."]
 
-# ========개발용==========
-CMD [ "npx", "nodemon", "-L", "main.js"]
+# for ssh port forwarding
+RUN sed -i -e 's/\r$//' ./entrypoint.sh
+
+CMD ["./entrypoint.sh"]

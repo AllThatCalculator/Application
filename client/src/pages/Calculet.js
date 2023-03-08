@@ -1,51 +1,49 @@
-import styled from "styled-components";
 import CalculetBlock from "../components/calculet-block/CalculetBlock";
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import styles from "../components/styles";
-import { BtnBlue } from "../components/atom-components/ButtonTemplate";
+import { useParams } from "react-router-dom";
 import CalculetHeader from "../components/calculet-block/CalculetHeader";
-
 import {
   updateCalculetCount,
   loadOftenUsedCalculet,
 } from "../components/calculet-block/oftenUsedCalculet";
-import { Font } from "../components/atom-components/StyledText";
 import FooterRecommend from "../components/global-components/FooterRecommend";
-import URL from "../components/PageUrls";
 import calculetInfo from "../user-actions/calculetInfo";
+import { Grid } from "@mui/material";
+import { PageScreenBox } from "../components/global-components/PageScreenBox";
+import LoadingPage from "../components/global-components/LoadingPage";
+import UploadIcon from "@mui/icons-material/Upload";
+import usePage from "../hooks/usePage";
+import getCalculetUpdateLog from "../user-actions/getCalculetUpdateLog";
+import getUserIdToken from "../utils/getUserIdToken";
+import PageScreenBottom from "../components/global-components/PageScreenBottom";
 
-// 계산기 블록 배경
-const Positioner = styled.div`
-  background: ${styles.styleColor.white300};
-`;
-// 계산기 등록 버튼 배경
-const PositionerBottom = styled.div`
-  background: ${styles.styleColor.blue30};
-  ${styles.styleEffect.opacity300};
-`;
-// 계산기 블록 감쌈
-const BoxCalculet = styled.div`
-  margin: 0 auto;
-  ${styles.sizes.desktop};
-  padding: ${styles.styleLayout.basic350};
-`;
-// 계산기 등록 버튼 감쌈
-const BoxCalculetBottom = styled(BoxCalculet)`
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: ${styles.styleLayout.basic750};
-  gap: ${styles.styleLayout.basic300};
-`;
+async function handleGetCalculetInfo(id, setCalculetObj) {
+  let calculetInfoRequest = null;
+  const userId = await getUserIdToken();
 
-const WrapperCol = styled(BoxCalculet)`
-  display: flex;
-  flex-direction: column;
-  gap: ${styles.styleLayout.basic700};
-`;
+  // 로그인한 유저 - 계산기 정보 요청
+  if (userId) {
+    calculetInfoRequest = await calculetInfo(id, userId);
+  }
+  // 로그인 안 한 유저 - 계산기 정보 요청
+  else {
+    calculetInfoRequest = await calculetInfo(id);
+  }
+
+  if (calculetInfoRequest !== null) {
+    setCalculetObj(calculetInfoRequest);
+  }
+}
+async function handleGetCalculetUpdateLog(id, setUpdateLog) {
+  // 계산기 업데이트 로그 내역 요청
+  const updateLogRequest = await getCalculetUpdateLog(id);
+  if (updateLogRequest !== null) {
+    setUpdateLog(updateLogRequest);
+  }
+}
+
 function Calculet() {
-  const navigate = useNavigate();
+  const { registerPage } = usePage();
   // 계산기 객체
   // {object} calculetObj 계산기 객체
   //         {string} title: "사칙연산 계산기", - 계산기 이름
@@ -65,16 +63,9 @@ function Calculet() {
   //   {integer} calculationCnt: 10, - 연산수
   //   {integer} userCnt: 10,      - 사용자 수
   // },
-  const [statistics, setStatistics] = useState(null);
 
-  // 계산기 정보 팝업창에 들어가는 내용
-  const [info, setInfo] = useState(null);
-
-  // 계산기 저작자 프로필 이미지
-  const [contributorImgSrc, setContributorImgSrc] = useState(null);
-
-  // (임시) 에러 처리 문구
-  const [errorText, setErrorText] = useState(null);
+  // 계산기 정보 팝업창에 들어가는 로그 내용
+  const [updateLog, setUpdateLog] = useState(null);
 
   // 현재 페이지에 로딩할 계산기 id
   let { id } = useParams();
@@ -84,22 +75,15 @@ function Calculet() {
     id = loadOftenUsedCalculet();
   }
 
+  const [isLoading, setIsLoading] = useState(true);
   /**
    * 백엔드에서 계산기 정보 불러오는 함수
    * useEffect 오류 해결 위해 useCallback
    */
   const loadCalculetObj = useCallback(() => {
-    const request = calculetInfo(id);
-    request.then((data) => {
-      if (data.calculet) {
-        setCalculetObj(data.calculet);
-        setStatistics(data.statistics);
-        setContributorImgSrc(data.calculet.contributorImgSrc);
-        setInfo(data.info);
-      } else {
-        setErrorText(data);
-      }
-    });
+    setIsLoading(true);
+    handleGetCalculetUpdateLog(id, setUpdateLog);
+    handleGetCalculetInfo(id, setCalculetObj);
   }, [id]);
 
   const onHandlerLoadClaculetObj = useCallback(() => {
@@ -111,41 +95,44 @@ function Calculet() {
    */
   useEffect(onHandlerLoadClaculetObj, [onHandlerLoadClaculetObj]);
 
+  // 로딩화면
+  useEffect(() => {
+    if (calculetObj !== null) setIsLoading(false);
+  }, [calculetObj]);
+
   return (
     <>
-      <Positioner>
-        <WrapperCol>
-          {calculetObj !== null ? (
-            <>
+      {isLoading && <LoadingPage />}
+      {!isLoading && (
+        <>
+          <Grid container sx={{ backgroundColor: "white" }}>
+            <PageScreenBox
+              sx={{
+                gap: { xs: "0.4rem", sm: "0.8rem", md: "1.2rem" },
+              }}
+            >
               <CalculetHeader
-                title={calculetObj.title}
-                contributor={calculetObj.contributor}
-                contributorImgSrc={contributorImgSrc}
-                statistics={statistics}
-                info={info}
+                // 계산기 블록 정보 & 팝업창 정보
+                calculetObj={calculetObj}
+                // 업데이트 로그
+                updateLog={updateLog}
               />
               <CalculetBlock
                 srcCode={calculetObj.srcCode}
                 manual={calculetObj.manual}
                 calculetId={id}
               />
-            </>
-          ) : (
-            <div>{errorText}</div> // 로딩화면
-          )}
-        </WrapperCol>
-      </Positioner>
-      <PositionerBottom>
-        <BoxCalculetBottom>
-          <Font font="text200">자신만의 계산기를 만드세요!</Font>
-          <BtnBlue
-            text="계산기 등록"
-            icon="Upload"
-            onClick={() => navigate(URL.REGISTER)}
+            </PageScreenBox>
+          </Grid>
+          <PageScreenBottom
+            helpText="자신만의 계산기를 만드세요!"
+            buttonText="계산기 등록"
+            handleButton={registerPage}
+            buttonIcon={<UploadIcon />}
           />
-        </BoxCalculetBottom>
-      </PositionerBottom>
-      <FooterRecommend />
+          <FooterRecommend />
+        </>
+      )}
     </>
   );
 }

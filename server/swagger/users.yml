@@ -1,53 +1,71 @@
 # User API
 
+# data
 components:
+  requestBodies:
+    userInfo:
+      description: 회원 정보
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              profileImg:
+                $ref: "#/components/schemas/profileImg"
+              userInfo:
+                $ref: "#/components/schemas/userInfo"
   schemas:
-    getSpecificUser:
+    userSimpleInfo:
       type: object
       properties:
-        success:
-          type: boolean
-          description: 성공 여부
-        userInfo:
-          $ref: "#components/schemas/userInfo"
+        userName:
+          $ref: "#/components/schemas/userInfo/properties/userName"
+        profileImgSrc:
+          $ref: "#/components/schemas/profileImgSrc"
+    userProfile:
+      $ref: "#/components/schemas/userInfo"
+      properties:
+        profileImgSrc:
+          $ref: "#/components/schemas/profileImgSrc"
+        email:
+          $ref: "#/components/schemas/email"
     userInfo:
       type: object
       properties:
-        email:
-          type: string
-          description: 사용자 이메일
         userName:
           type: string
           description: 사용자 이름
-        profileImg:
-          type: string
-          description: 사용자 프로필 src 주소
+          example: "test user"
         bio:
           type: string
           description: 사용자 소개
+          example: "안녕하세요"
         sex:
           type: string
           description: 사용자 성별
+          oneOf:
+            - "F"
+            - "M"
+          example: "F"
         birthdate:
           type: string
           description: 사용자 생년월일
+          example: "2023-01-01"
         job:
           type: string
           description: 사용자 직업
-      example:
-        email: "test@google.com"
-        userName: "test"
-        profileImg: "data:image/png;base64,iVOdfk2349..."
-        bio: "안녕하세요"
-        sex: "F"
-        birthdate: "0000-00-00"
-        job: "직업"
-    errorResult:
-      type: object
-      properties:
-        success:
-          type: boolean
-          description: 성공 여부
-        message:
-          type: string
-          description: 에러 메세지
+          example: "개발자"
+    profileImgSrc:
+      type: string
+      description: 사용자 프로필 src path
+      example: "/file/profile/123ae3c23e..."
+    profileImg:
+      type: string
+      format: binary
+      description: 프로필 이미지
+    email:
+      type: string
+      format: email
+      descrition: 사용자 이메일
+      example: "test@naver.com"

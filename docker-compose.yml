@@ -1,67 +1,32 @@
+# for local backend development
+
 version: "3"
 
 services:
-  frontend:
-    container_name: frontend
-    stdin_open: true
-    build:
-      context: ./client
-      dockerfile: Dockerfile.dev
-    env_file: ./client/.env
-    volumes:
-      - /client/node_modules
-      - ./client/:/client
-    ports:
-      - 3000:3000
-    networks:
-      - app-tier
-    tty: true
-    restart: always
-    depends_on:
-      - backend
-
   nginx:
     container_name: nginx
-    build: ./nginx-dev
+    build: ./nginx
     ports:
-      - 80:80
+      - 8080:8080
     volumes:
-      - ./client/src/css:/src/css
-    depends_on:
-      - frontend
+      - ./nginx/nginx.BE:/etc/nginx/conf.d
+      - ./scripts/dev/auto-reload-nginx.sh:/scripts/auto-reload-nginx.sh
     networks:
       - app-tier
     restart: always
+    command: ["/scripts/auto-reload-nginx.sh"]
 
   backend:
     container_name: backend
     build:
       context: ./server
       dockerfile: Dockerfile.dev
-    env_file: .env
+    env_file: ./server/.env
     ports:
       - 5000:5000
     volumes:
       - /server/node_modules
       - ./server/:/server
-    networks:
-      - app-tier
-    restart: always
-    depends_on:
-      - mariadb
-
-  mariadb:
-    container_name: mariadb
-    image: mariadb:10.5
-    ports:
-      - 3306:3306
-    volumes:
-      - ./database/mariaDB/conf.d:/etc/mysql/conf.d
-      - ./database/mariaDB/data:/var/lib/mysql
-      - ./database/mariaDB/initdb.d:/docker-entrypoint-initdb.d:ro
-    env_file: .env
-    environment:
-      TZ: Asia/Seoul
     networks:
       - app-tier
     restart: always

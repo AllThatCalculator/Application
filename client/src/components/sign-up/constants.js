@@ -13,8 +13,8 @@ const OPTIONS_EMAIL_ADDRESS = [
  * 성별 옵션 - 여, 남
  */
 const OPTIONS_SEX = [
-  { value: "F", name: "여자" },
-  { value: "M", name: "남자" },
+  { value: "F", name: "여성" },
+  { value: "M", name: "남성" },
 ];
 
 /**
@@ -29,5 +29,15 @@ const OPTIONS_YEAR = fillOptionsList(
  * 생년월일 옵션 - 월 01~12
  */
 const OPTIONS_MONTH = fillOptionsList(1, 12);
+/**
+ * 생년월일 옵션 - 일 01~31
+ */
+const OPTIONS_DATE = fillOptionsList(1, 31);
 
-export { OPTIONS_EMAIL_ADDRESS, OPTIONS_SEX, OPTIONS_MONTH, OPTIONS_YEAR };
+export {
+  OPTIONS_EMAIL_ADDRESS,
+  OPTIONS_SEX,
+  OPTIONS_MONTH,
+  OPTIONS_YEAR,
+  OPTIONS_DATE,
+};

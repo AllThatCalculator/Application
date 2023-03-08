@@ -1,53 +1,69 @@
 # record API
 
 components:
-  schemas:
+  requestBodies:
     saveRecord:
-      type: object
-      properties:
-        userId:
-          type: string
-          format: email
-          description: 유저 아이디
-        calculetId:
-          type: int
-          description: 계산기 번호
-        inputObj:
-          type: object
-          description: 계산기 입력값
-        outputObj:
-          type: object
-          description: 계산기 출력값
-      example:
-        userId: "bsa0322 - 임시"
-        calculetId: 1
-        inputObj: { value1: 1, value2: 2 }
-        outputObj: { result: 3 }
-    getRecord:
-      type: array
-      items:
-        - $ref: "#components/schemas/record"
+      description: 저장할 계산 이력 목록
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              recordArray:
+                type: array
+                items:
+                  $ref: "#/components/schemas/recordObject"
+                  properties:
+                    createdAt:
+                      $ref: "#/components/schemas/dateTimeLive"
+              calculetId:
+                $ref: "#/components/schemas/calculetId"
+    deleteRecord:
+      description: 삭제할 계산 이력 목록
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              calculetId:
+                $ref: "#/components/schemas/calculetId"
+              recordIdList:
+                type: array
+                items:
+                  $ref: "#/components/schemas/recordId"
 
-    record:
+  responses:
+    getRecord:
+      description: 계산이력 조회 성공
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/recordObject"
+              properties:
+                createdAt:
+                  $ref: "#/components/schemas/dateTimeLive"
+                id:
+                  $ref: "#/components/schemas/recordId"
+  schemas:
+    recordObject:
       type: object
       properties:
         inputObj:
           type: object
           description: 계산기 입력값
+          example:
+            value1: 1
+            value2: 2
         outputObj:
           type: object
           description: 계산기 출력값
-        createdAt:
-          type: string
-          format: date-time
-          description: 기록된 시간
-      example:
-        inputObj: { value1: 1, value2: 2 }
-        outputObj: { result: 3 }
-        createdAt: "2022-08-02T20:14:54.530Z"
-    errorResult:
-      type: object
-      properties:
-        message:
-          type: string
-          description: 에러 메세지
+          example:
+            result: 3
+    recordId:
+      type: string
+      description: 기록 UUID
+      example: 20186b96-9ff9-11ed-8c8c-0a403e9fff5e

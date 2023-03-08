@@ -142,7 +142,7 @@ function BtnToggle({ onClick }) {
   const icon = "CaretUpFill";
   return (
     <StyledBtnToggle onClick={onClick}>
-      <StyledIcon id={icon} name={icon} ></StyledIcon>
+      <StyledIcon id={icon} name={icon}></StyledIcon>
     </StyledBtnToggle>
   );
 }

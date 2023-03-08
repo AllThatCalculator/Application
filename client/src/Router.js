@@ -14,31 +14,43 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Search from "./pages/Search";
 import CalculetList from "./pages/CalculetList";
+// import WriteUserInfo from "./pages/WriteUserInfo";
 
 // google-analytics
 import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
+import Snackbars from "./components/global-components/Snackbars";
 
-const AppRouter = () => {
+function AppRouter({ isLoggedIn }) {
+  const PATH_CALCULET_ID = ":" + URL.CALCULET_ID;
+
   return (
     <BrowserRouter>
       <RouteChangeTracker />
-      <Header />
+      <Header isLoggedIn={isLoggedIn} />
+      <Snackbars />
       <Routes>
         <Route path={URL.CALCULET} element={<Calculet />}>
-          <Route path=":id" element={<Calculet />} />
+          <Route path={PATH_CALCULET_ID} element={<Calculet />} />
         </Route>
+
         <Route
           path={URL.REGISTER}
-          element={<Auth authComponent={<Register />} />}
+          element={
+            <Auth isLoggedIn={isLoggedIn} authComponent={<Register />} />
+          }
         />
-        <Route path={URL.LOGIN} element={<Login />} />
-        <Route path={URL.SIGN_UP} element={<SignUp />} />
+        <Route path={URL.LOGIN} element={<Login isLoggedIn={isLoggedIn} />} />
+        <Route
+          path={URL.SIGN_UP}
+          element={<SignUp isLoggedIn={isLoggedIn} />}
+        />
+        {/* <Route path={URL.WRITE_USER_INFO} element={<WriteUserInfo />} /> */}
         <Route path={URL.SEARCH} element={<Search />} />
         <Route path={URL.CALCULET_LIST} element={<CalculetList />} />
       </Routes>
       {/* <BookmarkBar /> */}
     </BrowserRouter>
   );
-};
+}
 
 export default AppRouter;

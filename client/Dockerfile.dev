@@ -4,10 +4,11 @@ WORKDIR /client
 ENV PATH /client/node_modules/.bin:$PATH
 ENV CHOKIDAR_USEPOLLING=TRUE
 
-COPY package*.json ./
-RUN npm install --silent && npm install react-script -g --silent
-RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
+# install package
+COPY ["package*.json", "./"]
+RUN ["npm", "install", "--silent"]
 
-COPY . .
+# run npm server
+COPY [".", "."]
 
-CMD ["npm", "start"]
+CMD ["node", "node_modules/react-scripts/scripts/start.js"]
