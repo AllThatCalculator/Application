@@ -3,7 +3,7 @@ name: (PROD) deploy frontend and backend
 on:
   push:
     branches:
-      - prod # for temporary
+      - production # for temporary
 jobs:
   production-deploy:
     runs-on: ubuntu-20.04
