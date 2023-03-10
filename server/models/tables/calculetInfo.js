@@ -23,20 +23,12 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING(100),
         allowNull: false,
       },
-      category_main_id: {
+      category_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: {
-          model: "category_sub",
-          key: "main_id",
-        },
-      },
-      category_sub_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "category_sub",
-          key: "sub_id",
+          model: "category",
+          key: "id",
         },
       },
       contributor_id: {
@@ -71,14 +63,9 @@ module.exports = function (sequelize, DataTypes) {
           fields: [{ name: "contributor_id" }],
         },
         {
-          name: "category_main_id",
+          name: "category_id",
           using: "BTREE",
-          fields: [{ name: "category_main_id" }],
-        },
-        {
-          name: "category_sub_id",
-          using: "BTREE",
-          fields: [{ name: "category_sub_id" }],
+          fields: [{ name: "category_id" }],
         },
       ],
     }

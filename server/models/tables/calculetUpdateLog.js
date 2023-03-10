@@ -1,7 +1,15 @@
+const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     "calculetUpdateLog",
     {
+      id: {
+        type: DataTypes.CHAR(36),
+        allowNull: false,
+        primaryKey: true,
+        unique: true,
+        defaultValue: Sequelize.Sequelize.fn("uuid"),
+      },
       message: {
         type: DataTypes.STRING(100),
         allowNull: false,
@@ -9,7 +17,6 @@ module.exports = function (sequelize, DataTypes) {
       calculet_id: {
         type: DataTypes.CHAR(36),
         allowNull: false,
-        primaryKey: true,
         references: {
           model: "calculet_info",
           key: "id",
@@ -20,6 +27,7 @@ module.exports = function (sequelize, DataTypes) {
       sequelize,
       tableName: "calculet_update_log",
       timestamps: true,
+      updatedAt: false,
       indexes: [
         {
           name: "PRIMARY",

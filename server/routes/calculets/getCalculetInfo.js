@@ -30,6 +30,12 @@ async function getCalculetInfo(req, res) {
         attributes: ["view_cnt", "calculation_cnt", "user_cnt", "calculet_id"],
         as: "calculet_count",
       },
+      // category
+      {
+        model: models.category,
+        required: true,
+        as: "category",
+      }
     ],
     where: {
       id: {
@@ -62,8 +68,8 @@ async function getCalculetInfo(req, res) {
     srcCode: bufferToString(calculetInfo.src_code),
     manual: bufferToString(calculetInfo.manual),
     description: calculetInfo.description,
-    categoryMainId: calculetInfo.category_main_id,
-    categorySubId: calculetInfo.category_sub_id,
+    categoryMainId: calculetInfo.category.main_id,
+    categorySubId: calculetInfo.category.sub_id,
     createdAt: calculetInfo.created_at,
     contributor: {
       userName: calculetInfo.contributor.user_name,

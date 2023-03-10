@@ -3,22 +3,24 @@ const { models } = require("../../models");
 const { urlFormatter } = require("../../utils/urlFormatter");
 const PREVIEW_CNT = 6;
 
-function makeSubList(condition) {
+function getCalculetsFromDB(condition = {}) {
   // complete where condition
   const filter = {};
+  if (typeof condition.title === "string") {
+    filter.title = {
+      [Op.substring]: condition.title,
+    };
+  }
+
+  const categoryFilter = {};
   if (typeof condition.mainId === "number") {
-    filter.category_main_id = {
+    categoryFilter.main_id = {
       [Op.eq]: condition.mainId,
     };
   }
   if (typeof condition.subId === "number") {
-    filter.category_sub_id = {
+    categoryFilter.sub_id = {
       [Op.eq]: condition.subId,
-    };
-  }
-  if (typeof condition.title === "string") {
-    filter.title = {
-      [Op.substring]: condition.title,
     };
   }
 
@@ -28,8 +30,6 @@ function makeSubList(condition) {
         "id",
         "title",
         "description",
-        "category_main_id",
-        "category_sub_id",
       ],
       include: [
         // contributor
@@ -46,6 +46,13 @@ function makeSubList(condition) {
           attributes: ["view_cnt"],
           as: "calculet_count",
         },
+        // category
+        {
+          model: models.category,
+          required: true,
+          as: "category",
+          where: categoryFilter,
+        }
       ],
       where: filter,
       limit: condition.limit,
@@ -62,8 +69,8 @@ function makeSubList(condition) {
         id: calculet.id,
         title: calculet.title,
         description: calculet.description,
-        categoryMainId: calculet.category_main_id,
-        categorySubId: calculet.category_sub_id,
+        categoryMainId: calculet.category.main_id,
+        categorySubId: calculet.category.sub_id,
         viewCnt: calculet.calculet_count.view_cnt,
         contributor: {
           userName: calculet.contributor.user_name,
@@ -79,60 +86,53 @@ function makeSubList(condition) {
 
 async function getCalculetList(req, res) {
   // 카테고리 소분류 리스트 얻어오기
-  const categorySub = await models.categorySub.findAll({
+  const categoryList = await models.category.findAll({
     order: [
       ["main_id", "ASC"],
       ["sub_id", "ASC"],
     ],
   });
-  const calculetLists = {};
 
-  // ordinary
-  await Promise.all(
-    categorySub.map(async (element) => {
-      if (calculetLists[element.main_id] === undefined) {
-        calculetLists[element.main_id] = {};
-      }
-      calculetLists[element.main_id][element.sub_id] = await makeSubList({
-        mainId: element.main_id,
-        subId: element.sub_id,
-        limit: PREVIEW_CNT,
-      });
-    })
-  );
+  const calculetLists = await getCalculetsFromDB({ limit: PREVIEW_CNT });
 
-  res.status(200).send(calculetLists);
+  const response = {};
+  categoryList.map((category) => {
+    if (response[category.main_id] === undefined) {
+      response[category.main_id] = {};
+    }
+    response[category.main_id][category.sub_id] = [];
+  });
+
+  calculetLists.map((calculet) => {
+    response[calculet.categoryMainId][calculet.categorySubId].push(calculet);
+  });
+
+  res.status(200).send(response);
 }
 
 async function getConverters(req, res) {
-  // 카테고리 소분류 리스트 얻어오기
-  const categorySub = await models.categorySub.findAll({
-    order: [["main_id", "ASC"]],
-    where: {
-      sub_id: {
-        [Op.eq]: 0,
-      },
-    },
+  const calculetLists = await getCalculetsFromDB({
+    subId: 0,
+    limit: PREVIEW_CNT,
   });
 
-  const calculetLists = {};
-  await Promise.all(
-    categorySub.map(async (element) => {
-      calculetLists[element.main_id] = await makeSubList({
-        mainId: element.main_id,
-        subId: element.sub_id,
-        limit: PREVIEW_CNT,
-      });
-    })
-  );
-  res.status(200).send(calculetLists);
+  const response = {};
+
+  calculetLists.map((calculet) => {
+    if (response[calculet.categoryMainId] === undefined) {
+      response[calculet.categoryMainId] = [];
+    }
+    response[calculet.categoryMainId].push(calculet);
+  });
+
+  res.status(200).send(response);
 }
 
 /**
  * 추천 리스트 뽑아주는 함수 - 우선 조회수 가장 높은 계산기 추천
  */
 async function recommendation(req, res) {
-  const calculetList = await makeSubList({ limit: 15 });
+  const calculetList = await getCalculetsFromDB({ limit: 15 });
 
   const response = calculetList.map((calculet) => ({
     id: calculet.id,
@@ -157,7 +157,7 @@ async function searchCalculets(req, res) {
     title: req.query.title,
     limit: req.query.limit ? parseInt(req.query.limit) : null,
   };
-  const calculetList = await makeSubList(condition);
+  const calculetList = await getCalculetsFromDB(condition);
 
   res.status(200).send(calculetList);
 }

@@ -6,6 +6,7 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.CHAR(36),
         allowNull: false,
         primaryKey: true,
+        unique: true
       },
       email: {
         type: DataTypes.STRING(254),
