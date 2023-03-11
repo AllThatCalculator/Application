@@ -18,7 +18,7 @@ function BoxCalculetItem({ onClick, calculet }) {
   const { ellipsis } = useSx();
 
   const { calculetCategory } = useSelector((state) => ({
-    calculetCategory: state.calculetCategory.category, // main에 바로 접근해서 변수에 저장
+    calculetCategory: state.calculetCategory.category,
   }));
 
   const { categoryMainId, categorySubId } = calculet;
