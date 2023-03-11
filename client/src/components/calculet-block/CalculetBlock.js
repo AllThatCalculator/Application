@@ -55,6 +55,7 @@ function CalculetBlock({ srcCode, manual, calculetId, isPreview = false }) {
         onLoad={(e) => adjustHeight(e)}
         scrolling="no"
         title="calculet"
+        id="calculetIframe"
       />
       <CalculetManual
         content={manual}
