@@ -8,7 +8,8 @@ const KEY_OUTPUT = "atc-calculet-output";
  * @returns 태그 배열
  */
 function approachIframeTag(className) {
-  return window.frames[0].document.querySelectorAll(`.${className}`);
+  const iframe = document.querySelector("iframe#calculetIframe").contentWindow.document.body;
+  return iframe.querySelectorAll(`.${className}`);
 }
 
 /**
