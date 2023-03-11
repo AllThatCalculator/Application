@@ -12,7 +12,6 @@ import useSx from "../../hooks/useSx";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import BoxRecCalculator from "../atom-components/BoxRecCalculator";
 import { useSelector } from "react-redux";
-import useGetCategoryName from "../../hooks/useGetCategoryName";
 
 /**
  * 계산기 정보 입력창 컴포넌트 (정보 입력 + 배너 미리보기)
@@ -21,9 +20,9 @@ import useGetCategoryName from "../../hooks/useGetCategoryName";
  */
 function WriteInform(props) {
   const { subTitleSx } = useSx();
-  const { calculetCategory } = useGetCategoryName();
-  const { userInfo } = useSelector((state) => ({
+  const { userInfo, calculetCategory } = useSelector((state) => ({
     userInfo: state.userInfo,
+    calculetCategory: state.calculetCategory.category,
   }));
 
   return (
@@ -53,11 +52,15 @@ function WriteInform(props) {
                   onChange={props.changeCategoryMain}
                 >
                   {calculetCategory &&
-                    calculetCategory.map((data) => (
-                      <MenuItem key={data.value} value={data.value}>
-                        {data.name}
-                      </MenuItem>
-                    ))}
+                    Object.entries(calculetCategory).map((data) => {
+                      const mainId = Number(data[0]);
+                      const mainName = data[1].name;
+                      return (
+                        <MenuItem key={mainId} value={mainId}>
+                          {mainName}
+                        </MenuItem>
+                      );
+                    })}
                 </Select>
               </FormControl>
             </Grid>
@@ -74,15 +77,23 @@ function WriteInform(props) {
                   onChange={props.changeCategorySub}
                 >
                   {calculetCategory &&
-                    calculetCategory.map(
-                      (mainData) =>
-                        mainData.value === props.categoryMainId &&
-                        mainData.sub.map((subData) => (
-                          <MenuItem key={subData.value} value={subData.value}>
-                            {subData.name}
-                          </MenuItem>
-                        ))
-                    )}
+                    Object.entries(calculetCategory).map((data) => {
+                      const mainId = Number(data[0]);
+                      const mainValue = data[1];
+                      const { name, ...subList } = mainValue; // name 제외하고 순회
+                      return (
+                        mainId === props.categoryMainId &&
+                        Object.entries(subList).map((subData) => {
+                          const key = subData[0];
+                          const value = subData[1];
+                          return (
+                            <MenuItem key={key} value={key}>
+                              {value}
+                            </MenuItem>
+                          );
+                        })
+                      );
+                    })}
                 </Select>
               </FormControl>
             </Grid>

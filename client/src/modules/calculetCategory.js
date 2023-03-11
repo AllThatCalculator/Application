@@ -7,45 +7,17 @@ const CALCULET_CATEGORY = "calculetCategory/CALCULET_CATEGORY";
 
 /** init State ( 초기 상태 ) */
 const initialState = {
-  main: [
-    {
-      value: 0,
-      name: "",
-      sub: [
-        {
-          value: 0,
-          name: "",
-        },
-      ],
-    },
-    // {
-    //     "value": 1,
-    //     "name": "수학",
-    //     "sub": [
-    //       {
-    //         "value": 0,
-    //         "name": "단위 변환기"
-    //       },
-    //       {
-    //         "value": 1,
-    //         "name": "계산"
-    //       },
-    //       {
-    //         "value": 2,
-    //         "name": "통계"
-    //       },
-    //       {
-    //         "value": 3,
-    //         "name": "기하"
-    //       },
-    //       {
-    //         "value": 99999,
-    //         "name": "기타"
-    //       }
-    //     ]
-    //   },
-  ],
-  updated_at: "",
+  category: {
+    // 1: {
+    //   name: 수학,
+    //   0: 단위 변환기,
+    //   1: 계산,
+    //   2: 통계,
+    //   3: 기하,
+    //   99999: 기타
+    // },
+  },
+  created_at: "",
 };
 
 /** Action Creator Function ( 액션 생성 함수 ) */
