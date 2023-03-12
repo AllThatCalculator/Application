@@ -33,8 +33,6 @@ you don't have to set both env file if you want to run frontend/backend only.
 - [`client/.env`](https://iewha-my.sharepoint.com/:u:/r/personal/jiyoung_06_i_ewha_ac_kr/Documents/PKB/ATC/env_file/dev/client.env?csf=1&web=1&e=xEXL7o)
 - [`server/.env`](https://iewha-my.sharepoint.com/:u:/r/personal/jiyoung_06_i_ewha_ac_kr/Documents/PKB/ATC/env_file/dev/server.env?csf=1&web=1&e=0Ijrzg)
 
-If you don't have access, use this [link](https://iewha-my.sharepoint.com/:f:/g/personal/jiyoung_06_i_ewha_ac_kr/EpJi4WzlxJpDl7Y3TQc6kScBvDjSg8kjucqMGiIqF4GWBw?e=REDyJl)
-
 ---
 
 ## 3-A. Run frontend in local environment
@@ -42,7 +40,7 @@ If you don't have access, use this [link](https://iewha-my.sharepoint.com/:f:/g/
 ![image](https://user-images.githubusercontent.com/78730403/211194688-49a99337-40e1-42f7-be01-2d77d2789a14.png)
 
 - Requirements
-  - `node: 16.14.1`
+  - node: `16.14.1`
 
 ### install package
 
