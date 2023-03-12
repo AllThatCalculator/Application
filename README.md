@@ -29,10 +29,13 @@ AllThatCalculator Application
 ## 2. set ENV files
 
 you don't have to set both env file if you want to run frontend/backend only.
+- [env files](https://iewha-my.sharepoint.com/:f:/r/personal/jiyoung_06_i_ewha_ac_kr/Documents/PKB/ATC/env_file/dev?csf=1&web=1&e=qMH3PY)
 
-- [`client/.env`](https://iewha-my.sharepoint.com/:u:/r/personal/jiyoung_06_i_ewha_ac_kr/Documents/PKB/ATC/env_file/dev/client.env?csf=1&web=1&e=xEXL7o)
-- [`server/.env`](https://iewha-my.sharepoint.com/:u:/r/personal/jiyoung_06_i_ewha_ac_kr/Documents/PKB/ATC/env_file/dev/server.env?csf=1&web=1&e=0Ijrzg)
-
+- client
+  - client/.env
+- server
+  - server/all-that-calculator-firebase-adminsdk-XXXXXX.json
+  - server/.env
 ---
 
 ## 3-A. Run frontend in local environment
