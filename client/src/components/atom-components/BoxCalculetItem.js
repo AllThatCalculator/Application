@@ -9,20 +9,21 @@ import {
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useState } from "react";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
-import useGetCategoryName from "../../hooks/useGetCategoryName";
 import useSx from "../../hooks/useSx";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import { useSelector } from "react-redux";
 
 // 계산기 목록 - 각 계산기 카드
 function BoxCalculetItem({ onClick, calculet }) {
-  const { getCategoryMainName, getCategorySubName } = useGetCategoryName();
   const { ellipsis } = useSx();
 
-  const categoryMainName = getCategoryMainName(calculet.categoryMainId);
-  const categorySubName = getCategorySubName(
-    calculet.categoryMainId,
-    calculet.categorySubId
-  );
+  const { calculetCategory } = useSelector((state) => ({
+    calculetCategory: state.calculetCategory.category,
+  }));
+
+  const { categoryMainId, categorySubId } = calculet;
+  const categoryMainName = calculetCategory[categoryMainId].name;
+  const categorySubName = calculetCategory[categoryMainId][categorySubId];
 
   // 가운데 style 적용을 위한 sx
   const centerSx = { alignItems: "center", gap: "0.8rem" };

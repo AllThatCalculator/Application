@@ -14,8 +14,8 @@ import useSx from "../../hooks/useSx";
 import CloseIcon from "@mui/icons-material/Close";
 import CakeIcon from "@mui/icons-material/Cake";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import useGetCategoryName from "../../hooks/useGetCategoryName";
 import { formatDay } from "../../utils/formatTime";
+import { useSelector } from "react-redux";
 
 /**
  * 계산기 정보 팝업창에 들어갈 내용
@@ -49,9 +49,11 @@ function ModalCalculetInfo({
   const { isWindowSmDown } = useSx();
   const dateSx = { xs: "10rem", sm: "11rem", md: "12rem" };
 
-  const { getCategoryMainName, getCategorySubName } = useGetCategoryName();
-  const categoryMainName = getCategoryMainName(categoryMainId);
-  const categorySubName = getCategorySubName(categoryMainId, categorySubId);
+  const { calculetCategory } = useSelector((state) => ({
+    calculetCategory: state.calculetCategory.category,
+  }));
+  const categoryMainName = calculetCategory[categoryMainId].name;
+  const categorySubName = calculetCategory[categoryMainId][categorySubId];
 
   // sm up
   function CalculetProfileMd() {

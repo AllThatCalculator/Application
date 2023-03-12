@@ -290,7 +290,6 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
               error={errorType === ERROR_JOB}
             />
             <TextField
-              required
               fullWidth
               label="자기소개 문구"
               inputProps={{
@@ -306,13 +305,7 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
             variant="contained"
             onClick={onSubmitHandler}
             disabled={
-              !userName.value ||
-              !sex ||
-              !year ||
-              !month ||
-              !date ||
-              !job.value ||
-              !bio.value
+              !userName.value || !sex || !year || !month || !date || !job.value
             }
           >
             입력 완료
