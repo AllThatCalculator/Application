@@ -29,10 +29,9 @@ services:
     volumes:
       - /server/node_modules
       - ./server/:/server
-    networks:
-      - app-tier
+    # networks:
+    #   - app-tier
     restart: always
-
-networks:
-  app-tier:
-    driver: bridge
+# networks:
+#   app-tier:
+#     driver: bridge
