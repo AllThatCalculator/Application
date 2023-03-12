@@ -61,8 +61,7 @@ npm start
 ---
 
 ## 3-B. Run backend in local environment
-
-![image](https://user-images.githubusercontent.com/78730403/211194867-9e8cf188-ef2c-4b19-ae98-7029352e3b9e.png)
+![image](https://user-images.githubusercontent.com/78730403/224531314-091ac9fc-67b7-49e2-99c2-982f7e9a6ba4.png)
 
 - Requirements
   - `docker: (20.10.XX)`
@@ -83,17 +82,14 @@ docker compose up
 
 ![image](https://user-images.githubusercontent.com/78730403/210150591-9bfb7ebc-ade0-472c-a152-375524657431.png)
 
-- for Windows, enter `wsl`
+- for Windows, use `wsl`
   ```bash
   wsl
   ```
 
 ```bash
 sed -i -e 's/\r$//' ./server/entrypoint.sh
-sed -i -e 's/\r$//' ./scripts/dev/reload-nginx.sh
 ```
-
-**note** that you should visit `localhost:8080` to test in browser, not `localhost:3000`
 
 ---
 
