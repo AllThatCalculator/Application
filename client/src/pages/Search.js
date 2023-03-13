@@ -10,18 +10,20 @@ import {
 } from "../components/Layout";
 import { CALCULET } from "../components/search/Calculet";
 import SearchCalculet from "../components/search/SearchCalculet";
-import styles from "../components/styles";
+// import styles from "../components/styles";
 import { Font } from "../components/atom-components/StyledText";
 import FooterRecommend from "../components/global-components/FooterRecommend";
-/**
- * ContentLayout을 상속하는 SearchLayout
- * - flex와 gap, padding 을 새로 설정
- */
-const SearchLayout = styled(ContentLayout)`
-  flex-direction: column;
-  gap: ${styles.styleLayout.basic300};
-  padding: ${styles.styleLayout.basic350};
-`;
+import { Grid } from "@mui/material";
+import { PageScreenBox } from "../components/global-components/PageScreenBox";
+// /**
+//  * ContentLayout을 상속하는 SearchLayout
+//  * - flex와 gap, padding 을 새로 설정
+//  */
+// const SearchLayout = styled(ContentLayout)`
+//   flex-direction: column;
+//   gap: ${styles.styleLayout.basic300};
+//   padding: ${styles.styleLayout.basic350};
+// `;
 
 /**
  * 검색된 계산기 렌더하는 함수
@@ -87,33 +89,36 @@ function Search() {
   }
 
   return (
-    <>
-      <White300Layout>
-        <SearchLayout>
-          <BigTitle content="관련된 계산기들" />
-          {KEY_MAX ? (
-            <>
-              <RenderCalculet
-                calculets={currentCalculets(calculets)}
-                loading={loading}
-              />
-              <Pagination
-                renderPerPage={KEY_PAGE}
-                renderTotal={calculets.length}
-                paginate={setCurrentPage}
-                currentPage={currentPage}
-                isBlue={true}
-              />
-            </>
-          ) : (
-            <Font font="text200" color={styles.styleColor.gray100}>
-              검색된 결과가 없습니다.
-            </Font>
-          )}
-        </SearchLayout>
-      </White300Layout>
-      {!KEY_MAX && <FooterRecommend />}
-    </>
+    <Grid container sx={{ backgroundColor: "white" }}>
+      <PageScreenBox sx={{ flexDirection: "row", mb: "16rem" }}></PageScreenBox>
+    </Grid>
+    // <>
+    //   <White300Layout>
+    //     <SearchLayout>
+    //       <BigTitle content="관련된 계산기들" />
+    //       {KEY_MAX ? (
+    //         <>
+    //           <RenderCalculet
+    //             calculets={currentCalculets(calculets)}
+    //             loading={loading}
+    //           />
+    //           <Pagination
+    //             renderPerPage={KEY_PAGE}
+    //             renderTotal={calculets.length}
+    //             paginate={setCurrentPage}
+    //             currentPage={currentPage}
+    //             isBlue={true}
+    //           />
+    //         </>
+    //       ) : (
+    //         <Font font="text200" color={styles.styleColor.gray100}>
+    //           검색된 결과가 없습니다.
+    //         </Font>
+    //       )}
+    //     </SearchLayout>
+    //   </White300Layout>
+    //   {!KEY_MAX && <FooterRecommend />}
+    // </>
   );
 }
 export default Search;

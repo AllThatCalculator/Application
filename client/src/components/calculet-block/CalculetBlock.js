@@ -43,6 +43,7 @@ function CalculetBlock({ srcCode, manual, calculetId, isPreview = false }) {
       <iframe
         srcDoc={
           `<link href="/static-files/css/calculet.css" rel="stylesheet">
+          <link href="/static-files/css/font.css" rel="stylesheet">
           <style>
           * {
             padding: 0px;
