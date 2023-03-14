@@ -3,18 +3,20 @@
 version: "3"
 
 services:
-  nginx:
-    container_name: nginx
-    build: ./nginx
-    ports:
-      - 8080:8080
-    volumes:
-      - ./nginx/nginx.BE:/etc/nginx/conf.d
-      - ./scripts/dev/auto-reload-nginx.sh:/scripts/auto-reload-nginx.sh
-    networks:
-      - app-tier
-    restart: always
-    command: ["/scripts/auto-reload-nginx.sh"]
+  # nginx:
+  #   container_name: nginx
+  #   build: ./nginx
+  #   ports:
+  #     - 8080:8080
+  #   volumes:
+  #     - ./client/build:/usr/share/nginx/html
+  #     - ./client/src/css:/static-files/css
+  #     - ./nginx/nginx.BE:/etc/nginx/conf.d
+  #     - ./scripts/dev/auto-reload-nginx.sh:/scripts/auto-reload-nginx.sh
+  #   networks:
+  #     - app-tier
+  #   restart: always
+  #   command: ["/scripts/auto-reload-nginx.sh"]
 
   backend:
     container_name: backend
@@ -27,10 +29,9 @@ services:
     volumes:
       - /server/node_modules
       - ./server/:/server
-    networks:
-      - app-tier
+    # networks:
+    #   - app-tier
     restart: always
-
-networks:
-  app-tier:
-    driver: bridge
+# networks:
+#   app-tier:
+#     driver: bridge

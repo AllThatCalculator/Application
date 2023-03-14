@@ -24,15 +24,15 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./client/src/css:/src/css
       - ./nginx/nginx.FEBE:/etc/nginx/conf.d
+      - ./scripts/dev/auto-reload-nginx.sh:/scripts/auto-reload-nginx.sh
     depends_on:
       - frontend
       - backend
     networks:
       - app-tier
     restart: always
-    command: "nginx -g 'daemon off;'"
+    command: ["/scripts/auto-reload-nginx.sh"]
 
   backend:
     container_name: backend
@@ -40,8 +40,6 @@ services:
       context: ./server
       dockerfile: Dockerfile.dev
     env_file: ./server/.env
-    ports:
-      - 5000:5000
     volumes:
       - /server/node_modules
       - ./server/:/server
