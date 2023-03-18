@@ -85,6 +85,20 @@ components:
             type: array
             items:
               $ref: "#/components/schemas/calculetPreview"
+    getSearchResult:
+      description: 검색 결과
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              calculetList:
+                type: array
+                items:
+                  $ref: "#/components/schemas/calculetPreview"
+              count:
+                type: integer
+                description: 검색된 계산기 수
     getRecommendationList:
       description: 추천 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
       content:
