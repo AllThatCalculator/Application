@@ -1,7 +1,5 @@
 const { Op } = require("sequelize");
 const { models } = require("../../models");
-const { bufferToString } = require("../../utils/bufferConverter");
-const { urlFormatter } = require("../../utils/urlFormatter");
 const { userBookmark } = require("./bookmark/userBookmark");
 const { userLike } = require("./userLike");
 
@@ -65,18 +63,15 @@ async function getCalculetInfo(req, res) {
   const responseData = {
     id: calculetInfo.id,
     title: calculetInfo.title,
-    srcCode: bufferToString(calculetInfo.src_code),
-    manual: bufferToString(calculetInfo.manual),
+    srcCode: calculetInfo.src_code,
+    manual: calculetInfo.manual,
     description: calculetInfo.description,
     categoryMainId: calculetInfo.category.main_id,
     categorySubId: calculetInfo.category.sub_id,
     createdAt: calculetInfo.created_at,
     contributor: {
       userName: calculetInfo.contributor.user_name,
-      profileImgSrc: urlFormatter(
-        "profileImg",
-        calculetInfo.contributor.profile_img
-      ),
+      profileImgSrc: calculetInfo.contributor.profile_img,
     },
     statistics: {
       bookmark: calculetInfo.calculet_statistic.bookmark_cnt,

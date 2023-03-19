@@ -1,9 +1,62 @@
-const { Op } = require("sequelize");
+const { Op, col } = require("sequelize");
 const { models } = require("../../models");
-const { urlFormatter } = require("../../utils/urlFormatter");
 const PREVIEW_CNT = 6;
 
-function getCalculetsFromDB(condition = {}) {
+/**
+ * DB 검색한 데이터 후가공
+ * @param {object} calculet DB 검색 결과 데이터
+ * @param {number} categoryMainId 대분류 ID
+ * @param {number} categorySubId 소분류 ID
+ * @returns 가공된 데이터
+ */
+function processCalculet(calculet, categoryMainId, categorySubId) {
+  return {
+    id: calculet.id,
+    title: calculet.title,
+    description: calculet.description,
+    categoryMainId,
+    categorySubId,
+    viewCnt: calculet.calculet_count.view_cnt,
+    contributor: {
+      userName: calculet.contributor.user_name,
+      profileImgSrc: calculet.contributor.profile_img,
+    },
+  };
+}
+
+/**
+ * 소분류 별로 최대 PREVIEW_CNT개의 계산기 미리보기 정보를 DB에서 검색함
+ * @param {number} categoryId 
+ * @returns 검색된 계산기 미리보기 정보 배열
+ */
+function getCalculetsByCategoryId(categoryId) {
+  return models.calculetInfo.findAll({
+    attributes: ["id", "title", "description", "category_id",],
+    where: {
+      category_id: categoryId
+    },
+    limit: PREVIEW_CNT,
+    include: [
+      // contributor
+      {
+        model: models.userInfo,
+        attributes: ["user_name", "profile_img"],
+        as: "contributor",
+        required: true,
+      },
+      // count
+      {
+        model: models.calculetCount,
+        attributes: ["view_cnt"],
+        as: "calculet_count",
+        required: true,
+      },
+    ],
+    order: [[col("view_cnt"), "DESC"]],
+  });
+}
+
+function searchCalculetQuery(condition) {
   // complete where condition
   const filter = {};
   if (typeof condition.title === "string") {
@@ -11,7 +64,6 @@ function getCalculetsFromDB(condition = {}) {
       [Op.substring]: condition.title,
     };
   }
-
   const categoryFilter = {};
   if (typeof condition.mainId === "number") {
     categoryFilter.main_id = {
@@ -35,55 +87,32 @@ function getCalculetsFromDB(condition = {}) {
         // contributor
         {
           model: models.userInfo,
-          required: true,
           attributes: ["user_name", "profile_img"],
           as: "contributor",
         },
         // count
         {
           model: models.calculetCount,
-          required: true,
           attributes: ["view_cnt"],
           as: "calculet_count",
         },
         // category
         {
           model: models.category,
-          required: true,
           as: "category",
           where: categoryFilter,
+          attributes: ["main_id", "sub_id"]
         }
       ],
       where: filter,
       limit: condition.limit,
-      order: [
-        [
-          { model: models.calculetCount, as: "calculet_count" },
-          "view_cnt",
-          "DESC",
-        ],
-      ],
-    })
-    .then((data) => {
-      const subList = data.map((calculet) => ({
-        id: calculet.id,
-        title: calculet.title,
-        description: calculet.description,
-        categoryMainId: calculet.category.main_id,
-        categorySubId: calculet.category.sub_id,
-        viewCnt: calculet.calculet_count.view_cnt,
-        contributor: {
-          userName: calculet.contributor.user_name,
-          profileImgSrc: urlFormatter(
-            "profileImg",
-            calculet.contributor.profile_img
-          ),
-        },
-      }));
-      return subList;
+      order: [[col("view_cnt"), "DESC"]],
     });
 }
 
+/**
+ * 각 대분류/소분류 별 계산기 목록
+ */
 async function getCalculetList(req, res) {
   // 카테고리 소분류 리스트 얻어오기
   const categoryList = await models.category.findAll({
@@ -93,53 +122,41 @@ async function getCalculetList(req, res) {
     ],
   });
 
-  const calculetLists = await getCalculetsFromDB({ limit: PREVIEW_CNT });
-
-  const response = {};
-  categoryList.map((category) => {
-    if (response[category.main_id] === undefined) {
-      response[category.main_id] = {};
-    }
-    response[category.main_id][category.sub_id] = [];
-  });
-
-  calculetLists.map((calculet) => {
-    response[calculet.categoryMainId][calculet.categorySubId].push(calculet);
-  });
-
-  res.status(200).send(response);
-}
-
-async function getConverters(req, res) {
-  const calculetLists = await getCalculetsFromDB({
-    subId: 0,
-    limit: PREVIEW_CNT,
-  });
-
   const response = {};
 
-  calculetLists.map((calculet) => {
-    if (response[calculet.categoryMainId] === undefined) {
-      response[calculet.categoryMainId] = [];
-    }
-    response[calculet.categoryMainId].push(calculet);
-  });
+  await Promise.all(
+    categoryList.map(async (category) => {
+      const { id, main_id, sub_id } = category;
+      if (response[main_id] === undefined) {
+        response[main_id] = {};
+      }
+      const calculetList = await getCalculetsByCategoryId(id);
+      response[main_id][sub_id] = calculetList.map((calculet) => processCalculet(calculet, main_id, sub_id));
+    })
+  );
 
   res.status(200).send(response);
 }
 
 /**
- * 추천 리스트 뽑아주는 함수 - 우선 조회수 가장 높은 계산기 추천
+ * 각 대분류 별 단위변환기 목록
  */
-async function recommendation(req, res) {
-  const calculetList = await getCalculetsFromDB({ limit: 15 });
+async function getConverters(req, res) {
+  // list all converter category
+  const categoryList = await models.category.findAll({
+    where: {
+      sub_id: 0
+    }
+  });
 
-  const response = calculetList.map((calculet) => ({
-    id: calculet.id,
-    title: calculet.title,
-    description: calculet.description,
-    contributor: calculet.contributor,
-  }));
+  const response = {};
+
+  await Promise.all(
+    categoryList.map(async (category) => {
+      const calculetList = await getCalculetsByCategoryId(category.id);
+      response[category.main_id] = calculetList.map((calculet) => processCalculet(calculet, category.main_id, category.sub_id));
+    })
+  );
 
   res.status(200).send(response);
 }
@@ -157,14 +174,16 @@ async function searchCalculets(req, res) {
     title: req.query.title,
     limit: req.query.limit ? parseInt(req.query.limit) : null,
   };
-  const calculetList = await getCalculetsFromDB(condition);
+  const responseData = {};
+  const calculetList = await searchCalculetQuery(condition);
+  responseData.calculetList = calculetList.map((calculet) => processCalculet(calculet, calculet.category.main_id, calculet.category.sub_id));
+  responseData.count = calculetList.length;
 
-  res.status(200).send(calculetList);
+  res.status(200).send(responseData);
 }
 
 exports.getCalculetList = {
   default: getCalculetList,
   converters: getConverters,
-  recommendation: recommendation,
   search: searchCalculets,
 };

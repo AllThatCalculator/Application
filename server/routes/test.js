@@ -54,14 +54,14 @@ router.post("/update-log", [auth.firebase, auth.database], async (req, res) => {
  *          $ref: "#/components/responses/success201"
  */
 router.post("/calculets", [auth.firebase, auth.database], async (req, res) => {
+  const categoryId = await getCategoryId(req.body.categoryMainId, req.body.categorySubId);
   const calculet = await models.calculetInfo.create({
     id: uuidv4(),
     title: req.body.title,
     src_code: req.body.srcCode,
     manual: req.body.manual,
     description: req.body.description,
-    category_main_id: req.body.categoryMainId,
-    category_sub_id: req.body.categorySubId,
+    category_id: categoryId,
     contributor_id: res.locals.userId,
   });
   res.send(201, `/${calculet.id}`);

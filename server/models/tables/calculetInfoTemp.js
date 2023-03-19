@@ -1,4 +1,5 @@
 const Sequelize = require("sequelize");
+const { bufferToString } = require("../../utils/bufferConverter");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     "calculetInfoTemp",
@@ -16,10 +17,18 @@ module.exports = function (sequelize, DataTypes) {
       src_code: {
         type: DataTypes.BLOB,
         allowNull: false,
+        get() {
+          const rawValue = this.getDataValue('src_code');
+          return rawValue ? bufferToString(rawValue) : null;
+        }
       },
       manual: {
         type: DataTypes.BLOB,
         allowNull: false,
+        get() {
+          const rawValue = this.getDataValue('manual');
+          return rawValue ? bufferToString(rawValue) : null;
+        }
       },
       description: {
         type: DataTypes.STRING(100),

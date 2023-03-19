@@ -1,3 +1,5 @@
+const { urlFormatter } = require("../../utils/urlFormatter");
+
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     "userInfo",
@@ -19,6 +21,10 @@ module.exports = function (sequelize, DataTypes) {
       profile_img: {
         type: DataTypes.CHAR(36),
         allowNull: true,
+        get() {
+          const rawValue = this.getDataValue('profile_img');
+          return rawValue ? urlFormatter("profileImg", rawValue) : null;
+        }
       },
       bio: {
         type: DataTypes.STRING(200),
