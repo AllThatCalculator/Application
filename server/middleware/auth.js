@@ -95,7 +95,7 @@ async function authDatabase(req, res, next) {
       message: "can't find user",
     });
   } else {
-    res.locals.userInfo = userInfo.dataValues;
+    res.locals.userInfo = userInfo;
     next();
   }
   return;
