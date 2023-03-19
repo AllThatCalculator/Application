@@ -29,12 +29,13 @@ AllThatCalculator Application
 ## 2. set ENV files
 
 you don't have to set both env file if you want to run frontend/backend only.
+- [env files](https://iewha-my.sharepoint.com/:f:/r/personal/jiyoung_06_i_ewha_ac_kr/Documents/PKB/ATC/env_file/dev?csf=1&web=1&e=qMH3PY)
 
-- [`client/.env`](https://iewha-my.sharepoint.com/:u:/r/personal/jiyoung_06_i_ewha_ac_kr/Documents/PKB/ATC/env_file/dev/client.env?csf=1&web=1&e=xEXL7o)
-- [`server/.env`](https://iewha-my.sharepoint.com/:u:/r/personal/jiyoung_06_i_ewha_ac_kr/Documents/PKB/ATC/env_file/dev/server.env?csf=1&web=1&e=0Ijrzg)
-
-If you don't have access, use this [link](https://iewha-my.sharepoint.com/:f:/g/personal/jiyoung_06_i_ewha_ac_kr/EpJi4WzlxJpDl7Y3TQc6kScBvDjSg8kjucqMGiIqF4GWBw?e=REDyJl)
-
+- client
+  - client/.env
+- server
+  - server/all-that-calculator-firebase-adminsdk-XXXXXX.json
+  - server/.env
 ---
 
 ## 3-A. Run frontend in local environment
@@ -42,7 +43,7 @@ If you don't have access, use this [link](https://iewha-my.sharepoint.com/:f:/g/
 ![image](https://user-images.githubusercontent.com/78730403/211194688-49a99337-40e1-42f7-be01-2d77d2789a14.png)
 
 - Requirements
-  - `node: 16.14.1`
+  - node: `16.14.1`
 
 ### install package
 
@@ -61,8 +62,7 @@ npm start
 ---
 
 ## 3-B. Run backend in local environment
-
-![image](https://user-images.githubusercontent.com/78730403/211194867-9e8cf188-ef2c-4b19-ae98-7029352e3b9e.png)
+![image](https://user-images.githubusercontent.com/78730403/224531314-091ac9fc-67b7-49e2-99c2-982f7e9a6ba4.png)
 
 - Requirements
   - `docker: (20.10.XX)`
@@ -83,17 +83,14 @@ docker compose up
 
 ![image](https://user-images.githubusercontent.com/78730403/210150591-9bfb7ebc-ade0-472c-a152-375524657431.png)
 
-- for Windows, enter `wsl`
+- for Windows, use `wsl`
   ```bash
   wsl
   ```
 
 ```bash
 sed -i -e 's/\r$//' ./server/entrypoint.sh
-sed -i -e 's/\r$//' ./scripts/dev/reload-nginx.sh
 ```
-
-**note** that you should visit `localhost:8080` to test in browser, not `localhost:3000`
 
 ---
 

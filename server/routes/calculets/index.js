@@ -9,6 +9,7 @@ const { getCalculetInfo } = require("./getCalculetInfo");
 const { postCalculets } = require("./postCalculets");
 const { userLike } = require("./userLike");
 const { getUpdateLog } = require("./updateLog");
+const { recommendation } = require("./recommend");
 // modules
 const bookmark = require("./bookmark");
 
@@ -60,7 +61,7 @@ router.get("/converters", errorHandler.dbWrapper(getCalculetList.converters));
  */
 router.get(
   "/recommendation",
-  errorHandler.dbWrapper(getCalculetList.recommendation)
+  errorHandler.dbWrapper(recommendation)
 );
 
 /**
@@ -73,11 +74,11 @@ router.get(
  *        - $ref: "#/components/parameters/title"
  *        - $ref: "#/components/parameters/limit"
  *      tags: [calculets]
- *      summary: 계산기 검색 (대분류 / 소분류 / 제목)
+ *      summary: 계산기 검색 (대분류 / 소분류 / 제목) - 페이지네이션 X (한번에 불러오는 방식)
  *      description: 대분류 | 소분류 | 계산기 제목으로 검색 필터 설정 가능 (모든 쿼리 파라미터는 필수X)
  *      responses:
  *        200:
- *          $ref: "#/components/responses/getCalculetList"
+ *          $ref: "#/components/responses/getSearchResult"
  *        400:
  *          $ref: "#/components/responses/error"
  */
