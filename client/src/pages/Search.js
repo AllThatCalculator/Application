@@ -24,6 +24,7 @@ import useGetUrlParam from "../hooks/useGetUrlParam";
 import getCalculetFind from "../user-actions/getCalculetFind";
 import getSearchRequestBody from "../utils/getSearchRequestBody";
 import LoadingPage from "../components/global-components/LoadingPage";
+import SkeletonPage from "../components/search/SkeletonPage";
 
 const KEY_TOTAL_MAIN = "대분류 전체";
 const KEY_TOTAL_SUB = "소분류 전체";
@@ -191,127 +192,117 @@ function Search() {
   }
 
   return (
-    <>
-      {isLoading && <LoadingPage />}
-      {!isLoading && (
-        <PageWhiteScreenBox>
-          <PageScreenBox gap="1.6rem">
-            <Title content="검색 결과" />
+    <PageWhiteScreenBox>
+      <PageScreenBox gap="1.6rem">
+        <Title content="검색 결과" />
+        <FlexBox>
+          <Typography sx={{ ...subTitleSx }} color="info.main">
+            '{searchUrlId}'
+          </Typography>
+          <Typography sx={{ ...subTitleSx }}>
+            에 대한 {resultCount}개의 검색 결과
+          </Typography>
+        </FlexBox>
+        <Grid container sx={{ alignItems: "center" }}>
+          <Grid item xs>
             <FlexBox>
-              <Typography sx={{ ...subTitleSx }} color="info.main">
-                '{searchUrlId}'
+              <Typography variant="body1">전체</Typography>
+              <Typography variant="body1" color="info.main">
+                {` ${resultCount} `}
               </Typography>
-              <Typography sx={{ ...subTitleSx }}>
-                에 대한 {resultCount}개의 검색 결과
-              </Typography>
+              <Typography variant="body1">건</Typography>
             </FlexBox>
-            <Grid container sx={{ alignItems: "center" }}>
-              <Grid item xs>
-                <FlexBox>
-                  <Typography variant="body1">전체</Typography>
-                  <Typography variant="body1" color="info.main">
-                    {` ${resultCount} `}
-                  </Typography>
-                  <Typography variant="body1">건</Typography>
-                </FlexBox>
-              </Grid>
-              <Grid item>
-                <FlexBox gap="0.4rem">
-                  <FormControl size="small" sx={{ width: SELECT_BOX_WIDTH }}>
-                    <Select
-                      value={categoryMainId}
-                      onChange={changeCategoryMain}
-                      displayEmpty
-                      renderValue={
-                        categoryMainId !== "" ? undefined : () => KEY_TOTAL_MAIN
-                      }
-                      sx={{ color: categoryMainId === "" && "text.disabled" }}
-                    >
-                      <MenuItem key="total-main" value="">
-                        {KEY_TOTAL_MAIN}
-                      </MenuItem>
-                      {calculetCategory &&
-                        Object.entries(calculetCategory).map((data) => {
-                          const mainId = Number(data[0]);
-                          const mainName = data[1].name;
+          </Grid>
+          <Grid item>
+            <FlexBox gap="0.4rem">
+              <FormControl size="small" sx={{ width: SELECT_BOX_WIDTH }}>
+                <Select
+                  value={categoryMainId}
+                  onChange={changeCategoryMain}
+                  displayEmpty
+                  renderValue={
+                    categoryMainId !== "" ? undefined : () => KEY_TOTAL_MAIN
+                  }
+                  sx={{ color: categoryMainId === "" && "text.disabled" }}
+                >
+                  <MenuItem key="total-main" value="">
+                    {KEY_TOTAL_MAIN}
+                  </MenuItem>
+                  {calculetCategory &&
+                    Object.entries(calculetCategory).map((data) => {
+                      const mainId = Number(data[0]);
+                      const mainName = data[1].name;
+                      return (
+                        <MenuItem key={mainId} value={mainId}>
+                          {mainName}
+                        </MenuItem>
+                      );
+                    })}
+                </Select>
+              </FormControl>
+              <FormControl
+                disabled={categoryMainId === ""}
+                size="small"
+                sx={{ width: SELECT_BOX_WIDTH }}
+              >
+                <Select
+                  value={categorySubId}
+                  onChange={changeCategorySub}
+                  displayEmpty
+                  renderValue={
+                    categorySubId !== "" ? undefined : () => KEY_TOTAL_SUB
+                  }
+                  sx={{ color: categorySubId === "" && "text.disabled" }}
+                >
+                  <MenuItem key="total-sub" value="">
+                    {KEY_TOTAL_SUB}
+                  </MenuItem>
+                  {calculetCategory &&
+                    Object.entries(calculetCategory).map((data) => {
+                      const mainId = Number(data[0]);
+                      const mainValue = data[1];
+                      const { name, ...subList } = mainValue; // name 제외하고 순회
+
+                      return (
+                        mainId === Number(categoryMainId) &&
+                        subList &&
+                        Object.entries(subList).map((subData) => {
+                          const key = Number(subData[0]);
+                          const value = subData[1];
                           return (
-                            <MenuItem key={mainId} value={mainId}>
-                              {mainName}
+                            <MenuItem key={key} value={key}>
+                              {value}
                             </MenuItem>
                           );
-                        })}
-                    </Select>
-                  </FormControl>
-                  <FormControl
-                    disabled={categoryMainId === ""}
-                    size="small"
-                    sx={{ width: SELECT_BOX_WIDTH }}
-                  >
-                    <Select
-                      value={categorySubId}
-                      onChange={changeCategorySub}
-                      displayEmpty
-                      renderValue={
-                        categorySubId !== "" ? undefined : () => KEY_TOTAL_SUB
-                      }
-                      sx={{ color: categorySubId === "" && "text.disabled" }}
-                    >
-                      <MenuItem key="total-sub" value="">
-                        {KEY_TOTAL_SUB}
-                      </MenuItem>
-                      {calculetCategory &&
-                        Object.entries(calculetCategory).map((data) => {
-                          const mainId = Number(data[0]);
-                          const mainValue = data[1];
-                          const { name, ...subList } = mainValue; // name 제외하고 순회
-
-                          return (
-                            mainId === Number(categoryMainId) &&
-                            subList &&
-                            Object.entries(subList).map((subData) => {
-                              const key = Number(subData[0]);
-                              const value = subData[1];
-                              return (
-                                <MenuItem key={key} value={key}>
-                                  {value}
-                                </MenuItem>
-                              );
-                            })
-                          );
-                        })}
-                    </Select>
-                  </FormControl>
-                  <FormControl size="small" sx={{ width: 82 }}>
-                    <Select
-                      value={resultLimit}
-                      onChange={handleResultLimitChange}
-                    >
-                      {[20, 40, 60].map((data) => (
-                        <MenuItem key={data} value={data}>
-                          {data}개
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </FlexBox>
-              </Grid>
-            </Grid>
-            <Divider />
-            {handleResultList()}
-            <Grid
-              container
-              sx={{ w: 1, mt: "6.4rem", justifyContent: "center" }}
-            >
-              <Pagination
-                count={1}
-                page={currentPage}
-                onChange={handleCurrentPageChange}
-              />
-            </Grid>
-          </PageScreenBox>
-        </PageWhiteScreenBox>
-      )}
-    </>
+                        })
+                      );
+                    })}
+                </Select>
+              </FormControl>
+              <FormControl size="small" sx={{ width: 82 }}>
+                <Select value={resultLimit} onChange={handleResultLimitChange}>
+                  {[20, 40, 60].map((data) => (
+                    <MenuItem key={data} value={data}>
+                      {data}개
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </FlexBox>
+          </Grid>
+        </Grid>
+        <Divider />
+        {!isLoading && handleResultList()}
+        {isLoading && <SkeletonPage />}
+        <Grid container sx={{ w: 1, mt: "6.4rem", justifyContent: "center" }}>
+          <Pagination
+            count={1}
+            page={currentPage}
+            onChange={handleCurrentPageChange}
+          />
+        </Grid>
+      </PageScreenBox>
+    </PageWhiteScreenBox>
   );
 }
 export default Search;
