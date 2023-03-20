@@ -264,10 +264,12 @@ function Search() {
                           const mainId = Number(data[0]);
                           const mainValue = data[1];
                           const { name, ...subList } = mainValue; // name 제외하고 순회
+
                           return (
-                            mainId === categoryMainId &&
+                            mainId === Number(categoryMainId) &&
+                            subList &&
                             Object.entries(subList).map((subData) => {
-                              const key = subData[0];
+                              const key = Number(subData[0]);
                               const value = subData[1];
                               return (
                                 <MenuItem key={key} value={key}>
