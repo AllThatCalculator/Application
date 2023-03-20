@@ -127,7 +127,7 @@ function Search() {
     setCategorySubId(""); // 초기화
 
     // update
-    searchOptionPage(searchUrlId, categoryMainId, categorySubId, resultLimit);
+    searchOptionPage(searchUrlId, targetValue, categorySubId, resultLimit);
   }
 
   /**
@@ -142,7 +142,7 @@ function Search() {
     setCategorySubId(targetValue);
 
     // update
-    searchOptionPage(searchUrlId, categoryMainId, categorySubId, resultLimit);
+    searchOptionPage(searchUrlId, categoryMainId, targetValue, resultLimit);
   }
 
   useEffect(() => {
