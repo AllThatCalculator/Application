@@ -23,7 +23,6 @@ import BoxNoItem from "../components/atom-components/BoxNoItem";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import getCalculetFind from "../user-actions/getCalculetFind";
 import getSearchRequestBody from "../utils/getSearchRequestBody";
-import LoadingPage from "../components/global-components/LoadingPage";
 import SkeletonPage from "../components/search/SkeletonPage";
 
 const KEY_TOTAL_MAIN = "대분류 전체";
