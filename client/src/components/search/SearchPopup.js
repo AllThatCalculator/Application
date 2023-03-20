@@ -32,7 +32,7 @@ function SearchPopup() {
         onFocus={() => setIsPopUpOpen(true)}
       >
         <BoxSearchInput />
-        <Paper sx={{ ...popupLayoutSx, width: "auto" }} elevation={3}>
+        <Paper sx={{ ...popupLayoutSx, width: "44.8rem" }} elevation={3}>
           <Box sx={popupContentSx}>
             {isPopUpOpen &&
               resultPreviewList.map((data) => (
