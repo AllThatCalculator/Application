@@ -4,7 +4,7 @@ module.exports = function (app) {
   app.use(
     ["/api", "/file"],
     createProxyMiddleware({
-      target: "https://www.allthatcalculator.net", // development server
+      target: "https://allthatcalculator.net", // development server
       changeOrigin: true,
     })
   );
