@@ -2,7 +2,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import useInput from "../../hooks/useInput";
 import firebaseAuth from "../../firebaseAuth";
-// import ModalEmailForm from "./ModalEmailForm";
 import { BasicButton, CaptionButton } from "../atom-components/Buttons";
 import {
   Button,
@@ -26,7 +25,6 @@ import usePage from "../../hooks/usePage";
 import { useSelector } from "react-redux";
 import useLoading from "../../hooks/useLoading";
 import useError from "../../hooks/useError";
-// import useSx from "../../hooks/useSx";
 
 /**
  * 로고 스타일 정의 (구글, 깃허브)
@@ -203,7 +201,6 @@ function SignUpFirebase({ activateComponent }) {
 
   return (
     <>
-      {/* {modalEmailActive && <ModalEmailForm handleClose={modalEmailClose} />} */}
       <Card variant="outlined">
         <CardContent>
           <FlexColumnBox gap="1.6rem">

@@ -48,7 +48,6 @@ export const setAuthError = (data) => ({
 });
 
 export default function error(state = initialState, action) {
-  // console.log(action);
   switch (action.type) {
     case IS_ERROR_FALSE:
       return {

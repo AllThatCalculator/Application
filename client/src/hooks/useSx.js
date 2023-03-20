@@ -62,6 +62,16 @@ function useSx() {
     fontWeight: "bold",
   };
 
+  /** 팝업 스타일 */
+  const popupLayoutSx = {
+    position: "absolute",
+    zIndex: 2000,
+    bgcolor: "white",
+  };
+  const popupContentSx = {
+    position: "relative",
+  };
+
   return {
     WIDTH_CATEGORY_BAR,
     HEIGHT_CODE_EDITOR,
@@ -77,6 +87,8 @@ function useSx() {
     ellipsis,
     widthSx,
     subTitleSx,
+    popupLayoutSx,
+    popupContentSx,
   };
 }
 export default useSx;

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { StyledImg } from "../components/atom-components/BoxIcon";
 import useInput from "../hooks/useInput";
 import firebaseAuth from "../firebaseAuth";
 import {
@@ -37,6 +36,7 @@ import useLoading from "../hooks/useLoading";
 import useError from "../hooks/useError";
 import FindPwFormDialog from "../components/login/FindPwFormDialog";
 import useSnackbar from "../hooks/useSnackbar";
+import StyledImg from "../components/atom-components/StyledImg";
 
 /**
  * 로고 스타일 정의 (구글, 깃허브)
@@ -248,6 +248,7 @@ function Login({ isLoggedIn }) {
         sx={{
           justifyContent: "center",
           pointerEvents: isLoading ? "none" : "auto",
+          paddingTop: "8.4rem",
         }}
       >
         <FlexColumnBox sx={{ ...widthSx }}>

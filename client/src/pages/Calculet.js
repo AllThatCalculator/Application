@@ -1,6 +1,5 @@
 import CalculetBlock from "../components/calculet-block/CalculetBlock";
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import CalculetHeader from "../components/calculet-block/CalculetHeader";
 import {
   updateCalculetCount,
@@ -16,6 +15,7 @@ import usePage from "../hooks/usePage";
 import getCalculetUpdateLog from "../user-actions/getCalculetUpdateLog";
 import getUserIdToken from "../utils/getUserIdToken";
 import PageScreenBottom from "../components/global-components/PageScreenBottom";
+import useGetUrlParam from "../hooks/useGetUrlParam";
 
 async function handleGetCalculetInfo(id, setCalculetObj) {
   let calculetInfoRequest = null;
@@ -68,7 +68,7 @@ function Calculet() {
   const [updateLog, setUpdateLog] = useState(null);
 
   // 현재 페이지에 로딩할 계산기 id
-  let { id } = useParams();
+  let { id } = useGetUrlParam();
 
   // id 없다면 메인 페이지이므로 자주 쓰는 계산기 불러오기
   if (id === undefined) {

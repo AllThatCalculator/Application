@@ -152,6 +152,7 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
         job: job.value,
       },
     };
+
     // 서버에 요청
     const request = signUpUser(body, userIdToken);
     request.then((result) => {

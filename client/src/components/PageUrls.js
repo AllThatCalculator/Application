@@ -29,5 +29,10 @@ const URL = {
   //============변수================
   /** 계산기 id */
   CALCULET_ID: "id",
+  /** 검색 id */
+  SEARCH_ID: "keyword",
+  CATEGORY_MAIN_ID: "categoryMain",
+  CATEGORY_SUB_ID: "categorySub",
+  LEN_ID: "len",
 };
 export default URL;

@@ -6,6 +6,7 @@ import usePage from "../../hooks/usePage";
 import useSx from "../../hooks/useSx";
 import useGetCategoryName from "../../hooks/useGetCategoryName";
 import BoxCalculetItem from "../atom-components/BoxCalculetItem";
+import BoxNoItem from "../atom-components/BoxNoItem";
 
 /**
  * 대분류1, 소분류*, 계산기* 목록들을 나열하여 반환하는 컴포넌트
@@ -23,14 +24,6 @@ function CalculetItemList({
   const { calculetIdPage } = usePage();
   const { subTitleSx } = useSx();
   const { getCategoryMainName, getCategorySubName } = useGetCategoryName(); // 카테고리 가져오기
-
-  function NoItem() {
-    return (
-      <Typography variant="body2" color="text.disabled">
-        존재하지 않습니다.
-      </Typography>
-    );
-  }
 
   /**
    * 각 바로가기 버튼에 맞는 대분류의 위치 얻기
@@ -136,7 +129,7 @@ function CalculetItemList({
                 )
               ) : (
                 <Grid item xs={1} sm={1} md={1}>
-                  <NoItem />
+                  <BoxNoItem />
                 </Grid>
               )}
             </Grid>
@@ -155,7 +148,7 @@ function CalculetItemList({
                   handleCalculet(calculet)
                 )
               ) : (
-                <NoItem />
+                <BoxNoItem />
               )}
             </Grid>
           </FlexColumnBox>

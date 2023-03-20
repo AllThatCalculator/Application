@@ -37,15 +37,34 @@ function usePage() {
   }
 
   // 뒤로가기
-  const backPage = () => {
+  function backPage() {
     // window.history.back();
     navigate(-1, { replace: true });
-  };
+  }
   // 뒤로가기 & 새로고침
-  const backRefreshPage = () => {
+  function backRefreshPage() {
     navigate(-1, { replace: true });
     window.location.reload(true);
-  };
+  }
+
+  // 검색창
+  function searchPage(keyword) {
+    navigate(URL.SEARCH + "?" + URL.SEARCH_ID + "=" + keyword);
+  }
+  // 검색창
+  function searchOptionPage(keyword, categoryMainId, categorySubId, len) {
+    let url = URL.SEARCH + "?" + URL.SEARCH_ID + "=" + keyword;
+
+    url +=
+      categoryMainId !== ""
+        ? `&&${URL.CATEGORY_MAIN_ID}=${categoryMainId}`
+        : "";
+    url +=
+      categorySubId !== "" ? `&&${URL.CATEGORY_SUB_ID}=${categorySubId}` : "";
+    url += `&&${URL.LEN_ID}=${len}`;
+
+    navigate(url);
+  }
 
   return {
     calculetPage,
@@ -56,6 +75,8 @@ function usePage() {
     signUpPage,
     backPage,
     backRefreshPage,
+    searchPage,
+    searchOptionPage,
   };
 }
 export default usePage;
