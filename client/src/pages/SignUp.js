@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { StyledImg } from "../components/atom-components/BoxIcon";
 import SignUpFirebase from "../components/sign-up/SignUpFirebase";
 import SignUpInform from "../components/sign-up/SignUpInform";
 import usePreventLeave from "../hooks/usePreventLeave";
@@ -9,6 +8,7 @@ import { FlexColumnBox } from "../components/global-components/FlexBox";
 import useSx from "../hooks/useSx";
 import { useSelector } from "react-redux";
 import { LinearProgress } from "@mui/material";
+import StyledImg from "../components/atom-components/StyledImg";
 
 /**
  * 회원가입 페이지
@@ -78,6 +78,7 @@ function SignUp({ isLoggedIn }) {
       sx={{
         justifyContent: "center",
         pointerEvents: isLoading ? "none" : "auto",
+        paddingTop: "8.4rem",
       }}
     >
       <FlexColumnBox

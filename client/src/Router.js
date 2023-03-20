@@ -22,6 +22,8 @@ import Snackbars from "./components/global-components/Snackbars";
 
 function AppRouter({ isLoggedIn }) {
   const PATH_CALCULET_ID = ":" + URL.CALCULET_ID;
+  /** ?SEARCH_ID=:SEARCH_ID | search?keyword="" */
+  const PATH_SEARCH_ID = "?" + URL.SEARCH_ID + "=:" + URL.SEARCH_ID;
 
   return (
     <BrowserRouter>
@@ -45,7 +47,9 @@ function AppRouter({ isLoggedIn }) {
           element={<SignUp isLoggedIn={isLoggedIn} />}
         />
         {/* <Route path={URL.WRITE_USER_INFO} element={<WriteUserInfo />} /> */}
-        <Route path={URL.SEARCH} element={<Search />} />
+        <Route path={URL.SEARCH} element={<Search />}>
+          <Route path={PATH_SEARCH_ID} element={<Search />} />
+        </Route>
         <Route path={URL.CALCULET_LIST} element={<CalculetList />} />
       </Routes>
       {/* <BookmarkBar /> */}

@@ -4,16 +4,13 @@ import {
   Box,
   ButtonBase,
   ClickAwayListener,
-  Dialog,
-  DialogTitle,
-  ListItem,
-  ListItemButton,
-  ListItemText,
   Paper,
 } from "@mui/material";
 import { useRef } from "react";
 import useSx from "../../hooks/useSx";
 import EditIcon from "@mui/icons-material/Edit";
+import PaperPopup from "../global-components/PaperPopup";
+import DialogPopup from "../global-components/DialogPopup";
 
 /**
  * 프로필 이미지 컴포넌트
@@ -47,15 +44,6 @@ function ProfileChange({
   /** 프로필 뱃지 아이콘 크기 */
   const EditIconSize = {
     fontSize: { xs: "1.6rem", sm: "1.8rem", md: "2.2rem" },
-  };
-  /** 프로필 선택 팝업 스타일 */
-  const popupLayoutStyles = {
-    position: "absolute",
-    zIndex: 2000,
-    bgcolor: "white",
-  };
-  const popupStyles = {
-    position: "relative",
   };
 
   // 이미지 파일 -> url 생성
@@ -103,48 +91,20 @@ function ProfileChange({
     },
   ];
 
-  /** 사진 선택 | 기본 이미지 변경 list component */
-  const StyledListItem = ({ data }) => {
-    return (
-      <ListItem disablePadding>
-        <ListItemButton
-          onClick={data.onClickFuntion}
-          sx={{
-            paddingY: "1.2rem",
-            paddingLeft: "2.0rem",
-            paddingRight: "8rem",
-          }}
-        >
-          <ListItemText primary={data.name} sx={{ ml: "1.6rem" }} />
-        </ListItemButton>
-      </ListItem>
-    );
-  };
-
-  const compontList = (
-    <>
-      {listData.map((data) => (
-        <StyledListItem key={data.name} data={data} />
-      ))}
-    </>
-  );
-
   /** sm down에서의 popup 컴포넌트 */
   const SmPopup = () => {
     return (
-      <Dialog onClose={handleOffIsPopUpOpen} open={isPopUpOpen}>
-        <DialogTitle>프로필 사진</DialogTitle>
-        {compontList}
-      </Dialog>
+      <DialogPopup
+        listData={listData}
+        title="프로필 사진"
+        onClose={handleOffIsPopUpOpen}
+        open={isPopUpOpen}
+      />
     );
   };
   /** md up에서의 popup 컴포넌트 */
   const MdPopup = () => {
-    return (
-      <Paper sx={popupLayoutStyles} elevation={3}>
-        <Box sx={popupStyles}>{compontList}</Box>
-      </Paper>
-    );
+    return <PaperPopup listData={listData} />;
   };
 
   return (
