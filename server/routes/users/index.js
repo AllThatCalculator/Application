@@ -32,7 +32,7 @@ router.post(
   "/",
   [
     upload.single("profileImg"),
-    auth.firebase,
+    auth.validate,
     errorHandler.asyncWrapper(postProfile),
   ],
   errorHandler.dbWrapper(signUp)
@@ -53,7 +53,7 @@ router.post(
  *              schema:
  *                $ref: "#/components/schemas/userProfile"
  */
-router.get("/me/profile", [auth.firebase, auth.database], me.detail);
+router.get("/me/profile", auth.validate, errorHandler.dbWrapper(me.detail));
 
 /**
  * @swagger
@@ -70,6 +70,6 @@ router.get("/me/profile", [auth.firebase, auth.database], me.detail);
  *              schema:
  *                $ref: "#/components/schemas/userSimpleInfo"
  */
-router.get("/me", [auth.firebase, auth.database], me.default);
+router.get("/me", auth.validate, errorHandler.dbWrapper(me.default));
 
 module.exports = router;

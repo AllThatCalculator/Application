@@ -1,5 +1,7 @@
+const { admin } = require("../../config/firebase");
 const { models } = require("../../models");
 const { errorObject } = require("../../utils/errorMessage");
+const { timestamp } = require("../../utils/timestamp");
 
 exports.signUp = async (req, res) => {
   // to read multipart/form-data
@@ -22,7 +24,11 @@ exports.signUp = async (req, res) => {
     profile_img: res.locals.profileUUID,
   });
 
-  console.log("successfully signed up");
+  await admin.auth().setCustomUserClaims(res.locals.userId, {
+    registered: true
+  });
+
+  console.log(`${timestamp()} | USER ${res.locals.userId} successfully signed up`);
 
   res.status(201).send("/");
 };

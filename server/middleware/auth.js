@@ -5,11 +5,11 @@ const { getTokenFromHeader } = require("../utils/tokenHandler");
 const { errorHandler } = require("./errorHandler");
 
 /**
- * 미들웨어 - 인증이 필요한 api 앞단에서 클라이언트의 토큰 유효성 검사 (firebase)
- * res.locals.userId - firebase uid
- * res.locals.email - firebase email
+ * 미들웨어 - 인증이 필요한 api 앞단에서 클라이언트의 토큰 유효성 검사
+ * - (로그인 O) firebase 검증 수행
+ * - (로그인 X) 에러메세지 리턴
  */
-async function authFirebase(req, res, next) {
+async function validateFirebase(req, res, next) {
   const idToken = getTokenFromHeader(req.headers);
 
   if (idToken === null) {
@@ -21,8 +21,16 @@ async function authFirebase(req, res, next) {
   try {
     // verify token
     const decodedIdToken = await admin.auth().verifyIdToken(idToken);
+
+    // check if registered
+    if (!decodedIdToken.registered) {
+      res.status(401).send(errorObject(401, 2));
+    }
+
     res.locals.userId = decodedIdToken.user_id;
     res.locals.email = decodedIdToken.email;
+    res.locals.registered = decodedIdToken.registered;
+
     next();
   } catch (error) {
     console.error(error.code);
@@ -41,6 +49,12 @@ async function authFirebase(req, res, next) {
     }
   }
 }
+
+/**
+ * 미들웨어 - 로그인 한 경우에만 토큰 유효성 검사
+ * - (로그인 O) firebase 검증 수행
+ * - (로그인 X) 다음 로직 수행
+ */
 async function verifyFirebase(req, res, next) {
   const idToken = getTokenFromHeader(req.headers);
 
@@ -50,59 +64,19 @@ async function verifyFirebase(req, res, next) {
     return;
   }
 
-  try {
-    // verify token
-    const decodedIdToken = await admin.auth().verifyIdToken(idToken);
-    res.locals.userId = decodedIdToken.user_id;
-    res.locals.email = decodedIdToken.email;
-    next();
-  } catch (error) {
-    console.error(error.code);
-    res.status(401);
-
-    switch (error.code) {
-      // expired token
-      case "auth/id-token-expired":
-        res.send(errorObject(401, 0));
-        break;
-      // invalid token
-      case "auth/argument-error":
-        res.send(errorObject(401, 1));
-        break;
-    }
-  }
+  await validateFirebase(req, res, next);
 }
+
 /**
- * 미들웨어 - 인증이 필요한 api 앞단에서 가입된 유저인지 확인 후 유저 정보 저장
- * res.locals.userInfo 참조
- *  - id
- *  - email
- *  - user_name
- *  - profile_img
- *  - bio
- *  - sex
- *  - birthdate
- *  - job
- *  - created_at
- *  - updated_at
+ * @property {function} validate 로그인 필수
+ * @property {function} verify 로그인 선택
+ * 
+ * 로그인 확인 된 경우
+ *   @var {string} res.locals.userId firebase uid
+ *   @var {string} res.locals.email firebase email
+ *   @var {boolean} res.locals.registered sign up completed
  */
-async function authDatabase(req, res, next) {
-  const userInfo = await models.userInfo.findByPk(res.locals.userId);
-
-  if (userInfo == null) {
-    res.status(401).send({
-      code: 2,
-      message: "can't find user",
-    });
-  } else {
-    res.locals.userInfo = userInfo;
-    next();
-  }
-  return;
-}
-
 exports.auth = {
-  firebase: authFirebase,
-  database: errorHandler.dbWrapper(authDatabase),
-  checkFirebase: errorHandler.asyncWrapper(verifyFirebase),
+  validate: validateFirebase,
+  verify: verifyFirebase,
 };

@@ -103,7 +103,7 @@ router.get("/find", errorHandler.dbWrapper(getCalculetList.search));
  */
 router.get(
   "/:calculetId",
-  auth.checkFirebase,
+  auth.verify,
   errorHandler.dbWrapper(getCalculetInfo)
 );
 
@@ -139,7 +139,7 @@ router.get("/update-log/:calculetId", errorHandler.dbWrapper(getUpdateLog));
  */
 router.post(
   "/",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(postCalculets)
 );
 
@@ -160,7 +160,7 @@ router.post(
  */
 router.put(
   "/like/:calculetId",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(userLike.mark)
 );
 
@@ -181,7 +181,7 @@ router.put(
  */
 router.put(
   "/unlike/:calculetId",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(userLike.remove)
 );
 

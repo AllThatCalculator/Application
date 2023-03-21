@@ -24,7 +24,7 @@ const { deleteUser } = require("./users/deleteUser");
  *        200:
  *          description: 등록 성공
  */
-router.post("/update-log", [auth.firebase, auth.database], async (req, res) => {
+router.post("/update-log", auth.validate, async (req, res) => {
   const calculet = await models.calculetInfo.findByPk(req.body.calculetId);
   if (calculet.user_id !== res.locals.userId) {
     res.status(403).send(errorObject(403, 0));
@@ -53,7 +53,7 @@ router.post("/update-log", [auth.firebase, auth.database], async (req, res) => {
  *        201:
  *          $ref: "#/components/responses/success201"
  */
-router.post("/calculets", [auth.firebase, auth.database], async (req, res) => {
+router.post("/calculets", auth.validate, async (req, res) => {
   const categoryId = await getCategoryId(req.body.categoryMainId, req.body.categorySubId);
   const calculet = await models.calculetInfo.create({
     id: uuidv4(),
@@ -80,7 +80,7 @@ router.post("/calculets", [auth.firebase, auth.database], async (req, res) => {
  *        200:
  *          description: 회원 정보 삭제 완료
  */
-router.delete("/users", auth.firebase, async (req, res) => {
+router.delete("/users", auth.validate, async (req, res) => {
   try {
     await deleteUser.database(res.locals.userId);
     await deleteUser.firebase(res.locals.userId);
@@ -106,7 +106,7 @@ router.delete("/users", auth.firebase, async (req, res) => {
  */
 router.delete(
   "/users/database",
-  [auth.firebase, auth.database],
+  auth.validate,
   async (req, res) => {
     try {
       await deleteUser.database(res.locals.userId);
@@ -116,4 +116,30 @@ router.delete(
     }
   }
 );
+
+/**
+ * @swagger
+ *  /api/test/register-all:
+ *    get:
+ *      tags: [TEST]
+ *      summary: 유저 등록 
+ *      description: DB에 있는 모든 유저를 상대로 firebase custom claim에 등록 설정
+ *      responses:
+ *        200:
+ *          description: 완료 (결과는 터미널 로그 확인)
+ */
+router.get("/register-all", async (req, res) => {
+  const userList = await models.userInfo.findAll();
+  auth.
+    Promise.all(userList.map(async (user) => {
+      await admin.auth().setCustomUserClaims(user.id, { registered: true })
+        .then(() => console.log(`${user.id} completed`))
+        .catch((err) => {
+          console.log(`${user.id} failed`);
+          console.log(err);
+        });
+    }));
+
+  res.status(200).send();
+});
 module.exports = router;

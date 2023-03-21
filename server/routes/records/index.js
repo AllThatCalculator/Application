@@ -23,7 +23,7 @@ const { record } = require("./calculetRecord");
  */
 router.post(
   "/",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(record.post)
 );
 
@@ -42,7 +42,7 @@ router.post(
  */
 router.get(
   "/:calculetId",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(record.get)
 );
 
@@ -61,7 +61,7 @@ router.get(
  */
 router.delete(
   "/",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(record.delete)
 );
 
