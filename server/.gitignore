@@ -1,3 +1,5 @@
 /node_modules
 
 /all-that-calculator*-firebase-adminsdk*
+
+.adminjs
