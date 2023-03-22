@@ -21,6 +21,10 @@ const asyncWrapper = (asyncFunc) => {
   };
 };
 
+/**
+ * DB 에러 핸들러
+ *   - sequelize 에러 별 대응 구현 필요
+ */
 const dbErrorHandler = (asyncFunc) => {
   return (req, res, next) => {
     asyncFunc(req, res, next).catch((error) => {
@@ -31,6 +35,11 @@ const dbErrorHandler = (asyncFunc) => {
   };
 };
 
+/**
+ * @property {function} default 기본 에러 핸들러
+ * @property {function} asyncWrapper 비동기 함수 에러 핸들러
+ * @property {function} dbWrapper DB 함수 에러 핸들러 
+ */
 exports.errorHandler = {
   default: defaultErrorHandler,
   asyncWrapper: asyncWrapper,
