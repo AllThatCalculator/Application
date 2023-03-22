@@ -12,7 +12,6 @@ function defaultErrorHandler(err, req, res, next) {
 /**
  * 비동기 요청 위한 wrapper
  */
-
 const asyncWrapper = (asyncFunc) => {
   return (req, res, next) => {
     asyncFunc(req, res, next).catch((error) => {
