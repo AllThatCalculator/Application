@@ -200,6 +200,7 @@ async function adminLoginHandler(email, password) {
  * @property {function} validate 로그인 필수
  * @property {function} verify 로그인 선택
  * @property {function} admin 관리자 권한 확인
+ * @property {function} login 관리자 로그인
  * 
  * 로그인 확인 된 경우
  *   @var {string} res.locals.userId firebase uid
@@ -210,5 +211,6 @@ exports.auth = {
   validate: authWrapper(validateFirebase),
   verify: authWrapper(verifyFirebase),
   admin: authWrapper(validateAdmin),
-  login: adminLoginHandler
+  login: adminLoginHandler,
+  postFirebase: postEmailAndPassword
 };

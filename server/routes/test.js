@@ -142,4 +142,32 @@ router.get("/register-all", async (req, res) => {
 
   res.status(200).send();
 });
+
+/**
+ * @swagger
+ *  /api/test/login:
+ *    post:
+ *      tags: [TEST]
+ *      summary: 토큰 발급받기
+ *      description: email/password 기반으로 firebase에서 idToken 발급
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: string
+ *                  format: email
+ *                password:
+ *                  type: string
+ *      responses:
+ *        200:
+ *          description: 성공
+ */
+router.post("/login", async (req, res) => {
+  const { idToken } = await auth.postFirebase(req.body.email, req.body.password);
+  res.status(200).send(idToken);
+});
 module.exports = router;
