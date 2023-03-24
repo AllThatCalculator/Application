@@ -21,8 +21,8 @@ const options = {
           type: "http",
           scheme: "bearer",
           bearerFormat: "JWT",
-          description: `</br>1. 수동으로 idToken 발급 받아서 입력</br>
-          2. /api/test/login api로 발급 받아서 입력`
+          description: `</br>- 수동으로 idToken 발급 받아서 입력</br>
+          - /api/test/login api로 발급 받아서 입력`
         },
       },
     },
