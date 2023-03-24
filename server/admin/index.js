@@ -6,21 +6,16 @@ const AdminJSSequelize = require('@adminjs/sequelize');
 const session = require('express-session');
 
 const { models } = require('../models');
-const { calculetTempResource } = require('./calculetInfoTemp');
+const { calculetTempResource } = require('./resources/calculetInfoTemp');
+const { userInfoResource } = require("./resources/userInfo");
 const { auth } = require("../middleware/auth");
 const { logger } = require("../middleware/logger");
+const { accessController } = require("./utils/accessController");
 
 const MAX_AGE = 60 * 60 * 1000; // 1 hour
 
 
-const authenticate = async (email, password) => {
-
-  return Promise.resolve({
-    email: email,
-    idToken: "ewrwe"
-  });
-  // return null;
-};
+const authenticate = auth.login;
 
 // define app
 const adminApp = express();
@@ -28,21 +23,42 @@ AdminJS.registerAdapter({
   Resource: AdminJSSequelize.Resource,
   Database: AdminJSSequelize.Database,
 });
+
 const adminOptions = {
-  resources: [
-    models.calculetCount,
-    models.calculetInfo,
+  resources: [{
+    resource: models.calculetInfo,
+    ...accessController(),
+  }, {
+    resource: models.category,
+    ...accessController(),
+  }, {
+    resource: models.categoryMain,
+    ...accessController(),
+  }, {
+    resource: models.categorySub,
+    ...accessController(),
+  }, {
+    resource: models.calculetRecord,
+    ...accessController(9, 9, 9, 9)
+  }, {
+    resource: models.calculetCount,
+    ...accessController(9, 9, 9, 9)
+  }, {
+    resource: models.calculetStatistics,
+    ...accessController(9, 9, 9, 9)
+  }, {
+    resource: models.calculetUpdateLog,
+    ...accessController(9, 9, 9, 9)
+  }, {
+    resource: models.userCalculetBookmark,
+    ...accessController(9, 9, 9, 9)
+  }, {
+    resource: models.userCalculetLike,
+    ...accessController(9, 9, 9, 9)
+  },
     calculetTempResource,
-    models.calculetRecord,
-    models.calculetStatistics,
-    models.calculetUpdateLog,
-    models.category,
-    models.categoryMain,
-    models.categorySub,
-    models.userCalculetBookmark,
-    models.userCalculetLike,
-    models.userInfo
-  ],
+    userInfoResource,
+  ]
 };
 
 const admin = new AdminJS(adminOptions);
@@ -72,6 +88,7 @@ const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
   }
 );
 
+// to use session cookie
 adminApp.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
@@ -81,10 +98,7 @@ adminApp.use(session({
 }));
 
 adminApp.use(logger);
-
 adminApp.use("/admin/api", auth.admin);
-
-// const adminRouter = AdminJSExpress.buildRouter(admin);
 adminApp.use(admin.options.rootPath, adminRouter);
 
 module.exports = adminApp;

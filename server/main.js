@@ -63,6 +63,7 @@ app.listen(port, () => {
 // admin
 const adminApp = require("./admin");
 
+adminApp.use(errorHandler.default);
 adminApp.listen(process.env.ADMIN_PORT, () => {
   console.log(`${timestamp()} | listening ${process.env.ADMIN_PORT}`);
 });
