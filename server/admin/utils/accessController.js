@@ -8,9 +8,11 @@
 exports.accessController = (c = 3, r = 1, u = 3, d = 3) => ({
   options: {
     actions: {
+      // CREATE
       new: {
         isAccessible: ({ currentAdmin }) => (currentAdmin.accessLevel >= c)
       },
+      // READ
       list: {
         isAccessible: ({ currentAdmin }) => (currentAdmin.accessLevel >= r)
       },
@@ -20,9 +22,11 @@ exports.accessController = (c = 3, r = 1, u = 3, d = 3) => ({
       search: {
         isAccessible: ({ currentAdmin }) => (currentAdmin.accessLevel >= r)
       },
+      // UPDATE
       edit: {
         isAccessible: ({ currentAdmin }) => (currentAdmin.accessLevel >= u)
       },
+      // DELETE
       delete: {
         isAccessible: ({ currentAdmin }) => (currentAdmin.accessLevel >= d)
       },
@@ -32,5 +36,3 @@ exports.accessController = (c = 3, r = 1, u = 3, d = 3) => ({
     }
   }
 });
-
-

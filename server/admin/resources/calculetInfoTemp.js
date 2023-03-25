@@ -33,25 +33,37 @@ const calculetTempResource = {
   ...accessController(),
 };
 
+// add custom action
 calculetTempResource.options.actions.publish = {
   isAccessible: ({ currentAdmin }) => (currentAdmin.accessLevel >= 2),
   actionType: "record",
   component: false,
-  handler: async (request, response, context) => {
+  handler: async (req, res, context) => {
     const { record, currentAdmin } = context;
-
-    await publishCalculet(record.params);
-
-    // 로그
-    console.log(`${timestamp()} | ${record.id()} published by ${currentAdmin.email}`);
-    return {
-      record: record.toJSON(currentAdmin),
-      msg: "Register completed",
-      redirectUrl: "/admin/resources/calculet_info_temp"
-    };
+    try {
+      await publishCalculet(record.params);
+      // 로그
+      console.log(`${timestamp()} | ${record.id()} published by ${currentAdmin.email}`);
+      return {
+        record: record.toJSON(currentAdmin),
+        redirectUrl: "/admin/resources/calculet_info_temp",
+        notice: {
+          message: "계산기 등록 완료",
+          type: "success"
+        }
+      };
+    } catch (error) {
+      return {
+        record: record.toJSON(currentAdmin),
+        notice: {
+          message: "계산기 등록 실패",
+          type: "error"
+        }
+      };
+    }
   },
   guard: "등록하시겠습니까?",
-  icon: "Add",
+  icon: "CalculatorCheck",
 };
 
 module.exports = { calculetTempResource };

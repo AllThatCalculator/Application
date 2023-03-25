@@ -8,6 +8,8 @@ const session = require('express-session');
 const { models } = require('../models');
 const { calculetTempResource } = require('./resources/calculetInfoTemp');
 const { userInfoResource } = require("./resources/userInfo");
+
+// middleware
 const { auth } = require("../middleware/auth");
 const { logger } = require("../middleware/logger");
 const { accessController } = require("./utils/accessController");
@@ -39,22 +41,22 @@ const adminOptions = {
     ...accessController(),
   }, {
     resource: models.calculetRecord,
-    ...accessController(9, 9, 9, 9)
+    ...accessController(9, 3, 9, 9)
   }, {
     resource: models.calculetCount,
-    ...accessController(9, 9, 9, 9)
+    ...accessController(9, 3, 9, 9)
   }, {
     resource: models.calculetStatistics,
-    ...accessController(9, 9, 9, 9)
+    ...accessController(9, 3, 9, 9)
   }, {
     resource: models.calculetUpdateLog,
-    ...accessController(9, 9, 9, 9)
+    ...accessController(9, 3, 9, 9)
   }, {
     resource: models.userCalculetBookmark,
-    ...accessController(9, 9, 9, 9)
+    ...accessController(9, 3, 9, 9)
   }, {
     resource: models.userCalculetLike,
-    ...accessController(9, 9, 9, 9)
+    ...accessController(9, 3, 9, 9)
   },
     calculetTempResource,
     userInfoResource,

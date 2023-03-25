@@ -117,7 +117,7 @@ async function validateAdmin(req, res, next) {
 }
 
 /**
- * 
+ * firebase REST API로 email/password 로그인 요청 보내는 함수
  * @param {string} email 
  * @param {string} password 
  * @returns firebase request promise
@@ -186,7 +186,7 @@ async function adminLoginHandler(email, password) {
       return {
         email: email,
         idToken: identified.idToken,
-        accessLevel: decodedIdToken.accessLevel
+        accessLevel: decodedIdToken.accessLevel,
       };
     }
     return null;
