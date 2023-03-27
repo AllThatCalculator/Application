@@ -4,6 +4,9 @@ import {
   OPTIONS_YEAR,
   OPTIONS_MONTH,
   OPTIONS_DATE,
+  USERNAME_LIMIT,
+  JOB_LIMIT,
+  BIO_LIMIT,
 } from "./constants";
 import useInput from "../../hooks/useInput";
 import signUpUser from "../../user-actions/SignUpUser";
@@ -68,8 +71,7 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
   /** 프로필 사진 */
   const [profileImg, setProfileImg] = useState({ url: "", file: null });
 
-  /** 닉네임 최대 길이 */
-  const USERNAME_LIMIT = 20;
+  /** 닉네임 */
   const userName = useInput("");
 
   // 성별
@@ -96,12 +98,10 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
     setDate(event.target.value);
   }
 
-  /** 직업 최대 길이 */
-  const JOB_LIMIT = 25;
+  /** 직업 */
   const job = useInput("");
 
-  /** 자기소개 문구 최대 길이 */
-  const BIO_LIMIT = 200;
+  /** 자기소개 */
   const bio = useInput("");
 
   /**

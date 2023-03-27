@@ -10,12 +10,7 @@ const USER_ID_TOKEN = "userInfo/USER_ID_TOKEN";
 const initialState = {
   // 기본 정보
   userName: "",
-  bio: "",
-  sex: "",
-  birthdate: "",
-  job: "",
   profileImgSrc: "",
-  email: "",
   // id token
   idToken: "",
 };

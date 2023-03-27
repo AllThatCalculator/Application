@@ -30,6 +30,8 @@ import useGetCategoryList from "../hooks/useGetCategoryList";
 import getCalculetConverters from "../user-actions/getCalculetConverters";
 import { FlexBox } from "../components/global-components/FlexBox";
 import SearchBar from "../components/search/SearchBar";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 /**
  * 헤더에 있는 컴포넌트들
@@ -38,25 +40,26 @@ import SearchBar from "../components/search/SearchBar";
  * @param {function} onLogout 로그아웃 이벤트 (로그아웃 버튼 이벤트)
  */
 function Contents({ isLoggedIn, onIsOpen, onLogout }) {
-  const { loginPage, signUpPage } = usePage();
+  const { loginPage, signUpPage, profilePage, settingPage } = usePage();
 
   const { userInfo } = useSelector((state) => ({
     userInfo: state.userInfo,
   }));
+
   // 내 계정 팝업 리스트
   const myAccountList = [
-    // [
-    //   {
-    //     name: "프로필",
-    //     icon: <AccountCircleOutlinedIcon />,
-    //     onClickFuntion: profilePage,
-    //   },
-    //   {
-    //     name: "설정",
-    //     icon: <SettingsOutlinedIcon />,
-    //     onClickFuntion: settingAccountPage,
-    //   },
-    // ],
+    [
+      {
+        name: "프로필",
+        icon: <AccountCircleOutlinedIcon />,
+        onClickFuntion: profilePage,
+      },
+      {
+        name: "설정",
+        icon: <SettingsOutlinedIcon />,
+        onClickFuntion: settingPage,
+      },
+    ],
     [
       {
         name: "로그아웃",
@@ -89,7 +92,12 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
       popupIcon: (
         <Avatar
           src={isLoggedIn ? userInfo.profileImgSrc : ""}
-          sx={{ width: avatarSizeSx, height: avatarSizeSx }}
+          sx={{
+            width: avatarSizeSx,
+            height: avatarSizeSx,
+            // 헤더에 png 파일로 들어가면 배경색이랑 겹쳐져서 안 보일 수 있음
+            bgcolor: userInfo.profileImgSrc !== null ? "white" : "",
+          }}
         />
       ),
       popupTitle: "내 계정",

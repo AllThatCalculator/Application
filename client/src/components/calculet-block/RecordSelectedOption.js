@@ -26,7 +26,7 @@ function RecordSelectedOption({
   const { onSelectAllClick, onSelectRecentClick, onSelectRecordClick } =
     clickFunctionList;
 
-  const { isWindowSmDown } = useSx();
+  const { isWindowSmDown, popupLayoutSx, popupContentSx } = useSx();
 
   function handleOnIsPopUpOpen() {
     setIsPopUpOpen(true);
@@ -34,16 +34,6 @@ function RecordSelectedOption({
   function handleOffIsPopUpOpen() {
     setIsPopUpOpen(false);
   }
-
-  /** 팝업 스타일 */
-  const popupLayoutStyles = {
-    position: "absolute",
-    zIndex: 2000,
-    bgcolor: "white",
-  };
-  const popupStyles = {
-    position: "relative",
-  };
 
   function handleSelectAllClick() {
     handleOffIsPopUpOpen();
@@ -112,8 +102,8 @@ function RecordSelectedOption({
   /** md up에서의 popup 컴포넌트 */
   const MdPopup = () => {
     return (
-      <Paper sx={popupLayoutStyles} elevation={3}>
-        <Box sx={popupStyles}>{compontList}</Box>
+      <Paper sx={popupLayoutSx} elevation={3}>
+        <Box sx={popupContentSx}>{compontList}</Box>
       </Paper>
     );
   };

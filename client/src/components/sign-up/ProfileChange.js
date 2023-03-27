@@ -21,14 +21,22 @@ import DialogPopup from "../global-components/DialogPopup";
  * setProfileImg : 이미지 state 변경하는 함수
  * isPopUpOpen : 이미지 변경하는 popup state
  * setIsPopUpOpen : 이미지 변경하는 popup state 변경하는 함수
+ * profileSize : 프로필 사진 크기
+ * EditSize : 프로필 뱃지 버튼 크기
+ * EditIconSize : 프로필 뱃지 아이콘 크기
  */
 function ProfileChange({
   profileImg,
   setProfileImg,
   isPopUpOpen,
   setIsPopUpOpen,
+  profileSize = { xs: "6.4rem", sm: "7.2rem", md: "8.0rem" },
+  EditSize = { xs: "2.2rem", sm: "2.4rem", md: "2.8rem" },
+  EditIconSize = {
+    fontSize: { xs: "1.6rem", sm: "1.8rem", md: "2.2rem" },
+  },
 }) {
-  const { isWindowSmDown } = useSx();
+  const { isWindowMdDown } = useSx();
 
   function handleOnIsPopUpOpen() {
     setIsPopUpOpen(true);
@@ -36,15 +44,6 @@ function ProfileChange({
   function handleOffIsPopUpOpen() {
     setIsPopUpOpen(false);
   }
-
-  /** 프로필 사진 크기 */
-  const profileSize = { xs: "6.4rem", sm: "7.2rem", md: "8.0rem" };
-  /** 프로필 뱃지 버튼 크기 */
-  const EditSize = { xs: "2.2rem", sm: "2.4rem", md: "2.8rem" };
-  /** 프로필 뱃지 아이콘 크기 */
-  const EditIconSize = {
-    fontSize: { xs: "1.6rem", sm: "1.8rem", md: "2.2rem" },
-  };
 
   // 이미지 파일 -> url 생성
   function createImageUrl(fileBlob) {
@@ -139,7 +138,7 @@ function ProfileChange({
               />
             </Badge>
           </ButtonBase>
-          {isWindowSmDown ? <SmPopup /> : isPopUpOpen ? <MdPopup /> : null}
+          {isWindowMdDown ? <SmPopup /> : isPopUpOpen ? <MdPopup /> : null}
         </Box>
       </ClickAwayListener>
       <input

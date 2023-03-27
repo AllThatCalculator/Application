@@ -37,6 +37,7 @@ import useError from "../hooks/useError";
 import FindPwFormDialog from "../components/login/FindPwFormDialog";
 import useSnackbar from "../hooks/useSnackbar";
 import StyledImg from "../components/atom-components/StyledImg";
+import StyledPwTextField from "../components/global-components/StyledPwTextField";
 
 /**
  * 로고 스타일 정의 (구글, 깃허브)
@@ -267,33 +268,15 @@ function Login({ isLoggedIn }) {
                     error={errorType === ERROR_EMAIL}
                     helperText={errorType === ERROR_EMAIL && authError}
                   />
-                  <FormControl
-                    required
-                    fullWidth
+                  <StyledPwTextField
+                    id={ERROR_PW}
+                    required={true}
+                    label="비밀번호"
+                    value={pw.value}
+                    handleOnChange={pw.onChange}
                     error={errorType === ERROR_PW}
-                  >
-                    <InputLabel>비밀번호</InputLabel>
-                    <OutlinedInput
-                      value={pw.value}
-                      onChange={pw.onChange}
-                      type={showPassword ? "text" : "password"}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                      label="비밀번호"
-                    />
-                    <FormHelperText>
-                      {errorType === ERROR_PW && authError}
-                    </FormHelperText>
-                  </FormControl>
+                    helperText={errorType === ERROR_PW && authError}
+                  />
                 </FlexColumnBox>
                 <CaptionButton text="비밀번호 찾기" onClick={onFindPwModal} />
                 <Button

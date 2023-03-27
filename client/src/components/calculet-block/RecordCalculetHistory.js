@@ -16,7 +16,6 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import deleteCalculetRecords from "../../user-actions/deleteCalculetRecords";
 import { Button } from "@mui/material";
-import RecordDeleteWarningDialog from "./RecordDeleteWarningDialog";
 import useSnackbar from "../../hooks/useSnackbar";
 import useCalculetRecord from "../../hooks/useCalculetRecord";
 import postCalculetRecords from "../../user-actions/postCalculetRecords";
@@ -29,6 +28,7 @@ import {
   getCalculetInOutputObj,
   setCalculetInOutputObj,
 } from "../../utils/setCalculetInOutputObj";
+import WarningDialog from "../global-components/WarningDialog";
 
 // orderBy key constant
 const KEY_CREATED_AT = "createdAt";
@@ -707,10 +707,13 @@ function RecordCalculetHistory({ calculetId, isPreview }) {
           />
         </Paper>
       </Box>
-      <RecordDeleteWarningDialog
+      <WarningDialog
         isOpen={isDeleteWarning}
         setIsOpen={setIsDeleteWarning}
         handleOnClick={handleDeleteCalculetRecords}
+        title="정말 삭제하시겠습니까?"
+        contentText="삭제하시면 복구할 수 없습니다."
+        actionText="삭제"
       />
     </>
   );

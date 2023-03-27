@@ -13,6 +13,8 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Search from "./pages/Search";
 import CalculetList from "./pages/CalculetList";
+import Profile from "./pages/Profile";
+import Setting from "./pages/Setting";
 
 // google-analytics
 import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
@@ -22,6 +24,8 @@ function AppRouter({ isLoggedIn }) {
   const PATH_CALCULET_ID = ":" + URL.CALCULET_ID;
   /** ?SEARCH_ID=:SEARCH_ID | search?keyword="" */
   const PATH_SEARCH_ID = "?" + URL.SEARCH_ID + "=:" + URL.SEARCH_ID;
+  /** setting/"" */
+  const PATH_SETTING_ID = ":" + URL.MENU_ID;
 
   return (
     <BrowserRouter>
@@ -32,7 +36,6 @@ function AppRouter({ isLoggedIn }) {
         <Route path={URL.CALCULET} element={<Calculet />}>
           <Route path={PATH_CALCULET_ID} element={<Calculet />} />
         </Route>
-
         <Route
           path={URL.REGISTER}
           element={
@@ -48,6 +51,19 @@ function AppRouter({ isLoggedIn }) {
           <Route path={PATH_SEARCH_ID} element={<Search />} />
         </Route>
         <Route path={URL.CALCULET_LIST} element={<CalculetList />} />
+
+        <Route
+          path={URL.PROFILE}
+          element={<Auth isLoggedIn={isLoggedIn} authComponent={<Profile />} />}
+        />
+
+        {/* 설정 - 계정, 저작 권한, 비밀번호 변경 */}
+        <Route
+          path={URL.SETTING}
+          element={<Auth isLoggedIn={isLoggedIn} authComponent={<Setting />} />}
+        >
+          <Route path={PATH_SETTING_ID} element={<Setting />} />
+        </Route>
       </Routes>
       {/* <BookmarkBar /> */}
     </BrowserRouter>

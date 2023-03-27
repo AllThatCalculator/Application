@@ -12,6 +12,10 @@ import usePage from "../hooks/usePage";
 import PreviewCalculet from "../components/register/PreviewCalculet";
 import { useSelector } from "react-redux";
 import useSnackbar from "../hooks/useSnackbar";
+import {
+  changeCategoryMain,
+  changeCategorySub,
+} from "../utils/changeCategorySelect";
 
 /**
  * 계산기 등록 페이지 컴포넌트
@@ -43,27 +47,15 @@ function Register() {
     "# 계산기 이름\n본인이 구현한 계산기에 대한 설명을 작성해주세요."
   );
 
-  /**
-   * 계산기 대분류 change 함수
-   * - value에 먼저 접근한 후, value에 맞는 name을 찾아서 저장
-   * - 해당하는 대분류에 속하는 소분류 옵션을 세팅
-   * @param {*} event
-   */
-  function changeCategoryMain(event) {
+  function handleChangeCategoryMain(event) {
     // 대분류 타겟 value 값
-    const targetValue = Number(event.target.value);
-    setCategoryMainId(targetValue);
-    setCategorySubId(""); // 초기화
+    let value = event.target.value;
+    changeCategoryMain(value, setCategoryMainId, setCategorySubId);
   }
-
-  /**
-   * 계산기 소분류 change 함수
-   * - value에 먼저 접근한 후, value에 맞는 name을 찾아서 저장
-   * @param {*} event
-   */
-  function changeCategorySub(event) {
-    const targetValue = Number(event.target.value);
-    setCategorySubId(targetValue);
+  function handleChangeCategorySub(event) {
+    // 소분류 타겟 value 값
+    let value = event.target.value;
+    changeCategorySub(value, setCategorySubId);
   }
 
   // 미리보기 활성화
@@ -152,8 +144,8 @@ function Register() {
             categorySubId={categorySubId}
             changeTitle={title.onChange}
             changeDescription={description.onChange}
-            changeCategoryMain={changeCategoryMain}
-            changeCategorySub={changeCategorySub}
+            changeCategoryMain={handleChangeCategoryMain}
+            changeCategorySub={handleChangeCategorySub}
           />
           <WriteCode
             // 계산기 코드 입력
