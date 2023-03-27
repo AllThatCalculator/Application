@@ -23,6 +23,7 @@ function deleteUserFromDatabase(userId) {
       },
     },
   });
+  // 프로필 있을 경우 S3 버킷에서도 지워야 함
 }
 
 exports.deleteUser = {

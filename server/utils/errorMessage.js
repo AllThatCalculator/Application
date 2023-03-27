@@ -20,6 +20,7 @@ const message = {
    */
   403: {
     0: "access denied",
+    1: "unauthorized"
   },
   /**
    * 중복 등록

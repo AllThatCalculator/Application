@@ -19,7 +19,7 @@ const { userBookmark } = require("./userBookmark");
  */
 router.get(
   "/bookmark",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(userBookmark.list)
 );
 
@@ -40,7 +40,7 @@ router.get(
  */
 router.put(
   "/bookmark/:calculetId",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(userBookmark.mark)
 );
 
@@ -61,7 +61,7 @@ router.put(
  */
 router.put(
   "/remove-bookmark/:calculetId",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(userBookmark.remove)
 );
 module.exports = router;
