@@ -14,11 +14,14 @@ import { useSelector } from "react-redux";
 import { FlexColumnBox } from "../components/global-components/FlexBox";
 import { handleGetUserInfo } from "../utils/handleActions";
 import Password from "../components/setting/Password";
+import useSx from "../hooks/useSx";
+import SettingMenu from "../components/setting/SettingMenu";
 
 function Setting() {
   // 설정 - 계정, 비밀번호 변경
   let { menu } = useGetUrlParam();
   const { settingAccountPage, settingPasswordPage } = usePage();
+  const { isWindowMdDown } = useSx();
 
   const { idToken } = useSelector((state) => ({
     idToken: state.userInfo.idToken,
@@ -96,7 +99,7 @@ function Setting() {
         }
       });
     }
-  }, []);
+  }, [menu]);
 
   // get user info
   useEffect(() => {
@@ -108,44 +111,49 @@ function Setting() {
 
   return (
     <PageWhiteScreenBox>
-      <PageScreenBox gap="2rem">
-        <Grid container>
-          <Grid item xs>
-            {tabList.map(
-              (data, index) =>
-                index === tabValue && (
-                  <FlexColumnBox key={index} gap="2rem">
-                    {data.content}
-                  </FlexColumnBox>
-                )
+      <PageScreenBox>
+        {menu === undefined && isWindowMdDown && <SettingMenu />}
+        {(!isWindowMdDown || (menu !== undefined && isWindowMdDown)) && (
+          <Grid container>
+            <Grid item xs>
+              {tabList.map(
+                (data, index) =>
+                  index === tabValue && (
+                    <FlexColumnBox key={index} gap="2rem">
+                      {data.content}
+                    </FlexColumnBox>
+                  )
+              )}
+            </Grid>
+            {!isWindowMdDown && (
+              <Grid item>
+                <Tabs
+                  orientation="vertical"
+                  variant="scrollable"
+                  allowScrollButtonsMobile
+                  value={tabValue}
+                  onChange={handleTabValueChange}
+                  sx={{
+                    borderRight: 1,
+                    borderColor: "divider",
+                    width: "100%",
+                  }}
+                >
+                  {tabList.map((data) => (
+                    <Tab
+                      key={data.label}
+                      label={data.label}
+                      icon={data.icon}
+                      iconPosition="start"
+                      sx={{ justifyContent: "flex-start" }}
+                      onClick={data.onClick}
+                    />
+                  ))}
+                </Tabs>
+              </Grid>
             )}
           </Grid>
-          <Grid item>
-            <Tabs
-              orientation="vertical"
-              variant="scrollable"
-              allowScrollButtonsMobile
-              value={tabValue}
-              onChange={handleTabValueChange}
-              sx={{
-                borderRight: 1,
-                borderColor: "divider",
-                width: "100%",
-              }}
-            >
-              {tabList.map((data) => (
-                <Tab
-                  key={data.label}
-                  label={data.label}
-                  icon={data.icon}
-                  iconPosition="start"
-                  sx={{ justifyContent: "flex-start" }}
-                  onClick={data.onClick}
-                />
-              ))}
-            </Tabs>
-          </Grid>
-        </Grid>
+        )}
       </PageScreenBox>
     </PageWhiteScreenBox>
   );
