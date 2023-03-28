@@ -4,8 +4,9 @@ const router = express.Router();
 const { auth } = require("../../middleware/auth");
 const { errorHandler } = require("../../middleware/errorHandler");
 // api
-const { postProfile } = require("../s3Bucket/profile");
+const { postProfile, deleteProfile } = require("../s3Bucket/profile");
 const { signUp } = require("./signUp");
+const { updateUser } = require("./updateUser");
 const { me } = require("./getMyInfo");
 // resource
 const multer = require("multer");
@@ -36,6 +37,34 @@ router.post(
     errorHandler.asyncWrapper(postProfile),
   ],
   errorHandler.dbWrapper(signUp)
+);
+
+/**
+ * @swagger
+ *  /api/users/me/profile:
+ *    patch:
+ *      tags: [users]
+ *      summary: 프로필 수정 <Auth>
+ *      description: 회원 프로필을 수정함
+ *      requestBody:
+ *        $ref: "#/components/requestBodies/userUpdateInfo"
+ *      responses:
+ *        204:
+ *          $ref: "#/components/responses/success204"
+ *        400:
+ *          $ref: "#/components/responses/error"
+ *        401:
+ *          $ref: "#/components/responses/error"
+ */
+router.patch(
+  "/me/profile",
+  [
+    upload.single("profileImg"),
+    auth.validate,
+    errorHandler.asyncWrapper(deleteProfile),
+    errorHandler.asyncWrapper(postProfile),
+  ],
+  errorHandler.dbWrapper(updateUser)
 );
 
 /**

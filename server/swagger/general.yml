@@ -23,6 +23,8 @@ components:
             type: string
             example: "/"
             description: 리다이렉션 위치
+    success204:
+      description: The resource was updated or deleted successfully.
 
   schemas:
     dateTimeLive:
