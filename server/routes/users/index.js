@@ -4,7 +4,7 @@ const router = express.Router();
 const { auth } = require("../../middleware/auth");
 const { errorHandler } = require("../../middleware/errorHandler");
 // api
-const { postProfile } = require("../s3Bucket/profile");
+const { postProfile, deleteProfile } = require("../s3Bucket/profile");
 const { signUp } = require("./signUp");
 const { updateUser } = require("./updateUser");
 const { me } = require("./getMyInfo");
@@ -61,6 +61,7 @@ router.patch(
   [
     upload.single("profileImg"),
     auth.validate,
+    errorHandler.asyncWrapper(deleteProfile),
     errorHandler.asyncWrapper(postProfile),
   ],
   errorHandler.dbWrapper(updateUser)
