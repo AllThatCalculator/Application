@@ -34,7 +34,7 @@ function Profile() {
     handleGetUserInfo(idToken).then((data) => {
       setUserInfo(data);
     });
-  }, []);
+  }, [idToken]);
 
   return (
     <PageWhiteScreenBox>

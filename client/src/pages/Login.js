@@ -7,14 +7,8 @@ import {
   Card,
   CardContent,
   Divider,
-  FormControl,
-  FormHelperText,
   Grid,
-  IconButton,
-  InputAdornment,
-  InputLabel,
   LinearProgress,
-  OutlinedInput,
   TextField,
   Typography,
 } from "@mui/material";
@@ -23,8 +17,6 @@ import {
   FlexBox,
   FlexColumnBox,
 } from "../components/global-components/FlexBox";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
   BasicButton,
   CaptionButton,
@@ -209,13 +201,6 @@ function Login({ isLoggedIn }) {
       handleOffLoading(); // loading stop
     });
   }
-
-  /** 비밀번호 숨김 상태 */
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
 
   // 소셜 로그인 버튼 리스트
   const socailLoginList = [

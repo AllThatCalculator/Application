@@ -10,9 +10,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import usePage from "../hooks/usePage";
 import URL from "../components/PageUrls";
-import { useSelector } from "react-redux";
 import { FlexColumnBox } from "../components/global-components/FlexBox";
-import { handleGetUserInfo } from "../utils/handleActions";
 import Password from "../components/setting/Password";
 import useSx from "../hooks/useSx";
 import SettingMenu from "../components/setting/SettingMenu";
@@ -23,39 +21,10 @@ function Setting() {
   const { settingAccountPage, settingPasswordPage } = usePage();
   const { isWindowMdDown } = useSx();
 
-  const { idToken } = useSelector((state) => ({
-    idToken: state.userInfo.idToken,
-    // userInfo: state.userInfo,
-  }));
-
   // tab
   const [tabValue, setTabValue] = useState(0);
   const handleTabValueChange = (event, value) => {
     setTabValue(value);
-  };
-
-  // 계정 : input 컴포넌트에 맞는 id변수들
-  const [userInfoInputs, setUserInfoInputs] = useState({
-    userName: "",
-    profileImgSrc: "",
-    job: "",
-    bio: "",
-    email: "",
-    birthdate: "",
-    sex: "",
-  });
-
-  // const { userName, profileImgSrc, job, bio, email, birthdate, sex } =
-  //   userInfoInputs;
-
-  // 입력 event
-  const handleUserInfoInput = (event) => {
-    const { id, value } = event.target;
-
-    setUserInfoInputs({
-      ...userInfoInputs, // 기존의 input 객체를 복사한 뒤
-      [id]: value, // id 키를 가진 input만의 value로 설정
-    });
   };
 
   // 탭 메뉴
@@ -66,12 +35,7 @@ function Setting() {
       {
         label: "계정",
         icon: <PersonOutlineIcon />,
-        content: (
-          <Account
-            userInfo={userInfoInputs}
-            handleUserInfoInput={handleUserInfoInput}
-          />
-        ),
+        content: <Account />,
         onClick: settingAccountPage,
         menuId: URL.ACCOUNT_ID,
       },
@@ -99,15 +63,7 @@ function Setting() {
         }
       });
     }
-  }, [menu]);
-
-  // get user info
-  useEffect(() => {
-    if (idToken === "") return;
-    handleGetUserInfo(idToken).then((data) => {
-      setUserInfoInputs(data);
-    });
-  }, []);
+  }, [menu, tabList]);
 
   return (
     <PageWhiteScreenBox>

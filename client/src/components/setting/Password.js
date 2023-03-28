@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import firebaseAuth from "../../firebaseAuth";
 import useError from "../../hooks/useError";
@@ -127,17 +127,15 @@ function Password() {
         handleSetAuthError(result);
         switch (result) {
           // => 예외처리 ) 새로운 비밀번호 보안 취약
-          case "auth/weak-password": {
+          case "auth/weak-password":
             handleSetErrorType(KEY_NEW_PW);
-          }
+            break;
           default:
             break;
         }
       }
     });
   }
-
-  useEffect(handleSetClearError, []);
 
   return (
     <>

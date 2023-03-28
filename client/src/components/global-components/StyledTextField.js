@@ -11,6 +11,7 @@ function StyledTextField({
   helperText = "",
   disabled = false,
   maxRows = false,
+  bold = false,
 }) {
   const helperTextError = error && !!helperText ? helperText : ""; // 에러 설명
   const helperTextGuide = !error && !!helperText ? helperText : ""; // 설명
@@ -34,6 +35,7 @@ function StyledTextField({
       error={error}
       multiline={!!maxRows}
       maxRows={maxRows ? maxRows : null}
+      sx={{ ".MuiInputBase-input": { fontWeight: bold && "bold" } }}
     />
   );
 }

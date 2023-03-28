@@ -16,6 +16,7 @@ import getCalculetUpdateLog from "../user-actions/getCalculetUpdateLog";
 import getUserIdToken from "../utils/getUserIdToken";
 import PageScreenBottom from "../components/global-components/PageScreenBottom";
 import useGetUrlParam from "../hooks/useGetUrlParam";
+import { handleError } from "../utils/handleActions";
 
 async function handleGetCalculetInfo(id, setCalculetObj) {
   let calculetInfoRequest = null;
@@ -31,7 +32,10 @@ async function handleGetCalculetInfo(id, setCalculetObj) {
   }
 
   if (calculetInfoRequest !== null) {
-    setCalculetObj(calculetInfoRequest);
+    // handle error
+    if (!handleError(calculetInfoRequest)) {
+      setCalculetObj(calculetInfoRequest);
+    }
   }
 }
 async function handleGetCalculetUpdateLog(id, setUpdateLog) {
@@ -99,7 +103,6 @@ function Calculet() {
   useEffect(() => {
     if (calculetObj !== null) setIsLoading(false);
   }, [calculetObj]);
-
   return (
     <>
       {isLoading && <LoadingPage />}

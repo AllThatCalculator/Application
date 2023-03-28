@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 import useInput from "../../hooks/useInput";
 import firebaseAuth from "../../firebaseAuth";
@@ -8,19 +7,11 @@ import {
   Card,
   CardContent,
   Divider,
-  FormControl,
-  FormHelperText,
   Grid,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
   TextField,
   Typography,
 } from "@mui/material";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
 import usePage from "../../hooks/usePage";
 import { useSelector } from "react-redux";
 import useLoading from "../../hooks/useLoading";
@@ -167,21 +158,6 @@ function SignUpFirebase({ activateComponent }) {
       }
       handleOffLoading(); // loading stop
     });
-  }
-
-  /** 비밀번호 숨김 상태 */
-  // 비밀번호 숨김 상태
-  const [showPassword, setShowPassword] = useState(false);
-  // 비밀번호 확인 숨김 상태
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
-  function handleClickShowPassword() {
-    setShowPassword((show) => !show);
-  }
-  function handleClickShowPasswordConfirm() {
-    setShowPasswordConfirm((show) => !show);
-  }
-  function handleMouseDownPassword(event) {
-    event.preventDefault();
   }
 
   // 소셜 회원가입 버튼 리스트

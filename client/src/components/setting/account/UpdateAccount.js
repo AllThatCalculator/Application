@@ -13,20 +13,36 @@ import ProfileChange from "../../sign-up/ProfileChange";
  */
 function UpdateAccount({ userInfo, handleUserInfoInput }) {
   const { isWindowMdDown, profileSize, badgeSize, badgeIconSize } = useSx();
-  const { userName, profileImgSrc, job, bio, email, birthdate, sex } = userInfo;
+  const {
+    userName,
+    profileImgSrc,
+    job,
+    bio,
+    email,
+    birthdate,
+    sex,
+    emailNews,
+  } = userInfo;
 
   /** 프로필 사진 */
   const [profileImg, setProfileImg] = useState({
     url: profileImgSrc,
     file: null,
   });
+
   const [isOpenProfileImgPopUp, setIsOpenProfileImgPopUp] = useState(false);
 
   const textFieldList = [
     {
       id: "email",
-      label: "이메일",
+      label: "이메일(ID)",
       value: email,
+      disabled: true,
+    },
+    {
+      id: "emailNews",
+      label: "이메일(소식용)",
+      value: emailNews,
       helperText: "소식 받을 이메일을 작성해주세요.",
     },
     {
@@ -110,6 +126,7 @@ function UpdateAccount({ userInfo, handleUserInfoInput }) {
                 maxLength={maxLength}
                 maxRows={maxRows}
                 helperText={helperText}
+                bold={disabled}
               />
             );
           })}
