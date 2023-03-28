@@ -9,6 +9,7 @@ const { bufferToString } = require("../utils/bufferConverter");
 const authWrapper = (asyncFunc) => {
   return (req, res, next) =>
     asyncFunc(req, res, next).catch((error) => {
+      res.status(401);
       switch (error.code) {
         // token not found
         case "token-not-found":
@@ -26,6 +27,8 @@ const authWrapper = (asyncFunc) => {
         case "unregistered":
           res.send(errorObject(401, 2));
           break;
+        default:
+          res.send();
       }
     });
 };
