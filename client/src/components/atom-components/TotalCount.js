@@ -9,8 +9,8 @@ function TotalCount({ length }) {
   return (
     <FlexBox sx={{ width: "8rem" }}>
       <Typography variant="body1">전체</Typography>
-      <Typography variant="body1" color="info.main">
-        {` ${length} `}
+      <Typography variant="body1" color="info.main" sx={{ whiteSpace: "pre" }}>
+        {` ${length}`}
       </Typography>
       <Typography variant="body1">건</Typography>
     </FlexBox>
