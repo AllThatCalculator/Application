@@ -15,6 +15,19 @@ components:
                 $ref: "#/components/schemas/profileImg"
               userInfo:
                 $ref: "#/components/schemas/userInfo"
+    userUpdateInfo:
+      description: 회원 수정 정보
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              profileImg:
+                $ref: "#/components/schemas/profileImg"
+              userInfo:
+                $ref: "#/components/schemas/userUpdateInfo"
+
   schemas:
     userSimpleInfo:
       type: object
@@ -30,6 +43,17 @@ components:
           $ref: "#/components/schemas/profileImgSrc"
         email:
           $ref: "#/components/schemas/email"
+    userUpdateInfo:
+      type: object
+      properties:
+        email:
+          $ref: "#/components/schemas/email"
+        userName:
+          $ref: "#/components/schemas/userInfo/properties/userName"
+        job:
+          $ref: "#/components/schemas/userInfo/properties/job"
+        bio:
+          $ref: "#/components/schemas/userInfo/properties/bio"
     userInfo:
       type: object
       properties:
