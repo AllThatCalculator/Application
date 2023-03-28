@@ -80,7 +80,7 @@ async function deleteProfile(req, res, next) {
   });
 
   // if exist profile img -> delete
-  if (user.profile_img) {
+  if (req.file && user.profile_img) {
     const result = await deleteObjectFromS3(user.profile_img);
 
     if (result.code !== 204) {
