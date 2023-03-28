@@ -46,7 +46,7 @@ async function postProfile(req, res, next) {
  */
 async function putObjectToS3(profileImg) {
   // generate uuid for profile image
-  const newUUID = uuidv4().replace(/-/g, "");
+  const newUUID = uuidv4();
 
   // send PUT command to S3 bucket
   const params = {
