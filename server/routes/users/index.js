@@ -33,7 +33,7 @@ router.post(
   "/",
   [
     upload.single("profileImg"),
-    auth.validate,
+    auth.signUp,
     errorHandler.asyncWrapper(postProfile),
   ],
   errorHandler.dbWrapper(signUp)
