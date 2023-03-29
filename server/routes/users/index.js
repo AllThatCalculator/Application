@@ -7,6 +7,7 @@ const { errorHandler } = require("../../middleware/errorHandler");
 const { postProfile, deleteProfile } = require("../s3Bucket/profile");
 const { signUp } = require("./signUp");
 const { updateUser } = require("./updateUser");
+const { deleteUser } = require("./deleteUser");
 const { me } = require("./getMyInfo");
 // resource
 const multer = require("multer");
@@ -38,6 +39,19 @@ router.post(
   ],
   errorHandler.dbWrapper(signUp)
 );
+
+/**
+ * @swagger
+ *  /api/users:
+ *    delete:
+ *      tags: [users]
+ *      summary: 계정 탈퇴 <Auth>
+ *      description: 유저가 계정을 탈퇴하는 경우. firebase와 database, s3 bucket에 있는 모든 정보 삭제
+ *      responses:
+ *        204:
+ *          $ref: "#/components/responses/success204"
+ */
+router.delete("/", auth.validate, errorHandler.dbWrapper(deleteUser.default));
 
 /**
  * @swagger
