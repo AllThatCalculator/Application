@@ -1,5 +1,5 @@
 const { admin } = require("../../config/firebase");
-const { models } = require("../../models");
+const { models } = require("../../models2");
 const { errorObject } = require("../../utils/errorMessage");
 const { timestamp } = require("../../utils/timestamp");
 
@@ -16,12 +16,12 @@ exports.signUp = async (req, res) => {
   await models.userInfo.create({
     id: res.locals.userId,
     email: res.locals.email,
-    user_name: userInfo.userName,
+    userName: userInfo.userName,
     bio: userInfo.bio,
     sex: userInfo.sex,
     birthdate: userInfo.birthdate,
     job: userInfo.job,
-    profile_img: res.locals.profileUUID,
+    profileImg: res.locals.profileUUID,
   });
 
   await admin.auth().setCustomUserClaims(res.locals.userId, {

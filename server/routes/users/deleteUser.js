@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const { admin } = require("../../config/firebase");
-const { models } = require("../../models");
+const { models } = require("../../models2");
 const { deleteObjectFromS3 } = require("../s3Bucket/profile");
 
 /**
@@ -32,10 +32,10 @@ function deleteUserFromDatabase(userId) {
 async function deleteUser(req, res) {
   // s3 bucket profile 삭제
   const user = await models.userInfo.findByPk(res.locals.userId, {
-    attributes: ["profile_img"],
+    attributes: ["profileImgSrc"],
   });
-  if (user.profile_img) {
-    await deleteObjectFromS3(user.profile_img);
+  if (user?.profileImgSrc) {
+    await deleteObjectFromS3(user.profileImgSrc);
   }
 
   // db & firebase에 있는 정보 삭제

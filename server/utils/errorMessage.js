@@ -14,6 +14,7 @@ const message = {
     0: "token expired",
     1: "invalid token",
     2: "can't find user",
+    3: "user not found"
   },
   /**
    * 권한 문제

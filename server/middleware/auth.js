@@ -28,6 +28,9 @@ const authWrapper = (asyncFunc) => {
         case "unregistered":
           res.send(errorObject(401, 2));
           break;
+        case "auth/user-not-found":
+          res.send(errorObject(401, 3));
+          break;
         default:
           res.send();
       }
@@ -51,7 +54,7 @@ async function validateFirebase(req, res, next) {
   }
 
   // verify token
-  const decodedIdToken = await admin.auth().verifyIdToken(idToken);
+  const decodedIdToken = await admin.auth().verifyIdToken(idToken, true);
 
   // check if registered
   if (!decodedIdToken.registered) {
@@ -99,7 +102,7 @@ async function signUpAuth(req, res, next) {
   }
 
   // verify token
-  const decodedIdToken = await admin.auth().verifyIdToken(idToken);
+  const decodedIdToken = await admin.auth().verifyIdToken(idToken, true);
 
   if (decodedIdToken.registered) {
     res.send(409).send(errorObject(409, 0));

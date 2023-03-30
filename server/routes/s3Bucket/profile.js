@@ -1,7 +1,7 @@
 const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const s3Client = require("../../config/s3Bucket");
 const { v4: uuidv4 } = require("uuid");
-const { models } = require("../../models");
+const { models } = require("../../models2");
 
 /**
  * s3버킷에 프로필 사진 올리는 미들웨어 + 에러처리 포함
@@ -76,12 +76,12 @@ async function putObjectToS3(profileImg) {
  */
 async function deleteProfile(req, res, next) {
   const user = await models.userInfo.findByPk(res.locals.userId, {
-    attributes: ["profile_img"],
+    attributes: ["profileImgSrc"],
   });
 
   // if exist profile img -> delete
-  if (req.file && user.profile_img) {
-    const result = await deleteObjectFromS3(user.profile_img);
+  if (req.file && user.profileImgSrc) {
+    const result = await deleteObjectFromS3(user.profileImgSrc);
 
     if (result.code !== 204) {
       res.status(400).send({
