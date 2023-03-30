@@ -14,7 +14,7 @@ require("dotenv").config();
 const port = process.env.EXPRESS_PORT;
 
 // 데이터베이스 연결
-const { sequelize } = require("./models");
+const { sequelize } = require("./models2");
 
 sequelize
   .sync({ force: false })

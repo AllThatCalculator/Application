@@ -10,8 +10,8 @@ const development = {
   define: {
     underscored: true,
     underscoredAll: true,
-    createdAt: "created_at",
-    updatedAt: "updated_at",
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
     charset: 'utf8mb4',
     collate: 'utf8mb4_unicode_ci',
   },
