@@ -1,4 +1,3 @@
-const { Op } = require("sequelize");
 const { models } = require("../../models2");
 
 async function postCalculets(req, res) {
