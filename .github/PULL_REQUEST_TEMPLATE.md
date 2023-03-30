@@ -12,3 +12,4 @@
   - [ ] warning 해결
   - [ ] console 주석
 - BE
+  - [ ] 새로운 api에 대한 에러 처리 (wrapper, 혹은 try-catch)

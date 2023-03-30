@@ -122,4 +122,4 @@ async function deleteObjectFromS3(profileImgUUID) {
   }
 }
 
-module.exports = { postProfile, deleteProfile };
+module.exports = { postProfile, deleteProfile, deleteObjectFromS3 };
