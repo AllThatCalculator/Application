@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { models, sequelize } = require("../../../models");
+const { models, sequelize } = require("../../../models2");
 
 /**
  * 유저/계산기에 대해 북마크 여부 리턴
@@ -11,10 +11,10 @@ function checkBookmark(userId, calculetId) {
   return models.userCalculetBookmark
     .findOne({
       where: {
-        user_id: {
+        userId: {
           [Op.eq]: userId,
         },
-        calculet_id: {
+        calculetId: {
           [Op.eq]: calculetId,
         },
       },
@@ -30,10 +30,10 @@ function checkBookmark(userId, calculetId) {
 async function putBookMark(req, res) {
   const userId = res.locals.userId;
   const calculetId = req.params.calculetId;
-  const calculet = await models.calculetStatistics.findByPk(calculetId);
+  const calculet = await models.calculetInfo.findByPk(calculetId);
 
   if (await checkBookmark(userId, calculetId)) {
-    res.status(200).send({ bookmarkCnt: calculet.bookmark_cnt });
+    res.status(200).send({ bookmarkCnt: calculet.bookmarkCnt });
     return;
   }
 
@@ -46,29 +46,29 @@ async function putBookMark(req, res) {
     await sequelize.transaction(async (t) => {
       await models.userCalculetBookmark.create(
         {
-          user_id: userId,
-          calculet_id: calculetId,
+          userId,
+          calculetId,
         },
         { transaction: t }
       );
-      await calculet.increment("bookmark_cnt", {
+      await calculet.increment("bookmarkCnt", {
         transaction: t,
       });
     });
-    res.status(200).send({ bookmarkCnt: calculet.bookmark_cnt + 1 });
+    res.status(200).send({ bookmarkCnt: calculet.bookmarkCnt + 1 });
   } catch (error) {
     console.error(error);
-    res.status(400).send({ bookmarkCnt: calculet.bookmark_cnt });
+    res.status(400).send({ bookmarkCnt: calculet.bookmarkCnt });
   }
 }
 
 async function removeBookMark(req, res) {
   const userId = res.locals.userId;
   const calculetId = req.params.calculetId;
-  const calculet = await models.calculetStatistics.findByPk(calculetId);
+  const calculet = await models.calculetInfo.findByPk(calculetId);
 
   if (!(await checkBookmark(userId, calculetId))) {
-    res.status(200).send({ bookmarkCnt: calculet.bookmark_cnt });
+    res.status(200).send({ bookmarkCnt: calculet.bookmarkCnt });
     return;
   }
 
@@ -80,17 +80,17 @@ async function removeBookMark(req, res) {
      */
     await sequelize.transaction(async (t) => {
       await models.userCalculetBookmark.destroy({
-        where: { user_id: userId, calculet_id: calculetId },
+        where: { userId, calculetId },
         transaction: t,
       });
-      await calculet.decrement("bookmark_cnt", {
+      await calculet.decrement("bookmarkCnt", {
         transaction: t,
       });
     });
-    res.status(200).send({ bookmarkCnt: calculet.bookmark_cnt - 1 });
+    res.status(200).send({ bookmarkCnt: calculet.bookmarkCnt - 1 });
   } catch (error) {
     console.error(error);
-    res.status(400).send({ bookmarkCnt: calculet.bookmark_cnt });
+    res.status(400).send({ bookmarkCnt: calculet.bookmarkCnt });
   }
 }
 
@@ -107,16 +107,13 @@ async function listBookmark(req, res) {
       },
     ],
     where: {
-      user_id: {
+      userId: {
         [Op.eq]: userId,
       },
     },
   });
 
-  const responseData = bookmarkList.map((element) => ({
-    title: element.calculet.title,
-    id: element.calculet.id,
-  }));
+  const responseData = bookmarkList.map((element) => element.toJSON().calculet);
 
   res.status(200).send(responseData);
   return;
