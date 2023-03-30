@@ -3,6 +3,7 @@ const { errorObject } = require("../utils/errorMessage");
 const { getTokenFromHeader } = require("../utils/tokenHandler");
 const https = require("https");
 const { bufferToString } = require("../utils/bufferConverter");
+
 /**
  * Firebase 인증 관련 에러 핸들러
  */
@@ -81,6 +82,36 @@ async function verifyFirebase(req, res, next) {
 
   await validateFirebase(req, res, next);
 }
+
+/**
+ * 회원가입 전인 유저 확인하는 미들웨어
+ *   @var {string} res.locals.userId firebase uid
+ *   @var {string} res.locals.email firebase email
+ */
+async function signUpAuth(req, res, next) {
+  const idToken = getTokenFromHeader(req.headers);
+
+  if (idToken === null) {
+    // token not found
+    throw {
+      code: "token-not-found"
+    };
+  }
+
+  // verify token
+  const decodedIdToken = await admin.auth().verifyIdToken(idToken);
+
+  if (decodedIdToken.registered) {
+    res.send(409).send(errorObject(409, 0));
+    return;
+  }
+
+  res.locals.userId = decodedIdToken.user_id;
+  res.locals.email = decodedIdToken.email;
+
+  next();
+}
+
 
 /**
  * 관리자 권한이 있는지 확인하는 미들웨어
@@ -213,6 +244,7 @@ async function adminLoginHandler(email, password) {
 exports.auth = {
   validate: authWrapper(validateFirebase),
   verify: authWrapper(verifyFirebase),
+  signUp: authWrapper(signUpAuth),
   admin: authWrapper(validateAdmin),
   login: adminLoginHandler,
   postFirebase: postEmailAndPassword
