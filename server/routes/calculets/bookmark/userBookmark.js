@@ -11,9 +11,7 @@ function checkBookmark(userId, calculetId) {
   return models.userCalculetBookmark
     .findOne({
       where: {
-        userId: {
-          [Op.eq]: userId,
-        },
+        userId,
         calculetId: {
           [Op.eq]: calculetId,
         },
@@ -32,6 +30,11 @@ async function putBookMark(req, res) {
   const calculetId = req.params.calculetId;
   const calculet = await models.calculetInfo.findByPk(calculetId);
 
+  if (calculet === null) {
+    res.status(404).send();
+    return;
+  }
+
   if (await checkBookmark(userId, calculetId)) {
     res.status(200).send({ bookmarkCnt: calculet.bookmarkCnt });
     return;
@@ -45,10 +48,7 @@ async function putBookMark(req, res) {
      */
     await sequelize.transaction(async (t) => {
       await models.userCalculetBookmark.create(
-        {
-          userId,
-          calculetId,
-        },
+        { userId, calculetId },
         { transaction: t }
       );
       await calculet.increment("bookmarkCnt", {
@@ -66,6 +66,11 @@ async function removeBookMark(req, res) {
   const userId = res.locals.userId;
   const calculetId = req.params.calculetId;
   const calculet = await models.calculetInfo.findByPk(calculetId);
+
+  if (calculet === null) {
+    res.status(404).send();
+    return;
+  }
 
   if (!(await checkBookmark(userId, calculetId))) {
     res.status(200).send({ bookmarkCnt: calculet.bookmarkCnt });
@@ -106,11 +111,7 @@ async function listBookmark(req, res) {
         as: "calculet",
       },
     ],
-    where: {
-      userId: {
-        [Op.eq]: userId,
-      },
-    },
+    where: { userId },
   });
 
   const responseData = bookmarkList.map((element) => element.toJSON().calculet);

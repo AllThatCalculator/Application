@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { models, sequelize } = require("../../models");
+const { models, sequelize } = require("../../models2");
 
 /**
  * 유저/계산기에 대해 좋아요 여부 리턴
@@ -11,10 +11,8 @@ function checkUserLikesCalculet(userId, calculetId) {
   return models.userCalculetLike
     .findOne({
       where: {
-        user_id: {
-          [Op.eq]: userId,
-        },
-        calculet_id: {
+        userId,
+        calculetId: {
           [Op.eq]: calculetId,
         },
       },
@@ -33,11 +31,16 @@ function checkUserLikesCalculet(userId, calculetId) {
 async function removeLike(req, res) {
   const userId = res.locals.userId;
   const calculetId = req.params.calculetId;
-  const calculet = await models.calculetStatistics.findByPk(calculetId);
+  const calculet = await models.calculetInfo.findByPk(calculetId);
+
+  if (calculet === null) {
+    res.status(404).send();
+    return;
+  }
 
   // 좋아요 체크 되어있지 않은 경우
   if (!(await checkUserLikesCalculet(userId, calculetId))) {
-    res.status(200).send({ likeCnt: calculet.like_cnt });
+    res.status(200).send({ likeCnt: calculet.likeCnt });
     return;
   }
 
@@ -49,19 +52,19 @@ async function removeLike(req, res) {
      */
     await sequelize.transaction(async (t) => {
       await models.userCalculetLike.destroy({
-        where: { user_id: userId, calculet_id: calculetId },
+        where: { userId, calculetId },
         transaction: t,
       });
-      await calculet.decrement("like_cnt", {
+      await calculet.decrement("likeCnt", {
         transaction: t,
       });
     });
     // success
-    res.status(200).send({ likeCnt: calculet.like_cnt - 1 });
+    res.status(200).send({ likeCnt: calculet.likeCnt - 1 });
   } catch (error) {
     // failed
     console.error(error);
-    res.status(400).send({ likeCnt: calculet.like_cnt });
+    res.status(400).send({ likeCnt: calculet.likeCnt });
   }
 }
 
@@ -71,11 +74,16 @@ async function removeLike(req, res) {
 async function putLike(req, res) {
   const userId = res.locals.userId;
   const calculetId = req.params.calculetId;
-  const calculet = await models.calculetStatistics.findByPk(calculetId);
+  const calculet = await models.calculetInfo.findByPk(calculetId);
+
+  if (calculet === null) {
+    res.status(404).send();
+    return;
+  }
 
   // 이미 좋아요 체크 되어있는 경우
   if (await checkUserLikesCalculet(userId, calculetId)) {
-    res.status(200).send({ likeCnt: calculet.like_cnt });
+    res.status(200).send({ likeCnt: calculet.likeCnt });
     return;
   }
 
@@ -87,22 +95,19 @@ async function putLike(req, res) {
      */
     await sequelize.transaction(async (t) => {
       await models.userCalculetLike.create(
-        {
-          user_id: userId,
-          calculet_id: calculetId,
-        },
+        { userId, calculetId },
         { transaction: t }
       );
-      await calculet.increment("like_cnt", {
+      await calculet.increment("likeCnt", {
         transaction: t,
       });
     });
     // success
-    res.status(200).send({ likeCnt: calculet.like_cnt + 1 });
+    res.status(200).send({ likeCnt: calculet.likeCnt + 1 });
   } catch (error) {
     // failed
     console.error(error);
-    res.status(400).send({ likeCnt: calculet.like_cnt });
+    res.status(400).send({ likeCnt: calculet.likeCnt });
   }
 }
 
