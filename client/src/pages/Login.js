@@ -102,6 +102,9 @@ function Login({ isLoggedIn }) {
         case "auth/wrong-password": // 잘못된 비밀번호
           handleSetErrorType(ERROR_PW);
           break;
+        case "auth/too-many-requests":
+          handleSetErrorType(ERROR_PW);
+          break;
         default:
           break;
       }
@@ -128,6 +131,9 @@ function Login({ isLoggedIn }) {
         switch (result) {
           case "auth/account-exists-with-different-credential": // 다른 인증방식으로
             handleSetErrorType(ERROR_EMAIL);
+            break;
+          case "auth/too-many-requests":
+            handleSetErrorType(ERROR_PW);
             break;
           default:
             break;
@@ -157,6 +163,9 @@ function Login({ isLoggedIn }) {
         switch (result) {
           case "auth/account-exists-with-different-credential": // 다른 인증방식으로
             handleSetErrorType(ERROR_EMAIL);
+            break;
+          case "auth/too-many-requests":
+            handleSetErrorType(ERROR_PW);
             break;
           default:
             break;
