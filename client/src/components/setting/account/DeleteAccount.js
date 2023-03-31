@@ -1,18 +1,42 @@
 import { Typography } from "@mui/material";
 import { useState } from "react";
+import useError from "../../../hooks/useError";
 import { ResponsiveButton } from "../../atom-components/Buttons";
-import WarningDialog from "../../global-components/WarningDialog";
+import DeleteAccountFormDialog from "./DeleteAccountFormDialog";
 
 /**
  * 계정 탈퇴
  * @param {} param0
  * @returns
  */
-function DeleteAccount() {
+function DeleteAccount({
+  handleOnClickDeleteAccount,
+  email,
+  password,
+  onChangePassword,
+  isLoading,
+}) {
   const [isDeleteWarning, setIsDeleteWarning] = useState(false);
+  // error state
+  const { handleSetClearError } = useError();
   function handleOpenIsDeleteWarning() {
     setIsDeleteWarning(true);
+    handleSetClearError();
   }
+
+  const textFieldList = [
+    {
+      id: "email",
+      label: "이메일",
+      value: email,
+      disabled: true,
+    },
+    {
+      id: "password",
+      label: "비밀번호",
+      value: password,
+    },
+  ];
 
   return (
     <>
@@ -25,13 +49,14 @@ function DeleteAccount() {
       >
         탈퇴
       </ResponsiveButton>
-      <WarningDialog
+      <DeleteAccountFormDialog
         isOpen={isDeleteWarning}
         setIsOpen={setIsDeleteWarning}
-        handleOnClick={() => {}}
-        title="정말 탈퇴하시겠습니까?"
-        contentText="탈퇴하시면 복구할 수 없습니다."
-        actionText="탈퇴"
+        value={textFieldList}
+        onChange={onChangePassword}
+        handleOnSubmit={handleOnClickDeleteAccount}
+        password={password}
+        isLoading={isLoading}
       />
     </>
   );

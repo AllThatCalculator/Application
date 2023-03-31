@@ -29,6 +29,9 @@ const URL = {
   // 설정
   SETTING: "/setting",
 
+  // 회원탈퇴 완료 페이지
+  DELETE_COMPLETE: "/delete-complete",
+
   //============변수================
   /** 계산기 id */
   CALCULET_ID: "id", // :id

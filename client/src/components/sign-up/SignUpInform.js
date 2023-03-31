@@ -9,7 +9,6 @@ import {
   BIO_LIMIT,
 } from "./constants";
 import useInput from "../../hooks/useInput";
-import signUpUser from "../../user-actions/SignUpUser";
 import { auth } from "../../firebase";
 import {
   Button,
@@ -26,18 +25,22 @@ import {
 } from "@mui/material";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import usePage from "../../hooks/usePage";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useLoading from "../../hooks/useLoading";
 import checkValidDate from "../../utils/checkValidDate";
 import useError from "../../hooks/useError";
 import checkSpecialSymbols from "../../utils/checkSpecialSymbols";
 import ProfileChange from "./ProfileChange";
+import { handleSignUp } from "../../utils/handleUserActions";
+import getUserMe from "../../user-actions/users/getUserMe";
+import { onSetUserIdToken, onSetUserInfo } from "../../modules/userInfo";
 
 /**
  * 회원가입 페이지
  */
 function SignUpInform({ activateEvent, deactivateEvent }) {
-  const { backPage } = usePage();
+  const { calculetRefreshPage } = usePage();
+  const dispatch = useDispatch();
 
   // loading state
   const { handleOnLoading, handleOffLoading } = useLoading();
@@ -142,7 +145,6 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
 
     // 서버에 보낼 정보 => body
     let body = {
-      // profileImg: profileImg,
       profileImg: profileImg.file,
       userInfo: {
         userName: userName.value,
@@ -152,24 +154,24 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
         job: job.value,
       },
     };
-
     // 서버에 요청
-    const request = signUpUser(body, userIdToken);
-    request.then((result) => {
+    // console.log("userIdToken", userIdToken);
+    handleSignUp(body, userIdToken).then((result) => {
       handleOffLoading(); // loading stop
-      // 가입 실패
-      if (result["code"] !== undefined) {
-        if (result.code === 0) {
-          // 이미 있는 계정이어서 발생한 error라서 홈으로 가면 됨
-          backPage();
-        } else {
-          activateEvent();
-        }
-      }
-      // 회원 가입 성공
-      if (result === "/") {
+      // success
+      if (result) {
+        /** set user info */
+        getUserMe(userIdToken).then((data) => {
+          // console.log(data);
+          dispatch(onSetUserInfo(data));
+        });
+        /** set user id token */
+        dispatch(onSetUserIdToken(userIdToken));
+
         // 전에 있던 페이지로 돌아가기
-        backPage();
+        // backPage();
+        // 우선 메인 페이지로
+        calculetRefreshPage();
       }
     });
   }

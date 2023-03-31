@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { onSetCalculetCategory } from "../modules/calculetCategory";
 import getCalculetCategory from "../user-actions/getCalculetCategory";
 import { onSetUserInfo, onSetUserIdToken } from "../modules/userInfo";
-import getUserMe from "../user-actions/getUserMe";
+import getUserMe from "../user-actions/users/getUserMe";
 
 function App() {
   /** Redux State */
@@ -36,8 +36,8 @@ function App() {
         );
         setIsSuccess(true);
       } else if (user) {
+        setIsLoggedIn(false);
         // on login
-        setIsLoggedIn(true);
         const token = user.accessToken;
 
         if (token !== null) {
@@ -45,6 +45,7 @@ function App() {
           getUserMe(token).then((data) => {
             // console.log(data);
             dispatch(onSetUserInfo(data));
+            setIsLoggedIn(true);
           });
           /** set user id token */
           dispatch(onSetUserIdToken(token));

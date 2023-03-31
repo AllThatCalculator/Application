@@ -9,6 +9,11 @@ function usePage() {
   function calculetPage() {
     navigate(URL.CALCULET);
   }
+  // 메인 페이지 & 새로고침
+  function calculetRefreshPage() {
+    navigate(URL.CALCULET);
+    window.location.reload(true);
+  }
 
   // 계산기 상세
   function calculetIdPage(id) {
@@ -87,8 +92,14 @@ function usePage() {
     navigate(URL.SETTING + "/" + URL.PASSWORD_ID);
   }
 
+  // 회원탈퇴완료
+  function deleteCompletePage() {
+    navigate(URL.DELETE_COMPLETE);
+  }
+
   return {
     calculetPage,
+    calculetRefreshPage,
     calculetIdPage,
     registerPage,
     calculetListPage,
@@ -102,6 +113,7 @@ function usePage() {
     settingPage,
     settingAccountPage,
     settingPasswordPage,
+    deleteCompletePage,
   };
 }
 export default usePage;

@@ -19,6 +19,7 @@ import Setting from "./pages/Setting";
 // google-analytics
 import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
 import Snackbars from "./components/global-components/Snackbars";
+import DeleteComplete from "./pages/guide/DeleteComplete";
 
 function AppRouter({ isLoggedIn }) {
   const PATH_CALCULET_ID = ":" + URL.CALCULET_ID;
@@ -64,6 +65,9 @@ function AppRouter({ isLoggedIn }) {
         >
           <Route path={PATH_SETTING_ID} element={<Setting />} />
         </Route>
+
+        {/*회원탈퇴 완료 */}
+        <Route path={URL.DELETE_COMPLETE} element={<DeleteComplete />} />
       </Routes>
       {/* <BookmarkBar /> */}
     </BrowserRouter>

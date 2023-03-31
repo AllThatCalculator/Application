@@ -21,13 +21,13 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import PopupList from "../components/global-components/PopupList";
 import usePage from "../hooks/usePage";
 import { useDispatch, useSelector } from "react-redux";
-import getCalculetList from "../user-actions/getCalculetList";
+import getCalculetList from "../user-actions/calculets/getCalculetList";
 import {
   onSetCalculetConverters,
   onSetCalculetList,
 } from "../modules/calculetList";
 import useGetCategoryList from "../hooks/useGetCategoryList";
-import getCalculetConverters from "../user-actions/getCalculetConverters";
+import getCalculetConverters from "../user-actions/calculets/getCalculetConverters";
 import { FlexBox } from "../components/global-components/FlexBox";
 import SearchBar from "../components/search/SearchBar";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";

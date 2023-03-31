@@ -2,7 +2,7 @@ import BoxRecCalculator from "../atom-components/BoxRecCalculator.js";
 import { useEffect, useState } from "react";
 import { Grid, Pagination } from "@mui/material";
 import useSx from "../../hooks/useSx.js";
-import getRecommendation from "../../user-actions/getRecommendation.js";
+import getRecommendation from "../../user-actions/calculets/getRecommendation.js";
 
 /**
  *

@@ -7,7 +7,7 @@ import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import Title from "../components/global-components/Title";
 import PageScreenBottom from "../components/global-components/PageScreenBottom";
 import CheckIcon from "@mui/icons-material/Check";
-import postRegisterCalculetTemp from "../user-actions/postRegisterCalculetTemp";
+import postRegisterCalculetTemp from "../user-actions/calculets/postRegisterCalculetTemp";
 import usePage from "../hooks/usePage";
 import PreviewCalculet from "../components/register/PreviewCalculet";
 import { useSelector } from "react-redux";

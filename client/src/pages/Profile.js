@@ -8,7 +8,7 @@ import {
 import Title from "../components/global-components/Title";
 import ProfileHeader from "../components/profile/ProfileHeader";
 import UserCalculetList from "../components/profile/UserCalculetList";
-import { handleGetUserInfo } from "../utils/handleActions";
+import { handleGetUserInfo } from "../utils/handleUserActions";
 
 function Profile() {
   const { idToken } = useSelector((state) => ({

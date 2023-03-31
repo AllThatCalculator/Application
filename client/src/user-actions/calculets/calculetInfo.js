@@ -5,20 +5,18 @@ import axios from "axios";
  */
 async function calculetInfo(id, userId = "") {
   try {
-    let data;
-    await axios
-      .get(`/api/calculets/${id}`, {
-        headers: {
-          Authorization: `Bearer ${userId}`,
-        },
-      })
-      .then((response) => {
-        data = response.data;
-      });
-    return data;
+    const response = await axios.get(`/api/calculets/${id}`, {
+      headers: {
+        Authorization: `Bearer ${userId}`,
+      },
+    });
+    return response.data;
   } catch (error) {
     switch (error.response.status) {
       case 400:
+        return;
+      case 401:
+        return;
       case 404:
         return error.response.data.message;
       default:
