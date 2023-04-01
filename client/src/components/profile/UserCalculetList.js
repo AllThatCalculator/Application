@@ -16,7 +16,7 @@ function UserCalculetList() {
   const { userName } = userInfo;
   const { subTitleSx } = useSx();
 
-  const KEY_CALCULET_LENGTH = 5;
+  const KEY_CALCULET_LENGTH = 0;
 
   // 선택된 대분류, 소분류 id
   //   const [categoryMainId, setCategoryMainId] = useState(
