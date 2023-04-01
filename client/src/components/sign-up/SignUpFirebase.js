@@ -1,4 +1,3 @@
-import { useState } from "react";
 import styled from "styled-components";
 import useInput from "../../hooks/useInput";
 import firebaseAuth from "../../firebaseAuth";
@@ -8,23 +7,16 @@ import {
   Card,
   CardContent,
   Divider,
-  FormControl,
-  FormHelperText,
   Grid,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
   TextField,
   Typography,
 } from "@mui/material";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import Visibility from "@mui/icons-material/Visibility";
 import usePage from "../../hooks/usePage";
 import { useSelector } from "react-redux";
 import useLoading from "../../hooks/useLoading";
 import useError from "../../hooks/useError";
+import StyledPwTextField from "../global-components/StyledPwTextField";
 
 /**
  * 로고 스타일 정의 (구글, 깃허브)
@@ -168,21 +160,6 @@ function SignUpFirebase({ activateComponent }) {
     });
   }
 
-  /** 비밀번호 숨김 상태 */
-  // 비밀번호 숨김 상태
-  const [showPassword, setShowPassword] = useState(false);
-  // 비밀번호 확인 숨김 상태
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
-  function handleClickShowPassword() {
-    setShowPassword((show) => !show);
-  }
-  function handleClickShowPasswordConfirm() {
-    setShowPasswordConfirm((show) => !show);
-  }
-  function handleMouseDownPassword(event) {
-    event.preventDefault();
-  }
-
   // 소셜 회원가입 버튼 리스트
   const socailSignUpList = [
     {
@@ -215,70 +192,24 @@ function SignUpFirebase({ activateComponent }) {
                 error={errorType === ERROR_EMAIL}
                 helperText={errorType === ERROR_EMAIL && authError}
               />
-              <FormControl
-                required
-                fullWidth
-                variant="outlined"
+              <StyledPwTextField
+                id={ERROR_PW}
+                required={true}
+                label="비밀번호"
+                value={pw.value}
+                handleOnChange={pw.onChange}
                 error={errorType === ERROR_PW}
-              >
-                <InputLabel htmlFor="outlined-adornment-password">
-                  비밀번호
-                </InputLabel>
-                <OutlinedInput
-                  value={pw.value}
-                  onChange={pw.onChange}
-                  type={showPassword ? "text" : "password"}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="비밀번호"
-                />
-                <FormHelperText error>
-                  {errorType === ERROR_PW && authError}
-                </FormHelperText>
-              </FormControl>
-              <FormControl
-                required
-                fullWidth
-                variant="outlined"
+                helperText={errorType === ERROR_PW && authError}
+              />
+              <StyledPwTextField
+                id={ERROR_PW_CONFIRM}
+                required={true}
+                label="비밀번호 확인"
+                value={pwConfirmation.value}
+                handleOnChange={pwConfirmation.onChange}
                 error={errorType === ERROR_PW_CONFIRM}
-              >
-                <InputLabel htmlFor="outlined-adornment-password">
-                  비밀번호 확인
-                </InputLabel>
-                <OutlinedInput
-                  value={pwConfirmation.value}
-                  onChange={pwConfirmation.onChange}
-                  type={showPasswordConfirm ? "text" : "password"}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={handleClickShowPasswordConfirm}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPasswordConfirm ? (
-                          <VisibilityOff />
-                        ) : (
-                          <Visibility />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  label="비밀번호 확인"
-                />
-                <FormHelperText error>
-                  {errorType === ERROR_PW_CONFIRM && authError}
-                </FormHelperText>
-              </FormControl>
+                helperText={errorType === ERROR_PW_CONFIRM && authError}
+              />
             </FlexColumnBox>
             <Button
               type="submit"

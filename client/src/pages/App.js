@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { onSetCalculetCategory } from "../modules/calculetCategory";
 import getCalculetCategory from "../user-actions/getCalculetCategory";
 import { onSetUserInfo, onSetUserIdToken } from "../modules/userInfo";
-import getUserInfo from "../user-actions/getUserInfo";
+import getUserMe from "../user-actions/users/getUserMe";
 
 function App() {
   /** Redux State */
@@ -31,25 +31,21 @@ function App() {
         dispatch(
           onSetUserInfo({
             userName: "",
-            bio: "",
-            sex: "",
-            birthdate: "",
-            job: "",
             profileImgSrc: "",
-            email: "",
           })
         );
         setIsSuccess(true);
       } else if (user) {
+        setIsLoggedIn(false);
         // on login
-        setIsLoggedIn(true);
         const token = user.accessToken;
 
         if (token !== null) {
           /** set user info */
-          getUserInfo(token).then((data) => {
+          getUserMe(token).then((data) => {
             // console.log(data);
             dispatch(onSetUserInfo(data));
+            setIsLoggedIn(true);
           });
           /** set user id token */
           dispatch(onSetUserIdToken(token));

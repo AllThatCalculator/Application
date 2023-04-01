@@ -14,8 +14,15 @@ function useGetUrlParam() {
 
   // URL에 포함되어있는 Key, Value 형식의 객체를 반환
   // /:id
-  let { id } = useParams();
+  let { id, menu } = useParams();
 
-  return { searchUrlId, categoryMainUrlId, categorySubUrlId, lenUrlId, id };
+  return {
+    searchUrlId,
+    categoryMainUrlId,
+    categorySubUrlId,
+    lenUrlId,
+    id,
+    menu,
+  };
 }
 export default useGetUrlParam;

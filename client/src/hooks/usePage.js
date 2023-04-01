@@ -9,6 +9,11 @@ function usePage() {
   function calculetPage() {
     navigate(URL.CALCULET);
   }
+  // 메인 페이지 & 새로고침
+  function calculetRefreshPage() {
+    navigate(URL.CALCULET);
+    window.location.reload(true);
+  }
 
   // 계산기 상세
   function calculetIdPage(id) {
@@ -53,21 +58,48 @@ function usePage() {
   }
   // 검색창
   function searchOptionPage(keyword, categoryMainId, categorySubId, len) {
+    // 검색어
     let url = URL.SEARCH + "?" + URL.SEARCH_ID + "=" + keyword;
 
+    // 대분류
     url +=
       categoryMainId !== ""
         ? `&&${URL.CATEGORY_MAIN_ID}=${categoryMainId}`
         : "";
+    // 소분류
     url +=
       categorySubId !== "" ? `&&${URL.CATEGORY_SUB_ID}=${categorySubId}` : "";
+    // 페이지 당 계산기 렌더할 개수
     url += `&&${URL.LEN_ID}=${len}`;
 
     navigate(url);
   }
 
+  // 프로필
+  function profilePage() {
+    navigate(URL.PROFILE);
+  }
+  // 설정
+  function settingPage() {
+    navigate(URL.SETTING);
+  }
+  // 설정 - 계정
+  function settingAccountPage() {
+    navigate(URL.SETTING + "/" + URL.ACCOUNT_ID);
+  }
+  // 설정 - 비밀번호 변경
+  function settingPasswordPage() {
+    navigate(URL.SETTING + "/" + URL.PASSWORD_ID);
+  }
+
+  // 회원탈퇴완료
+  function deleteCompletePage() {
+    navigate(URL.DELETE_COMPLETE);
+  }
+
   return {
     calculetPage,
+    calculetRefreshPage,
     calculetIdPage,
     registerPage,
     calculetListPage,
@@ -77,6 +109,11 @@ function usePage() {
     backRefreshPage,
     searchPage,
     searchOptionPage,
+    profilePage,
+    settingPage,
+    settingAccountPage,
+    settingPasswordPage,
+    deleteCompletePage,
   };
 }
 export default usePage;

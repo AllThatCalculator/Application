@@ -1,13 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  Divider,
-  FormControl,
-  Grid,
-  MenuItem,
-  Pagination,
-  Select,
-  Typography,
-} from "@mui/material";
+import { Divider, Grid, Pagination, Typography } from "@mui/material";
 import {
   PageScreenBox,
   PageWhiteScreenBox,
@@ -21,12 +13,15 @@ import BoxCalculetItem from "../components/atom-components/BoxCalculetItem";
 import usePage from "../hooks/usePage";
 import BoxNoItem from "../components/atom-components/BoxNoItem";
 import useGetUrlParam from "../hooks/useGetUrlParam";
-import getCalculetFind from "../user-actions/getCalculetFind";
+import getCalculetFind from "../user-actions/calculets/getCalculetFind";
 import getSearchRequestBody from "../utils/getSearchRequestBody";
 import SkeletonPage from "../components/search/SkeletonPage";
-
-const KEY_TOTAL_MAIN = "대분류 전체";
-const KEY_TOTAL_SUB = "소분류 전체";
+import TotalCount from "../components/atom-components/TotalCount";
+import SearchFilter from "../components/global-components/SearchFilter";
+import {
+  changeCategoryMain,
+  changeCategorySub,
+} from "../utils/changeCategorySelect";
 
 async function getCalculetResult(
   setIsLoading,
@@ -61,19 +56,14 @@ function Search() {
   /** Redux Dispatch */
   const dispatch = useDispatch();
 
-  const SELECT_BOX_WIDTH = 132;
+  // const SELECT_BOX_WIDTH = 132;
 
   const { subTitleSx } = useSx();
   const { calculetIdPage, searchOptionPage } = usePage();
 
-  const {
-    resultList,
-    count: resultCount,
-    calculetCategory,
-  } = useSelector((state) => ({
+  const { resultList, count: resultCount } = useSelector((state) => ({
     resultList: state.search.resultList,
     count: state.search.count,
-    calculetCategory: state.calculetCategory.category,
   }));
 
   /**
@@ -104,45 +94,28 @@ function Search() {
   const [resultLimit, setResultLimit] = useState(
     lenUrlId !== null ? lenUrlId : KEY_DEFAULT_LEN
   );
-  const handleResultLimitChange = (event) => {
+
+  function handleResultLimitChange(event) {
     let value = event.target.value;
     setResultLimit(value);
-
     // update
     searchOptionPage(searchUrlId, categoryMainId, categorySubId, value);
-  };
-
-  /**
-   * 계산기 대분류 change 함수
-   * - value에 먼저 접근한 후, value에 맞는 name을 찾아서 저장
-   * - 해당하는 대분류에 속하는 소분류 옵션을 세팅
-   * @param {*} event
-   */
-  function changeCategoryMain(event) {
-    // 대분류 타겟 value 값
-    let value = event.target.value;
-
-    const targetValue = value !== "" ? Number(value) : "";
-    setCategoryMainId(targetValue);
-    setCategorySubId(""); // 초기화
-
-    // update
-    searchOptionPage(searchUrlId, targetValue, categorySubId, resultLimit);
   }
 
-  /**
-   * 계산기 소분류 change 함수
-   * - value에 먼저 접근한 후, value에 맞는 name을 찾아서 저장
-   * @param {*} event
-   */
-  function changeCategorySub(event) {
+  function handleChangeCategoryMain(event) {
+    // 대분류 타겟 value 값
     let value = event.target.value;
-
-    const targetValue = value !== "" ? Number(value) : "";
-    setCategorySubId(targetValue);
-
+    changeCategoryMain(value, setCategoryMainId, setCategorySubId);
     // update
-    searchOptionPage(searchUrlId, categoryMainId, targetValue, resultLimit);
+    searchOptionPage(searchUrlId, value, categorySubId, resultLimit);
+  }
+
+  function handleChangeCategorySub(event) {
+    // 소분류 타겟 value 값
+    let value = event.target.value;
+    changeCategorySub(value, setCategorySubId);
+    // update
+    searchOptionPage(searchUrlId, categoryMainId, value, resultLimit);
   }
 
   useEffect(() => {
@@ -204,90 +177,19 @@ function Search() {
         </FlexBox>
         <Grid container sx={{ alignItems: "center" }}>
           <Grid item xs>
-            <FlexBox>
-              <Typography variant="body1">전체</Typography>
-              <Typography variant="body1" color="info.main">
-                {` ${resultCount} `}
-              </Typography>
-              <Typography variant="body1">건</Typography>
-            </FlexBox>
+            {/* 필터된 건수 */}
+            <TotalCount length={resultCount} />
           </Grid>
           <Grid item>
-            <FlexBox gap="0.4rem">
-              <FormControl size="small" sx={{ width: SELECT_BOX_WIDTH }}>
-                <Select
-                  value={categoryMainId}
-                  onChange={changeCategoryMain}
-                  displayEmpty
-                  renderValue={
-                    categoryMainId !== "" ? undefined : () => KEY_TOTAL_MAIN
-                  }
-                  sx={{ color: categoryMainId === "" && "text.disabled" }}
-                >
-                  <MenuItem key="total-main" value="">
-                    {KEY_TOTAL_MAIN}
-                  </MenuItem>
-                  {calculetCategory &&
-                    Object.entries(calculetCategory).map((data) => {
-                      const mainId = Number(data[0]);
-                      const mainName = data[1].name;
-                      return (
-                        <MenuItem key={mainId} value={mainId}>
-                          {mainName}
-                        </MenuItem>
-                      );
-                    })}
-                </Select>
-              </FormControl>
-              <FormControl
-                disabled={categoryMainId === ""}
-                size="small"
-                sx={{ width: SELECT_BOX_WIDTH }}
-              >
-                <Select
-                  value={categorySubId}
-                  onChange={changeCategorySub}
-                  displayEmpty
-                  renderValue={
-                    categorySubId !== "" ? undefined : () => KEY_TOTAL_SUB
-                  }
-                  sx={{ color: categorySubId === "" && "text.disabled" }}
-                >
-                  <MenuItem key="total-sub" value="">
-                    {KEY_TOTAL_SUB}
-                  </MenuItem>
-                  {calculetCategory &&
-                    Object.entries(calculetCategory).map((data) => {
-                      const mainId = Number(data[0]);
-                      const mainValue = data[1];
-                      const { name, ...subList } = mainValue; // name 제외하고 순회
-
-                      return (
-                        mainId === Number(categoryMainId) &&
-                        subList &&
-                        Object.entries(subList).map((subData) => {
-                          const key = Number(subData[0]);
-                          const value = subData[1];
-                          return (
-                            <MenuItem key={key} value={key}>
-                              {value}
-                            </MenuItem>
-                          );
-                        })
-                      );
-                    })}
-                </Select>
-              </FormControl>
-              <FormControl size="small" sx={{ width: 82 }}>
-                <Select value={resultLimit} onChange={handleResultLimitChange}>
-                  {[20, 40, 60].map((data) => (
-                    <MenuItem key={data} value={data}>
-                      {data}개
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </FlexBox>
+            {/* 필터 */}
+            <SearchFilter
+              categoryMainId={categoryMainId}
+              handleChangeCategoryMain={handleChangeCategoryMain}
+              categorySubId={categorySubId}
+              handleChangeCategorySub={handleChangeCategorySub}
+              resultLimit={resultLimit}
+              handleResultLimitChange={handleResultLimitChange}
+            />
           </Grid>
         </Grid>
         <Divider />

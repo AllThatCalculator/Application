@@ -9,7 +9,7 @@ import {
   onResetSearchResultPreview,
   onSetSearchResultPreview,
 } from "../../modules/search";
-import getCalculetFind from "../../user-actions/getCalculetFind";
+import getCalculetFind from "../../user-actions/calculets/getCalculetFind";
 import getSearchRequestBody from "../../utils/getSearchRequestBody";
 
 const Search = styled("div")(({ theme }) => ({

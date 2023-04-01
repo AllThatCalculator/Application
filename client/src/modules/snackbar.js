@@ -9,7 +9,7 @@ const SNACKBAR_SEVERITY_MESSAGE = "snackbar/SNACKBAR_SEVERITY_MESSAGE";
 /** init State ( 초기 상태 ) */
 const initialState = {
   open: false,
-  severity: "error" /** [basic, error, warning, info, success] */,
+  severity: "basic" /** [basic, error, warning, info, success] */,
   message: "",
   fullWidth: false, // width : true => 100%
   vertical: "top", // 세로
@@ -43,7 +43,7 @@ export default function snackbar(state = initialState, action) {
       return {
         ...state,
         open: false,
-        severity: "error",
+        severity: "basic",
         message: "",
         fullWidth: false,
         vertical: "top",

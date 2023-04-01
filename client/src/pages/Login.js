@@ -7,14 +7,8 @@ import {
   Card,
   CardContent,
   Divider,
-  FormControl,
-  FormHelperText,
   Grid,
-  IconButton,
-  InputAdornment,
-  InputLabel,
   LinearProgress,
-  OutlinedInput,
   TextField,
   Typography,
 } from "@mui/material";
@@ -23,8 +17,6 @@ import {
   FlexBox,
   FlexColumnBox,
 } from "../components/global-components/FlexBox";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import {
   BasicButton,
   CaptionButton,
@@ -37,6 +29,7 @@ import useError from "../hooks/useError";
 import FindPwFormDialog from "../components/login/FindPwFormDialog";
 import useSnackbar from "../hooks/useSnackbar";
 import StyledImg from "../components/atom-components/StyledImg";
+import StyledPwTextField from "../components/global-components/StyledPwTextField";
 
 /**
  * 로고 스타일 정의 (구글, 깃허브)
@@ -59,7 +52,7 @@ function Login({ isLoggedIn }) {
   const { handleSetAuthError, handleSetErrorType, handleSetClearError } =
     useError();
 
-  const { signUpPage, backPage } = usePage();
+  const { signUpPage, calculetPage } = usePage();
   const { widthSx } = useSx();
 
   // snackbar
@@ -86,36 +79,37 @@ function Login({ isLoggedIn }) {
    * 폼 제출
    * - 입력된 이메일과 비밀번호에 따른 경고 안내문 change & 로그인 통과
    */
-  function onSubmitHandler(event) {
+  async function onSubmitHandler(event) {
     event.preventDefault();
-    handleOnLoading(); // loading start
-    handleSetClearError();
+    await handleOnLoading(); // loading start
+    await handleSetClearError();
 
     // firebase 통한 이메일&패스워드 로그인
-    const request = firebaseAuth.signInWithEmail(email.value, pw.value);
-    request.then((result) => {
-      if (result === true) {
-        // 로그인 성공 시, 바로 전 페이지에 있던 곳으로
-        backPage();
-      } else {
-        // set error
-        handleSetAuthError(result);
-        switch (result) {
-          case "auth/invalid-email": // 이메일 형식
-            handleSetErrorType(ERROR_EMAIL);
-            break;
-          case "auth/user-not-found": // 존재하지 않는 계정
-            handleSetErrorType(ERROR_EMAIL);
-            break;
-          case "auth/wrong-password": // 잘못된 비밀번호
-            handleSetErrorType(ERROR_PW);
-            break;
-          default:
-            break;
-        }
+    const result = await firebaseAuth.signInWithEmail(email.value, pw.value);
+    if (result === true) {
+      // 로그인 성공 시, 바로 전 페이지에 있던 곳으로
+      calculetPage();
+    } else {
+      // set error
+      handleSetAuthError(result);
+      switch (result) {
+        case "auth/invalid-email": // 이메일 형식
+          handleSetErrorType(ERROR_EMAIL);
+          break;
+        case "auth/user-not-found": // 존재하지 않는 계정
+          handleSetErrorType(ERROR_EMAIL);
+          break;
+        case "auth/wrong-password": // 잘못된 비밀번호
+          handleSetErrorType(ERROR_PW);
+          break;
+        case "auth/too-many-requests":
+          handleSetErrorType(ERROR_PW);
+          break;
+        default:
+          break;
       }
-      handleOffLoading(); // loading stop
-    });
+    }
+    await handleOffLoading(); // loading stop
   }
 
   /**
@@ -128,7 +122,7 @@ function Login({ isLoggedIn }) {
       handleOnLoading(); // loading start
       if (result === true) {
         // 로그인 성공 시, 바로 전 페이지에 있던 곳으로
-        backPage();
+        calculetPage();
       } else if (result === false) {
         handleSetAuthError("auth/user-not-found"); // 존재하지 않는 계정
         handleSetErrorType(ERROR_EMAIL);
@@ -137,6 +131,9 @@ function Login({ isLoggedIn }) {
         switch (result) {
           case "auth/account-exists-with-different-credential": // 다른 인증방식으로
             handleSetErrorType(ERROR_EMAIL);
+            break;
+          case "auth/too-many-requests":
+            handleSetErrorType(ERROR_PW);
             break;
           default:
             break;
@@ -157,7 +154,7 @@ function Login({ isLoggedIn }) {
 
       if (result === true) {
         // 로그인 성공 시, 메인 화면으로
-        backPage();
+        calculetPage();
       } else if (result === false) {
         handleSetAuthError("auth/user-not-found"); // 존재하지 않는 계정
         handleSetErrorType(ERROR_EMAIL);
@@ -166,6 +163,9 @@ function Login({ isLoggedIn }) {
         switch (result) {
           case "auth/account-exists-with-different-credential": // 다른 인증방식으로
             handleSetErrorType(ERROR_EMAIL);
+            break;
+          case "auth/too-many-requests":
+            handleSetErrorType(ERROR_PW);
             break;
           default:
             break;
@@ -208,13 +208,6 @@ function Login({ isLoggedIn }) {
       handleOffLoading(); // loading stop
     });
   }
-
-  /** 비밀번호 숨김 상태 */
-  const [showPassword, setShowPassword] = useState(false);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
 
   // 소셜 로그인 버튼 리스트
   const socailLoginList = [
@@ -267,33 +260,15 @@ function Login({ isLoggedIn }) {
                     error={errorType === ERROR_EMAIL}
                     helperText={errorType === ERROR_EMAIL && authError}
                   />
-                  <FormControl
-                    required
-                    fullWidth
+                  <StyledPwTextField
+                    id={ERROR_PW}
+                    required={true}
+                    label="비밀번호"
+                    value={pw.value}
+                    handleOnChange={pw.onChange}
                     error={errorType === ERROR_PW}
-                  >
-                    <InputLabel>비밀번호</InputLabel>
-                    <OutlinedInput
-                      value={pw.value}
-                      onChange={pw.onChange}
-                      type={showPassword ? "text" : "password"}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={handleClickShowPassword}
-                            onMouseDown={handleMouseDownPassword}
-                            edge="end"
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                      label="비밀번호"
-                    />
-                    <FormHelperText>
-                      {errorType === ERROR_PW && authError}
-                    </FormHelperText>
-                  </FormControl>
+                    helperText={errorType === ERROR_PW && authError}
+                  />
                 </FlexColumnBox>
                 <CaptionButton text="비밀번호 찾기" onClick={onFindPwModal} />
                 <Button

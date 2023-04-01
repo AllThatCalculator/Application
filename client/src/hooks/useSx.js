@@ -72,6 +72,13 @@ function useSx() {
     position: "relative",
   };
 
+  // 뱃지 컴포넌트 크기 - ex. (계정 수정) 프로필 사진 변경
+  const profileSize = { xs: "10.4rem", sm: "12.2rem", md: "16.0rem" };
+  const badgeSize = { xs: "2.2rem", sm: "2.4rem", md: "2.8rem" };
+  const badgeIconSize = {
+    fontSize: { xs: "1.6rem", sm: "1.8rem", md: "2.2rem" },
+  };
+
   return {
     WIDTH_CATEGORY_BAR,
     HEIGHT_CODE_EDITOR,
@@ -89,6 +96,9 @@ function useSx() {
     subTitleSx,
     popupLayoutSx,
     popupContentSx,
+    profileSize,
+    badgeSize,
+    badgeIconSize,
   };
 }
 export default useSx;

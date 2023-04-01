@@ -41,7 +41,7 @@ function calculetRecord(state = initialState, action) {
     case CALCULET_RECORD_LIST:
       return {
         ...state,
-        recordList: [...action.data],
+        recordList: action.data,
       };
     case CALCULET_OBJECT:
       return {
@@ -51,7 +51,7 @@ function calculetRecord(state = initialState, action) {
     case CALCULET_RECENT_LIST:
       return {
         ...state,
-        recentList: [...action.data],
+        recentList: action.data,
       };
     case CALCULET_RECENT_LIST_APPEND:
       return {
