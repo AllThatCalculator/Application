@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { models } = require("../../models2");
+const { models } = require("../../models");
 const { errorObject } = require("../../utils/errorMessage");
 
 async function postRecords(req, res) {

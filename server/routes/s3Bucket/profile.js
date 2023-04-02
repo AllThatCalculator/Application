@@ -1,7 +1,7 @@
 const { PutObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const s3Client = require("../../config/s3Bucket");
 const { v4: uuidv4 } = require("uuid");
-const { models } = require("../../models2");
+const { models } = require("../../models");
 
 /**
  * s3버킷에 프로필 사진 올리는 미들웨어 + 에러처리 포함

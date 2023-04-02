@@ -1,83 +1,98 @@
-const Sequelize = require("sequelize");
-const { bufferToString } = require("../../utils/bufferConverter");
+const Sequelize = require('sequelize');
 module.exports = function (sequelize, DataTypes) {
-  return sequelize.define(
-    "calculetInfoTemp",
-    {
-      id: {
-        type: DataTypes.CHAR(36),
-        allowNull: false,
-        defaultValue: Sequelize.Sequelize.fn("uuid"),
-        primaryKey: true,
-      },
-      title: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-      },
-      src_code: {
-        type: DataTypes.BLOB,
-        allowNull: false,
-        get() {
-          const rawValue = this.getDataValue('src_code');
-          return rawValue ? bufferToString(rawValue) : null;
-        }
-      },
-      manual: {
-        type: DataTypes.BLOB,
-        allowNull: false,
-        get() {
-          const rawValue = this.getDataValue('manual');
-          return rawValue ? bufferToString(rawValue) : null;
-        }
-      },
-      description: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-      },
-      category_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: "category",
-          key: "id",
-        },
-      },
-      contributor_id: {
-        type: DataTypes.CHAR(36),
-        allowNull: false,
-        references: {
-          model: "user_info",
-          key: "id",
-        },
-      },
-      registered: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: 0,
-      },
+  return sequelize.define('calculetInfoTemp', {
+    id: {
+      type: DataTypes.CHAR(36),
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: Sequelize.Sequelize.fn("uuid")
     },
-    {
-      sequelize,
-      tableName: "calculet_info_temp",
-      timestamps: true,
-      indexes: [
-        {
-          name: "PRIMARY",
-          unique: true,
-          using: "BTREE",
-          fields: [{ name: "id" }],
-        },
-        {
-          name: "contributor_id",
-          using: "BTREE",
-          fields: [{ name: "contributor_id" }],
-        },
-        {
-          name: "category_id",
-          using: "BTREE",
-          fields: [{ name: "category_id" }],
-        },
-      ],
+    title: {
+      type: DataTypes.STRING(100),
+      allowNull: false
+    },
+    srcCode: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+      field: "src_code"
+    },
+    manual: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    description: {
+      type: DataTypes.STRING(100),
+      allowNull: false
+    },
+    categoryMainId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'category',
+        key: 'main_id'
+      },
+      field: "category_main_id"
+    },
+    categorySubId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'category',
+        key: 'sub_id'
+      },
+      field: "category_sub_id"
+    },
+    contributorId: {
+      type: DataTypes.STRING(36),
+      allowNull: true,
+      references: {
+        model: 'user_info',
+        key: 'id'
+      },
+      field: "contributor_id"
+    },
+    registered: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: 0
     }
-  );
+  }, {
+    sequelize,
+    tableName: 'calculet_info_temp',
+    hasTrigger: true,
+    timestamps: true,
+    indexes: [
+      {
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "id_UNIQUE",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
+      },
+      {
+        name: "calculet_info_temp_ibfk_1_idx",
+        using: "BTREE",
+        fields: [
+          { name: "contributor_id" },
+        ]
+      },
+      {
+        name: "calculet_info_temp_ibfk_2_idx",
+        using: "BTREE",
+        fields: [
+          { name: "category_main_id" },
+          { name: "category_sub_id" },
+        ]
+      },
+    ]
+  });
 };

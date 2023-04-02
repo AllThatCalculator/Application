@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const { admin } = require("../../config/firebase");
-const { models } = require("../../models2");
+const { models } = require("../../models");
 const { deleteObjectFromS3 } = require("../s3Bucket/profile");
 
 /**

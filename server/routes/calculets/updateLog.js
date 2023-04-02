@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { models } = require("../../models2");
+const { models } = require("../../models");
 
 async function getUpdateLog(req, res) {
   const updateLog = await models.calculetUpdateLog.findAll({

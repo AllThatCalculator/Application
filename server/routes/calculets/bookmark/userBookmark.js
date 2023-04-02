@@ -1,5 +1,5 @@
 const { Op } = require("sequelize");
-const { models, sequelize } = require("../../../models2");
+const { models, sequelize } = require("../../../models");
 
 /**
  * 유저/계산기에 대해 북마크 여부 리턴

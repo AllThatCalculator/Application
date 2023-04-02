@@ -1,4 +1,4 @@
-const { models } = require("../../models2");
+const { models } = require("../../models");
 
 /**
  * 유저 프로필(헤더 디스플레이 - userName, profileImg) 찾는 함수

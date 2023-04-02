@@ -1,5 +1,5 @@
 const { admin } = require("../../config/firebase");
-const { models } = require("../../models2");
+const { models } = require("../../models");
 const { errorObject } = require("../../utils/errorMessage");
 const { timestamp } = require("../../utils/timestamp");
 

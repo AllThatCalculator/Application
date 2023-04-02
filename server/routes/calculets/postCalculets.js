@@ -1,4 +1,4 @@
-const { models } = require("../../models2");
+const { models } = require("../../models");
 
 async function postCalculets(req, res) {
   // 데이터 생성

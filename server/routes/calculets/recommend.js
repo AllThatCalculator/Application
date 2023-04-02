@@ -1,5 +1,5 @@
 const { col } = require("sequelize");
-const { models } = require("../../models2");
+const { models } = require("../../models");
 
 /**
  * 추천 리스트 뽑아주는 함수 - 우선 조회수 가장 높은 계산기 추천

@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const { admin } = require("../config/firebase");
 const router = express.Router();
 const { auth } = require("../middleware/auth");
-const { models } = require("../models2");
+const { models } = require("../models");
 const { errorObject } = require("../utils/errorMessage");
 const { deleteUser } = require("./users/deleteUser");
 
