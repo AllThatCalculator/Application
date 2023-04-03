@@ -28,7 +28,6 @@ async function getCalculetList(req, res) {
 
   const response = {};
   calculetList.map((calculet) => {
-    console.log(calculet);
     const { categoryMainId, categorySubId } = calculet;
     if (response[categoryMainId] === undefined) {
       response[categoryMainId] = {};
@@ -50,7 +49,7 @@ async function getConverters(req, res) {
   SELECT
     ${calculetPreviewAttributes}
     FROM calculet_info calculet
-    INNER JOIN user_info user on contributor_id = user.id
+    INNER JOIN user_info contributor on contributor_id = contributor.id
     INNER JOIN (
       SELECT
         category_main_id as categoryMainId,
@@ -71,7 +70,6 @@ async function getConverters(req, res) {
     if (response[categoryMainId] === undefined) {
       response[categoryMainId] = Array();
     }
-    console.log(calculet);
     response[categoryMainId].push(calculet);
   });
 
