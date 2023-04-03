@@ -43,12 +43,6 @@ const adminOptions = {
     resource: models.calculetRecord,
     ...accessController(9, 3, 9, 9)
   }, {
-    resource: models.calculetCount,
-    ...accessController(9, 3, 9, 9)
-  }, {
-    resource: models.calculetStatistics,
-    ...accessController(9, 3, 9, 9)
-  }, {
     resource: models.calculetUpdateLog,
     ...accessController(9, 3, 9, 9)
   }, {

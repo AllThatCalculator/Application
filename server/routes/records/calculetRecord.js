@@ -20,11 +20,11 @@ async function postRecords(req, res) {
 
   // process data
   const recordArray = req.body.recordArray.map((element) => ({
-    user_id: userId,
-    calculet_id: calculetId,
+    userId,
+    calculetId,
     input: JSON.stringify(element.inputObj),
     output: JSON.stringify(element.outputObj),
-    created_at: element.createdAt,
+    createdAt: element.createdAt,
   }));
 
   // put data into database
@@ -35,16 +35,16 @@ async function postRecords(req, res) {
 
 async function getRecords(req, res) {
   const records = await models.calculetRecord.findAll({
-    attributes: ["input", "output", "created_at", "id"],
+    attributes: ["input", "output", "createdAt", "id"],
     where: {
-      calculet_id: {
+      calculetId: {
         [Op.eq]: req.params.calculetId,
       },
-      user_id: {
+      userId: {
         [Op.eq]: res.locals.userId,
-      },
+      }
     },
-    order: [["created_at", "DESC"]],
+    order: [["createdAt", "DESC"]],
   });
 
   // process data
@@ -52,7 +52,7 @@ async function getRecords(req, res) {
     return {
       inputObj: JSON.parse(row.input),
       outputObj: JSON.parse(row.output),
-      createdAt: row.created_at,
+      createdAt: row.createdAt,
       id: row.id,
     };
   });
@@ -69,10 +69,10 @@ async function deleteRecords(req, res) {
   // delete records
   await models.calculetRecord.destroy({
     where: {
-      user_id: {
+      userId: {
         [Op.eq]: res.locals.userId, // for authorize
       },
-      calculet_id: {
+      calculetId: {
         [Op.eq]: req.body.calculetId, // for double check
       },
       id: {

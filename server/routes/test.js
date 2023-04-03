@@ -26,14 +26,14 @@ const { deleteUser } = require("./users/deleteUser");
  */
 router.post("/update-log", auth.validate, async (req, res) => {
   const calculet = await models.calculetInfo.findByPk(req.body.calculetId);
-  if (calculet.user_id !== res.locals.userId) {
+  if (calculet.contributorId !== res.locals.userId) {
     res.status(403).send(errorObject(403, 0));
   }
 
   await models.calculetUpdateLog.create(
     {
       message: req.body.message,
-      calculet_id: req.body.calculetId,
+      calculetId: req.body.calculetId,
     },
     { silent: true }
   );
@@ -54,15 +54,15 @@ router.post("/update-log", auth.validate, async (req, res) => {
  *          $ref: "#/components/responses/success201"
  */
 router.post("/calculets", auth.validate, async (req, res) => {
-  const categoryId = await getCategoryId(req.body.categoryMainId, req.body.categorySubId);
   const calculet = await models.calculetInfo.create({
     id: uuidv4(),
     title: req.body.title,
-    src_code: req.body.srcCode,
+    srcCode: req.body.srcCode,
     manual: req.body.manual,
     description: req.body.description,
-    category_id: categoryId,
-    contributor_id: res.locals.userId,
+    categoryMainId: req.body.categoryMainId,
+    categorySubId: req.body.categorySubId,
+    contributorId: res.locals.userId,
   });
   res.send(201, `/${calculet.id}`);
 

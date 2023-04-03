@@ -46,7 +46,7 @@ async function postProfile(req, res, next) {
  */
 async function putObjectToS3(profileImg) {
   // generate uuid for profile image
-  const newUUID = uuidv4().replace(/-/g, "");
+  const newUUID = uuidv4();
 
   // send PUT command to S3 bucket
   const params = {
@@ -76,12 +76,12 @@ async function putObjectToS3(profileImg) {
  */
 async function deleteProfile(req, res, next) {
   const user = await models.userInfo.findByPk(res.locals.userId, {
-    attributes: ["profile_img"],
+    attributes: ["profileImgSrc"],
   });
 
   // if exist profile img -> delete
-  if (req.file && user.profile_img) {
-    const result = await deleteObjectFromS3(user.profile_img);
+  if (req.file && user.profileImgSrc) {
+    const result = await deleteObjectFromS3(user.profileImgSrc);
 
     if (result.code !== 204) {
       res.status(400).send({
