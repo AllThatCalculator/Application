@@ -184,6 +184,21 @@ async function updateNewPassword(newPassword) {
   }
 }
 
+// get auth state
+async function getAuthState() {
+  try {
+    let result = false;
+    await onAuthStateChanged(auth, (user) => {
+      if (!!user) {
+        result = user;
+      }
+    });
+    return result;
+  } catch (error) {
+    return error.code;
+  }
+}
+
 const firebaseAuth = {
   signUpWithEmail,
   signInWithEmail,
@@ -196,5 +211,6 @@ const firebaseAuth = {
   getCredential,
   signInWithCredential,
   updateNewPassword,
+  getAuthState,
 };
 export default firebaseAuth;

@@ -1,5 +1,6 @@
 import deleteMyUser from "../user-actions/users/deleteMyUser";
 import getUserInfo from "../user-actions/users/getUserInfo";
+import getUserMe from "../user-actions/users/getUserMe";
 import patchUserInfo from "../user-actions/users/patchUserInfo";
 import signUpUser from "../user-actions/users/SignUpUser";
 
@@ -21,6 +22,28 @@ async function handleGetUserInfo(idToken) {
     /** set user info */
     const response = await getUserInfo(idToken);
     return response;
+  } catch (error) {
+    return error.code;
+  }
+}
+
+/**
+ * 사용자 정보 가져오는 처리 (me)
+ * @param {*} idToken
+ */
+async function handleGetUserMe(idToken) {
+  try {
+    // let result = {
+    //   userName: "",
+    //   profileImgSrc: "",
+    // };
+    /** get user info */
+    const response = await getUserMe(idToken);
+    if (!!response) {
+      return response;
+    } else {
+      return false;
+    }
   } catch (error) {
     return error.code;
   }
@@ -106,6 +129,7 @@ async function handleDeleteUser(idToken) {
 
 export {
   handleGetUserInfo,
+  handleGetUserMe,
   handlePatchUserInfo,
   handleSignUp,
   handleDeleteUser,
