@@ -47,6 +47,9 @@ const message = {
 exports.errorObject = (statusCode, errorCode) => {
   return {
     code: errorCode,
-    message: message[statusCode][`${errorCode}`],
+    message: message[statusCode][errorCode],
   };
 };
+
+
+exports.errorMessage = message;
