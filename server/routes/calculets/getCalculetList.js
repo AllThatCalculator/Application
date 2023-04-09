@@ -1,5 +1,5 @@
-const { Op, col, QueryTypes } = require("sequelize");
-const { models, sequelize } = require("../../models");
+const { QueryTypes } = require("sequelize");
+const { sequelize } = require("../../models");
 const PREVIEW_CNT = 6;
 
 const calculetPreviewAttributes = `calculet.id, title, description, categoryMainId, category_sub_id as categorySubId, view_cnt as viewCnt,
@@ -73,66 +73,10 @@ async function getConverters(req, res) {
     response[categoryMainId].push(calculet);
   });
 
-
   res.status(200).send(response);
-}
-
-/**
- * 계산기 검색 함수 ( 대분류 | 소분류 | 제목 )
- */
-async function searchCalculets(req, res) {
-  const filter = {};
-  if (req.query.categoryMainId) {
-    filter.categoryMainId = {
-      [Op.eq]: parseInt(req.query.categoryMainId)
-    };
-  }
-
-  if (req.query.categorySubId) {
-    filter.categorySubId = {
-      [Op.eq]: parseInt(req.query.categorySubId)
-    };
-  }
-
-  if (req.query.title) {
-    const keywords = req.query.title.split(" ").map((word) => `*${word}*`).join(" ");
-    filter.title = sequelize.literal(`MATCH(title) AGAINST("${keywords}" in boolean mode)`);
-  }
-  let limit = null;
-  if (req.query.limit) {
-    limit = parseInt(req.query.limit);
-  }
-
-  const calculetList = await models.calculetInfo.findAll({
-    attributes: [
-      "id",
-      "title",
-      "description",
-      "categoryMainId",
-      "categorySubId",
-      "viewCnt"
-    ],
-    include: [
-      // contributor
-      {
-        model: models.userInfo,
-        attributes: ["userName", "profileImgSrc"],
-        as: "contributor",
-      },
-    ],
-    where: filter,
-    limit: limit,
-  });
-
-  const responseData = {
-    calculetList: calculetList.map((calculet) => calculet.toJSON()),
-    count: calculetList.length
-  };
-  res.status(200).send(responseData);
 }
 
 exports.getCalculetList = {
   default: getCalculetList,
   converters: getConverters,
-  search: searchCalculets,
 };

@@ -10,8 +10,10 @@ const { postCalculets } = require("./postCalculets");
 const { userLike } = require("./userLike");
 const { getUpdateLog } = require("./updateLog");
 const { recommendation } = require("./recommend");
+const { search } = require("./search");
 // modules
 const bookmark = require("./bookmark");
+const { query } = require("express-validator");
 
 // bookmark api
 router.use(bookmark);
@@ -69,20 +71,32 @@ router.get(
  *  /api/calculets/find:
  *    get:
  *      parameters:
- *        - $ref: "#/components/parameters/mainId"
- *        - $ref: "#/components/parameters/subId"
- *        - $ref: "#/components/parameters/title"
- *        - $ref: "#/components/parameters/limit"
+ *        - $ref: "#/components/parameters/categoryMainId"
+ *        - $ref: "#/components/parameters/categorySubId"
+ *        - $ref: "#/components/parameters/keyword"
+ *        - $ref: "#/components/parameters/size"
+ *        - $ref: "#/components/parameters/page"
+ *        - $ref: "#/components/parameters/target"
  *      tags: [calculets]
- *      summary: 계산기 검색 (대분류 / 소분류 / 제목) - 페이지네이션 X (한번에 불러오는 방식)
- *      description: 대분류 | 소분류 | 계산기 제목으로 검색 필터 설정 가능 (모든 쿼리 파라미터는 필수X)
+ *      summary: 계산기 검색 (대분류 / 소분류 / 키워드) - offset pagination
+ *      description: 대분류 | 소분류로 검색 필터 설정 가능
  *      responses:
  *        200:
  *          $ref: "#/components/responses/getSearchResult"
  *        400:
  *          $ref: "#/components/responses/error"
  */
-router.get("/find", errorHandler.dbWrapper(getCalculetList.search));
+router.get("/find",
+  // validate & sanitize query value
+  [
+    query("categoryMainId").optional().isInt().toInt(),
+    query("categorySubId").optional().isInt().toInt(),
+    query("keyword").blacklist("*").customSanitizer(keyword => keyword.split(" ").map((token) => `*${token}*`).join(" ")),
+    query("size").isInt({ gt: 0 }).toInt(),
+    query("page").isInt({ gt: 0 }).toInt(),
+    query("target").toLowerCase().isIn(["title", "desc", "all"])
+  ],
+  errorHandler.dbWrapper(search));
 
 /**
  * @swagger
