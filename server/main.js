@@ -10,6 +10,9 @@ const { errorHandler } = require("./middleware/errorHandler");
 const { logger } = require("./middleware/logger");
 const { timestamp } = require("./utils/timestamp");
 
+// admin apis
+const { getShowCode } = require("./admin/apis/getShowCode");
+
 require("dotenv").config();
 const port = process.env.EXPRESS_PORT;
 
@@ -50,14 +53,15 @@ app.use("/users", users);
 // 계산 이력 관리 API
 app.use("/records", records);
 
+// admin에서 계산기 소스코드 보여주는 API
+app.get("/show-code/:calculetId", errorHandler.dbWrapper(getShowCode));
+
 // default error handler
 app.use(errorHandler.default);
 
 // 서버 시작
 app.listen(port, () => {
-  console.log(
-    `${timestamp()} | listening ${port}`
-  );
+  console.log(`${timestamp()} | listening ${port}`);
 });
 
 // admin
