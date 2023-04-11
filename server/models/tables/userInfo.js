@@ -70,6 +70,14 @@ module.exports = function (sequelize, DataTypes) {
           { name: "profile_img" },
         ]
       },
+      {
+        name: "id_email",
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+          { name: "email" },
+        ]
+      },
     ]
   });
 };

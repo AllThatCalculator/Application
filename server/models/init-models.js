@@ -1,4 +1,5 @@
 const DataTypes = require("sequelize").DataTypes;
+const _admin = require("./tables/admin");
 const _calculetInfo = require("./tables/calculetInfo");
 const _calculetInfoTemp = require("./tables/calculetInfoTemp");
 const _calculetRecord = require("./tables/calculetRecord");
@@ -11,6 +12,7 @@ const _userCalculetLike = require("./tables/userCalculetLike");
 const _userInfo = require("./tables/userInfo");
 
 function initModels(sequelize) {
+  const admin = _admin(sequelize, DataTypes);
   const calculetInfo = _calculetInfo(sequelize, DataTypes);
   const calculetInfoTemp = _calculetInfoTemp(sequelize, DataTypes);
   const calculetRecord = _calculetRecord(sequelize, DataTypes);
@@ -48,6 +50,10 @@ function initModels(sequelize) {
   categoryMain.hasMany(category, { as: "categories", foreignKey: "main_id" });
   category.belongsTo(categorySub, { as: "sub", foreignKey: "sub_id" });
   categorySub.hasMany(category, { as: "categories", foreignKey: "sub_id" });
+  admin.belongsTo(userInfo, { as: "id_user_info", foreignKey: "id" });
+  userInfo.hasOne(admin, { as: "admin", foreignKey: "id" });
+  admin.belongsTo(userInfo, { as: "email_user_info", foreignKey: "email" });
+  userInfo.hasMany(admin, { as: "email_admins", foreignKey: "email" });
   calculetInfo.belongsTo(userInfo, { as: "contributor", foreignKey: "contributor_id" });
   userInfo.hasMany(calculetInfo, { as: "calculet_infos", foreignKey: "contributor_id" });
   calculetInfoTemp.belongsTo(userInfo, { as: "contributor", foreignKey: "contributor_id" });
@@ -60,6 +66,7 @@ function initModels(sequelize) {
   userInfo.hasMany(userCalculetLike, { as: "user_calculet_likes", foreignKey: "user_id" });
 
   return {
+    admin,
     calculetInfo,
     calculetInfoTemp,
     calculetRecord,
