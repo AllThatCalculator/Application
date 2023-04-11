@@ -117,13 +117,14 @@ router.delete(
   }
 );
 
+// admin 정보 삭제되니 주의할 것
 // /**
 //  * @swagger
 //  *  /api/test/register-all:
 //  *    get:
 //  *      tags: [TEST]
-//  *      summary: 유저 등록 
-//  *      description: DB에 있는 모든 유저를 상대로 firebase custom claim에 등록 설정
+//  *      summary: 유저 등록 (admin 정보 삭제되니 주의할 것)
+//  *      description: DB에 있는 모든 유저를 상대로 firebase custom claim에 등록 설정 (admin 정보 삭제되니 주의할 것)
 //  *      responses:
 //  *        200:
 //  *          description: 완료 (결과는 터미널 로그 확인)
