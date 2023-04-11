@@ -1,4 +1,5 @@
 const { models } = require("../../models");
+const { sendEmail } = require("../../utils/emailSender");
 
 async function postCalculets(req, res) {
   // 데이터 생성
@@ -12,6 +13,7 @@ async function postCalculets(req, res) {
     contributor_id: res.locals.userId,
   });
 
+  sendEmail().catch(err, () => console.error);
   res.status(201).send("/");
 }
 
