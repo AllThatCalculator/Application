@@ -75,6 +75,7 @@ exports.emailTemplate = (content) => `
                 <tr>
                   <td
                     align="left"
+                    valign="middle"
                     style="
                       padding-top: 0;
                       padding-right: 0;
