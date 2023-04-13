@@ -1,3 +1,4 @@
+const CustomError = require("../utils/CustomError");
 const { errorObject } = require("../utils/errorMessage");
 
 /**
@@ -5,6 +6,11 @@ const { errorObject } = require("../utils/errorMessage");
  * - 백엔드 로직에 예상하지 못한 버그가 있는 경우 app crash 발생 예방
  */
 function defaultErrorHandler(err, req, res, next) {
+  if (err instanceof CustomError) {
+    res.status(err.code).send(err);
+    return;
+  }
+
   console.error(err.stack);
   res.status(500).send(errorObject(500, 0));
 }
@@ -14,8 +20,12 @@ function defaultErrorHandler(err, req, res, next) {
  */
 const asyncWrapper = (asyncFunc) => {
   return (req, res, next) => {
-    asyncFunc(req, res, next).catch((error) => {
-      console.error(error);
+    asyncFunc(req, res, next).catch((err) => {
+      if (err instanceof CustomError) {
+        res.status(err.code).send(err);
+        return;
+      }
+      console.error(err);
       res.status(500).send(errorObject(500, 0));
     });
   };
@@ -27,8 +37,13 @@ const asyncWrapper = (asyncFunc) => {
  */
 const dbErrorHandler = (asyncFunc) => {
   return (req, res, next) => {
-    asyncFunc(req, res, next).catch((error) => {
-      console.error(error);
+    asyncFunc(req, res, next).catch((err) => {
+      if (err instanceof CustomError) {
+        res.status(err.code).send(err);
+        return;
+      }
+
+      console.error(err);
       console.error("error occured during creating record to DB");
       res.status(400).send(errorObject(400, 0));
     });

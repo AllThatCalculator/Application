@@ -14,16 +14,16 @@ function publishCalculet(record) {
   return sequelize.transaction(async (t) => {
     // move to calculetInfo table
     await models.calculetInfo.create(record, {
-      transaction: t
+      transaction: t,
     });
     // delete from temporary table
     await models.calculetInfoTemp.destroy({
       where: {
         id: {
-          [Op.eq]: record.id
-        }
+          [Op.eq]: record.id,
+        },
       },
-      transaction: t
+      transaction: t,
     });
   });
 }
@@ -35,7 +35,7 @@ const calculetTempResource = {
 
 // add custom action
 calculetTempResource.options.actions.publish = {
-  isAccessible: ({ currentAdmin }) => (currentAdmin.accessLevel >= 2),
+  isAccessible: ({ currentAdmin }) => currentAdmin.accessLevel >= 2,
   actionType: "record",
   component: false,
   handler: async (req, res, context) => {
@@ -43,27 +43,42 @@ calculetTempResource.options.actions.publish = {
     try {
       await publishCalculet(record.params);
       // 로그
-      console.log(`${timestamp()} | ${record.id()} published by ${currentAdmin.email}`);
+      console.log(
+        `${timestamp()} | ${record.id()} published by ${currentAdmin.email}`
+      );
       return {
         record: record.toJSON(currentAdmin),
         redirectUrl: "/admin/resources/calculet_info_temp",
         notice: {
           message: "계산기 등록 완료",
-          type: "success"
-        }
+          type: "success",
+        },
       };
     } catch (error) {
       return {
         record: record.toJSON(currentAdmin),
         notice: {
           message: "계산기 등록 실패",
-          type: "error"
-        }
+          type: "error",
+        },
       };
     }
   },
   guard: "등록하시겠습니까?",
   icon: "CalculatorCheck",
+};
+
+calculetTempResource.options.actions.showCode = {
+  isAccessible: ({ currentAdmin }) => currentAdmin.accessLevel >= 1,
+  actionType: "record",
+  component: false,
+  handler: async (req, res, context) => {
+    const { record, currentAdmin } = context;
+    return {
+      redirectUrl: `/admin/api/show-code/${record.params.id}`,
+      record: record.toJSON(currentAdmin),
+    };
+  },
 };
 
 module.exports = { calculetTempResource };

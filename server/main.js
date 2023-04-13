@@ -55,9 +55,7 @@ app.use(errorHandler.default);
 
 // 서버 시작
 app.listen(port, () => {
-  console.log(
-    `${timestamp()} | listening ${port}`
-  );
+  console.log(`${timestamp()} | listening ${port}`);
 });
 
 // admin
