@@ -95,12 +95,6 @@ const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
   }
 );
 
-// admin에서 계산기 소스코드 보여주는 API
-adminApp.get(
-  "/admin/api/show-code/:calculetId",
-  errorHandler.dbWrapper(getShowCode)
-);
-
 // to use session cookie
 adminApp.use(
   session({
@@ -115,5 +109,11 @@ adminApp.use(
 adminApp.use(logger);
 adminApp.use("/admin/api", auth.admin);
 adminApp.use(admin.options.rootPath, adminRouter);
+
+// admin에서 계산기 소스코드 보여주는 API
+adminApp.get(
+  "/admin/api/show-code/:calculetId",
+  errorHandler.dbWrapper(getShowCode)
+);
 
 module.exports = adminApp;
