@@ -10,68 +10,81 @@ const { userContent } = require("./email/userContent");
  * @returns email list of admin user (level >= 2)
  */
 function getAdminEmailList() {
-  return models.admin.findAll().
-    then(list => list
-      .filter((user) => user.accessLevel >= 2)
-      .map(user => user.toJSON().email)
+  return models.admin
+    .findAll()
+    .then((list) =>
+      list
+        .filter((user) => user.accessLevel >= 2)
+        .map((user) => user.toJSON().email)
     );
 }
 
 /**
  * 관리자에게 가는 계산기 임시 등록 알림 메일
  * @param {object} calculetObj 계산기 객체
- * @returns 
+ * @returns
  */
 async function alertMailForAdmin(calculetObj) {
-  const {
-    id,
-    title,
-    categoryMainId, categorySubId,
-    description,
-    manual
-  } = calculetObj;
+  const { id, title, categoryMainId, categorySubId, description, manual } =
+    calculetObj;
 
   const [categoryMain, categorySub, adminList] = await Promise.all([
-    models.categoryMain.findByPk(categoryMainId, { attributes: ["name"] }).then((data) => data.name),
-    models.categorySub.findByPk(categorySubId, { attributes: ["name"] }).then((data) => data.name),
-    getAdminEmailList()
+    models.categoryMain
+      .findByPk(categoryMainId, { attributes: ["name"] })
+      .then((data) => data.name),
+    models.categorySub
+      .findByPk(categorySubId, { attributes: ["name"] })
+      .then((data) => data.name),
+    getAdminEmailList(),
   ]);
+
+  console.log(adminList);
 
   const html = emailTemplate(
     adminContent(
       title,
-      categoryMain, categorySub,
-      description, manual,
-      shortcutButton(`https://dev.allthatcalculator.io/admin/resources/calculet_info_temp/records/${id}/show`, "관리자 페이지 바로가기")
-    ));
+      categoryMain,
+      categorySub,
+      description,
+      manual,
+      shortcutButton(
+        `https://dev.allthatcalculator.io/admin/resources/calculet_info_temp/records/${id}/show`
+      )
+    )
+  );
 
-  return {
+  return sendEmail({
     to: adminList,
-    subject: `[AllthatCalculator] 새로운 계산기 "${title}" 등록 확인 요청`,
-    html
-  };
+    subject: `[AllThatCalculator] 새로운 계산기 "${title}" 등록 확인 요청`,
+    html,
+  });
 }
 
 /**
  * 유저에게 가는 계산기 등록 알림 메일
- * @param {string} userName 유저 닉네임
- * @param {string} email 유저 이메일
  * @param {string} calculetId 계산기 id
  * @param {string} title 계산기 제목
- * @returns 
+ * @param {string} contributorId 유저 uid
+ * @returns
  */
-function alertMailForUser(userName, email, calculetId, title) {
+async function alertMailForUser(calculetId, title, contributorId) {
+  const { userName, email } = await models.userInfo.findByPk(contributorId, {
+    attributes: ["userName", "email"],
+  });
+
   const html = emailTemplate(
     userContent(
-      title, userName, shortcutButton(`https://allthatcalculator.io/${calculetId}`, "바로가기")
+      title,
+      userName,
+      shortcutButton(`https://allthatcalculator.io/${calculetId}`)
     )
   );
 
-  return {
+  return sendEmail({
     to: email,
-    subject: `[AllthatCalculator] "${title}"이(가) 등록되었습니다!`,
-    html
-  };
+    subject: `[AllThatCalculator] "${title}"이(가) 등록되었습니다!`,
+    html,
+  });
 }
 
 /**
@@ -81,7 +94,7 @@ function alertMailForUser(userName, email, calculetId, title) {
  * @param {string} mailObject.subject 제목
  * @param {string} mailObject.html 본문
  */
-exports.sendEmail = async function sendEmail(mailObject) {
+async function sendEmail(mailObject) {
   // fixed part
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -97,12 +110,13 @@ exports.sendEmail = async function sendEmail(mailObject) {
   const info = await transporter.sendMail({
     ...mailObject,
     from: process.env.EMAIL_ACCOUNT, // sender address
+    to: await getAdminEmailList(),
   });
 
   console.log("Message sent: %s", info.messageId);
-};
+}
 
-exports.mailFormat = {
+exports.sendEmail = {
   admin: alertMailForAdmin,
-  user: alertMailForUser
+  user: alertMailForUser,
 };
