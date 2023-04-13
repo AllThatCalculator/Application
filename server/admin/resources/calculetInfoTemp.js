@@ -75,7 +75,7 @@ calculetTempResource.options.actions.showCode = {
   handler: async (req, res, context) => {
     const { record, currentAdmin } = context;
     return {
-      redirectUrl: `/api/show-code/${record.params.id}`,
+      redirectUrl: `/admin/api/show-code/${record.params.id}`,
       record: record.toJSON(currentAdmin),
     };
   },
