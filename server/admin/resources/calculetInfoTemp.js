@@ -25,6 +25,14 @@ function publishCalculet(record) {
       },
       transaction: t,
     });
+
+    // send email to contributor
+    if (process.env.NODE_ENV === "production") {
+      const { sendEmail } = require("../../utils/emailSender");
+      sendEmail
+        .user(record.id, record.title, record.contributor_id)
+        .catch(console.error);
+    }
   });
 }
 
