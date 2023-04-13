@@ -4,6 +4,16 @@ exports.emailTemplate = (content) => `
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @import url("https://allthatcalculator.io/static-files/font.css");
+      @font-face {
+        font-family: "S-CoreDream-4Regular";
+        src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff")
+          format("woff");
+        font-weight: normal;
+        font-style: normal;
+      }
+    </style>
   </head>
   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"> -->
   <body>
