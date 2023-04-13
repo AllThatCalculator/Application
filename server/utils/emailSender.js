@@ -38,8 +38,6 @@ async function alertMailForAdmin(calculetObj) {
     getAdminEmailList(),
   ]);
 
-  console.log(adminList);
-
   const html = emailTemplate(
     adminContent(
       title,
@@ -110,7 +108,6 @@ async function sendEmail(mailObject) {
   const info = await transporter.sendMail({
     ...mailObject,
     from: process.env.EMAIL_ACCOUNT, // sender address
-    to: await getAdminEmailList(),
   });
 
   console.log("Message sent: %s", info.messageId);

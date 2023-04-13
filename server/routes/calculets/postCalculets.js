@@ -18,10 +18,8 @@ async function postCalculets(req, res) {
 
   // send mail to admin
   if (process.env.NODE_ENV === "production") {
-    const { sendEmail, mailFormat } = require("../../utils/emailSender");
-    mailFormat.admin(newCalculetObject)
-      .then((mailContent) => sendEmail(mailContent))
-      .catch(console.error);
+    const { sendEmail } = require("../../utils/emailSender");
+    sendEmail.admin(newCalculetObject).catch(console.error);
   }
 
   res.status(201).send("/");
