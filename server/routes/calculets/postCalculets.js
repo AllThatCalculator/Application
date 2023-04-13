@@ -1,19 +1,29 @@
 const { models } = require("../../models");
-const { sendEmail } = require("../../utils/emailSender");
+const { v4: uuidv4 } = require("uuid");
 
 async function postCalculets(req, res) {
-  // 데이터 생성
-  await models.calculetInfoTemp.create({
+  const newCalculetObject = {
+    id: uuidv4(),
     title: req.body.title,
     srcCode: req.body.srcCode,
     manual: req.body.manual,
     description: req.body.description,
     categoryMainId: req.body.categoryMainId,
     categorySubId: req.body.categorySubId,
-    contributor_id: res.locals.userId,
-  });
+    contributorId: res.locals.userId,
+  };
 
-  sendEmail().catch(err, () => console.error);
+  // create data
+  await models.calculetInfoTemp.create(newCalculetObject);
+
+  // send mail to admin
+  if (process.env.NODE_ENV === "production") {
+    const { sendEmail, mailFormat } = require("../../utils/emailSender");
+    mailFormat.admin(newCalculetObject)
+      .then((mailContent) => sendEmail(mailContent))
+      .catch(console.error);
+  }
+
   res.status(201).send("/");
 }
 
