@@ -4,8 +4,8 @@ const { admin } = require("../config/firebase");
 const router = express.Router();
 const { auth } = require("../middleware/auth");
 const { models } = require("../models");
-const { errorObject } = require("../utils/errorMessage");
 const { deleteUser } = require("./users/deleteUser");
+const { CustomError } = require("../utils/CustomError");
 
 /**
  * @swagger
@@ -27,7 +27,7 @@ const { deleteUser } = require("./users/deleteUser");
 router.post("/update-log", auth.validate, async (req, res) => {
   const calculet = await models.calculetInfo.findByPk(req.body.calculetId);
   if (calculet.contributorId !== res.locals.userId) {
-    res.status(403).send(errorObject(403, 0));
+    throw new CustomError(403, 0);
   }
 
   await models.calculetUpdateLog.create(
@@ -104,18 +104,14 @@ router.delete("/users", auth.validate, async (req, res) => {
  *        200:
  *          description: 회원 정보 삭제 완료
  */
-router.delete(
-  "/users/database",
-  auth.validate,
-  async (req, res) => {
-    try {
-      await deleteUser.database(res.locals.userId);
-      res.status(200).send(`user "${res.locals.email}" deleted from database`);
-    } catch (error) {
-      res.status(400).send("request failed");
-    }
+router.delete("/users/database", auth.validate, async (req, res) => {
+  try {
+    await deleteUser.database(res.locals.userId);
+    res.status(200).send(`user "${res.locals.email}" deleted from database`);
+  } catch (error) {
+    res.status(400).send("request failed");
   }
-);
+});
 
 // admin 정보 삭제되니 주의할 것
 // /**
@@ -167,7 +163,10 @@ router.delete(
  *          description: 성공
  */
 router.post("/login", async (req, res) => {
-  const { idToken } = await auth.postFirebase(req.body.email, req.body.password);
+  const { idToken } = await auth.postFirebase(
+    req.body.email,
+    req.body.password
+  );
   res.status(200).send(idToken);
 });
 
@@ -176,7 +175,7 @@ router.post("/login", async (req, res) => {
 //  *  /api/test/admin-setting:
 //  *    get:
 //  *      tags: [TEST]
-//  *      summary: 관리자 유저 등록 
+//  *      summary: 관리자 유저 등록
 //  *      description: firebase에 관리자로 등록된 유저를 DB에 기록
 //  *      responses:
 //  *        200:
@@ -185,7 +184,6 @@ router.post("/login", async (req, res) => {
 // router.get("/admin-setting", async (req, res) => {
 
 //   const { users } = await admin.auth().listUsers();
-
 
 //   Promise.all(users.map(async (userData) => {
 //     // console.log(userData.customClaims);
