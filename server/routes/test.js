@@ -117,31 +117,31 @@ router.delete(
   }
 );
 
-/**
- * @swagger
- *  /api/test/register-all:
- *    get:
- *      tags: [TEST]
- *      summary: 유저 등록 
- *      description: DB에 있는 모든 유저를 상대로 firebase custom claim에 등록 설정
- *      responses:
- *        200:
- *          description: 완료 (결과는 터미널 로그 확인)
- */
-router.get("/register-all", async (req, res) => {
-  const userList = await models.userInfo.findAll();
-  auth.
-    Promise.all(userList.map(async (user) => {
-      await admin.auth().setCustomUserClaims(user.id, { registered: true })
-        .then(() => console.log(`${user.id} completed`))
-        .catch((err) => {
-          console.log(`${user.id} failed`);
-          console.log(err);
-        });
-    }));
+// admin 정보 삭제되니 주의할 것
+// /**
+//  * @swagger
+//  *  /api/test/register-all:
+//  *    get:
+//  *      tags: [TEST]
+//  *      summary: 유저 등록 (admin 정보 삭제되니 주의할 것)
+//  *      description: DB에 있는 모든 유저를 상대로 firebase custom claim에 등록 설정 (admin 정보 삭제되니 주의할 것)
+//  *      responses:
+//  *        200:
+//  *          description: 완료 (결과는 터미널 로그 확인)
+//  */
+// router.get("/register-all", async (req, res) => {
+//   const userList = await models.userInfo.findAll();
+//   Promise.all(userList.map(async (user) => {
+//     await admin.auth().setCustomUserClaims(user.id, { registered: true })
+//       .then(() => console.log(`${user.id} completed`))
+//       .catch((err) => {
+//         console.log(`${user.id} failed`);
+//         console.log(err);
+//       });
+//   }));
 
-  res.status(200).send();
-});
+//   res.status(200).send();
+// });
 
 /**
  * @swagger
@@ -170,4 +170,41 @@ router.post("/login", async (req, res) => {
   const { idToken } = await auth.postFirebase(req.body.email, req.body.password);
   res.status(200).send(idToken);
 });
+
+// /**
+//  * @swagger
+//  *  /api/test/admin-setting:
+//  *    get:
+//  *      tags: [TEST]
+//  *      summary: 관리자 유저 등록 
+//  *      description: firebase에 관리자로 등록된 유저를 DB에 기록
+//  *      responses:
+//  *        200:
+//  *          description: 완료 (결과는 터미널 로그 확인)
+//  */
+// router.get("/admin-setting", async (req, res) => {
+
+//   const { users } = await admin.auth().listUsers();
+
+
+//   Promise.all(users.map(async (userData) => {
+//     // console.log(userData.customClaims);
+//     if (!!userData.customClaims?.admin) {
+//       const { email, userName } = await models.userInfo.findByPk(userData.uid, {
+//         attributes: ["email", "userName"],
+//       });
+//       const data = {
+//         id: userData.uid,
+//         email,
+//         accessLevel: userData.customClaims.accessLevel
+//       };
+//       await models.admin.create(data);
+//       console.log(`${userName} recorded`, data);
+
+//     }
+//   }));
+
+//   res.status(200).send();
+// });
+
 module.exports = router;
