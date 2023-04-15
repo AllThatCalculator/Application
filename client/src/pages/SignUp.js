@@ -15,7 +15,6 @@ import { checkSymbols, checkSpace } from "../utils/checkSpecialSymbols";
 import checkValidDate from "../utils/checkValidDate";
 import firebaseAuth from "../firebaseAuth";
 import { handleGetUserMe, handleSignUp } from "../utils/handleUserActions";
-import getUserMe from "../user-actions/users/getUserMe";
 import { onSetUserIdToken, onSetUserInfo } from "../modules/userInfo";
 import {
   ID_INPUT_BIO,
@@ -49,6 +48,7 @@ import {
   FIREBASE_AUTH_ERROR_WEAK_PASSWORD,
 } from "../constants/auth";
 import useSnackbar from "../hooks/useSnackbar";
+import { setAuthError, setClearError, setErrorType } from "../modules/error";
 
 /**
  * 회원가입 페이지
@@ -131,7 +131,7 @@ function SignUp({ isLoggedIn }) {
 
   // input content, symbol check handle
   useEffect(() => {
-    handleSetClearError(); // init error
+    dispatch(setClearError()); // init error
     setIsSubmitDisabled(true);
 
     // 닉네임 : 공백 혹은 특수문자 검사
@@ -139,8 +139,8 @@ function SignUp({ isLoggedIn }) {
       !!inputUserName &&
       (checkSymbols(inputUserName) || checkSpace(inputUserName))
     ) {
-      handleSetAuthError(ATC_VALIDATE_ERROR_SPECIAL_SYMBOLS_USER_NAME);
-      handleSetErrorType(KEY_ERROR_USER_NAME);
+      dispatch(setAuthError(ATC_VALIDATE_ERROR_SPECIAL_SYMBOLS_USER_NAME));
+      dispatch(setErrorType(KEY_ERROR_USER_NAME));
       return;
     }
 
@@ -148,16 +148,16 @@ function SignUp({ isLoggedIn }) {
     if (!!inputYear && !!inputMonth && !!inputDate) {
       const birthdateDb = inputYear + "-" + inputMonth + "-" + inputDate;
       if (!checkValidDate(birthdateDb)) {
-        handleSetAuthError(ATC_VALIDATE_ERROR_INVALID_DATE);
-        handleSetErrorType(KEY_ERROR_BIRTHDATE);
+        dispatch(setAuthError(ATC_VALIDATE_ERROR_INVALID_DATE));
+        dispatch(setErrorType(KEY_ERROR_BIRTHDATE));
         return;
       }
     }
 
     // 직업 : 특수문자 검사
     if (!!inputJob && checkSymbols(inputJob)) {
-      handleSetAuthError(ATC_VALIDATE_ERROR_SPECIAL_SYMBOLS_JOB);
-      handleSetErrorType(KEY_ERROR_JOB);
+      dispatch(setAuthError(ATC_VALIDATE_ERROR_SPECIAL_SYMBOLS_JOB));
+      dispatch(setErrorType(KEY_ERROR_JOB));
       return;
     }
 
@@ -179,9 +179,7 @@ function SignUp({ isLoggedIn }) {
     inputMonth,
     inputDate,
     inputJob,
-    inputEmail,
-    inputPassword,
-    inputPasswordConfirm,
+    dispatch,
   ]);
 
   /**

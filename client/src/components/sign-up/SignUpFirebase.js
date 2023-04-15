@@ -1,6 +1,4 @@
-import useInput from "../../hooks/useInput";
-import firebaseAuth from "../../firebaseAuth";
-import { BasicButton, CaptionButton } from "../atom-components/Buttons";
+import { BasicButton } from "../atom-components/Buttons";
 import {
   Button,
   Card,
@@ -8,13 +6,8 @@ import {
   Divider,
   Grid,
   TextField,
-  Typography,
 } from "@mui/material";
-import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
-import usePage from "../../hooks/usePage";
-import { useSelector } from "react-redux";
-import useLoading from "../../hooks/useLoading";
-import useError from "../../hooks/useError";
+import { FlexColumnBox } from "../global-components/FlexBox";
 import StyledPwTextField from "../global-components/StyledPwTextField";
 import StyledImg from "../atom-components/StyledImg";
 
