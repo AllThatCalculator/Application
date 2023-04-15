@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleErrorUserActions } from "../../utils/handleUserActions";
 
 /**
  * 계산기 정보 팝업 - 계산기 업데이트 로그
@@ -12,8 +13,7 @@ async function getCalculetUpdateLog(calculetId) {
     });
     return data;
   } catch (error) {
-    // console.log(error);
-    return null;
+    handleErrorUserActions(error.response);
   }
 }
 export default getCalculetUpdateLog;

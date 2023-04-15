@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleErrorUserActions } from "../../utils/handleUserActions";
 
 /**
  * 계산 내역 불러오는 함수
@@ -19,8 +20,7 @@ async function getCalculetRecords(calculetId = "", userId = "") {
       });
     return data;
   } catch (error) {
-    // console.log("계산 이력 error", error);
-    return null;
+    handleErrorUserActions(error.response);
   }
 }
 export default getCalculetRecords;

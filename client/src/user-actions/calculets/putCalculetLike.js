@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleErrorUserActions } from "../../utils/handleUserActions";
 
 /**
  * 좋아요 등록 | 취소
@@ -23,7 +24,7 @@ async function putCalculetLike(state, calculetId, userId) {
         data = response.data;
       });
   } catch (error) {
-    // console.log(error);
+    handleErrorUserActions(error.response);
   }
   return data;
 }

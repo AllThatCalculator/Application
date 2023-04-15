@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleErrorUserActions } from "../../utils/handleUserActions";
 
 /**
  * 계산기 검색 얻어오기
@@ -16,12 +17,7 @@ async function getCalculetFind(dataToSubmit = {}) {
       });
     return data;
   } catch (error) {
-    switch (error.response.status) {
-      case 400:
-        return error.response.data;
-      default:
-        return;
-    }
+    handleErrorUserActions(error.response);
   }
 }
 export default getCalculetFind;

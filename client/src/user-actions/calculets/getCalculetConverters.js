@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleErrorUserActions } from "../../utils/handleUserActions";
 
 /**
  * 단위 변환기 가져오기
@@ -12,12 +13,7 @@ async function getCalculetConverters() {
     });
     return data;
   } catch (error) {
-    switch (error.response.status) {
-      case 400:
-        return error.response.data;
-      default:
-        return;
-    }
+    handleErrorUserActions(error.response);
   }
 }
 export default getCalculetConverters;
