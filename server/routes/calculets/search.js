@@ -1,6 +1,6 @@
 const { sequelize, models } = require("../../models");
 const { Op, col } = require("sequelize");
-const CustomError = require("../../utils/CustomError");
+const { CustomError } = require("../../utils/CustomError");
 const { validationResult } = require("express-validator");
 
 /**
@@ -13,13 +13,13 @@ function setFilter(query) {
   const filter = {};
   if (query.categoryMainId) {
     filter.categoryMainId = {
-      [Op.eq]: query.categoryMainId
+      [Op.eq]: query.categoryMainId,
     };
   }
 
   if (query.categorySubId) {
     filter.categorySubId = {
-      [Op.eq]: query.categorySubId
+      [Op.eq]: query.categorySubId,
     };
   }
 
@@ -38,7 +38,9 @@ function setFilter(query) {
   }
 
   // set keyword
-  filter.keyword = sequelize.literal(`MATCH(${target}) AGAINST("${query.keyword}" in boolean mode)`);
+  filter.keyword = sequelize.literal(
+    `MATCH(${target}) AGAINST("${query.keyword}" in boolean mode)`
+  );
 
   return filter;
 }
@@ -50,6 +52,7 @@ async function searchCalculets(req, res) {
   const error = validationResult(req);
   // request invalid
   if (!error.isEmpty()) {
+    console.log(error.mapped());
     throw new CustomError(400, 1);
   }
 
@@ -80,13 +83,13 @@ async function searchCalculets(req, res) {
     offset: size * (page - 1),
     order: [
       [col("viewCnt"), "DESC"],
-      [col("id"), "DESC"]
-    ]
+      [col("id"), "DESC"],
+    ],
   });
 
   const responseData = {
     calculetList: data.rows.map((calculet) => calculet.toJSON()),
-    count: data.count
+    count: data.count,
   };
   res.status(200).send(responseData);
 }
