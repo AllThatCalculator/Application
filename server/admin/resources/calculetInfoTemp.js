@@ -10,7 +10,8 @@ const { accessController } = require("../utils/accessController");
  */
 function publishCalculet(record) {
   // 본 테이블 등록
-  record.updated_at = new Date(); // updated_at 갱신
+  record.updatedAt = new Date(); // updated_at 갱신
+
   return sequelize.transaction(async (t) => {
     // move to calculetInfo table
     await models.calculetInfo.create(record, {
@@ -30,7 +31,7 @@ function publishCalculet(record) {
     if (process.env.NODE_ENV === "production") {
       const { sendEmail } = require("../../utils/emailSender");
       sendEmail
-        .user(record.id, record.title, record.contributor_id)
+        .user(record.id, record.title, record.contributorId)
         .catch(console.error);
     }
   });
@@ -63,6 +64,7 @@ calculetTempResource.options.actions.publish = {
         },
       };
     } catch (error) {
+      console.error(error);
       return {
         record: record.toJSON(currentAdmin),
         notice: {
