@@ -9,7 +9,6 @@ import Auth from "./hoc/auth";
 // 페이지
 import Calculet from "./pages/Calculet";
 import Register from "./pages/Register";
-import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Search from "./pages/Search";
 import CalculetList from "./pages/CalculetList";
@@ -20,6 +19,9 @@ import Setting from "./pages/Setting";
 import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
 import Snackbars from "./components/global-components/Snackbars";
 import DeleteComplete from "./pages/guide/DeleteComplete";
+
+// container
+import LoginContainer from "./containers/LoginContainer";
 
 function AppRouter({ isLoggedIn }) {
   const PATH_CALCULET_ID = ":" + URL.CALCULET_ID;
@@ -43,7 +45,10 @@ function AppRouter({ isLoggedIn }) {
             <Auth isLoggedIn={isLoggedIn} authComponent={<Register />} />
           }
         />
-        <Route path={URL.LOGIN} element={<Login isLoggedIn={isLoggedIn} />} />
+        <Route
+          path={URL.LOGIN}
+          element={<LoginContainer isLoggedIn={isLoggedIn} />}
+        />
         <Route
           path={URL.SIGN_UP}
           element={<SignUp isLoggedIn={isLoggedIn} />}

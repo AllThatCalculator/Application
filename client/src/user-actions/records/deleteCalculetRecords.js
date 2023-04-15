@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleErrorUserActions } from "../../utils/handleUserActions";
 
 /**
  * 계산 내역 삭제
@@ -19,8 +20,7 @@ async function deleteCalculetRecords(dataToSubmit = {}, userId = "") {
       });
     return data;
   } catch (error) {
-    // console.log("계산 이력 삭제 error", error);
-    return null;
+    handleErrorUserActions(error.response);
   }
 }
 export default deleteCalculetRecords;

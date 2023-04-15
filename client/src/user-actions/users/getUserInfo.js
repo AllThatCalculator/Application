@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleErrorUserActions } from "../../utils/handleUserActions";
 
 async function getUserInfo(userId) {
   try {
@@ -9,7 +10,7 @@ async function getUserInfo(userId) {
     });
     return response.data;
   } catch (error) {
-    // console.log(error);
+    handleErrorUserActions(error.response);
   }
 }
 

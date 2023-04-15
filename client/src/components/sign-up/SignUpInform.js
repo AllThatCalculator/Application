@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   OPTIONS_SEX,
   OPTIONS_YEAR,
@@ -8,10 +7,7 @@ import {
   JOB_LIMIT,
   BIO_LIMIT,
 } from "./constants";
-import useInput from "../../hooks/useInput";
-import { auth } from "../../firebase";
 import {
-  Button,
   Card,
   CardContent,
   FormControl,
@@ -24,160 +20,41 @@ import {
   Typography,
 } from "@mui/material";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
-import usePage from "../../hooks/usePage";
-import { useDispatch, useSelector } from "react-redux";
-import useLoading from "../../hooks/useLoading";
-import checkValidDate from "../../utils/checkValidDate";
-import useError from "../../hooks/useError";
-import checkSpecialSymbols from "../../utils/checkSpecialSymbols";
 import ProfileChange from "./ProfileChange";
-import { handleSignUp } from "../../utils/handleUserActions";
-import getUserMe from "../../user-actions/users/getUserMe";
-import { onSetUserIdToken, onSetUserInfo } from "../../modules/userInfo";
 
 /**
  * 회원가입 페이지
  */
-function SignUpInform({ activateEvent, deactivateEvent }) {
-  const { calculetRefreshPage } = usePage();
-  const dispatch = useDispatch();
+function SignUpInform({
+  profileImg,
+  setProfileImg,
+  isOpenProfileImgPopUp,
+  setIsOpenProfileImgPopUp,
 
-  // loading state
-  const { handleOnLoading, handleOffLoading } = useLoading();
-  // error state
-  const { handleSetAuthError, handleSetErrorType, handleSetClearError } =
-    useError();
-  // error id
-  const ERROR_USER_NAME = "sign-up-user-name";
-  const ERROR_BIRTHDATE = "sign-up-birthdate";
-  const ERROR_JOB = "sign-up-job";
+  errorType,
+  keyErrorUserName,
+  keyErrorBirthdate,
+  keyErrorJob,
+  authError,
 
-  // redux state
-  const { authError, errorType } = useSelector((state) => ({
-    authError: state.error.authError,
-    errorType: state.error.errorType,
-  }));
+  inputUserName,
+  inputSex,
+  inputYear,
+  inputMonth,
+  inputDate,
+  inputJob,
+  inputBio,
+  setSignUpInputs,
+  setSignUpSelects,
 
-  // 회원가입한 사람의 Id Token
-  const userIdToken = auth.currentUser.accessToken;
-
-  /**
-   * 프로필 사진 profileImg - type : Blob
-   *
-   * 닉네임 userName
-   * 성별 sex
-   * 생년월일 birthdate -> year, month, date
-   * 직업 job
-   * 자기소개 문구 bio
-   */
-
-  /** 프로필 사진 */
-  const [profileImg, setProfileImg] = useState({ url: "", file: null });
-
-  /** 닉네임 */
-  const userName = useInput("");
-
-  // 성별
-  const [sex, setSex] = useState("");
-  function handleSexChange(event) {
-    setSex(event.target.value);
-  }
-
-  // 생년
-  const [year, setYear] = useState("");
-  function handleYearChange(event) {
-    setYear(event.target.value);
-  }
-
-  // 월
-  const [month, setMonth] = useState("");
-  function handleMonthChange(event) {
-    setMonth(event.target.value);
-  }
-
-  // 일
-  const [date, setDate] = useState("");
-  function handleDateChange(event) {
-    setDate(event.target.value);
-  }
-
-  /** 직업 */
-  const job = useInput("");
-
-  /** 자기소개 */
-  const bio = useInput("");
-
-  /**
-   * 폼 제출
-   * - 입력된 비밀번호와 비밀번호 확인에 따른 경고 안내문 & 회원가입 성공
-   */
-  function onSubmitHandler(event) {
-    event.preventDefault();
-    handleSetClearError(); // clear error
-    handleOnLoading(); // loading start
-
-    // 닉네임 : 공백 혹은 특수문자 검사
-    if (checkSpecialSymbols(userName.value)) {
-      handleSetAuthError("special-symbols");
-      handleSetErrorType(ERROR_USER_NAME);
-      handleOffLoading(); // loading stop
-      return;
-    }
-
-    // DB 데이터 타입에 맞게 처리 - 날짜 유효성 검사
-    const birthdateDb = year + "-" + month + "-" + date;
-    if (!checkValidDate(birthdateDb)) {
-      handleSetAuthError("invalid-date");
-      handleSetErrorType(ERROR_BIRTHDATE);
-      handleOffLoading(); // loading stop
-      return;
-    }
-
-    // 직업 : 공백 혹은 특수문자 검사
-    if (checkSpecialSymbols(job.value)) {
-      handleSetAuthError("special-symbols");
-      handleSetErrorType(ERROR_JOB);
-      handleOffLoading(); // loading stop
-      return;
-    }
-
-    deactivateEvent(); // off event
-
-    // 서버에 보낼 정보 => body
-    let body = {
-      profileImg: profileImg.file,
-      userInfo: {
-        userName: userName.value,
-        bio: bio.value,
-        sex: sex,
-        birthdate: birthdateDb,
-        job: job.value,
-      },
-    };
-    // 서버에 요청
-    // console.log("userIdToken", userIdToken);
-    handleSignUp(body, userIdToken).then((result) => {
-      handleOffLoading(); // loading stop
-      // success
-      if (result) {
-        /** set user info */
-        getUserMe(userIdToken).then((data) => {
-          // console.log(data);
-          dispatch(onSetUserInfo(data));
-        });
-        /** set user id token */
-        dispatch(onSetUserIdToken(userIdToken));
-
-        // 전에 있던 페이지로 돌아가기
-        // backPage();
-        // 우선 메인 페이지로
-        calculetRefreshPage();
-      }
-    });
-  }
-
-  const [isOpenProfileImgPopUp, setIsOpenProfileImgPopUp] = useState(false);
-
+  idInputUserName,
+  idInputSex,
+  idInputYear,
+  idInputMonth,
+  idInputDate,
+  idInputJob,
+  idInputBio,
+}) {
   return (
     <Card variant="outlined">
       <CardContent>
@@ -185,6 +62,7 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
           <Typography variant="subtitle1" color="text.disabled">
             아래 내용을 작성해 주세요.
           </Typography>
+
           <FlexColumnBox gap="1.6rem">
             <FlexBox
               // 프로필 사진
@@ -203,21 +81,27 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
             <TextField
               required
               fullWidth
+              id={idInputUserName}
               label="닉네임"
               inputProps={{
                 maxLength: USERNAME_LIMIT,
               }}
-              helperText={`${errorType === ERROR_USER_NAME ? authError : ""} ${
-                userName.value.length
+              helperText={`${errorType === keyErrorUserName ? authError : ""} ${
+                inputUserName.length
               }/${USERNAME_LIMIT} 
               `}
-              value={userName.value}
-              onChange={userName.onChange}
-              error={errorType === ERROR_USER_NAME}
+              value={inputUserName}
+              onChange={setSignUpInputs}
+              error={errorType === keyErrorUserName}
             />
             <FormControl fullWidth required>
               <InputLabel>성별</InputLabel>
-              <Select value={sex} label="성별" onChange={handleSexChange}>
+              <Select
+                name={idInputSex}
+                value={inputSex}
+                label="성별"
+                onChange={setSignUpSelects}
+              >
                 {OPTIONS_SEX.map((item) => (
                   <MenuItem key={item.value} value={item.value}>
                     {item.name}
@@ -230,10 +114,15 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
                 <FormControl
                   fullWidth
                   required
-                  error={errorType === ERROR_BIRTHDATE}
+                  error={errorType === keyErrorBirthdate}
                 >
                   <InputLabel>생년</InputLabel>
-                  <Select value={year} label="생년" onChange={handleYearChange}>
+                  <Select
+                    name={idInputYear}
+                    value={inputYear}
+                    label="생년"
+                    onChange={setSignUpSelects}
+                  >
                     {OPTIONS_YEAR.map((item) => (
                       <MenuItem key={item.value} value={item.name}>
                         {item.name}
@@ -242,17 +131,22 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
                   </Select>
                 </FormControl>
                 <FormHelperText error>
-                  {errorType === ERROR_BIRTHDATE && authError}
+                  {errorType === keyErrorBirthdate && authError}
                 </FormHelperText>
               </Grid>
               <Grid item xs>
                 <FormControl
                   fullWidth
                   required
-                  error={errorType === ERROR_BIRTHDATE}
+                  error={errorType === keyErrorBirthdate}
                 >
                   <InputLabel>월</InputLabel>
-                  <Select value={month} label="월" onChange={handleMonthChange}>
+                  <Select
+                    name={idInputMonth}
+                    value={inputMonth}
+                    label="월"
+                    onChange={setSignUpSelects}
+                  >
                     {OPTIONS_MONTH.map((item) => (
                       <MenuItem key={item.value} value={item.name}>
                         {item.name}
@@ -265,10 +159,15 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
                 <FormControl
                   fullWidth
                   required
-                  error={errorType === ERROR_BIRTHDATE}
+                  error={errorType === keyErrorBirthdate}
                 >
                   <InputLabel>일</InputLabel>
-                  <Select value={date} label="일" onChange={handleDateChange}>
+                  <Select
+                    name={idInputDate}
+                    value={inputDate}
+                    label="일"
+                    onChange={setSignUpSelects}
+                  >
                     {OPTIONS_DATE.map((item) => (
                       <MenuItem key={item.value} value={item.name}>
                         {item.name}
@@ -281,38 +180,30 @@ function SignUpInform({ activateEvent, deactivateEvent }) {
             <TextField
               required
               fullWidth
+              id={idInputJob}
               label="직업"
               inputProps={{
                 maxLength: JOB_LIMIT,
               }}
-              helperText={`${errorType === ERROR_JOB ? authError : ""} ${
-                job.value.length
+              helperText={`${errorType === keyErrorJob ? authError : ""} ${
+                inputJob.length
               }/${JOB_LIMIT}`}
-              value={job.value}
-              onChange={job.onChange}
-              error={errorType === ERROR_JOB}
+              value={inputJob}
+              onChange={setSignUpInputs}
+              error={errorType === keyErrorJob}
             />
             <TextField
               fullWidth
+              id={idInputBio}
               label="자기소개 문구"
               inputProps={{
                 maxLength: BIO_LIMIT,
               }}
-              helperText={`${bio.value.length}/${BIO_LIMIT}`}
-              value={bio.value}
-              onChange={bio.onChange}
+              helperText={`${inputBio.length}/${BIO_LIMIT}`}
+              value={inputBio}
+              onChange={setSignUpInputs}
             />
           </FlexColumnBox>
-          <Button
-            type="submit"
-            variant="contained"
-            onClick={onSubmitHandler}
-            disabled={
-              !userName.value || !sex || !year || !month || !date || !job.value
-            }
-          >
-            입력 완료
-          </Button>
         </FlexColumnBox>
       </CardContent>
     </Card>

@@ -1,6 +1,6 @@
 import axios from "axios";
-import URL from "../../components/PageUrls";
 import { handleUserInfoData } from "../../utils/handleDataToSubmit";
+import { handleErrorUserActions } from "../../utils/handleUserActions";
 
 /**
  * 회원 가입 - 서버에 요청
@@ -22,13 +22,7 @@ async function signUpUser(dataToSubmit = {}, userId) {
     );
     return response.data;
   } catch (error) {
-    switch (error.response.status) {
-      case 409: // 이미 등록된 상태에서 한 번 더 요청 보냄 error
-        window.location.href = URL.CALCULET;
-        return;
-      default:
-        return error.response.data;
-    }
+    handleErrorUserActions(error.response);
   }
 }
 export default signUpUser;

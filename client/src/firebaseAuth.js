@@ -73,7 +73,8 @@ async function signUpWithSocial(social) {
     // 튕겨내버리는 문제 때문에, 우선 로그인 진행되도록 하기
     return true;
     // const result = await signInWithPopup(auth, provider);
-    // const { isNewUser } = getAdditionalUserInfo(result);
+    // const { isNewUser } = await getAdditionalUserInfo(result);
+    // console.log(isNewUser);
     // if (isNewUser) {
     //   // 새로운 유저 -> 회원가입 가능!
     //   return true;
@@ -102,7 +103,7 @@ async function signInWithSocial(social) {
 
   try {
     const result = await signInWithPopup(auth, provider);
-    const { isNewUser } = getAdditionalUserInfo(result);
+    const { isNewUser } = await getAdditionalUserInfo(result);
     if (isNewUser) {
       // 새로운 유저 -> 존재하지 않는 계정
       // 로그인 실패
@@ -184,6 +185,23 @@ async function updateNewPassword(newPassword) {
   }
 }
 
+/**
+ * get auth state
+ * @param {*} refresh : 리프레시 여부
+ * @returns
+ */
+async function getAuthState(refresh) {
+  try {
+    let result = false;
+    await auth.currentUser.getIdToken(refresh).then((token) => {
+      result = token;
+    });
+    return result;
+  } catch (error) {
+    return error.code;
+  }
+}
+
 const firebaseAuth = {
   signUpWithEmail,
   signInWithEmail,
@@ -196,5 +214,6 @@ const firebaseAuth = {
   getCredential,
   signInWithCredential,
   updateNewPassword,
+  getAuthState,
 };
 export default firebaseAuth;

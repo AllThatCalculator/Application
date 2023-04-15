@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleErrorUserActions } from "../../utils/handleUserActions";
 
 /**
  * 계정 탈퇴 (firebase deleteUser와 구분하기 위해 My)
@@ -13,14 +14,7 @@ async function deleteMyUser(userId) {
     });
     return response.data;
   } catch (error) {
-    switch (error.response.status) {
-      case 400:
-        return;
-      case 401:
-        return;
-      default:
-        return "404 NOT FOUND";
-    }
+    handleErrorUserActions(error.response);
   }
 }
 

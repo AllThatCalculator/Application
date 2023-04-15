@@ -1,4 +1,5 @@
 import axios from "axios";
+import { handleErrorUserActions } from "../../utils/handleUserActions";
 
 /**
  * 추천 계산기 목록 불러오기
@@ -11,12 +12,7 @@ async function getRecommendation() {
     });
     return data;
   } catch (error) {
-    switch (error.response.status) {
-      case 400:
-        return error.response.data;
-      default:
-        return;
-    }
+    handleErrorUserActions(error.response);
   }
 }
 export default getRecommendation;

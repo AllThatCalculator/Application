@@ -88,7 +88,7 @@ function CaptionButton({ text, onClick }) {
  * @param {string} text : 버튼 내용
  * @param {function} onClick : 클릭 함수
  */
-function BasicButton({ icon, text, onClick }) {
+function BasicButton({ icon, text, onClick, disabled }) {
   return (
     <Button
       fullWidth
@@ -100,6 +100,7 @@ function BasicButton({ icon, text, onClick }) {
         textTransform: "none",
       }}
       onClick={onClick}
+      disabled={disabled}
     >
       <Box sx={{ position: "absolute", top: "1.6rem", left: "5.4rem" }}>
         {icon}

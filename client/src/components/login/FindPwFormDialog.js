@@ -17,11 +17,12 @@ import { useSelector } from "react-redux";
  * @param {function} onChange
  */
 function FindPwFormDialog({
+  idInputEmailFindPw,
   isOpen,
   setIsOpen,
   value,
   onChange,
-  handleOnSubmit,
+  onClickFindPwHandler,
   inputId,
 }) {
   // redux state
@@ -43,6 +44,7 @@ function FindPwFormDialog({
             비밀번호를 찾고자하는 이메일을 입력해주세요.
           </DialogContentText>
           <TextField
+            id={idInputEmailFindPw}
             required
             autoFocus
             margin="normal"
@@ -61,7 +63,7 @@ function FindPwFormDialog({
           <Button
             variant="contained"
             disabled={!value}
-            onClick={handleOnSubmit}
+            onClick={onClickFindPwHandler}
           >
             완료
           </Button>
