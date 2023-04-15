@@ -12,8 +12,8 @@ const development = {
     underscoredAll: true,
     createdAt: "createdAt",
     updatedAt: "updatedAt",
-    charset: 'utf8mb4',
-    collate: 'utf8mb4_unicode_ci',
+    charset: "utf8mb4",
+    collate: "utf8mb4_unicode_ci",
   },
   logging: false,
 };
@@ -31,10 +31,10 @@ const production = {
   define: {
     underscored: true,
     underscoredAll: true,
-    createdAt: "created_at",
-    updatedAt: "updated_at",
-    charset: 'utf8mb4',
-    collate: 'utf8mb4_unicode_ci',
+    createdAt: "createdAt",
+    updatedAt: "updatedAt",
+    charset: "utf8mb4",
+    collate: "utf8mb4_unicode_ci",
   },
   logging: false,
 };
