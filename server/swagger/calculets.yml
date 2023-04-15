@@ -16,31 +16,47 @@ components:
       name: calculetId
       schema:
         $ref: "#/components/schemas/calculetId"
-    mainId:
+    categoryMainId:
       in: query
       required: false
       name: categoryMainId
       schema:
         $ref: "#/components/schemas/calculet/properties/categoryMainId"
-    subId:
+    categorySubId:
       in: query
       required: false
       name: categorySubId
       schema:
         $ref: "#/components/schemas/calculet/properties/categorySubId"
-    title:
+    keyword:
       in: query
-      required: false
-      name: title
+      required: true
+      name: keyword
+      description: 검색어
       schema:
-        $ref: "#/components/schemas/calculet/properties/title"
-    limit:
+        type: string
+    size:
       in: query
-      required: false
-      name: limit
-      description: 최대 개수 - 미지정시 조건에 해당하는 모든 계산기 불러옴
+      required: true
+      name: size
+      description: size per page
       schema:
         type: integer
+    page:
+      in: query
+      required: true
+      name: page
+      description: page number (1~)
+      schema:
+        type: integer
+    target:
+      in: query
+      required: true
+      name: target
+      description: 검색 대상 (title | desc | all)
+      schema:
+        type: string
+      example: title
   responses:
     likeResult:
       content:
@@ -85,6 +101,20 @@ components:
             type: array
             items:
               $ref: "#/components/schemas/calculetPreview"
+    getSearchResult:
+      description: 검색 결과
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              calculetList:
+                type: array
+                items:
+                  $ref: "#/components/schemas/calculetPreview"
+              count:
+                type: integer
+                description: 검색된 계산기 수
     getRecommendationList:
       description: 추천 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
       content:

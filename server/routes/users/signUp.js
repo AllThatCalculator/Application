@@ -1,5 +1,7 @@
+const { admin } = require("../../config/firebase");
 const { models } = require("../../models");
-const { errorObject } = require("../../utils/errorMessage");
+const { CustomError } = require("../../utils/CustomError");
+const { timestamp } = require("../../utils/timestamp");
 
 exports.signUp = async (req, res) => {
   // to read multipart/form-data
@@ -7,22 +9,27 @@ exports.signUp = async (req, res) => {
 
   if ((await models.userInfo.findByPk(res.locals.userId)) !== null) {
     // already signed up
-    res.status(409).send(errorObject(409, 0));
-    return;
+    throw new CustomError(409, 0);
   }
 
   await models.userInfo.create({
     id: res.locals.userId,
     email: res.locals.email,
-    user_name: userInfo.userName,
+    userName: userInfo.userName,
     bio: userInfo.bio,
     sex: userInfo.sex,
     birthdate: userInfo.birthdate,
     job: userInfo.job,
-    profile_img: res.locals.profileUUID,
+    profileImg: res.locals.profileUUID,
   });
 
-  console.log("successfully signed up");
+  await admin.auth().setCustomUserClaims(res.locals.userId, {
+    registered: true,
+  });
+
+  console.log(
+    `${timestamp()} | USER ${res.locals.userId} successfully signed up`
+  );
 
   res.status(201).send("/");
 };

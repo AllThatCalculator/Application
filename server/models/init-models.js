@@ -1,134 +1,41 @@
 const DataTypes = require("sequelize").DataTypes;
-const _calculetCount = require("./tables/calculetCount");
+const _admin = require("./tables/admin");
 const _calculetInfo = require("./tables/calculetInfo");
 const _calculetInfoTemp = require("./tables/calculetInfoTemp");
 const _calculetRecord = require("./tables/calculetRecord");
-const _calculetStatistics = require("./tables/calculetStatistics");
 const _calculetUpdateLog = require("./tables/calculetUpdateLog");
+const _category = require("./tables/category");
 const _categoryMain = require("./tables/categoryMain");
 const _categorySub = require("./tables/categorySub");
-const _category = require("./tables/category");
 const _userCalculetBookmark = require("./tables/userCalculetBookmark");
 const _userCalculetLike = require("./tables/userCalculetLike");
 const _userInfo = require("./tables/userInfo");
 
 function initModels(sequelize) {
-  const calculetCount = _calculetCount(sequelize, DataTypes);
+  const admin = _admin(sequelize, DataTypes);
   const calculetInfo = _calculetInfo(sequelize, DataTypes);
   const calculetInfoTemp = _calculetInfoTemp(sequelize, DataTypes);
   const calculetRecord = _calculetRecord(sequelize, DataTypes);
-  const calculetStatistics = _calculetStatistics(sequelize, DataTypes);
   const calculetUpdateLog = _calculetUpdateLog(sequelize, DataTypes);
+  const category = _category(sequelize, DataTypes);
   const categoryMain = _categoryMain(sequelize, DataTypes);
   const categorySub = _categorySub(sequelize, DataTypes);
-  const category = _category(sequelize, DataTypes);
   const userCalculetBookmark = _userCalculetBookmark(sequelize, DataTypes);
   const userCalculetLike = _userCalculetLike(sequelize, DataTypes);
   const userInfo = _userInfo(sequelize, DataTypes);
 
-  // calculetInfo(N) - caculetRecord - userInfo(M)
   calculetInfo.belongsToMany(userInfo, {
     as: "user_id_user_infos",
-    through: calculetRecord,
-    foreignKey: "calculet_id",
-    otherKey: "user_id",
-  });
-  userInfo.belongsToMany(calculetInfo, {
-    as: "calculet_id_calculet_infos",
-    through: calculetRecord,
-    foreignKey: "user_id",
-    otherKey: "calculet_id",
-  });
-
-  // calculetInfo(N) - userCalculetBookmark - userInfo(M)
-  calculetInfo.belongsToMany(userInfo, {
-    as: "user_id_user_info_user_calculet_bookmarks",
     through: userCalculetBookmark,
     foreignKey: "calculet_id",
     otherKey: "user_id",
   });
-  userInfo.belongsToMany(calculetInfo, {
-    as: "calculet_id_calculet_info_user_calculet_bookmarks",
-    through: userCalculetBookmark,
-    foreignKey: "user_id",
-    otherKey: "calculet_id",
-  });
-
-  // calculetInfo(N) - userCaculetLike - userInfo(M)
   calculetInfo.belongsToMany(userInfo, {
     as: "user_id_user_info_user_calculet_likes",
     through: userCalculetLike,
     foreignKey: "calculet_id",
     otherKey: "user_id",
   });
-  userInfo.belongsToMany(calculetInfo, {
-    as: "calculet_id_calculet_info_user_calculet_likes",
-    through: userCalculetLike,
-    foreignKey: "user_id",
-    otherKey: "calculet_id",
-  });
-
-  // calculetInfo(1) - calculetCount(1)
-  calculetCount.belongsTo(calculetInfo, {
-    as: "calculet",
-    foreignKey: "calculet_id",
-  });
-  calculetInfo.hasOne(calculetCount, {
-    as: "calculet_count",
-    foreignKey: "calculet_id",
-  });
-
-  // calculetInfo(1) - calculetRecord(N)
-  calculetRecord.belongsTo(calculetInfo, {
-    as: "calculet",
-    foreignKey: "calculet_id",
-  });
-  calculetInfo.hasMany(calculetRecord, {
-    as: "calculet_records",
-    foreignKey: "calculet_id",
-  });
-
-  // calculetInfo(1) - calculetStatistics(1)
-  calculetStatistics.belongsTo(calculetInfo, {
-    as: "calculet",
-    foreignKey: "calculet_id",
-  });
-  calculetInfo.hasOne(calculetStatistics, {
-    as: "calculet_statistic",
-    foreignKey: "calculet_id",
-  });
-
-  // calculetInfo(1) - calculetUpdateLog(N)
-  calculetUpdateLog.belongsTo(calculetInfo, {
-    as: "calculet",
-    foreignKey: "calculet_id",
-  });
-  calculetInfo.hasMany(calculetUpdateLog, {
-    as: "calculet_update_logs",
-    foreignKey: "calculet_id",
-  });
-
-  // calculetInfo(1) - userCalculetBookmark(N)
-  userCalculetBookmark.belongsTo(calculetInfo, {
-    as: "calculet",
-    foreignKey: "calculet_id",
-  });
-  calculetInfo.hasMany(userCalculetBookmark, {
-    as: "user_calculet_bookmarks",
-    foreignKey: "calculet_id",
-  });
-
-  // calculetInfo(1) - userCalculetLike(N)
-  userCalculetLike.belongsTo(calculetInfo, {
-    as: "calculet",
-    foreignKey: "calculet_id",
-  });
-  calculetInfo.hasMany(userCalculetLike, {
-    as: "user_calculet_likes",
-    foreignKey: "calculet_id",
-  });
-
-  // categoryMain(N) - category - categorySub(M)
   categoryMain.belongsToMany(categorySub, {
     as: "sub_id_category_subs",
     through: category,
@@ -141,42 +48,90 @@ function initModels(sequelize) {
     foreignKey: "sub_id",
     otherKey: "main_id",
   });
-
-  // categoryMain(1) - category(N)
-  category.belongsTo(categoryMain, { as: "main", foreignKey: "main_id" });
-  categoryMain.hasMany(category, {
-    as: "category_mains",
-    foreignKey: "main_id",
+  userInfo.belongsToMany(calculetInfo, {
+    as: "calculet_id_calculet_infos",
+    through: userCalculetBookmark,
+    foreignKey: "user_id",
+    otherKey: "calculet_id",
   });
-
-  // categorySub(1) - category(N)
-  category.belongsTo(categorySub, { as: "sub", foreignKey: "sub_id" });
-  categorySub.hasMany(category, {
-    as: "category_subs",
-    foreignKey: "sub_id",
+  userInfo.belongsToMany(calculetInfo, {
+    as: "calculet_id_calculet_info_user_calculet_likes",
+    through: userCalculetLike,
+    foreignKey: "user_id",
+    otherKey: "calculet_id",
   });
-
-  // category(1) - calculetInfo(N)
+  calculetRecord.belongsTo(calculetInfo, {
+    as: "calculet",
+    foreignKey: "calculet_id",
+  });
+  calculetInfo.hasMany(calculetRecord, {
+    as: "calculet_records",
+    foreignKey: "calculet_id",
+  });
+  calculetUpdateLog.belongsTo(calculetInfo, {
+    as: "calculet",
+    foreignKey: "calculet_id",
+  });
+  calculetInfo.hasMany(calculetUpdateLog, {
+    as: "calculet_update_logs",
+    foreignKey: "calculet_id",
+  });
+  userCalculetBookmark.belongsTo(calculetInfo, {
+    as: "calculet",
+    foreignKey: "calculet_id",
+  });
+  calculetInfo.hasMany(userCalculetBookmark, {
+    as: "user_calculet_bookmarks",
+    foreignKey: "calculet_id",
+  });
+  userCalculetLike.belongsTo(calculetInfo, {
+    as: "calculet",
+    foreignKey: "calculet_id",
+  });
+  calculetInfo.hasMany(userCalculetLike, {
+    as: "user_calculet_likes",
+    foreignKey: "calculet_id",
+  });
   calculetInfo.belongsTo(category, {
-    as: "category",
-    foreignKey: "category_id",
+    as: "category_main",
+    foreignKey: "category_main_id",
   });
   category.hasMany(calculetInfo, {
     as: "calculet_infos",
-    foreignKey: "category_id",
+    foreignKey: "category_main_id",
   });
-
-  // category(1) - calculetInfoTemp(N)
+  calculetInfo.belongsTo(category, {
+    as: "category_sub",
+    foreignKey: "category_sub_id",
+  });
+  category.hasMany(calculetInfo, {
+    as: "category_sub_calculet_infos",
+    foreignKey: "category_sub_id",
+  });
   calculetInfoTemp.belongsTo(category, {
-    as: "category",
-    foreignKey: "category_id",
+    as: "category_main",
+    foreignKey: "category_main_id",
   });
   category.hasMany(calculetInfoTemp, {
     as: "calculet_info_temps",
-    foreignKey: "category_id",
+    foreignKey: "category_main_id",
   });
-
-  // userInfo(1) - calculetInfo(N)
+  calculetInfoTemp.belongsTo(category, {
+    as: "category_sub",
+    foreignKey: "category_sub_id",
+  });
+  category.hasMany(calculetInfoTemp, {
+    as: "category_sub_calculet_info_temps",
+    foreignKey: "category_sub_id",
+  });
+  category.belongsTo(categoryMain, { as: "main", foreignKey: "main_id" });
+  categoryMain.hasMany(category, { as: "categories", foreignKey: "main_id" });
+  category.belongsTo(categorySub, { as: "sub", foreignKey: "sub_id" });
+  categorySub.hasMany(category, { as: "categories", foreignKey: "sub_id" });
+  admin.belongsTo(userInfo, { as: "id_user_info", foreignKey: "id" });
+  userInfo.hasOne(admin, { as: "admin", foreignKey: "id" });
+  admin.belongsTo(userInfo, { as: "email_user_info", foreignKey: "email" });
+  userInfo.hasMany(admin, { as: "email_admins", foreignKey: "email" });
   calculetInfo.belongsTo(userInfo, {
     as: "contributor",
     foreignKey: "contributor_id",
@@ -185,8 +140,6 @@ function initModels(sequelize) {
     as: "calculet_infos",
     foreignKey: "contributor_id",
   });
-
-  // userInfo(1) - calculetInfoTemp(N)
   calculetInfoTemp.belongsTo(userInfo, {
     as: "contributor",
     foreignKey: "contributor_id",
@@ -195,15 +148,11 @@ function initModels(sequelize) {
     as: "calculet_info_temps",
     foreignKey: "contributor_id",
   });
-
-  // userInfo(1) - calculetRecord(N)
   calculetRecord.belongsTo(userInfo, { as: "user", foreignKey: "user_id" });
   userInfo.hasMany(calculetRecord, {
     as: "calculet_records",
     foreignKey: "user_id",
   });
-
-  // userInfo(1) - userCalculetBookmark(N)
   userCalculetBookmark.belongsTo(userInfo, {
     as: "user",
     foreignKey: "user_id",
@@ -212,8 +161,6 @@ function initModels(sequelize) {
     as: "user_calculet_bookmarks",
     foreignKey: "user_id",
   });
-
-  // userInfo(1) - userCalculetLike(N)
   userCalculetLike.belongsTo(userInfo, { as: "user", foreignKey: "user_id" });
   userInfo.hasMany(userCalculetLike, {
     as: "user_calculet_likes",
@@ -221,11 +168,10 @@ function initModels(sequelize) {
   });
 
   return {
-    calculetCount,
+    admin,
     calculetInfo,
     calculetInfoTemp,
     calculetRecord,
-    calculetStatistics,
     calculetUpdateLog,
     category,
     categoryMain,

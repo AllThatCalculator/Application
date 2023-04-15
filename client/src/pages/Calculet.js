@@ -1,21 +1,21 @@
 import CalculetBlock from "../components/calculet-block/CalculetBlock";
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import CalculetHeader from "../components/calculet-block/CalculetHeader";
 import {
   updateCalculetCount,
   loadOftenUsedCalculet,
 } from "../components/calculet-block/oftenUsedCalculet";
 import FooterRecommend from "../components/global-components/FooterRecommend";
-import calculetInfo from "../user-actions/calculetInfo";
+import calculetInfo from "../user-actions/calculets/calculetInfo";
 import { Grid } from "@mui/material";
 import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import LoadingPage from "../components/global-components/LoadingPage";
 import UploadIcon from "@mui/icons-material/Upload";
 import usePage from "../hooks/usePage";
-import getCalculetUpdateLog from "../user-actions/getCalculetUpdateLog";
+import getCalculetUpdateLog from "../user-actions/calculets/getCalculetUpdateLog";
 import getUserIdToken from "../utils/getUserIdToken";
 import PageScreenBottom from "../components/global-components/PageScreenBottom";
+import useGetUrlParam from "../hooks/useGetUrlParam";
 
 async function handleGetCalculetInfo(id, setCalculetObj) {
   let calculetInfoRequest = null;
@@ -31,6 +31,7 @@ async function handleGetCalculetInfo(id, setCalculetObj) {
   }
 
   if (calculetInfoRequest !== null) {
+    // return;
     setCalculetObj(calculetInfoRequest);
   }
 }
@@ -44,6 +45,7 @@ async function handleGetCalculetUpdateLog(id, setUpdateLog) {
 
 function Calculet() {
   const { registerPage } = usePage();
+
   // 계산기 객체
   // {object} calculetObj 계산기 객체
   //         {string} title: "사칙연산 계산기", - 계산기 이름
@@ -68,7 +70,7 @@ function Calculet() {
   const [updateLog, setUpdateLog] = useState(null);
 
   // 현재 페이지에 로딩할 계산기 id
-  let { id } = useParams();
+  let { id } = useGetUrlParam();
 
   // id 없다면 메인 페이지이므로 자주 쓰는 계산기 불러오기
   if (id === undefined) {
@@ -97,7 +99,7 @@ function Calculet() {
 
   // 로딩화면
   useEffect(() => {
-    if (calculetObj !== null) setIsLoading(false);
+    if (!!calculetObj) setIsLoading(false);
   }, [calculetObj]);
 
   return (

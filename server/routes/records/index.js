@@ -3,6 +3,7 @@ const router = express.Router();
 const { auth } = require("../../middleware/auth");
 const { errorHandler } = require("../../middleware/errorHandler");
 const { record } = require("./calculetRecord");
+const { body } = require("express-validator");
 
 /**
  * @swagger
@@ -23,7 +24,13 @@ const { record } = require("./calculetRecord");
  */
 router.post(
   "/",
-  [auth.firebase, auth.database],
+  [
+    auth.validate,
+    body("calculetId").isString(),
+    body("recordArray").isArray(),
+    body("recordArray.*.createdAt").isISO8601(),
+    body("recordArray.*.outputObj").isObject(),
+  ],
   errorHandler.dbWrapper(record.post)
 );
 
@@ -40,11 +47,7 @@ router.post(
  *        200:
  *          $ref: "#/components/responses/getRecord"
  */
-router.get(
-  "/:calculetId",
-  [auth.firebase, auth.database],
-  errorHandler.dbWrapper(record.get)
-);
+router.get("/:calculetId", auth.validate, errorHandler.dbWrapper(record.get));
 
 /**
  * @swagger
@@ -61,7 +64,12 @@ router.get(
  */
 router.delete(
   "/",
-  [auth.firebase, auth.database],
+  [
+    auth.validate,
+    body("calculetId").isString(),
+    body("recordIdList").isArray(),
+    body("recordIdList.*").isString(),
+  ],
   errorHandler.dbWrapper(record.delete)
 );
 

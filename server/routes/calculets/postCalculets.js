@@ -1,43 +1,26 @@
-const { Op } = require("sequelize");
 const { models } = require("../../models");
-
-/**
- * 대분류, 소분류 ID로 카테고리 ID 찾기
- * @param {*} mainId 대분류 ID
- * @param {*} subId 소분류 ID
- * @returns category ID
- */
-async function getCategoryId(mainId, subId) {
-  const filter = {};
-  if (typeof mainId === "number") {
-    filter.main_id = {
-      [Op.eq]: mainId
-    };
-  }
-  if (typeof subId === "number") {
-    filter.sub_id = {
-      [Op.eq]: subId
-    };
-  }
-
-  const { id } = await models.category.findOne({
-    where: filter
-  });
-
-  return id;
-}
+const { v4: uuidv4 } = require("uuid");
 
 async function postCalculets(req, res) {
-  const categoryId = await getCategoryId(req.body.categoryMainId, req.body.categorySubId);
-  // 데이터 생성
-  await models.calculetInfoTemp.create({
+  const newCalculetObject = {
+    id: uuidv4(),
     title: req.body.title,
-    src_code: req.body.srcCode,
+    srcCode: req.body.srcCode,
     manual: req.body.manual,
     description: req.body.description,
-    category_id: categoryId,
-    contributor_id: res.locals.userId,
-  });
+    categoryMainId: req.body.categoryMainId,
+    categorySubId: req.body.categorySubId,
+    contributorId: res.locals.userId,
+  };
+
+  // create data
+  await models.calculetInfoTemp.create(newCalculetObject);
+
+  // send mail to admin
+  if (process.env.NODE_ENV === "production") {
+    const { sendEmail } = require("../../utils/emailSender");
+    sendEmail.admin(newCalculetObject).catch(console.error);
+  }
 
   res.status(201).send("/");
 }

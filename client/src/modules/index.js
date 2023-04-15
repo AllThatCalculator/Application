@@ -6,6 +6,7 @@ import error from "./error";
 import loading from "./loading";
 import snackbar from "./snackbar";
 import calculetRecord from "./calculetRecord";
+import search from "./search";
 
 const rootReducer = combineReducers({
   calculetCategory,
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   loading,
   snackbar,
   calculetRecord,
+  search,
 });
 
 export default rootReducer;

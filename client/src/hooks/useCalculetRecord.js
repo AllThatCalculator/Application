@@ -5,7 +5,7 @@ import {
   onSetCalculetRecent,
   onSetCalculetRecord,
 } from "../modules/calculetRecord";
-import getCalculetRecords from "../user-actions/getCalculetRecords";
+import getCalculetRecords from "../user-actions/records/getCalculetRecords";
 /**
  * 사용자 기록 내역 hook
  * @returns

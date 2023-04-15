@@ -1,5 +1,12 @@
 import fillOptionsList from "./fillOptionsList";
 
+/** 닉네임 최대 길이 */
+const USERNAME_LIMIT = 20;
+/** 직업 최대 길이 */
+const JOB_LIMIT = 25;
+/** 자기소개 문구 최대 길이 */
+const BIO_LIMIT = 200;
+
 // 이메일 옵션
 const OPTIONS_EMAIL_ADDRESS = [
   { value: "default", name: "직접 입력" },
@@ -35,6 +42,9 @@ const OPTIONS_MONTH = fillOptionsList(1, 12);
 const OPTIONS_DATE = fillOptionsList(1, 31);
 
 export {
+  USERNAME_LIMIT,
+  JOB_LIMIT,
+  BIO_LIMIT,
   OPTIONS_EMAIL_ADDRESS,
   OPTIONS_SEX,
   OPTIONS_MONTH,

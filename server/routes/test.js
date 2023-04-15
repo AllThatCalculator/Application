@@ -4,8 +4,8 @@ const { admin } = require("../config/firebase");
 const router = express.Router();
 const { auth } = require("../middleware/auth");
 const { models } = require("../models");
-const { errorObject } = require("../utils/errorMessage");
 const { deleteUser } = require("./users/deleteUser");
+const { CustomError } = require("../utils/CustomError");
 
 /**
  * @swagger
@@ -24,16 +24,16 @@ const { deleteUser } = require("./users/deleteUser");
  *        200:
  *          description: 등록 성공
  */
-router.post("/update-log", [auth.firebase, auth.database], async (req, res) => {
+router.post("/update-log", auth.validate, async (req, res) => {
   const calculet = await models.calculetInfo.findByPk(req.body.calculetId);
-  if (calculet.user_id !== res.locals.userId) {
-    res.status(403).send(errorObject(403, 0));
+  if (calculet.contributorId !== res.locals.userId) {
+    throw new CustomError(403, 0);
   }
 
   await models.calculetUpdateLog.create(
     {
       message: req.body.message,
-      calculet_id: req.body.calculetId,
+      calculetId: req.body.calculetId,
     },
     { silent: true }
   );
@@ -53,16 +53,16 @@ router.post("/update-log", [auth.firebase, auth.database], async (req, res) => {
  *        201:
  *          $ref: "#/components/responses/success201"
  */
-router.post("/calculets", [auth.firebase, auth.database], async (req, res) => {
+router.post("/calculets", auth.validate, async (req, res) => {
   const calculet = await models.calculetInfo.create({
     id: uuidv4(),
     title: req.body.title,
-    src_code: req.body.srcCode,
+    srcCode: req.body.srcCode,
     manual: req.body.manual,
     description: req.body.description,
-    category_main_id: req.body.categoryMainId,
-    category_sub_id: req.body.categorySubId,
-    contributor_id: res.locals.userId,
+    categoryMainId: req.body.categoryMainId,
+    categorySubId: req.body.categorySubId,
+    contributorId: res.locals.userId,
   });
   res.send(201, `/${calculet.id}`);
 
@@ -80,7 +80,7 @@ router.post("/calculets", [auth.firebase, auth.database], async (req, res) => {
  *        200:
  *          description: 회원 정보 삭제 완료
  */
-router.delete("/users", auth.firebase, async (req, res) => {
+router.delete("/users", auth.validate, async (req, res) => {
   try {
     await deleteUser.database(res.locals.userId);
     await deleteUser.firebase(res.locals.userId);
@@ -104,16 +104,105 @@ router.delete("/users", auth.firebase, async (req, res) => {
  *        200:
  *          description: 회원 정보 삭제 완료
  */
-router.delete(
-  "/users/database",
-  [auth.firebase, auth.database],
-  async (req, res) => {
-    try {
-      await deleteUser.database(res.locals.userId);
-      res.status(200).send(`user "${res.locals.email}" deleted from database`);
-    } catch (error) {
-      res.status(400).send("request failed");
-    }
+router.delete("/users/database", auth.validate, async (req, res) => {
+  try {
+    await deleteUser.database(res.locals.userId);
+    res.status(200).send(`user "${res.locals.email}" deleted from database`);
+  } catch (error) {
+    res.status(400).send("request failed");
   }
-);
+});
+
+// admin 정보 삭제되니 주의할 것
+// /**
+//  * @swagger
+//  *  /api/test/register-all:
+//  *    get:
+//  *      tags: [TEST]
+//  *      summary: 유저 등록 (admin 정보 삭제되니 주의할 것)
+//  *      description: DB에 있는 모든 유저를 상대로 firebase custom claim에 등록 설정 (admin 정보 삭제되니 주의할 것)
+//  *      responses:
+//  *        200:
+//  *          description: 완료 (결과는 터미널 로그 확인)
+//  */
+// router.get("/register-all", async (req, res) => {
+//   const userList = await models.userInfo.findAll();
+//   Promise.all(userList.map(async (user) => {
+//     await admin.auth().setCustomUserClaims(user.id, { registered: true })
+//       .then(() => console.log(`${user.id} completed`))
+//       .catch((err) => {
+//         console.log(`${user.id} failed`);
+//         console.log(err);
+//       });
+//   }));
+
+//   res.status(200).send();
+// });
+
+/**
+ * @swagger
+ *  /api/test/login:
+ *    post:
+ *      tags: [TEST]
+ *      summary: 토큰 발급받기
+ *      description: email/password 기반으로 firebase에서 idToken 발급
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: string
+ *                  format: email
+ *                password:
+ *                  type: string
+ *      responses:
+ *        200:
+ *          description: 성공
+ */
+router.post("/login", async (req, res) => {
+  const { idToken } = await auth.postFirebase(
+    req.body.email,
+    req.body.password
+  );
+  res.status(200).send(idToken);
+});
+
+// /**
+//  * @swagger
+//  *  /api/test/admin-setting:
+//  *    get:
+//  *      tags: [TEST]
+//  *      summary: 관리자 유저 등록
+//  *      description: firebase에 관리자로 등록된 유저를 DB에 기록
+//  *      responses:
+//  *        200:
+//  *          description: 완료 (결과는 터미널 로그 확인)
+//  */
+// router.get("/admin-setting", async (req, res) => {
+
+//   const { users } = await admin.auth().listUsers();
+
+//   Promise.all(users.map(async (userData) => {
+//     // console.log(userData.customClaims);
+//     if (!!userData.customClaims?.admin) {
+//       const { email, userName } = await models.userInfo.findByPk(userData.uid, {
+//         attributes: ["email", "userName"],
+//       });
+//       const data = {
+//         id: userData.uid,
+//         email,
+//         accessLevel: userData.customClaims.accessLevel
+//       };
+//       await models.admin.create(data);
+//       console.log(`${userName} recorded`, data);
+
+//     }
+//   }));
+
+//   res.status(200).send();
+// });
+
 module.exports = router;

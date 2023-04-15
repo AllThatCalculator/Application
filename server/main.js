@@ -7,13 +7,15 @@ const records = require("./routes/records");
 
 // middleware
 const { errorHandler } = require("./middleware/errorHandler");
-const { logger } = require("./utils/logger");
+const { logger } = require("./middleware/logger");
+const { timestamp } = require("./utils/timestamp");
 
 require("dotenv").config();
 const port = process.env.EXPRESS_PORT;
 
 // 데이터베이스 연결
 const { sequelize } = require("./models");
+
 sequelize
   .sync({ force: false })
   .then(() => {
@@ -53,9 +55,13 @@ app.use(errorHandler.default);
 
 // 서버 시작
 app.listen(port, () => {
-  console.log(
-    `${new Date().toLocaleString("en-US", {
-      timeZone: "Asia/Seoul",
-    })} | listening ${port}`
-  );
+  console.log(`${timestamp()} | listening ${port}`);
+});
+
+// admin
+const adminApp = require("./admin");
+
+adminApp.use(errorHandler.default);
+adminApp.listen(process.env.ADMIN_PORT, () => {
+  console.log(`${timestamp()} | listening ${process.env.ADMIN_PORT}`);
 });

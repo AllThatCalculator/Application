@@ -10,6 +10,9 @@ import {
   deleteUser,
   onAuthStateChanged,
   sendPasswordResetEmail,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword,
 } from "firebase/auth";
 
 async function signUpWithEmail(email, password) {
@@ -70,7 +73,8 @@ async function signUpWithSocial(social) {
     // 튕겨내버리는 문제 때문에, 우선 로그인 진행되도록 하기
     return true;
     // const result = await signInWithPopup(auth, provider);
-    // const { isNewUser } = getAdditionalUserInfo(result);
+    // const { isNewUser } = await getAdditionalUserInfo(result);
+    // console.log(isNewUser);
     // if (isNewUser) {
     //   // 새로운 유저 -> 회원가입 가능!
     //   return true;
@@ -99,7 +103,7 @@ async function signInWithSocial(social) {
 
   try {
     const result = await signInWithPopup(auth, provider);
-    const { isNewUser } = getAdditionalUserInfo(result);
+    const { isNewUser } = await getAdditionalUserInfo(result);
     if (isNewUser) {
       // 새로운 유저 -> 존재하지 않는 계정
       // 로그인 실패
@@ -141,6 +145,63 @@ async function findPassword(email) {
   }
 }
 
+/**
+ * 현재 사용자가 입력한 현재 비밀번호로부터 credential 발급
+ * @param {*} password
+ */
+function getCredential(password) {
+  const credential = EmailAuthProvider.credential(
+    auth.currentUser.email,
+    password
+  );
+  return credential;
+}
+
+/**
+ * 발급받은 credential로 재로그인
+ * @param {*} credential
+ * @returns
+ */
+async function signInWithCredential(credential) {
+  try {
+    await reauthenticateWithCredential(auth.currentUser, credential);
+    return true;
+  } catch (error) {
+    return error.code;
+  }
+}
+
+/**
+ * 비밀번호 변경
+ * @param {*} newPassword
+ * @returns
+ */
+async function updateNewPassword(newPassword) {
+  try {
+    await updatePassword(auth.currentUser, newPassword);
+    return true;
+  } catch (error) {
+    return error.code;
+  }
+}
+
+/**
+ * get auth state
+ * @param {*} refresh : 리프레시 여부
+ * @returns
+ */
+async function getAuthState(refresh) {
+  try {
+    let result = false;
+    await auth.currentUser.getIdToken(refresh).then((token) => {
+      result = token;
+    });
+    return result;
+  } catch (error) {
+    return error.code;
+  }
+}
+
 const firebaseAuth = {
   signUpWithEmail,
   signInWithEmail,
@@ -150,5 +211,9 @@ const firebaseAuth = {
   signInWithSocial,
   checkAuthState,
   findPassword,
+  getCredential,
+  signInWithCredential,
+  updateNewPassword,
+  getAuthState,
 };
 export default firebaseAuth;

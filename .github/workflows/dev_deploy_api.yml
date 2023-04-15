@@ -5,7 +5,7 @@ on:
     branches:
       - develop
     paths:
-      - server/*
+      - 'server/**'
 jobs:
   deploy-backend:
     runs-on: ubuntu-20.04

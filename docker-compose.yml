@@ -9,6 +9,7 @@ services:
     ports:
       - 8080:8080
     volumes:
+      - ./client/build:/usr/share/nginx/html
       - ./nginx/nginx.BE:/etc/nginx/conf.d
       - ./scripts/dev/auto-reload-nginx.sh:/scripts/auto-reload-nginx.sh
     networks:
@@ -22,15 +23,12 @@ services:
       context: ./server
       dockerfile: Dockerfile.dev
     env_file: ./server/.env
-    ports:
-      - 5000:5000
     volumes:
       - /server/node_modules
       - ./server/:/server
     networks:
       - app-tier
     restart: always
-
 networks:
   app-tier:
     driver: bridge

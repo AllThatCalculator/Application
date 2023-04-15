@@ -9,8 +9,11 @@ const { getCalculetInfo } = require("./getCalculetInfo");
 const { postCalculets } = require("./postCalculets");
 const { userLike } = require("./userLike");
 const { getUpdateLog } = require("./updateLog");
+const { recommendation } = require("./recommend");
+const { search } = require("./search");
 // modules
 const bookmark = require("./bookmark");
+const { query } = require("express-validator");
 
 // bookmark api
 router.use(bookmark);
@@ -60,7 +63,7 @@ router.get("/converters", errorHandler.dbWrapper(getCalculetList.converters));
  */
 router.get(
   "/recommendation",
-  errorHandler.dbWrapper(getCalculetList.recommendation)
+  errorHandler.dbWrapper(recommendation)
 );
 
 /**
@@ -68,20 +71,32 @@ router.get(
  *  /api/calculets/find:
  *    get:
  *      parameters:
- *        - $ref: "#/components/parameters/mainId"
- *        - $ref: "#/components/parameters/subId"
- *        - $ref: "#/components/parameters/title"
- *        - $ref: "#/components/parameters/limit"
+ *        - $ref: "#/components/parameters/categoryMainId"
+ *        - $ref: "#/components/parameters/categorySubId"
+ *        - $ref: "#/components/parameters/keyword"
+ *        - $ref: "#/components/parameters/size"
+ *        - $ref: "#/components/parameters/page"
+ *        - $ref: "#/components/parameters/target"
  *      tags: [calculets]
- *      summary: 계산기 검색 (대분류 / 소분류 / 제목)
- *      description: 대분류 | 소분류 | 계산기 제목으로 검색 필터 설정 가능 (모든 쿼리 파라미터는 필수X)
+ *      summary: 계산기 검색 (대분류 / 소분류 / 키워드) - offset pagination
+ *      description: 대분류 | 소분류로 검색 필터 설정 가능
  *      responses:
  *        200:
- *          $ref: "#/components/responses/getCalculetList"
+ *          $ref: "#/components/responses/getSearchResult"
  *        400:
  *          $ref: "#/components/responses/error"
  */
-router.get("/find", errorHandler.dbWrapper(getCalculetList.search));
+router.get("/find",
+  // validate & sanitize query value
+  [
+    query("categoryMainId").optional().isInt().toInt(),
+    query("categorySubId").optional().isInt().toInt(),
+    query("keyword").blacklist("*").customSanitizer(keyword => keyword.split(" ").map((token) => `*${token}*`).join(" ")),
+    query("size").isInt({ gt: 0 }).toInt(),
+    query("page").isInt({ gt: 0 }).toInt(),
+    query("target").toLowerCase().isIn(["title", "desc", "all"])
+  ],
+  errorHandler.dbWrapper(search));
 
 /**
  * @swagger
@@ -102,7 +117,7 @@ router.get("/find", errorHandler.dbWrapper(getCalculetList.search));
  */
 router.get(
   "/:calculetId",
-  auth.checkFirebase,
+  auth.verify,
   errorHandler.dbWrapper(getCalculetInfo)
 );
 
@@ -138,7 +153,7 @@ router.get("/update-log/:calculetId", errorHandler.dbWrapper(getUpdateLog));
  */
 router.post(
   "/",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(postCalculets)
 );
 
@@ -159,7 +174,7 @@ router.post(
  */
 router.put(
   "/like/:calculetId",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(userLike.mark)
 );
 
@@ -180,7 +195,7 @@ router.put(
  */
 router.put(
   "/unlike/:calculetId",
-  [auth.firebase, auth.database],
+  auth.validate,
   errorHandler.dbWrapper(userLike.remove)
 );
 

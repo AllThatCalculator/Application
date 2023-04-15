@@ -21,10 +21,16 @@ const options = {
           type: "http",
           scheme: "bearer",
           bearerFormat: "JWT",
+          description: `</br>- 수동으로 idToken 발급 받아서 입력</br>
+          - /api/test/login api로 발급 받아서 입력`
         },
       },
     },
     security: [{ bearerAuth: [] }],
+    externalDocs: {
+      description: "오류 코드 및 메세지",
+      url: "https://www.notion.so/Error-code-9e2aeb37404e48cda8dae8328556156a"
+    }
   },
   apis: [
     "./routes/*.js",

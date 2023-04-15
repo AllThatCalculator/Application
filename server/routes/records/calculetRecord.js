@@ -1,13 +1,16 @@
 const { Op } = require("sequelize");
 const { models } = require("../../models");
-const { errorObject } = require("../../utils/errorMessage");
+const { CustomError } = require("../../utils/CustomError");
+const { validationResult } = require("express-validator");
 
 async function postRecords(req, res) {
-  // check request body
-  if (!req.body.calculetId || !req.body.recordArray) {
-    res.status(400).send(errorObject(400, 1));
-    return;
+  const error = validationResult(req);
+  // request invalid
+  if (!error.isEmpty()) {
+    console.log(error.mapped());
+    throw new CustomError(400, 1);
   }
+
   const calculetId = req.body.calculetId;
   const userId = res.locals.userId;
 
@@ -20,11 +23,11 @@ async function postRecords(req, res) {
 
   // process data
   const recordArray = req.body.recordArray.map((element) => ({
-    user_id: userId,
-    calculet_id: calculetId,
+    userId,
+    calculetId,
     input: JSON.stringify(element.inputObj),
     output: JSON.stringify(element.outputObj),
-    created_at: element.createdAt,
+    createdAt: element.createdAt,
   }));
 
   // put data into database
@@ -35,16 +38,16 @@ async function postRecords(req, res) {
 
 async function getRecords(req, res) {
   const records = await models.calculetRecord.findAll({
-    attributes: ["input", "output", "created_at", "id"],
+    attributes: ["input", "output", "createdAt", "id"],
     where: {
-      calculet_id: {
+      calculetId: {
         [Op.eq]: req.params.calculetId,
       },
-      user_id: {
+      userId: {
         [Op.eq]: res.locals.userId,
       },
     },
-    order: [["created_at", "DESC"]],
+    order: [["createdAt", "DESC"]],
   });
 
   // process data
@@ -52,7 +55,7 @@ async function getRecords(req, res) {
     return {
       inputObj: JSON.parse(row.input),
       outputObj: JSON.parse(row.output),
-      createdAt: row.created_at,
+      createdAt: row.createdAt,
       id: row.id,
     };
   });
@@ -61,18 +64,20 @@ async function getRecords(req, res) {
 }
 
 async function deleteRecords(req, res) {
-  // check request body
-  if (!req.body.calculetId || !req.body.recordIdList) {
-    res.status(400).send(errorObject(400, 1));
-    return;
+  const error = validationResult(req);
+  // request invalid
+  if (!error.isEmpty()) {
+    console.log(error.mapped());
+    throw new CustomError(400, 1);
   }
+
   // delete records
   await models.calculetRecord.destroy({
     where: {
-      user_id: {
+      userId: {
         [Op.eq]: res.locals.userId, // for authorize
       },
-      calculet_id: {
+      calculetId: {
         [Op.eq]: req.body.calculetId, // for double check
       },
       id: {

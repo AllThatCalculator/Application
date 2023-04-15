@@ -25,7 +25,7 @@
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
 
 # DB Key등 설정 파일
-.env
+*.env
 *.pem
 
 # 로컬에 저장되는 DB파일

@@ -2,9 +2,9 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 
 module.exports = function (app) {
   app.use(
-    ["/api", "/file", "/static-files"],
+    ["/api", "/file"],
     createProxyMiddleware({
-      target: "https://www.allthatcalculator.net", // development server
+      target: "https://allthatcalculator.net", // development server
       changeOrigin: true,
     })
   );

@@ -8,8 +8,7 @@ const auto = new SequelizeAuto(
     host: process.env.MYSQL_HOST,
     port: process.env.MYSQL_PORT,
     dialect: "mysql",
-    output: "./models/tables",
-    underscored: true,
+    directory: "./models/",
     caseModel: "c",
     caseFile: "c",
   }
