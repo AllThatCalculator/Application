@@ -12,7 +12,8 @@ const ERROR_PROVIDER_ALREADY_LINKED = "error/ERROR_PROVIDER_ALREADY_LINKED";
 const ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL =
   "error/ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL";
 const ERROR_INVALID_DATE = "error/ERROR_INVALID_DATE";
-const ERROR_SPECIAL_SYMBOLS = "error/ERROR_SPECIAL_SYMBOLS";
+const ERROR_SPECIAL_SYMBOLS_USER_NAME = "error/ERROR_SPECIAL_SYMBOLS_USER_NAME";
+const ERROR_SPECIAL_SYMBOLS_JOB = "error/ERROR_SPECIAL_SYMBOLS_JOB";
 
 // init State ( 초기 상태 )
 const initialState = {
@@ -44,7 +45,8 @@ export const setAuthError = (data) => ({
     (data === "auth/account-exists-with-different-credential" &&
       ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL) ||
     (data === "invalid-date" && ERROR_INVALID_DATE) ||
-    (data === "special-symbols" && ERROR_SPECIAL_SYMBOLS),
+    (data === "special-symbols-user-name" && ERROR_SPECIAL_SYMBOLS_USER_NAME) ||
+    (data === "special-symbols-job" && ERROR_SPECIAL_SYMBOLS_JOB),
 });
 
 export default function error(state = initialState, action) {
@@ -128,10 +130,17 @@ export default function error(state = initialState, action) {
         authError: "유효한 날짜가 아닙니다.",
         isError: true,
       };
-    case ERROR_SPECIAL_SYMBOLS:
+    case ERROR_SPECIAL_SYMBOLS_USER_NAME:
       return {
         ...state,
-        authError: "공백 혹은 특수문자를 제거해주세요.",
+        authError: "공백 혹은 _,-,(,)를 제외한 특수문자를 제거해주세요.",
+        isError: true,
+      };
+
+    case ERROR_SPECIAL_SYMBOLS_JOB:
+      return {
+        ...state,
+        authError: "_,-,(,)를 제외한 특수문자를 제거해주세요.",
         isError: true,
       };
     default:

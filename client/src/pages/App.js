@@ -8,6 +8,7 @@ import getCalculetCategory from "../user-actions/getCalculetCategory";
 import { onSetUserInfo, onSetUserIdToken } from "../modules/userInfo";
 import { handleGetUserMe } from "../utils/handleUserActions";
 import firebaseAuth from "../firebaseAuth";
+import URL from "../components/PageUrls";
 
 function App() {
   /** Redux State */
@@ -22,7 +23,6 @@ function App() {
     setIsSuccess(false);
     setIsLoggedIn(false);
 
-    // console.log(auth);
     // login state
     onAuthStateChanged(auth, (user) => {
       // 회원가입 시, 이미 가입한 계정으로 회원가입하면 로그인되는 상황을 막고자 update막음
@@ -40,24 +40,30 @@ function App() {
       } else if (!!user) {
         // setIsLoggedIn(false);
         // on login
-        const token = user.accessToken;
 
-        if (token !== null) {
-          /** set user info */
-          handleGetUserMe(token).then((data) => {
-            // success 사용자 있음 : me update & 메인 페이지
-            if (!!data) {
-              dispatch(onSetUserInfo(data));
-              setIsSuccess(true);
-              setIsLoggedIn(true);
-              /** set user id token */
-              dispatch(onSetUserIdToken(token));
-            }
-            // error 사용자 없음 : delete(동시에 로그아웃 됨)
-            else {
-              firebaseAuth.deleteAuth();
-            }
-          });
+        if (document.location.pathname === URL.SIGN_UP) {
+          setIsSuccess(true);
+          setIsLoggedIn(true);
+        } else {
+          const token = user.accessToken;
+          if (token !== null) {
+            /** set user info */
+            handleGetUserMe(token).then((data) => {
+              // success 사용자 있음 : me update & 메인 페이지
+              if (!!data) {
+                dispatch(onSetUserInfo(data));
+                setIsSuccess(true);
+                setIsLoggedIn(true);
+                /** set user id token */
+                dispatch(onSetUserIdToken(token));
+              }
+              // error 사용자 없음 : delete(동시에 로그아웃 됨)
+              else {
+                firebaseAuth.signOutAuth();
+                firebaseAuth.deleteAuth();
+              }
+            });
+          }
         }
       }
     });

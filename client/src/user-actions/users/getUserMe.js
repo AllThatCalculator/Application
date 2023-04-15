@@ -8,7 +8,9 @@ async function getUserMe(userId) {
       },
     });
     return response.data;
-  } catch (error) {}
+  } catch (error) {
+    // console.log(error);
+  }
 }
 
 export default getUserMe;

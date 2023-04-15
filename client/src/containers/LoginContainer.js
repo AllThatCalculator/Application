@@ -66,7 +66,7 @@ function LoginContainer({ isLoggedIn }) {
   // get user me handle
   async function onGetUserMeHandler() {
     // get token
-    const { accessToken: idToken } = await firebaseAuth.getAuthState();
+    const idToken = await firebaseAuth.getAuthState(false);
 
     // get user me
     let result = await handleGetUserMe(idToken);
