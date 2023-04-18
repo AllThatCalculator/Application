@@ -11,9 +11,9 @@ async function getCalculetInfo(req, res) {
       {
         model: models.userInfo,
         required: true,
-        attributes: ["userName", "profileImgSrc"],
+        attributes: ["id", "userName", "profileImgSrc"],
         as: "contributor",
-      }
+      },
     ],
     where: {
       id: {
@@ -50,7 +50,7 @@ async function getCalculetInfo(req, res) {
     id,
     createdAt,
     contributor,
-    statistics
+    statistics,
   } = calculetInfo.toJSON();
 
   const responseData = {
@@ -68,6 +68,7 @@ async function getCalculetInfo(req, res) {
       liked: userLiked,
       bookmarked: userBookmarked,
     },
+    isMe: contributor.id === res.locals.userId,
   };
 
   res.status(200).send(responseData);

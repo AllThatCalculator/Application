@@ -32,6 +32,8 @@ components:
     userSimpleInfo:
       type: object
       properties:
+        id:
+          $ref: "#/components/schemas/userInfo/properties/id"
         userName:
           $ref: "#/components/schemas/userInfo/properties/userName"
         profileImgSrc:
@@ -57,6 +59,10 @@ components:
     userInfo:
       type: object
       properties:
+        id:
+          type: string
+          description: firebase uid
+          example: "FmBZs9SG8ybc0hla149hKXXTnT52"
         userName:
           type: string
           description: 사용자 이름
@@ -83,7 +89,7 @@ components:
     profileImgSrc:
       type: string
       description: 사용자 프로필 src path
-      example: "/file/profile/123ae3c23e..."
+      example: "/file/profile/FmBZs9SG8ybc0hla149hKXXTnT52"
     profileImg:
       type: string
       format: binary

@@ -85,6 +85,8 @@ components:
             properties:
               id:
                 $ref: "#/components/schemas/calculetId"
+              isMe:
+                $ref: "#/components/schemas/isMe"
               createdAt:
                 $ref: "#/components/schemas/dateTimeLive"
               contributor:
@@ -93,6 +95,7 @@ components:
                 $ref: "#/components/schemas/statistics"
               userCalculet:
                 $ref: "#/components/schemas/userCalculet"
+
     getCalculetList:
       description: 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
       content:
@@ -243,3 +246,6 @@ components:
           type: string
           description: 업데이트 메세지
           example: 업데이트 로그
+    isMe:
+      type: boolean
+      description: 본인이 작성자인지 여부
