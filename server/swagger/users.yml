@@ -27,7 +27,33 @@ components:
                 $ref: "#/components/schemas/profileImg"
               userInfo:
                 $ref: "#/components/schemas/userUpdateInfo"
-
+  responses:
+    myCalculetList:
+      description: 마이 계산기 리스트
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              properties:
+                id:
+                  $ref: "#/components/schemas/calculetId"
+                title:
+                  $ref: "#/components/schemas/calculet/properties/title"
+                categoryMainId:
+                  $ref: "#/components/schemas/calculet/properties/categoryMainId"
+                categorySubId:
+                  $ref: "#/components/schemas/calculet/properties/categorySubId"
+                createdAt:
+                  $ref: "#/components/schemas/calculet/properties/createdAt"
+                blocked:
+                  $ref: "#/components/schemas/calculet/properties/blocked"
+                viewCnt:
+                  $ref: "#/components/schemas/statistics/properties/view"
+                likeCnt:
+                  $ref: "#/components/schemas/statistics/properties/like"
+                bookmarkCnt:
+                  $ref: "#/components/schemas/statistics/properties/bookmark"
   schemas:
     userSimpleInfo:
       type: object

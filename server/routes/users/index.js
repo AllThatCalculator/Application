@@ -9,6 +9,7 @@ const { signUp } = require("./signUp");
 const { updateUser } = require("./updateUser");
 const { deleteUser } = require("./deleteUser");
 const { me } = require("./getMyInfo");
+const { getMyCalculetList } = require("./getMyCalculetList");
 // resource
 const multer = require("multer");
 const upload = multer();
@@ -114,5 +115,22 @@ router.get("/me/profile", auth.validate, errorHandler.dbWrapper(me.detail));
  *                $ref: "#/components/schemas/userSimpleInfo"
  */
 router.get("/me", auth.validate, errorHandler.dbWrapper(me.default));
+
+/**
+ * @swagger
+ *  /api/users/me/calculet:
+ *    get:
+ *      tags: [users]
+ *      summary: 로그인 한 사용자(본인)의 마이 계산기 목록 요청 <Auth>
+ *      description: 마이 계산기 목록들 (임시 계산기 포함)
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/myCalculetList"
+ */
+router.get(
+  "/me/calculet",
+  auth.validate,
+  errorHandler.dbWrapper(getMyCalculetList)
+);
 
 module.exports = router;
