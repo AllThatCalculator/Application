@@ -1,28 +1,28 @@
-var DataTypes = require("sequelize").DataTypes;
-var _admin = require("./tables/admin");
-var _calculetInfo = require("./tables/calculetInfo");
-var _calculetInfoTemp = require("./tables/calculetInfoTemp");
-var _calculetRecord = require("./tables/calculetRecord");
-var _calculetUpdateLog = require("./tables/calculetUpdateLog");
-var _category = require("./tables/category");
-var _categoryMain = require("./tables/categoryMain");
-var _categorySub = require("./tables/categorySub");
-var _userCalculetBookmark = require("./tables/userCalculetBookmark");
-var _userCalculetLike = require("./tables/userCalculetLike");
-var _userInfo = require("./tables/userInfo");
+const DataTypes = require("sequelize").DataTypes;
+const _admin = require("./tables/admin");
+const _calculetInfo = require("./tables/calculetInfo");
+const _calculetInfoTemp = require("./tables/calculetInfoTemp");
+const _calculetRecord = require("./tables/calculetRecord");
+const _calculetUpdateLog = require("./tables/calculetUpdateLog");
+const _category = require("./tables/category");
+const _categoryMain = require("./tables/categoryMain");
+const _categorySub = require("./tables/categorySub");
+const _userCalculetBookmark = require("./tables/userCalculetBookmark");
+const _userCalculetLike = require("./tables/userCalculetLike");
+const _userInfo = require("./tables/userInfo");
 
 function initModels(sequelize) {
-  var admin = _admin(sequelize, DataTypes);
-  var calculetInfo = _calculetInfo(sequelize, DataTypes);
-  var calculetInfoTemp = _calculetInfoTemp(sequelize, DataTypes);
-  var calculetRecord = _calculetRecord(sequelize, DataTypes);
-  var calculetUpdateLog = _calculetUpdateLog(sequelize, DataTypes);
-  var category = _category(sequelize, DataTypes);
-  var categoryMain = _categoryMain(sequelize, DataTypes);
-  var categorySub = _categorySub(sequelize, DataTypes);
-  var userCalculetBookmark = _userCalculetBookmark(sequelize, DataTypes);
-  var userCalculetLike = _userCalculetLike(sequelize, DataTypes);
-  var userInfo = _userInfo(sequelize, DataTypes);
+  const admin = _admin(sequelize, DataTypes);
+  const calculetInfo = _calculetInfo(sequelize, DataTypes);
+  const calculetInfoTemp = _calculetInfoTemp(sequelize, DataTypes);
+  const calculetRecord = _calculetRecord(sequelize, DataTypes);
+  const calculetUpdateLog = _calculetUpdateLog(sequelize, DataTypes);
+  const category = _category(sequelize, DataTypes);
+  const categoryMain = _categoryMain(sequelize, DataTypes);
+  const categorySub = _categorySub(sequelize, DataTypes);
+  const userCalculetBookmark = _userCalculetBookmark(sequelize, DataTypes);
+  const userCalculetLike = _userCalculetLike(sequelize, DataTypes);
+  const userInfo = _userInfo(sequelize, DataTypes);
 
   calculetInfo.belongsToMany(userInfo, {
     as: "userIdUserInfos",
