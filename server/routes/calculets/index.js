@@ -22,7 +22,7 @@ router.use(bookmark);
  * @swagger
  *  /api/calculets:
  *    get:
- *      tags: [calculets]
+ *      tags: [calculet-list]
  *      summary: 계산기 전체 목록 불러오기
  *      description: DB에 저장된 계산기의 전체 목록을 카테고리별로 불러온다
  *      responses:
@@ -37,7 +37,7 @@ router.get("/", errorHandler.dbWrapper(getCalculetList.default));
  * @swagger
  *  /api/calculets/converters:
  *    get:
- *      tags: [calculets]
+ *      tags: [calculet-list]
  *      summary: 단위변환기 목록 불러오기
  *      description: 계산기 목록 중 소분류가 단위변환기에 속하는 계산기 목록
  *      responses:
@@ -52,7 +52,7 @@ router.get("/converters", errorHandler.dbWrapper(getCalculetList.converters));
  * @swagger
  *  /api/calculets/recommendation:
  *    get:
- *      tags: [calculets]
+ *      tags: [calculet-list]
  *      summary: 추천계산기 목록 불러오기
  *      description: (임시) 조회수 높은 top 15 계산기
  *      responses:
@@ -74,7 +74,7 @@ router.get("/recommendation", errorHandler.dbWrapper(recommendation));
  *        - $ref: "#/components/parameters/keyword"
  *        - $ref: "#/components/parameters/size"
  *        - $ref: "#/components/parameters/page"
- *      tags: [calculets]
+ *      tags: [calculet-list]
  *      summary: 계산기 검색 (대분류 / 소분류 / 키워드) - offset pagination
  *      description: 대분류 | 소분류로 검색 필터 설정 가능
  *      responses:
@@ -166,7 +166,7 @@ router.post("/", auth.validate, errorHandler.dbWrapper(postCalculets));
  *    put:
  *      parameters:
  *        - $ref: "#/components/parameters/calculetId"
- *      tags: [calculets]
+ *      tags: [like]
  *      summary: 좋아요 등록 <Auth>
  *      description: 로그인한 유저에 대해 계산기 "좋아요" 등록
  *      responses:
@@ -187,7 +187,7 @@ router.put(
  *    put:
  *      parameters:
  *        - $ref: "#/components/parameters/calculetId"
- *      tags: [calculets]
+ *      tags: [like]
  *      summary: 좋아요 취소 <Auth>
  *      description: 로그인한 유저에 대해 계산기 "좋아요" 취소
  *      responses:
