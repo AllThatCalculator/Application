@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const { models } = require("../../models");
 const { userBookmark } = require("./bookmark/userBookmark");
 const { userLike } = require("./userLike");
+const { CustomError } = require("../../utils/CustomError");
 
 async function getCalculetInfo(req, res) {
   // 계산기 정보 (유저와 카테고리 대분류, 소분류, 계산기 통계, 조회수)
@@ -23,8 +24,11 @@ async function getCalculetInfo(req, res) {
   });
 
   if (calculetInfo === null) {
-    res.status(404).send();
-    return;
+    throw new CustomError(404, 0);
+  }
+
+  if (calculetInfo.blocked) {
+    throw new CustomError(403, 2);
   }
 
   // update view count of calculet
