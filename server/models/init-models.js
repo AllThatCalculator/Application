@@ -1,170 +1,170 @@
-const DataTypes = require("sequelize").DataTypes;
-const _admin = require("./tables/admin");
-const _calculetInfo = require("./tables/calculetInfo");
-const _calculetInfoTemp = require("./tables/calculetInfoTemp");
-const _calculetRecord = require("./tables/calculetRecord");
-const _calculetUpdateLog = require("./tables/calculetUpdateLog");
-const _category = require("./tables/category");
-const _categoryMain = require("./tables/categoryMain");
-const _categorySub = require("./tables/categorySub");
-const _userCalculetBookmark = require("./tables/userCalculetBookmark");
-const _userCalculetLike = require("./tables/userCalculetLike");
-const _userInfo = require("./tables/userInfo");
+var DataTypes = require("sequelize").DataTypes;
+var _admin = require("./tables/admin");
+var _calculetInfo = require("./tables/calculetInfo");
+var _calculetInfoTemp = require("./tables/calculetInfoTemp");
+var _calculetRecord = require("./tables/calculetRecord");
+var _calculetUpdateLog = require("./tables/calculetUpdateLog");
+var _category = require("./tables/category");
+var _categoryMain = require("./tables/categoryMain");
+var _categorySub = require("./tables/categorySub");
+var _userCalculetBookmark = require("./tables/userCalculetBookmark");
+var _userCalculetLike = require("./tables/userCalculetLike");
+var _userInfo = require("./tables/userInfo");
 
 function initModels(sequelize) {
-  const admin = _admin(sequelize, DataTypes);
-  const calculetInfo = _calculetInfo(sequelize, DataTypes);
-  const calculetInfoTemp = _calculetInfoTemp(sequelize, DataTypes);
-  const calculetRecord = _calculetRecord(sequelize, DataTypes);
-  const calculetUpdateLog = _calculetUpdateLog(sequelize, DataTypes);
-  const category = _category(sequelize, DataTypes);
-  const categoryMain = _categoryMain(sequelize, DataTypes);
-  const categorySub = _categorySub(sequelize, DataTypes);
-  const userCalculetBookmark = _userCalculetBookmark(sequelize, DataTypes);
-  const userCalculetLike = _userCalculetLike(sequelize, DataTypes);
-  const userInfo = _userInfo(sequelize, DataTypes);
+  var admin = _admin(sequelize, DataTypes);
+  var calculetInfo = _calculetInfo(sequelize, DataTypes);
+  var calculetInfoTemp = _calculetInfoTemp(sequelize, DataTypes);
+  var calculetRecord = _calculetRecord(sequelize, DataTypes);
+  var calculetUpdateLog = _calculetUpdateLog(sequelize, DataTypes);
+  var category = _category(sequelize, DataTypes);
+  var categoryMain = _categoryMain(sequelize, DataTypes);
+  var categorySub = _categorySub(sequelize, DataTypes);
+  var userCalculetBookmark = _userCalculetBookmark(sequelize, DataTypes);
+  var userCalculetLike = _userCalculetLike(sequelize, DataTypes);
+  var userInfo = _userInfo(sequelize, DataTypes);
 
   calculetInfo.belongsToMany(userInfo, {
-    as: "user_id_user_infos",
+    as: "userIdUserInfos",
     through: userCalculetBookmark,
-    foreignKey: "calculet_id",
-    otherKey: "user_id",
+    foreignKey: "calculetId",
+    otherKey: "userId",
   });
   calculetInfo.belongsToMany(userInfo, {
-    as: "user_id_user_info_user_calculet_likes",
+    as: "userIdUserInfoUserCalculetLikes",
     through: userCalculetLike,
-    foreignKey: "calculet_id",
-    otherKey: "user_id",
+    foreignKey: "calculetId",
+    otherKey: "userId",
   });
   categoryMain.belongsToMany(categorySub, {
-    as: "sub_id_category_subs",
+    as: "subIdCategorySubs",
     through: category,
-    foreignKey: "main_id",
-    otherKey: "sub_id",
+    foreignKey: "mainId",
+    otherKey: "subId",
   });
   categorySub.belongsToMany(categoryMain, {
-    as: "main_id_category_mains",
+    as: "mainIdCategoryMains",
     through: category,
-    foreignKey: "sub_id",
-    otherKey: "main_id",
+    foreignKey: "subId",
+    otherKey: "mainId",
   });
   userInfo.belongsToMany(calculetInfo, {
-    as: "calculet_id_calculet_infos",
+    as: "calculetIdCalculetInfos",
     through: userCalculetBookmark,
-    foreignKey: "user_id",
-    otherKey: "calculet_id",
+    foreignKey: "userId",
+    otherKey: "calculetId",
   });
   userInfo.belongsToMany(calculetInfo, {
-    as: "calculet_id_calculet_info_user_calculet_likes",
+    as: "calculetIdCalculetInfoUserCalculetLikes",
     through: userCalculetLike,
-    foreignKey: "user_id",
-    otherKey: "calculet_id",
+    foreignKey: "userId",
+    otherKey: "calculetId",
   });
   calculetRecord.belongsTo(calculetInfo, {
     as: "calculet",
-    foreignKey: "calculet_id",
+    foreignKey: "calculetId",
   });
   calculetInfo.hasMany(calculetRecord, {
-    as: "calculet_records",
-    foreignKey: "calculet_id",
+    as: "calculetRecords",
+    foreignKey: "calculetId",
   });
   calculetUpdateLog.belongsTo(calculetInfo, {
     as: "calculet",
-    foreignKey: "calculet_id",
+    foreignKey: "calculetId",
   });
   calculetInfo.hasMany(calculetUpdateLog, {
-    as: "calculet_update_logs",
-    foreignKey: "calculet_id",
+    as: "calculetUpdateLogs",
+    foreignKey: "calculetId",
   });
   userCalculetBookmark.belongsTo(calculetInfo, {
     as: "calculet",
-    foreignKey: "calculet_id",
+    foreignKey: "calculetId",
   });
   calculetInfo.hasMany(userCalculetBookmark, {
-    as: "user_calculet_bookmarks",
-    foreignKey: "calculet_id",
+    as: "userCalculetBookmarks",
+    foreignKey: "calculetId",
   });
   userCalculetLike.belongsTo(calculetInfo, {
     as: "calculet",
-    foreignKey: "calculet_id",
+    foreignKey: "calculetId",
   });
   calculetInfo.hasMany(userCalculetLike, {
-    as: "user_calculet_likes",
-    foreignKey: "calculet_id",
+    as: "userCalculetLikes",
+    foreignKey: "calculetId",
   });
   calculetInfo.belongsTo(category, {
-    as: "category_main",
-    foreignKey: "category_main_id",
+    as: "categoryMain",
+    foreignKey: "categoryMainId",
   });
   category.hasMany(calculetInfo, {
-    as: "calculet_infos",
-    foreignKey: "category_main_id",
+    as: "calculetInfos",
+    foreignKey: "categoryMainId",
   });
   calculetInfo.belongsTo(category, {
-    as: "category_sub",
-    foreignKey: "category_sub_id",
+    as: "categorySub",
+    foreignKey: "categorySubId",
   });
   category.hasMany(calculetInfo, {
-    as: "category_sub_calculet_infos",
-    foreignKey: "category_sub_id",
+    as: "categorySubCalculetInfos",
+    foreignKey: "categorySubId",
   });
   calculetInfoTemp.belongsTo(category, {
-    as: "category_main",
-    foreignKey: "category_main_id",
+    as: "categoryMain",
+    foreignKey: "categoryMainId",
   });
   category.hasMany(calculetInfoTemp, {
-    as: "calculet_info_temps",
-    foreignKey: "category_main_id",
+    as: "calculetInfoTemps",
+    foreignKey: "categoryMainId",
   });
   calculetInfoTemp.belongsTo(category, {
-    as: "category_sub",
-    foreignKey: "category_sub_id",
+    as: "categorySub",
+    foreignKey: "categorySubId",
   });
   category.hasMany(calculetInfoTemp, {
-    as: "category_sub_calculet_info_temps",
-    foreignKey: "category_sub_id",
+    as: "categorySubCalculetInfoTemps",
+    foreignKey: "categorySubId",
   });
-  category.belongsTo(categoryMain, { as: "main", foreignKey: "main_id" });
-  categoryMain.hasMany(category, { as: "categories", foreignKey: "main_id" });
-  category.belongsTo(categorySub, { as: "sub", foreignKey: "sub_id" });
-  categorySub.hasMany(category, { as: "categories", foreignKey: "sub_id" });
-  admin.belongsTo(userInfo, { as: "id_user_info", foreignKey: "id" });
+  category.belongsTo(categoryMain, { as: "main", foreignKey: "mainId" });
+  categoryMain.hasMany(category, { as: "categories", foreignKey: "mainId" });
+  category.belongsTo(categorySub, { as: "sub", foreignKey: "subId" });
+  categorySub.hasMany(category, { as: "categories", foreignKey: "subId" });
+  admin.belongsTo(userInfo, { as: "idUserInfo", foreignKey: "id" });
   userInfo.hasOne(admin, { as: "admin", foreignKey: "id" });
-  admin.belongsTo(userInfo, { as: "email_user_info", foreignKey: "email" });
-  userInfo.hasMany(admin, { as: "email_admins", foreignKey: "email" });
+  admin.belongsTo(userInfo, { as: "emailUserInfo", foreignKey: "email" });
+  userInfo.hasMany(admin, { as: "emailAdmins", foreignKey: "email" });
   calculetInfo.belongsTo(userInfo, {
     as: "contributor",
-    foreignKey: "contributor_id",
+    foreignKey: "contributorId",
   });
   userInfo.hasMany(calculetInfo, {
-    as: "calculet_infos",
-    foreignKey: "contributor_id",
+    as: "calculetInfos",
+    foreignKey: "contributorId",
   });
   calculetInfoTemp.belongsTo(userInfo, {
     as: "contributor",
-    foreignKey: "contributor_id",
+    foreignKey: "contributorId",
   });
   userInfo.hasMany(calculetInfoTemp, {
-    as: "calculet_info_temps",
-    foreignKey: "contributor_id",
+    as: "calculetInfoTemps",
+    foreignKey: "contributorId",
   });
-  calculetRecord.belongsTo(userInfo, { as: "user", foreignKey: "user_id" });
+  calculetRecord.belongsTo(userInfo, { as: "user", foreignKey: "userId" });
   userInfo.hasMany(calculetRecord, {
-    as: "calculet_records",
-    foreignKey: "user_id",
+    as: "calculetRecords",
+    foreignKey: "userId",
   });
   userCalculetBookmark.belongsTo(userInfo, {
     as: "user",
-    foreignKey: "user_id",
+    foreignKey: "userId",
   });
   userInfo.hasMany(userCalculetBookmark, {
-    as: "user_calculet_bookmarks",
-    foreignKey: "user_id",
+    as: "userCalculetBookmarks",
+    foreignKey: "userId",
   });
-  userCalculetLike.belongsTo(userInfo, { as: "user", foreignKey: "user_id" });
+  userCalculetLike.belongsTo(userInfo, { as: "user", foreignKey: "userId" });
   userInfo.hasMany(userCalculetLike, {
-    as: "user_calculet_likes",
-    foreignKey: "user_id",
+    as: "userCalculetLikes",
+    foreignKey: "userId",
   });
 
   return {
