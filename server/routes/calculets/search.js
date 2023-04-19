@@ -23,6 +23,11 @@ function setFilter(query) {
     };
   }
 
+  // check keyword && target both exist
+  if (query.target === undefined || query.keyword === undefined) {
+    return filter;
+  }
+
   // set search target
   let target = "";
   switch (query.target) {

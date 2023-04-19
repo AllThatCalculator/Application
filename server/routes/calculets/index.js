@@ -61,10 +61,7 @@ router.get("/converters", errorHandler.dbWrapper(getCalculetList.converters));
  *        400:
  *          $ref: "#/components/responses/error"
  */
-router.get(
-  "/recommendation",
-  errorHandler.dbWrapper(recommendation)
-);
+router.get("/recommendation", errorHandler.dbWrapper(recommendation));
 
 /**
  * @swagger
@@ -73,10 +70,10 @@ router.get(
  *      parameters:
  *        - $ref: "#/components/parameters/categoryMainId"
  *        - $ref: "#/components/parameters/categorySubId"
+ *        - $ref: "#/components/parameters/target"
  *        - $ref: "#/components/parameters/keyword"
  *        - $ref: "#/components/parameters/size"
  *        - $ref: "#/components/parameters/page"
- *        - $ref: "#/components/parameters/target"
  *      tags: [calculets]
  *      summary: 계산기 검색 (대분류 / 소분류 / 키워드) - offset pagination
  *      description: 대분류 | 소분류로 검색 필터 설정 가능
@@ -86,17 +83,27 @@ router.get(
  *        400:
  *          $ref: "#/components/responses/error"
  */
-router.get("/find",
+router.get(
+  "/find",
   // validate & sanitize query value
   [
     query("categoryMainId").optional().isInt().toInt(),
     query("categorySubId").optional().isInt().toInt(),
-    query("keyword").blacklist("*").customSanitizer(keyword => keyword.split(" ").map((token) => `*${token}*`).join(" ")),
+    query("keyword")
+      .optional()
+      .blacklist("*")
+      .customSanitizer((keyword) =>
+        keyword
+          .split(" ")
+          .map((token) => `*${token}*`)
+          .join(" ")
+      ),
+    query("target").optional().toLowerCase().isIn(["title", "desc", "all"]),
     query("size").isInt({ gt: 0 }).toInt(),
     query("page").isInt({ gt: 0 }).toInt(),
-    query("target").toLowerCase().isIn(["title", "desc", "all"])
   ],
-  errorHandler.dbWrapper(search));
+  errorHandler.dbWrapper(search)
+);
 
 /**
  * @swagger
@@ -151,11 +158,7 @@ router.get("/update-log/:calculetId", errorHandler.dbWrapper(getUpdateLog));
  *        400:
  *          $ref: "#/components/responses/error"
  */
-router.post(
-  "/",
-  auth.validate,
-  errorHandler.dbWrapper(postCalculets)
-);
+router.post("/", auth.validate, errorHandler.dbWrapper(postCalculets));
 
 /**
  * @swagger

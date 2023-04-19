@@ -30,9 +30,9 @@ components:
         $ref: "#/components/schemas/calculet/properties/categorySubId"
     keyword:
       in: query
-      required: true
+      required: false
       name: keyword
-      description: 검색어
+      description: 검색어 (지정 시 target 지정도 필요함)
       schema:
         type: string
     size:
@@ -51,9 +51,9 @@ components:
         type: integer
     target:
       in: query
-      required: true
+      required: false
       name: target
-      description: 검색 대상 (title | desc | all)
+      description: 검색 대상 (title | desc | all - 지정 시 keyword 지정도 필요)
       schema:
         type: string
       example: title
