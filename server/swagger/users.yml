@@ -27,6 +27,18 @@ components:
                 $ref: "#/components/schemas/profileImg"
               userInfo:
                 $ref: "#/components/schemas/userUpdateInfo"
+    updateMyCalculetInfo:
+      description: 마이 계산기 정보 수정
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              updateMessage:
+                $ref: "#/components/schemas/updateLog/properties/message"
+              calculetInfo:
+                $ref: "#/components/schemas/calculetUpdate"
   responses:
     myCalculetList:
       description: 마이 계산기 리스트

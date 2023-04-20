@@ -252,3 +252,20 @@ components:
           type: string
           description: 업데이트 메세지
           example: 업데이트 로그
+    calculetUpdate:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/calculetId"
+        title:
+          $ref: "#/components/schemas/calculet/properties/title"
+        srcCode:
+          $ref: "#/components/schemas/calculet/properties/srcCode"
+        manual:
+          $ref: "#/components/schemas/calculet/properties/manual"
+        description:
+          $ref: "#/components/schemas/calculet/properties/description"
+        categoryMainId:
+          $ref: "#/components/schemas/calculet/properties/categoryMainId"
+        categorySubId:
+          $ref: "#/components/schemas/calculet/properties/categorySubId"
