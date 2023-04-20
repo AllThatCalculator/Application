@@ -11,6 +11,7 @@ const { deleteUser } = require("./deleteUser");
 const { me } = require("./getMyInfo");
 const { getMyCalculetList } = require("./getMyCalculetList");
 const { updateMyCalculet } = require("./updateMyCalculet");
+const { deleteMyCalculet } = require("./deleteMyCalculet");
 // resource
 const multer = require("multer");
 const upload = multer();
@@ -158,16 +159,27 @@ router.patch(
  *  /api/users/me/calculet:
  *    delete:
  *      tags: [users]
- *      summary: 로그인 한 사용자(본인)의 마이 계산기 목록 요청 <Auth>
- *      description: 마이 계산기 목록들 (임시 계산기 포함)
+ *      summary: 로그인 한 사용자(본인)의 마이 계산기 삭제 요청 <Auth>
+ *      description: 마이 계산기 삭제 (임시 계산기 포함)
+ *      parameters:
+ *      - name: calculetId
+ *        in: header
+ *        required: true
+ *        schema:
+ *          $ref: "#/components/schemas/calculetId"
+ *      - name: blocked
+ *        in: header
+ *        required: true
+ *        schema:
+ *          $ref: "#/components/schemas/calculet/blocked"
  *      responses:
- *        200:
- *          $ref: "#/components/responses/myCalculetList"
+ *        204:
+ *          $ref: "#/components/responses/success204"
  */
 router.delete(
   "/me/calculet",
   auth.validate,
-  errorHandler.dbWrapper(getMyCalculetList)
+  errorHandler.dbWrapper(deleteMyCalculet)
 );
 
 module.exports = router;
