@@ -30,9 +30,9 @@ components:
         $ref: "#/components/schemas/calculet/properties/categorySubId"
     keyword:
       in: query
-      required: true
+      required: false
       name: keyword
-      description: 검색어
+      description: 검색어 (지정 시 target 지정도 필요함)
       schema:
         type: string
     size:
@@ -51,9 +51,9 @@ components:
         type: integer
     target:
       in: query
-      required: true
+      required: false
       name: target
-      description: 검색 대상 (title | desc | all)
+      description: 검색 대상 (title | desc | all - 지정 시 keyword 지정도 필요)
       schema:
         type: string
       example: title
@@ -85,6 +85,8 @@ components:
             properties:
               id:
                 $ref: "#/components/schemas/calculetId"
+              isMe:
+                $ref: "#/components/schemas/isMe"
               createdAt:
                 $ref: "#/components/schemas/dateTimeLive"
               contributor:
@@ -93,6 +95,7 @@ components:
                 $ref: "#/components/schemas/statistics"
               userCalculet:
                 $ref: "#/components/schemas/userCalculet"
+
     getCalculetList:
       description: 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
       content:
@@ -252,6 +255,9 @@ components:
           type: string
           description: 업데이트 메세지
           example: 업데이트 로그
+    isMe:
+      type: boolean
+      description: 본인이 작성자인지 여부
     calculetUpdate:
       type: object
       properties:

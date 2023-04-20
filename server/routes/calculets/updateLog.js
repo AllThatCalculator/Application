@@ -1,3 +1,4 @@
+const sequelize = require("sequelize");
 const { Op } = require("sequelize");
 const { models } = require("../../models");
 
@@ -6,6 +7,11 @@ async function getUpdateLog(req, res) {
     where: {
       calculetId: {
         [Op.eq]: req.params.calculetId,
+      },
+      createdAt: {
+        [Op.lte]: sequelize.literal(
+          `(SELECT updated_at FROM calculet_info WHERE id = "${req.params.calculetId}")`
+        ),
       },
     },
     attributes: ["createdAt", "message"],

@@ -1,5 +1,5 @@
 function updateCalculetCount(calculetId) {
-  if (Number(calculetId) !== Number(localStorage.getItem("previousCalculet"))) {
+  if (calculetId !== localStorage.getItem("previousCalculet")) {
     // console.log("update!", calculetId);
     localStorage.setItem("previousCalculet", calculetId);
     localStorage.setItem("continueCnt", 1);
@@ -27,8 +27,8 @@ function loadOftenUsedCalculet() {
 
   // 만약 자주 쓰는 계산기가 비어있다면 초기화
   if (localStorage.getItem("oftenCalculet") === null) {
-    localStorage.setItem("oftenCalculet", 1);
-    localStorage.setItem("previousCalculet", 1);
+    localStorage.setItem("oftenCalculet", "1");
+    localStorage.setItem("previousCalculet", "1");
     localStorage.setItem("continueCnt", 1);
   }
 
