@@ -22,7 +22,7 @@ router.use(bookmark);
  * @swagger
  *  /api/calculets:
  *    get:
- *      tags: [calculets]
+ *      tags: [calculet-list]
  *      summary: 계산기 전체 목록 불러오기
  *      description: DB에 저장된 계산기의 전체 목록을 카테고리별로 불러온다
  *      responses:
@@ -37,7 +37,7 @@ router.get("/", errorHandler.dbWrapper(getCalculetList.default));
  * @swagger
  *  /api/calculets/converters:
  *    get:
- *      tags: [calculets]
+ *      tags: [calculet-list]
  *      summary: 단위변환기 목록 불러오기
  *      description: 계산기 목록 중 소분류가 단위변환기에 속하는 계산기 목록
  *      responses:
@@ -52,7 +52,7 @@ router.get("/converters", errorHandler.dbWrapper(getCalculetList.converters));
  * @swagger
  *  /api/calculets/recommendation:
  *    get:
- *      tags: [calculets]
+ *      tags: [calculet-list]
  *      summary: 추천계산기 목록 불러오기
  *      description: (임시) 조회수 높은 top 15 계산기
  *      responses:
@@ -61,10 +61,7 @@ router.get("/converters", errorHandler.dbWrapper(getCalculetList.converters));
  *        400:
  *          $ref: "#/components/responses/error"
  */
-router.get(
-  "/recommendation",
-  errorHandler.dbWrapper(recommendation)
-);
+router.get("/recommendation", errorHandler.dbWrapper(recommendation));
 
 /**
  * @swagger
@@ -73,11 +70,11 @@ router.get(
  *      parameters:
  *        - $ref: "#/components/parameters/categoryMainId"
  *        - $ref: "#/components/parameters/categorySubId"
+ *        - $ref: "#/components/parameters/target"
  *        - $ref: "#/components/parameters/keyword"
  *        - $ref: "#/components/parameters/size"
  *        - $ref: "#/components/parameters/page"
- *        - $ref: "#/components/parameters/target"
- *      tags: [calculets]
+ *      tags: [calculet-list]
  *      summary: 계산기 검색 (대분류 / 소분류 / 키워드) - offset pagination
  *      description: 대분류 | 소분류로 검색 필터 설정 가능
  *      responses:
@@ -86,17 +83,27 @@ router.get(
  *        400:
  *          $ref: "#/components/responses/error"
  */
-router.get("/find",
+router.get(
+  "/find",
   // validate & sanitize query value
   [
     query("categoryMainId").optional().isInt().toInt(),
     query("categorySubId").optional().isInt().toInt(),
-    query("keyword").blacklist("*").customSanitizer(keyword => keyword.split(" ").map((token) => `*${token}*`).join(" ")),
+    query("keyword")
+      .optional()
+      .blacklist("*")
+      .customSanitizer((keyword) =>
+        keyword
+          .split(" ")
+          .map((token) => `*${token}*`)
+          .join(" ")
+      ),
+    query("target").optional().toLowerCase().isIn(["title", "desc", "all"]),
     query("size").isInt({ gt: 0 }).toInt(),
     query("page").isInt({ gt: 0 }).toInt(),
-    query("target").toLowerCase().isIn(["title", "desc", "all"])
   ],
-  errorHandler.dbWrapper(search));
+  errorHandler.dbWrapper(search)
+);
 
 /**
  * @swagger
@@ -151,11 +158,7 @@ router.get("/update-log/:calculetId", errorHandler.dbWrapper(getUpdateLog));
  *        400:
  *          $ref: "#/components/responses/error"
  */
-router.post(
-  "/",
-  auth.validate,
-  errorHandler.dbWrapper(postCalculets)
-);
+router.post("/", auth.validate, errorHandler.dbWrapper(postCalculets));
 
 /**
  * @swagger
@@ -163,7 +166,7 @@ router.post(
  *    put:
  *      parameters:
  *        - $ref: "#/components/parameters/calculetId"
- *      tags: [calculets]
+ *      tags: [like]
  *      summary: 좋아요 등록 <Auth>
  *      description: 로그인한 유저에 대해 계산기 "좋아요" 등록
  *      responses:
@@ -184,7 +187,7 @@ router.put(
  *    put:
  *      parameters:
  *        - $ref: "#/components/parameters/calculetId"
- *      tags: [calculets]
+ *      tags: [like]
  *      summary: 좋아요 취소 <Auth>
  *      description: 로그인한 유저에 대해 계산기 "좋아요" 취소
  *      responses:
