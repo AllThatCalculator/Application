@@ -15,6 +15,8 @@ const { deleteMyCalculet } = require("./deleteMyCalculet");
 // resource
 const multer = require("multer");
 const upload = multer();
+// modules
+const { header, body } = require("express-validator");
 
 /**
  * @swagger
@@ -150,7 +152,19 @@ router.get(
  */
 router.patch(
   "/me/calculet",
-  auth.validate,
+  [
+    auth.validate,
+    body("calculetInfo.id").isUUID(),
+    body(["calculetInfo.categoryMainId", "calculetInfo.categorySubId"])
+      .optional()
+      .isInt()
+      .toInt(),
+    body(["updateMessage", "calculetInfo.title", "calculetInfo.description"])
+      .isString()
+      .isLength({ min: 1, max: 100 }),
+    body("calculetInfo.srcCode").notEmpty(),
+    body("calculetInfo.manual").isString(),
+  ],
   errorHandler.dbWrapper(updateMyCalculet)
 );
 
@@ -178,7 +192,11 @@ router.patch(
  */
 router.delete(
   "/me/calculet",
-  auth.validate,
+  [
+    auth.validate,
+    header("calculetId").isUUID(),
+    header("blocked").isInt({ gt: -1, lt: 3 }).toInt(),
+  ],
   errorHandler.dbWrapper(deleteMyCalculet)
 );
 

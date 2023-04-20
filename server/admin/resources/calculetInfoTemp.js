@@ -11,12 +11,26 @@ const { accessController } = require("../utils/accessController");
 function publishCalculet(record) {
   // 본 테이블 등록
   record.updatedAt = new Date(); // updated_at 갱신
+  record.blocked = 0; // blocked 초기화
 
   return sequelize.transaction(async (t) => {
     // move to calculetInfo table
-    await models.calculetInfo.create(record, {
-      transaction: t,
-    });
+    if (record.registered == 1) {
+      // 등록됐었던 계산기라면 -> 업데이트
+      await models.calculetInfo.update(record, {
+        where: {
+          id: {
+            [Op.eq]: record.id,
+          },
+        },
+        transaction: t,
+      });
+    } else {
+      await models.calculetInfo.create(record, {
+        transaction: t,
+      });
+    }
+
     // delete from temporary table
     await models.calculetInfoTemp.destroy({
       where: {

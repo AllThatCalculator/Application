@@ -57,7 +57,7 @@ components:
                 categorySubId:
                   $ref: "#/components/schemas/calculet/properties/categorySubId"
                 createdAt:
-                  $ref: "#/components/schemas/calculet/properties/createdAt"
+                  $ref: "#/components/schemas/dateTimeLive"
                 blocked:
                   $ref: "#/components/schemas/calculet/properties/blocked"
                 viewCnt:

@@ -1,22 +1,29 @@
 const { models } = require("../../models");
 const { Op } = require("sequelize");
+const { CustomError } = require("../../utils/CustomError");
+const { validationResult, matchedData } = require("express-validator");
 
 exports.updateMyCalculet = async (req, res) => {
-  const calculetInfo = req.body.calculetInfo;
-  const updateMessage = req.body.updateMessage;
+  const error = validationResult(req);
+  // request invalid
+  if (!error.isEmpty()) {
+    console.log(error.mapped());
+    throw new CustomError(400, 1);
+  }
 
-  const user = await models.calculetInfo.findByPk(calculetInfo.id, {
-    attributes: ["contributorId"],
-  });
+  const bodyData = matchedData(req, { locations: ["body"] });
+  const calculetInfo = bodyData.calculetInfo;
+  const updateMessage = bodyData.updateMessage;
 
-  console.log(res.locals.userId);
-  console.log(user.contributorId);
+  // check my calculet
+  const user = await models.calculetInfo.findByPk(calculetInfo.id);
   if (user.contributorId != res.locals.userId) {
-    res.status(400).send("user mismatch");
+    throw new CustomError(403, 0);
   }
 
   // create calculet info temp
   calculetInfo.contributorId = res.locals.userId;
+  calculetInfo.registered = true;
   await models.calculetInfoTemp.create(calculetInfo);
 
   // create update log
@@ -24,15 +31,5 @@ exports.updateMyCalculet = async (req, res) => {
     calculetId: calculetInfo.id,
     message: updateMessage,
   });
-
-  // delete calculet info
-  await models.calculetInfo.destroy({
-    where: {
-      id: {
-        [Op.eq]: calculetInfo.id,
-      },
-    },
-  });
-
   res.status(204).send();
 };
