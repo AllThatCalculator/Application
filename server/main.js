@@ -4,6 +4,7 @@ const app = express();
 const calculets = require("./routes/calculets");
 const users = require("./routes/users");
 const records = require("./routes/records");
+const category = require("./routes/category");
 
 // middleware
 const { errorHandler } = require("./middleware/errorHandler");
@@ -49,6 +50,9 @@ app.use("/users", users);
 
 // 계산 이력 관리 API
 app.use("/records", records);
+
+// 카테고리 API
+app.use("/category", category);
 
 // default error handler
 app.use(errorHandler.default);
