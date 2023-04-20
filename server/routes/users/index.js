@@ -171,7 +171,7 @@ router.patch(
  *        in: header
  *        required: true
  *        schema:
- *          $ref: "#/components/schemas/calculet/blocked"
+ *          $ref: "#/components/schemas/calculet/properties/blocked"
  *      responses:
  *        204:
  *          $ref: "#/components/responses/success204"
