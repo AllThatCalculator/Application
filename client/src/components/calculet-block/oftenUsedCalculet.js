@@ -2,7 +2,7 @@ function updateCalculetCount(calculetId) {
   if (calculetId !== localStorage.getItem("previousCalculet")) {
     // console.log("update!", calculetId);
     localStorage.setItem("previousCalculet", calculetId);
-    localStorage.setItem("continueCnt", 1);
+    localStorage.setItem("continueCnt", 0);
   } else {
     // console.log("continue");
     const cnt = localStorage.getItem("continueCnt");
@@ -27,9 +27,10 @@ function loadOftenUsedCalculet() {
 
   // 만약 자주 쓰는 계산기가 비어있다면 초기화
   if (localStorage.getItem("oftenCalculet") === null) {
-    localStorage.setItem("oftenCalculet", "1");
-    localStorage.setItem("previousCalculet", "1");
-    localStorage.setItem("continueCnt", 1);
+    const DEFAULT_ID = "76ad0be9-3433-49d7-9ea4-af06ca5a0ff9";
+    localStorage.setItem("oftenCalculet", DEFAULT_ID);
+    localStorage.setItem("previousCalculet", DEFAULT_ID);
+    localStorage.setItem("continueCnt", 0);
   }
 
   // 자주 쓰는 계산기 가져오기
