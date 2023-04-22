@@ -25,11 +25,11 @@ exports.deleteMyCalculet = async (req, res) => {
   };
 
   let result = 0;
-  if (blocked == 2) {
-    // if blocked == 2, delete calculet info temp
+  if (blocked === 2) {
+    // if blocked === 2, delete calculet info temp
     result = await models.calculetInfoTemp.destroy(option);
   } else {
-    // if blocked == 0 or 1, delete calculet info
+    // if blocked === 0 or 1, delete calculet info
     result = await models.calculetInfo.destroy(option);
   }
 

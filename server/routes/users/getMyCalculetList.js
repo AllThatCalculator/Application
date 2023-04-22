@@ -25,7 +25,7 @@ exports.getMyCalculetList = async (req, res) => {
     },
   };
 
-  let myCalculetList = await models.calculetInfo.findAll(option);
+  const myCalculetList = await models.calculetInfo.findAll(option);
   myCalculetList.push(...(await models.calculetInfoTemp.findAll(option)));
   myCalculetList.sort(function (a, b) {
     // 등록 일자순

@@ -15,7 +15,7 @@ function publishCalculet(record) {
 
   return sequelize.transaction(async (t) => {
     // move to calculetInfo table
-    if (record.registered == 1) {
+    if (record.registered === true) {
       // 등록됐었던 계산기라면 -> 업데이트
       await models.calculetInfo.update(record, {
         where: {
