@@ -27,9 +27,9 @@ function loadOftenUsedCalculet() {
 
   // 만약 자주 쓰는 계산기가 비어있다면 초기화
   if (localStorage.getItem("oftenCalculet") === null) {
-    const defaultId = "76ad0be9-3433-49d7-9ea4-af06ca5a0ff9";
-    localStorage.setItem("oftenCalculet", defaultId);
-    localStorage.setItem("previousCalculet", defaultId);
+    const DEFAULT_ID = "76ad0be9-3433-49d7-9ea4-af06ca5a0ff9";
+    localStorage.setItem("oftenCalculet", DEFAULT_ID);
+    localStorage.setItem("previousCalculet", DEFAULT_ID);
     localStorage.setItem("continueCnt", 0);
   }
 
