@@ -34,7 +34,7 @@ exports.deleteMyCalculet = async (req, res) => {
   }
 
   // if not exist calculet
-  if (result == 0) {
+  if (result === 0) {
     console.log("Verify that blocked field or calculetId is given correctly");
     throw new CustomError(404, 0);
   }
