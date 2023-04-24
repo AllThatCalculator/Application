@@ -152,7 +152,7 @@ async function validateAdmin(req, res, next) {
 }
 
 /**
- * firebase REST API로 email/password 로그인 요청 보내는 함수
+ * firebase REST API로 email/password 로그인 요청 보내는 함수 - 에러 처리 필요
  * @param {string} email
  * @param {string} password
  * @returns firebase request promise
@@ -177,26 +177,30 @@ async function postEmailAndPassword(email, password) {
 
   return new Promise((resolve, reject) => {
     const req = https.request(options, (res) => {
-      if (res.statusCode < 200 || res.statusCode > 299) {
-        return reject(new Error(`HTTP status code ${res.statusCode}`));
-      }
       const responseData = [];
       res.on("data", (data) => {
         responseData.push(data);
       });
       res.on("end", () => {
         const responseString = bufferToString(Buffer.concat(responseData));
+        // login failed
+        if (res.statusCode < 200 || res.statusCode > 299) {
+          console.log(responseString);
+          reject(new CustomError(401, 3));
+        }
         resolve(JSON.parse(responseString));
       });
     });
 
     req.on("error", (err) => {
-      reject(err);
+      console.error(err);
+      reject(new CustomError(400, 0));
     });
 
     req.on("timeout", () => {
       req.destroy();
-      reject(new Error("Request time out"));
+      console.error("firebase request timeout");
+      reject(new CustomError(400, 0));
     });
 
     req.write(postData);
@@ -225,6 +229,7 @@ async function adminLoginHandler(email, password) {
     }
     return null;
   } catch (error) {
+    console.error(error);
     return null;
   }
 }
