@@ -1,5 +1,6 @@
 #!/bin/bash
 
+docker system prune -af
 git pull
 
 IS_BLUE_RUNNING=$(docker ps | grep api_blue)
@@ -43,4 +44,4 @@ docker compose -f ./docker-compose.dev-server.yml stop $CONTAINER_B
 
 # clear unusing docker
 docker image prune -af
-docker system prune -f
+docker system prune -af

@@ -1,5 +1,6 @@
 #!/bin/bash
 
+docker system prune -af
 # unzip frontend build file
 git pull
 sudo tar -xzvf ./client/build.tar.gz -C ./client/
@@ -45,4 +46,4 @@ docker compose -f ./docker-compose.prod.yml stop $CONTAINER_B
 
 # clear unusing docker
 docker image prune -af
-docker system prune -f
+docker system prune -af
