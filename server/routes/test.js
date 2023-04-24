@@ -6,6 +6,7 @@ const { auth } = require("../middleware/auth");
 const { models } = require("../models");
 const { deleteUser } = require("./users/deleteUser");
 const { CustomError } = require("../utils/CustomError");
+const { errorHandler } = require("../middleware/errorHandler");
 
 /**
  * @swagger
@@ -162,13 +163,16 @@ router.delete("/users/database", auth.validate, async (req, res) => {
  *        200:
  *          description: 성공
  */
-router.post("/login", async (req, res) => {
-  const { idToken } = await auth.postFirebase(
-    req.body.email,
-    req.body.password
-  );
-  res.status(200).send(idToken);
-});
+router.post(
+  "/login",
+  errorHandler.asyncWrapper(async (req, res) => {
+    const { idToken } = await auth.postFirebase(
+      req.body.email,
+      req.body.password
+    );
+    res.status(200).send(idToken);
+  })
+);
 
 // /**
 //  * @swagger
