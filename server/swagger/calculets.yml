@@ -184,6 +184,10 @@ components:
           type: integer
           description: 카테고리 소분류
           example: 1
+        blocked:
+          type: integer
+          description: 신고 여부
+          example: 0
     calculetId:
       type: string
       description: 계산기 UUID
@@ -249,3 +253,20 @@ components:
     isMe:
       type: boolean
       description: 본인이 작성자인지 여부
+    calculetUpdate:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/calculetId"
+        title:
+          $ref: "#/components/schemas/calculet/properties/title"
+        srcCode:
+          $ref: "#/components/schemas/calculet/properties/srcCode"
+        manual:
+          $ref: "#/components/schemas/calculet/properties/manual"
+        description:
+          $ref: "#/components/schemas/calculet/properties/description"
+        categoryMainId:
+          $ref: "#/components/schemas/calculet/properties/categoryMainId"
+        categorySubId:
+          $ref: "#/components/schemas/calculet/properties/categorySubId"

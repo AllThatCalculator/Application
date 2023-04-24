@@ -52,7 +52,7 @@ module.exports = function (sequelize, DataTypes) {
         field: "contributor_id",
       },
       blocked: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: 0,
       },
