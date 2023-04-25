@@ -12,11 +12,12 @@ const { me } = require("./getMyInfo");
 const { getMyCalculetList } = require("./getMyCalculetList");
 const { updateMyCalculet } = require("./updateMyCalculet");
 const { deleteMyCalculet } = require("./deleteMyCalculet");
+const { getProfile } = require("./getProfile");
 // resource
 const multer = require("multer");
 const upload = multer();
 // modules
-const { header, body } = require("express-validator");
+const { header, body, query } = require("express-validator");
 
 /**
  * @swagger
@@ -198,6 +199,39 @@ router.delete(
     header("blocked").isInt({ gt: -1, lt: 3 }).toInt(),
   ],
   errorHandler.dbWrapper(deleteMyCalculet)
+);
+
+/**
+ * @swagger
+ *  /api/users/profile:
+ *    get:
+ *      parameters:
+ *        - $ref: "#/components/parameters/contributorId"
+ *        - $ref: "#/components/parameters/categoryMainId"
+ *        - $ref: "#/components/parameters/categorySubId"
+ *        - $ref: "#/components/parameters/size"
+ *        - $ref: "#/components/parameters/page"
+ *      tags: [users]
+ *      summary: 프로필 정보 가져오는 API (유저 정보 + 계산기 리스트)
+ *      description: 대분류 | 소분류로 검색 필터 설정 가능 - offset pagination
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/userInfoAndCalculet"
+ *        400:
+ *          $ref: "#/components/responses/error"
+ */
+router.get(
+  "/profile",
+  // validate & sanitize query value
+  [
+    auth.verify,
+    query("contributorId").isString(),
+    query("categoryMainId").optional().isInt().toInt(),
+    query("categorySubId").optional().isInt().toInt(),
+    query("size").isInt({ gt: 0 }).toInt(),
+    query("page").isInt({ gt: 0 }).toInt(),
+  ],
+  errorHandler.dbWrapper(getProfile)
 );
 
 module.exports = router;

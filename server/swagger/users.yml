@@ -66,6 +66,24 @@ components:
                   $ref: "#/components/schemas/statistics/properties/like"
                 bookmarkCnt:
                   $ref: "#/components/schemas/statistics/properties/bookmark"
+    userInfoAndCalculet:
+      description: 유저 프로필 (정보 + 계산기)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              user:
+                $ref: "#/components/schemas/userMiddleInfo"
+              isMe:
+                $ref: "#/components/schemas/isMe"
+              calculetList:
+                type: array
+                items:
+                  $ref: "#/components/schemas/calculetPreview"
+              count:
+                $ref: "#/components/schemas/calculetListCount"
+
   schemas:
     userSimpleInfo:
       type: object
@@ -76,6 +94,17 @@ components:
           $ref: "#/components/schemas/userInfo/properties/userName"
         profileImgSrc:
           $ref: "#/components/schemas/profileImgSrc"
+    userMiddleInfo:
+      type: object
+      properties:
+        userName:
+          $ref: "#/components/schemas/userInfo/properties/userName"
+        profileImgSrc:
+          $ref: "#/components/schemas/profileImgSrc"
+        job:
+          $ref: "#/components/schemas/userInfo/properties/job"
+        bio:
+          $ref: "#/components/schemas/userInfo/properties/bio"
     userProfile:
       $ref: "#/components/schemas/userInfo"
       properties:
