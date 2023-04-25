@@ -12,12 +12,12 @@ const { me } = require("./getMyInfo");
 const { getMyCalculetList } = require("./getMyCalculetList");
 const { updateMyCalculet } = require("./updateMyCalculet");
 const { deleteMyCalculet } = require("./deleteMyCalculet");
-const { getProfile } = require("./getProfile");
+const { public } = require("./getPublicProfile");
 // resource
 const multer = require("multer");
 const upload = multer();
 // modules
-const { header, body, query } = require("express-validator");
+const { header, body, query, param } = require("express-validator");
 
 /**
  * @swagger
@@ -203,35 +203,57 @@ router.delete(
 
 /**
  * @swagger
- *  /api/users/profile:
+ *  /api/users/{userId}/profile:
  *    get:
  *      parameters:
- *        - $ref: "#/components/parameters/contributorId"
+ *        - $ref: "#/components/parameters/userId"
+ *      tags: [users]
+ *      summary: 프로필 정보 가져오는 API (유저 정보)
+ *      description: 공개 프로필에 대한 정보
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/userPublicInfo"
+ *        400:
+ *          $ref: "#/components/responses/error"
+ */
+router.get(
+  "/:userId/profile",
+  // validate & sanitize query value
+  [auth.verify, param("userId").isString()],
+  errorHandler.dbWrapper(public.info)
+);
+
+/**
+ * @swagger
+ *  /api/users/{userId}/calculet:
+ *    get:
+ *      parameters:
+ *        - $ref: "#/components/parameters/userId"
  *        - $ref: "#/components/parameters/categoryMainId"
  *        - $ref: "#/components/parameters/categorySubId"
  *        - $ref: "#/components/parameters/size"
  *        - $ref: "#/components/parameters/page"
  *      tags: [users]
- *      summary: 프로필 정보 가져오는 API (유저 정보 + 계산기 리스트)
+ *      summary: 프로필 정보 가져오는 API (계산기 리스트)
  *      description: 대분류 | 소분류로 검색 필터 설정 가능 - offset pagination
  *      responses:
  *        200:
- *          $ref: "#/components/responses/userInfoAndCalculet"
+ *          $ref: "#/components/responses/userPublicCalculet"
  *        400:
  *          $ref: "#/components/responses/error"
  */
 router.get(
-  "/profile",
+  "/:userId/calculet",
   // validate & sanitize query value
   [
     auth.verify,
-    query("contributorId").isString(),
+    param("userId").isString(),
     query("categoryMainId").optional().isInt().toInt(),
     query("categorySubId").optional().isInt().toInt(),
     query("size").isInt({ gt: 0 }).toInt(),
     query("page").isInt({ gt: 0 }).toInt(),
   ],
-  errorHandler.dbWrapper(getProfile)
+  errorHandler.dbWrapper(public.calculet)
 );
 
 module.exports = router;

@@ -50,21 +50,8 @@ function setFilter(query) {
   return filter;
 }
 
-/**
- * 계산기 검색 함수
- */
-async function searchCalculets(req, res) {
-  const error = validationResult(req);
-  // request invalid
-  if (!error.isEmpty()) {
-    console.log(error.mapped());
-    throw new CustomError(400, 1);
-  }
-
-  // set filter
-  const filter = setFilter(req.query);
-
-  const { size, page } = req.query;
+async function getSearchCalculetList(query, filter) {
+  const { size, page } = query;
 
   const data = await models.calculetInfo.findAndCountAll({
     attributes: [
@@ -96,6 +83,27 @@ async function searchCalculets(req, res) {
     calculetList: data.rows.map((calculet) => calculet.toJSON()),
     count: data.count,
   };
+
+  return responseData;
+}
+
+/**
+ * 계산기 검색 함수
+ */
+async function searchCalculets(req, res) {
+  const error = validationResult(req);
+  // request invalid
+  if (!error.isEmpty()) {
+    console.log(error.mapped());
+    throw new CustomError(400, 1);
+  }
+
+  // set filter
+  const filter = setFilter(req.query);
+  const responseData = await getSearchCalculetList(req.query, filter);
+
   res.status(200).send(responseData);
 }
 exports.search = searchCalculets;
+exports.setFilter = setFilter;
+exports.getSearchCalculetList = getSearchCalculetList;
