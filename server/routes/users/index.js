@@ -12,11 +12,12 @@ const { me } = require("./getMyInfo");
 const { getMyCalculetList } = require("./getMyCalculetList");
 const { updateMyCalculet } = require("./updateMyCalculet");
 const { deleteMyCalculet } = require("./deleteMyCalculet");
+const { public } = require("./getPublicProfile");
 // resource
 const multer = require("multer");
 const upload = multer();
 // modules
-const { header, body } = require("express-validator");
+const { header, body, query, param } = require("express-validator");
 
 /**
  * @swagger
@@ -124,7 +125,7 @@ router.get("/me", auth.validate, errorHandler.dbWrapper(me.default));
  * @swagger
  *  /api/users/me/calculet:
  *    get:
- *      tags: [users]
+ *      tags: [users-calculet]
  *      summary: 로그인 한 사용자(본인)의 마이 계산기 목록 요청 <Auth>
  *      description: 마이 계산기 목록들 (임시 계산기 포함)
  *      responses:
@@ -141,7 +142,7 @@ router.get(
  * @swagger
  *  /api/users/me/calculet:
  *    patch:
- *      tags: [users]
+ *      tags: [users-calculet]
  *      summary: 로그인 한 사용자(본인)의 마이 계산기 수정 요청 <Auth>
  *      description: 마이 계산기 정보 수정하기 & 업데이트 로그 남기기
  *      requestBody:
@@ -172,7 +173,7 @@ router.patch(
  * @swagger
  *  /api/users/me/calculet:
  *    delete:
- *      tags: [users]
+ *      tags: [users-calculet]
  *      summary: 로그인 한 사용자(본인)의 마이 계산기 삭제 요청 <Auth>
  *      description: 마이 계산기 삭제 (임시 계산기 포함)
  *      parameters:
@@ -198,6 +199,61 @@ router.delete(
     header("blocked").isInt({ gt: -1, lt: 3 }).toInt(),
   ],
   errorHandler.dbWrapper(deleteMyCalculet)
+);
+
+/**
+ * @swagger
+ *  /api/users/{userId}/profile:
+ *    get:
+ *      parameters:
+ *        - $ref: "#/components/parameters/userId"
+ *      tags: [users]
+ *      summary: 프로필 정보 가져오는 API (유저 정보) <Auth?>
+ *      description: 공개 프로필에 대한 정보
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/userPublicInfo"
+ *        400:
+ *          $ref: "#/components/responses/error"
+ */
+router.get(
+  "/:userId/profile",
+  // validate & sanitize query value
+  [auth.verify, param("userId").isString()],
+  errorHandler.dbWrapper(public.info)
+);
+
+/**
+ * @swagger
+ *  /api/users/{userId}/calculet:
+ *    get:
+ *      parameters:
+ *        - $ref: "#/components/parameters/userId"
+ *        - $ref: "#/components/parameters/categoryMainId"
+ *        - $ref: "#/components/parameters/categorySubId"
+ *        - $ref: "#/components/parameters/size"
+ *        - $ref: "#/components/parameters/page"
+ *      tags: [users-calculet]
+ *      summary: 프로필 정보 가져오는 API (계산기 리스트) - offset pagination <Auth?>
+ *      description: 대분류 | 소분류로 검색 필터 설정 가능
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/userPublicCalculet"
+ *        400:
+ *          $ref: "#/components/responses/error"
+ */
+router.get(
+  "/:userId/calculet",
+  // validate & sanitize query value
+  [
+    auth.verify,
+    param("userId").isString(),
+    query("categoryMainId").optional().isInt().toInt(),
+    query("categorySubId").optional().isInt().toInt(),
+    query("size").isInt({ gt: 0 }).toInt(),
+    query("page").isInt({ gt: 0 }).toInt(),
+  ],
+  errorHandler.dbWrapper(public.calculet)
 );
 
 module.exports = router;

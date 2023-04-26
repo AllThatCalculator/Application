@@ -116,8 +116,7 @@ components:
                 items:
                   $ref: "#/components/schemas/calculetPreview"
               count:
-                type: integer
-                description: 검색된 계산기 수
+                $ref: "#/components/schemas/calculetListCount"
     getRecommendationList:
       description: 추천 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
       content:
@@ -253,6 +252,9 @@ components:
     isMe:
       type: boolean
       description: 본인이 작성자인지 여부
+    calculetListCount:
+      type: integer
+      description: 계산기 수
     calculetUpdate:
       type: object
       properties:
