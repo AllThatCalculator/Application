@@ -194,6 +194,7 @@ function Profile() {
         />
         <Divider />
         <UserCalculetList
+          userInfo={userInfo}
           userCalculetList={userCalculetList}
           categoryMainId={categoryMainId}
           handleChangeCategoryMain={handleChangeCategoryMain}

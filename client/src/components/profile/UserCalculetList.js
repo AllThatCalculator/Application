@@ -1,5 +1,4 @@
 import { Grid, Pagination, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
 import useSx from "../../hooks/useSx";
 import TotalCount from "../atom-components/TotalCount";
 import SearchFilter from "../global-components/SearchFilter";
@@ -7,6 +6,7 @@ import SearchSkeletonPage from "../search/SearchSkeletonPage";
 import SearchCalculetList from "../global-components/SearchCalculetList";
 
 function UserCalculetList({
+  userInfo,
   userCalculetList,
   categoryMainId,
   handleChangeCategoryMain,
@@ -19,11 +19,8 @@ function UserCalculetList({
   isCalculetListLoading,
 }) {
   const { calculetList, count } = userCalculetList;
-
-  const { userInfo } = useSelector((state) => ({
-    userInfo: state.userInfo,
-  }));
   const { userName } = userInfo;
+
   const { subTitleSx } = useSx();
 
   return (
