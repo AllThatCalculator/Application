@@ -109,7 +109,7 @@ function usePage() {
     categorySubId,
     len
   ) {
-    let url = URL.PROFILE + "?" + `&&${URL.USERUID_ID}=${uuid}`;
+    let url = URL.PROFILE + `?&&${URL.USERUID_ID}=${uuid}`;
 
     url += makeCalculetListOptionUrl(categoryMainId, categorySubId, len, "");
     navigate(url);
@@ -139,7 +139,7 @@ function usePage() {
 
   // uuid 프로필 페이지
   function profileUserIdPage(uuid) {
-    navigate(URL.PROFILE + "?" + `&&${URL.USERUID_ID}=${uuid}`);
+    navigate(URL.PROFILE + `?&&${URL.USERUID_ID}=${uuid}`);
   }
 
   // 설정

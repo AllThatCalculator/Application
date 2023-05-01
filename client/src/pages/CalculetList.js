@@ -1,35 +1,35 @@
 import CalculetItemList from "../components/calculet-list/CalculetItemList";
-import Shortcut from "../components/calculet-list/Shortcut";
-import useMoveScroll from "../hooks/useMoveScroll";
+// import Shortcut from "../components/calculet-list/Shortcut";
+// import useMoveScroll from "../hooks/useMoveScroll";
 import { useEffect } from "react";
 import { useState } from "react";
-import ImportExportIcon from "@mui/icons-material/ImportExport";
-import IsoIcon from "@mui/icons-material/Iso";
-import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-import TodayIcon from "@mui/icons-material/Today";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+// import ImportExportIcon from "@mui/icons-material/ImportExport";
+// import IsoIcon from "@mui/icons-material/Iso";
+// import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
+// import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+// import TodayIcon from "@mui/icons-material/Today";
+// import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Grid } from "@mui/material";
 import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import {
-  FlexBox,
+  // FlexBox,
   FlexColumnBox,
 } from "../components/global-components/FlexBox";
 import Title from "../components/global-components/Title";
-import useSx from "../hooks/useSx";
+// import useSx from "../hooks/useSx";
 import useGetCategoryList from "../hooks/useGetCategoryList";
-import useGetCategoryName from "../hooks/useGetCategoryName";
+// import useGetCategoryName from "../hooks/useGetCategoryName";
 
-const BTN_CONVERSION = `단위
-변환기`;
-const BTN_MATH = `수학
-`;
-const BTN_SCIENCE = `과학
-공학`;
-const BTN_ECONOMY = `경제
-사회`;
-const BTN_DAILY = "일상";
-const BTN_ETC = "기타";
+// const BTN_CONVERSION = `단위
+// 변환기`;
+// const BTN_MATH = `수학
+// `;
+// const BTN_SCIENCE = `과학
+// 공학`;
+// const BTN_ECONOMY = `경제
+// 사회`;
+// const BTN_DAILY = "일상";
+// const BTN_ETC = "기타";
 
 /**
  * 계산기 전체 목록 페이지
@@ -38,18 +38,18 @@ function CalculetList() {
   /**
    * 바로가기를 위한 ref
    */
-  const conversion = useMoveScroll();
-  const math = useMoveScroll();
-  const science = useMoveScroll();
-  const economy = useMoveScroll();
-  const daily = useMoveScroll();
-  const etc = useMoveScroll();
-  const { getCategoryMainName } = useGetCategoryName(); // 카테고리 가져오기
+  // const conversion = useMoveScroll();
+  // const math = useMoveScroll();
+  // const science = useMoveScroll();
+  // const economy = useMoveScroll();
+  // const daily = useMoveScroll();
+  // const etc = useMoveScroll();
+  // const { getCategoryMainName } = useGetCategoryName(); // 카테고리 가져오기
 
   /**
    * 대분류 수학 Ref, Ref로 스크롤 이동하는 함수
    */
-  const [contentsShortcut, setContentsShortcut] = useState([]);
+  // const [contentsShortcut, setContentsShortcut] = useState([]);
   // const contentsShortcut = [
   //   {
   //     text: BTN_CONVERSION,
@@ -96,17 +96,16 @@ function CalculetList() {
    */
   useEffect(() => {
     if (Object.keys(calculetList).length !== 0) {
-      Object.keys(calculetList).map((data, index) => {
-        // console.log(contentsShortcut);
-
-        setContentsShortcut([
-          ...contentsShortcut,
-          {
-            text: getCategoryMainName(data),
-            itemRef: etc, // 임시
-          },
-        ]);
-      });
+      // Object.keys(calculetList).map((data, index) => {
+      //   // console.log(contentsShortcut);
+      //   // setContentsShortcut([
+      //   //   ...contentsShortcut,
+      //   //   {
+      //   //     text: getCategoryMainName(data),
+      //   //     itemRef: etc, // 임시
+      //   //   },
+      //   // ]);
+      // });
       // Object.entries(calculetCategory).map(([key, value], index) => {
       //   if (key === "name") return;
       //   console.log(value);
@@ -115,17 +114,13 @@ function CalculetList() {
       //     itemRef: etc,
       //   });
       // });
-
       // for (const [key, value] of Object.entries(calculetCategory)) {
       //   if (key === "name") return;
-
       //   let content={text:value,   itemRef: daily}
       //   setContentsShortcut({
-
       //   })
       // }
       // Object.entries(calculetCategory).map((category, index) => {
-
       //   if(category==="name")
       //   // console.log(catetory);
       //   // setContentsShortcut({
@@ -144,10 +139,10 @@ function CalculetList() {
   /**
    * 스크롤 위치 Y 에 따른 활성화할 바로가기 버튼 (index로 접근)
    */
-  const [isActive, setIsActive] = useState(0);
+  // const [isActive, setIsActive] = useState(0);
 
   // 바로가기 width
-  const widthSx = "12rem";
+  // const widthSx = "12rem";
 
   return (
     <>
@@ -180,8 +175,8 @@ function CalculetList() {
                 {Object.keys(calculetList).length !== 0 && (
                   <CalculetItemList
                     item={calculetList}
-                    contentsShortcut={contentsShortcut}
-                    setIsActive={setIsActive}
+                    // contentsShortcut={contentsShortcut}
+                    // setIsActive={setIsActive}
                     scrollPosition={scrollPosition}
                   />
                 )}

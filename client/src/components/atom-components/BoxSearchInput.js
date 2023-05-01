@@ -74,7 +74,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
  *
  */
 function BoxSearchInput({ onIsSearchClose = () => {} }) {
-  const { searchPage, searchOptionPage } = usePage();
+  const { searchOptionPage } = usePage();
   /** Redux Dispatch */
   const dispatch = useDispatch();
 

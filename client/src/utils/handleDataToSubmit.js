@@ -1,8 +1,6 @@
 function handleUserInfoData(dataToSubmit) {
   const { profileImg, userInfo } = dataToSubmit;
 
-  console.log(profileImg, userInfo);
-
   const formData = new FormData(); // 서버에 보내기 위한 form
   // img file
   // if (profileImg === null) {

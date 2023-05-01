@@ -151,7 +151,7 @@ function Profile() {
         setUuid(result);
       });
     }
-  }, []);
+  }, [uuidUrlId]);
 
   // get user info
   useEffect(() => {
@@ -163,7 +163,7 @@ function Profile() {
         setIsProfileLoading(false);
       });
     }
-  }, [uuid]);
+  }, [uuid, idToken]);
 
   // get calculet list
   useEffect(() => {
@@ -179,10 +179,10 @@ function Profile() {
         currentPage
       ).then((res) => {
         setUserCalculetList(res);
-        console.log(res);
+        // console.log(res);
       });
     }
-  }, [uuid, categoryMainId, categorySubId, resultLimit, currentPage]);
+  }, [idToken, uuid, categoryMainId, categorySubId, resultLimit, currentPage]);
 
   return (
     <PageWhiteScreenBox>
