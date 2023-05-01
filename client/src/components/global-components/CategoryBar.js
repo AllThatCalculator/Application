@@ -75,14 +75,7 @@ function CategoryBar({ contents, isActive, setIsActive }) {
    * 계산기 바로가기 생성하는 함수
    * @param {object} calculet 계산기 id, title 포함하는 객체
    */
-  function handleLeaf(calculet) {
-    // categoryMainId
-    // categorySubId
-    // contributor: {userName: 'test', profileImgSrc: '/file/profile/7cd77f0ab16f4ab1aa0747996ad46e81'}
-    // description : "기타 계산기"
-    // id : "9dc33a8f-7647-4598-ac0b-2d1089c89404"
-    // title : "기타 계산기"
-    // viewCnt : 219
+  function handleLeaf(calculet, deps) {
     return (
       <ListItem
         key={calculet.id}
@@ -95,7 +88,10 @@ function CategoryBar({ contents, isActive, setIsActive }) {
             calculetIdPage(calculet.id);
             setIsActive(false)(e);
           }}
-          sx={{ ...gapSx, pl: (theme) => theme.spacing(10) }}
+          sx={{
+            ...gapSx,
+            pl: (theme) => theme.spacing(deps === 1 ? 5.5 : 10),
+          }}
         >
           <ListItemText primary={calculet.title} />
         </ListItemButton>
@@ -135,9 +131,9 @@ function CategoryBar({ contents, isActive, setIsActive }) {
           )
         }
         {
-          /* 계산기인 경우 */
+          // 계산기인 경우
           <Collapse in={toggle} timeout="auto" unmountOnExit>
-            {Object.values(subItems).map(handleLeaf)}
+            {Object.values(subItems).map((item) => handleLeaf(item, 2))}
           </Collapse>
         }
       </div>
@@ -165,14 +161,22 @@ function CategoryBar({ contents, isActive, setIsActive }) {
           </ListItemButton>
         </ListItem>
         <Collapse in={toggle} timeout="auto" unmountOnExit>
-          {Object.entries(mainItems).map((sub, subIndex) =>
-            handleSub(
-              sub,
-              mainId,
-              subIndex,
-              mainIndex,
-              categoryToggle[mainIndex].subToggle[subIndex].toggle
-            )
+          {mainId !== 99999 &&
+            Object.entries(mainItems).map((sub, subIndex) =>
+              handleSub(
+                sub,
+                mainId,
+                subIndex,
+                mainIndex,
+                categoryToggle[mainIndex].subToggle[subIndex].toggle
+              )
+            )}
+          {mainId === 99999 && (
+            <Collapse in={toggle} timeout="auto" unmountOnExit>
+              {Object.values(mainItems["99999"]).map((item) =>
+                handleLeaf(item, 1)
+              )}
+            </Collapse>
           )}
         </Collapse>
       </div>

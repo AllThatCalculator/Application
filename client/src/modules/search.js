@@ -15,17 +15,18 @@ const initialState = {
   resultList: [
     // 검색 결과
     // {
-    //   id: "9dc33a8f-7647-4598-ac0b-2d1089c89404",
-    //   title: "테스트 계산기",
-    //   description: "이 계산기에 대한 한 줄 설명",
-    //   categoryMainId: 1,
-    //   categorySubId: 1,
-    //   viewCnt: 0,
-    //   contributor: {
-    //     userName: "test user",
-    //     profileImgSrc: "/file/profile/123ae3c23e...",
-    //   },
-    // },
+    //   "id": "9dc33a8f-7647-4598-ac0b-2d1089c89404",
+    //   "title": "테스트 계산기",
+    //   "description": "이 계산기에 대한 한 줄 설명",
+    //   "categoryMainId": 1,
+    //   "categorySubId": 1,
+    //   "viewCnt": 0,
+    //   "contributor": {
+    //     "id": "FmBZs9SG8ybc0hla149hKXXTnT52",
+    //     "userName": "test user",
+    //     "profileImgSrc": "/file/profile/FmBZs9SG8ybc0hla149hKXXTnT52"
+    //   }
+    // }
   ],
   count: 0, // 총 검색결과 수
   resultPreviewList: [], // 검색 결과 미리보기

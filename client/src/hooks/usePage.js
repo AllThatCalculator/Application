@@ -56,11 +56,14 @@ function usePage() {
   function searchPage(keyword) {
     navigate(URL.SEARCH + "?" + URL.SEARCH_ID + "=" + keyword);
   }
-  // 검색창
-  function searchOptionPage(keyword, categoryMainId, categorySubId, len) {
-    // 검색어
-    let url = URL.SEARCH + "?" + URL.SEARCH_ID + "=" + keyword;
 
+  function makeCalculetListOptionUrl(
+    categoryMainId,
+    categorySubId,
+    len,
+    target
+  ) {
+    let url = "";
     // 대분류
     url +=
       categoryMainId !== ""
@@ -70,15 +73,75 @@ function usePage() {
     url +=
       categorySubId !== "" ? `&&${URL.CATEGORY_SUB_ID}=${categorySubId}` : "";
     // 페이지 당 계산기 렌더할 개수
-    url += `&&${URL.LEN_ID}=${len}`;
+    url += len !== 0 ? `&&${URL.LEN_ID}=${len}` : "";
+
+    // 통합 검색 / 제목 / 설명
+    url += target !== "" ? `&&${URL.TARGET_ID}=${target}` : "";
+
+    return url;
+  }
+
+  // 계산기 검색 - option
+  function searchOptionPage(
+    keyword,
+    categoryMainId,
+    categorySubId,
+    len,
+    target
+  ) {
+    // 검색어
+    let url = URL.SEARCH + "?" + URL.SEARCH_ID + "=" + keyword;
+
+    url += makeCalculetListOptionUrl(
+      categoryMainId,
+      categorySubId,
+      len,
+      target
+    );
 
     navigate(url);
   }
 
-  // 프로필
+  // 프로필 계산기 검색 - option
+  function profileCalculetSearchOptionPage(
+    uuid,
+    categoryMainId,
+    categorySubId,
+    len
+  ) {
+    let url = URL.PROFILE + "?" + `&&${URL.USERUID_ID}=${uuid}`;
+
+    url += makeCalculetListOptionUrl(categoryMainId, categorySubId, len, "");
+    navigate(url);
+  }
+  // function searchOptionPage(keyword, categoryMainId, categorySubId, len) {
+  //   // 검색어
+  //   let url = URL.SEARCH + "?" + URL.SEARCH_ID + "=" + keyword;
+
+  //   // 대분류
+  //   url +=
+  //     categoryMainId !== ""
+  //       ? `&&${URL.CATEGORY_MAIN_ID}=${categoryMainId}`
+  //       : "";
+  //   // 소분류
+  //   url +=
+  //     categorySubId !== "" ? `&&${URL.CATEGORY_SUB_ID}=${categorySubId}` : "";
+  //   // 페이지 당 계산기 렌더할 개수
+  //   url += `&&${URL.LEN_ID}=${len}`;
+
+  //   navigate(url);
+  // }
+
+  // 프로필 uuid 없으면 내 페이지
   function profilePage() {
     navigate(URL.PROFILE);
   }
+
+  // uuid 프로필 페이지
+  function profileUserIdPage(uuid) {
+    navigate(URL.PROFILE + "?" + `&&${URL.USERUID_ID}=${uuid}`);
+  }
+
   // 설정
   function settingPage() {
     navigate(URL.SETTING);
@@ -109,7 +172,9 @@ function usePage() {
     backRefreshPage,
     searchPage,
     searchOptionPage,
+    profileCalculetSearchOptionPage,
     profilePage,
+    profileUserIdPage,
     settingPage,
     settingAccountPage,
     settingPasswordPage,

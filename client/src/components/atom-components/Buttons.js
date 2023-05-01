@@ -1,4 +1,4 @@
-import { Button, ButtonBase, Typography } from "@mui/material";
+import { Button, ButtonBase, Tooltip, Typography } from "@mui/material";
 import useSx from "../../hooks/useSx";
 import { FlexBox } from "../global-components/FlexBox";
 import { styled } from "@mui/material/styles";
@@ -12,20 +12,30 @@ import { Box } from "@mui/system";
  * @param {bool} isClicked : 버튼 클릭 여부
  * @param {function} onClick : 이벤트 함수
  */
-function CountButton({ text, icon, clickedIcon, number, isClicked, onClick }) {
+function CountButton({
+  text,
+  icon,
+  clickedIcon,
+  number,
+  isClicked,
+  onClick,
+  tooltip = "",
+}) {
   const { boxSx } = useSx();
   // 내용 컴포넌트
   function Typo({ content }) {
     return <Typography variant="button">{content}</Typography>;
   }
   return (
-    <Button onClick={onClick} disableRipple={true}>
-      <FlexBox sx={boxSx}>
-        {isClicked ? clickedIcon : icon}
-        <Typo content={text} />
-        <Typo content={number} />
-      </FlexBox>
-    </Button>
+    <Tooltip title={tooltip}>
+      <Button onClick={onClick} disableRipple={true}>
+        <FlexBox sx={boxSx}>
+          {isClicked ? clickedIcon : icon}
+          <Typo content={text} />
+          <Typo content={number} />
+        </FlexBox>
+      </Button>
+    </Tooltip>
   );
 }
 

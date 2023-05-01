@@ -210,6 +210,9 @@ function SignUp({ isLoggedIn }) {
           job: inputJob,
         },
       };
+
+      // console.log(body);
+
       // 4. 회원 정보 삽입
       const resultSignUp = await handleSignUp(body, idToken);
       // success

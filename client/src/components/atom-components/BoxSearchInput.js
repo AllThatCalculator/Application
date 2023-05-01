@@ -74,7 +74,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
  *
  */
 function BoxSearchInput({ onIsSearchClose = () => {} }) {
-  const { searchPage } = usePage();
+  const { searchPage, searchOptionPage } = usePage();
   /** Redux Dispatch */
   const dispatch = useDispatch();
 
@@ -94,7 +94,10 @@ function BoxSearchInput({ onIsSearchClose = () => {} }) {
 
     // 검색 결과 미리보기 api
     // 최대 20개만 보여주기
-    const request = getCalculetFind(getSearchRequestBody("", "", input, 20));
+    // 미리보기에서는 all로
+    const request = getCalculetFind(
+      getSearchRequestBody("", "", input.trim(), 20, 1, "all")
+    );
     request.then((res) => {
       dispatch(onSetSearchResultPreview(res.calculetList));
     });
@@ -106,7 +109,8 @@ function BoxSearchInput({ onIsSearchClose = () => {} }) {
     if (inputText === "") return;
 
     // go search page
-    searchPage(inputText);
+    // searchPage(inputText);
+    searchOptionPage(inputText.trim(), "", "", 0, "");
 
     // init
     setInputText("");

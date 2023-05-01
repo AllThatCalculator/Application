@@ -171,7 +171,7 @@ function CalculetItemList({
           {/* 대분류 버튼 */}
           <ButtonBase
             sx={{ maxWidth: "fit-content", gap: "1.2rem" }}
-            ref={contentsShortcut[mainIndex].itemRef.element}
+            // ref={contentsShortcut[mainIndex].itemRef.element}
           >
             <Typography sx={{ ...subTitleSx }}>
               {getCategoryMainName(mainId)}

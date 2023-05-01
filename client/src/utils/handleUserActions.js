@@ -5,6 +5,8 @@ import getUserMe from "../user-actions/users/getUserMe";
 import patchUserInfo from "../user-actions/users/patchUserInfo";
 import signUpUser from "../user-actions/users/SignUpUser";
 import firebaseAuth from "../firebaseAuth";
+import getUserIdCalculetList from "../user-actions/users-calculet/getUserIdCalculetList";
+import getUserIdProfile from "../user-actions/users/getUserIdProfile";
 /**
  * 사용자 정보 가져오는 처리
  * @param {*} idToken
@@ -23,6 +25,23 @@ async function handleGetUserInfo(idToken) {
     /** set user info */
     const response = await getUserInfo(idToken);
     return response;
+  } catch (error) {
+    return error.code;
+  }
+}
+
+/**
+ * get user profile
+ * @param {*} idToken
+ */
+async function handleGetUserIdProfile(idToken, uuid) {
+  try {
+    const response = await getUserIdProfile(idToken, uuid);
+    if (!!response) {
+      return response;
+    } else {
+      return false;
+    }
   } catch (error) {
     return error.code;
   }
@@ -59,6 +78,24 @@ async function handlePatchUserInfo(idToken, body) {
     /** patch user info */
     await patchUserInfo(idToken, body);
     return true;
+  } catch (error) {
+    return error.code;
+  }
+}
+
+/**
+ * 사용자 프로필에 계산기 리스트
+ * @param {*} idToken
+ */
+async function handleGetUserIdCalculetList(idToken, uuid, body) {
+  try {
+    /** get user calculet list */
+    const response = await getUserIdCalculetList(idToken, uuid, body);
+    if (!!response) {
+      return response;
+    } else {
+      return false;
+    }
   } catch (error) {
     return error.code;
   }
@@ -147,4 +184,6 @@ export {
   handleSignUp,
   handleDeleteUser,
   handleErrorUserActions,
+  handleGetUserIdCalculetList,
+  handleGetUserIdProfile,
 };

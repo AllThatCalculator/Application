@@ -1,13 +1,20 @@
 function handleUserInfoData(dataToSubmit) {
+  const { profileImg, userInfo } = dataToSubmit;
+
+  console.log(profileImg, userInfo);
+
   const formData = new FormData(); // 서버에 보내기 위한 form
   // img file
-  if (dataToSubmit.profileImg === null) {
-    formData.append("profileImg", "");
-  } else {
-    formData.append("profileImg", dataToSubmit.profileImg);
-  }
+  // if (profileImg === null) {
+  //   formData.append("profileImg", "");
+  // } else {
+  // }
+
+  formData.append("profileImg", profileImg === null ? "" : profileImg);
+
   // user info
-  formData.append("userInfo", JSON.stringify(dataToSubmit.userInfo)); // object -> json -> payload로 감싸기
+  formData.append("userInfo", JSON.stringify(userInfo)); // object -> json -> payload로 감싸기
+
   return formData;
 }
 export { handleUserInfoData };

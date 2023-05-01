@@ -1,7 +1,15 @@
 import { useState } from "react";
 import ModalCalculetInfo from "../calculet-block/ModalCalculetInfo";
 import { useEffect } from "react";
-import { Avatar, Divider, Grid, IconButton, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Divider,
+  Grid,
+  IconButton,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { FlexBox } from "../global-components/FlexBox";
@@ -24,13 +32,11 @@ import useSnackbar from "../../hooks/useSnackbar";
 
 function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
   const { boxSx } = useSx();
-  const { loginPage } = usePage();
+  const { loginPage, profileUserIdPage } = usePage();
   const { openSnackbar } = useSnackbar();
 
-  const statistics = calculetObj.statistics;
-  const userCalculet = calculetObj.userCalculet;
-  const contributor = calculetObj.contributor;
-  const title = calculetObj.title;
+  // calculet object
+  const { statistics, userCalculet, contributor, title, isMe } = calculetObj;
 
   // user id token
   const { idToken } = useSelector((state) => ({
@@ -147,7 +153,7 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
 
   ///////////////////////////////////////////////////////////////////////////////
   // ============프로필, 뷰 컴포넌트=================
-  function HeaderInfoBox({ icon, text, number, isProfile }) {
+  function HeaderInfoBox({ icon, text, number, isProfile, action }) {
     // 내용 컴포넌트
     function Typo({ content }) {
       return (
@@ -161,16 +167,21 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
       );
     }
     return (
-      <FlexBox sx={boxSx}>
-        {/* 프로필 사진 없으면 (icon 빈 문자) 그냥 기본 프로필 이미지 보임 */}
-        {isProfile ? (
-          <Avatar sx={{ width: 28, height: 28 }} src={icon} />
-        ) : (
-          icon
-        )}
-        <Typo content={text} />
-        {!isProfile && <Typo content={number} />}
-      </FlexBox>
+      <Tooltip title={isProfile && "프로필 보러가기"}>
+        <FlexBox
+          sx={{ cursor: isProfile && "pointer", ...boxSx }}
+          onClick={action}
+        >
+          {/* 프로필 사진 없으면 (icon 빈 문자) 그냥 기본 프로필 이미지 보임 */}
+          {isProfile ? (
+            <Avatar sx={{ width: 28, height: 28 }} src={icon} />
+          ) : (
+            icon
+          )}
+          <Typo content={text} />
+          {!isProfile && <Typo content={number} />}
+        </FlexBox>
+      </Tooltip>
     );
   }
   // 프로필, 계산기 본 사람 수
@@ -179,7 +190,9 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
       icon: contributor.profileImgSrc,
       text: contributor.userName,
       isProfile: true,
-      number: null,
+      action: () => {
+        profileUserIdPage(contributor.id);
+      }, // 계산기 저작자 프로필 들어가기
     },
     {
       icon: <VisibilityIcon color="primary" />,
@@ -191,12 +204,32 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
   // =================계산기 이름, 정보=================
   function CalculetTitle() {
     return (
-      <>
+      <Grid container sx={{ alignItems: "center" }}>
         <Title content={title} />
         <IconButton color="primary" onClick={onModalOpen}>
           <InfoOutlinedIcon />
         </IconButton>
-      </>
+        {
+          // 내가 만든 계산기는 계산기 편집 버튼 보임
+          isMe && (
+            <Button
+              variant="contained"
+              disableElevation
+              sx={{
+                bgcolor: "#E2E5F3",
+                color: "primary.main",
+                "&:hover": { bgcolor: "white" },
+                "&.MuiButtonBase-root": {
+                  maxHeight: "3.2rem",
+                },
+              }}
+              onClick={() => {}}
+            >
+              계산기 편집
+            </Button>
+          )
+        }
+      </Grid>
     );
   }
 
@@ -208,6 +241,7 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
       number: likeObj.number,
       isClicked: likeObj.liked,
       onClick: toggleLike,
+      tooltip: "좋아요",
     },
     {
       text: "북마크",
@@ -216,6 +250,7 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
       number: bookmarkObj.number,
       isClicked: bookmarkObj.bookmarked,
       onClick: toggleBookmark,
+      tooltip: "북마크",
     },
     {
       text: "신고",
@@ -265,8 +300,7 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
     <>
       {!isPreview && modalOpen && (
         <ModalCalculetInfo
-          contributor={contributor.userName}
-          contributorImgSrc={contributor.profileImgSrc}
+          contributor={contributor}
           statistics={statistics}
           title={title}
           categoryMainId={calculetObj.categoryMainId}
@@ -277,38 +311,53 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
         />
       )}
       {/* 계산기 타이틀, 계산기 정보 */}
-      <Grid container>
-        <CalculetTitle />
-      </Grid>
+      <CalculetTitle />
       <Grid container sx={{ alignItems: "center" }}>
         {/* 사용자, 뷰 */}
         <Grid item xs>
           <FlexBox gap="1.2rem">
-            {infoList.map((data, index) => (
-              <HeaderInfoBox
-                key={index}
-                icon={data.icon}
-                text={data.text}
-                number={data.number}
-                isProfile={data.isProfile}
-              />
-            ))}
+            {infoList.map((data, index) => {
+              const { icon, text, number, isProfile, action } = data;
+              return (
+                <HeaderInfoBox
+                  key={index}
+                  icon={icon}
+                  text={text}
+                  number={number}
+                  isProfile={isProfile}
+                  action={action}
+                />
+              );
+            })}
           </FlexBox>
         </Grid>
         {/* 좋아요, 북마크, 신고 */}
         <Grid item>
           <FlexBox>
-            {StatisticsList.map((data, index) => (
-              <CountButton
-                key={index}
-                text={data.text}
-                icon={data.icon}
-                clickedIcon={data.clickedIcon}
-                number={data.number}
-                isClicked={data.isClicked}
-                onClick={data.onClick}
-              />
-            ))}
+            {StatisticsList.map((data, index) => {
+              const {
+                text,
+                icon,
+                clickedIcon,
+                number,
+                isClicked,
+                onClick,
+                tooltip,
+              } = data;
+
+              return (
+                <CountButton
+                  key={index}
+                  text={text}
+                  icon={icon}
+                  clickedIcon={clickedIcon}
+                  number={number}
+                  isClicked={isClicked}
+                  onClick={onClick}
+                  tooltip={tooltip}
+                />
+              );
+            })}
             {!isPreview &&
               MorePopupLists.map((popupData, index) => (
                 <PopupList

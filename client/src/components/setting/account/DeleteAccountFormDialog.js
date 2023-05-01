@@ -43,7 +43,7 @@ function DeleteAccountFormDialog({
         open={isOpen}
         onClose={handleClose}
         sx={{
-          "& .MuiDialog-paper": { maxHeight: 436 },
+          "& .MuiDialog-paper": { maxHeight: 640 },
           pointerEvents: isLoading ? "none" : "auto",
         }}
       >

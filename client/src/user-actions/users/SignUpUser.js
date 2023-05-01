@@ -11,7 +11,7 @@ import { handleErrorUserActions } from "../../utils/handleUserActions";
 async function signUpUser(dataToSubmit = {}, userId) {
   try {
     const response = await axios.post(
-      `/api/users`,
+      "/api/users",
       handleUserInfoData(dataToSubmit),
       {
         headers: {
