@@ -55,6 +55,7 @@ async function getCalculetInfo(req, res) {
     createdAt,
     contributor,
     statistics,
+    type,
   } = calculetInfo.toJSON();
 
   const responseData = {
@@ -73,6 +74,7 @@ async function getCalculetInfo(req, res) {
       bookmarked: userBookmarked,
     },
     isMe: contributor.id === res.locals.userId,
+    type,
   };
 
   res.status(200).send(responseData);

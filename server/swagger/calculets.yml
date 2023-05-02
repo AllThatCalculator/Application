@@ -187,6 +187,10 @@ components:
           type: integer
           description: 신고 여부
           example: 0
+        type:
+          type: integer
+          description: 등록 방식 (0 - 기존(default), 1 - simple v1)
+          example: 0
     calculetId:
       type: string
       description: 계산기 UUID

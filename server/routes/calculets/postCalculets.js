@@ -2,6 +2,8 @@ const { models } = require("../../models");
 const { v4: uuidv4 } = require("uuid");
 
 async function postCalculets(req, res) {
+  console.log(req.body);
+
   const newCalculetObject = {
     id: uuidv4(),
     title: req.body.title,
@@ -11,6 +13,7 @@ async function postCalculets(req, res) {
     categoryMainId: req.body.categoryMainId,
     categorySubId: req.body.categorySubId,
     contributorId: res.locals.userId,
+    type: req.body.type || 0,
   };
 
   // create data
