@@ -3,6 +3,7 @@ const router = express.Router();
 // middleware
 const { auth } = require("../../middleware/auth");
 const { errorHandler } = require("../../middleware/errorHandler");
+const { inputValidator } = require("../../middleware/inputValidator");
 // apis
 const { getCalculetList } = require("./getCalculetList");
 const { getCalculetInfo } = require("./getCalculetInfo");
@@ -13,7 +14,7 @@ const { recommendation } = require("./recommend");
 const { search } = require("./search");
 // modules
 const bookmark = require("./bookmark");
-const { query } = require("express-validator");
+const { query, body, param } = require("express-validator");
 
 // bookmark api
 router.use(bookmark);
@@ -94,7 +95,7 @@ router.get(
       .blacklist("*")
       .customSanitizer((keyword) =>
         keyword
-          .split(" ")
+          .split()
           .map((token) => `*${token}*`)
           .join(" ")
       ),
@@ -125,6 +126,7 @@ router.get(
 router.get(
   "/:calculetId",
   auth.verify,
+  [param("calculetId").isUUID(), inputValidator],
   errorHandler.dbWrapper(getCalculetInfo)
 );
 
@@ -141,7 +143,11 @@ router.get(
  *        200:
  *          $ref: "#/components/responses/updateLogList"
  */
-router.get("/update-log/:calculetId", errorHandler.dbWrapper(getUpdateLog));
+router.get(
+  "/update-log/:calculetId",
+  [param("calculetId").isUUID(), inputValidator],
+  errorHandler.dbWrapper(getUpdateLog)
+);
 
 /**
  * @swagger
@@ -158,7 +164,25 @@ router.get("/update-log/:calculetId", errorHandler.dbWrapper(getUpdateLog));
  *        400:
  *          $ref: "#/components/responses/error"
  */
-router.post("/", auth.validate, errorHandler.dbWrapper(postCalculets));
+router.post(
+  "/",
+  auth.validate,
+  // validate & sanitize query value
+  [
+    body("title").isString(),
+    body("srcCode").isString(),
+    body("manual").isString(),
+    body("description").isString().isLength({
+      min: 0,
+      max: 100,
+    }),
+    body("categoryMainId").optional().isInt().toInt(),
+    body("categorySubId").optional().isInt().toInt(),
+    body("type").optional().isInt({ min: 0, max: 1 }).toInt(),
+    inputValidator,
+  ],
+  errorHandler.dbWrapper(postCalculets)
+);
 
 /**
  * @swagger
@@ -178,6 +202,7 @@ router.post("/", auth.validate, errorHandler.dbWrapper(postCalculets));
 router.put(
   "/like/:calculetId",
   auth.validate,
+  [param("calculetId").isUUID(), inputValidator],
   errorHandler.dbWrapper(userLike.mark)
 );
 
@@ -199,6 +224,7 @@ router.put(
 router.put(
   "/unlike/:calculetId",
   auth.validate,
+  [param("calculetId").isUUID(), inputValidator],
   errorHandler.dbWrapper(userLike.remove)
 );
 
