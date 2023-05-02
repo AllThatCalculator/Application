@@ -58,6 +58,11 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
         defaultValue: 0,
       },
+      type: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        defaultValue: 0,
+      },
       blocked: {
         type: DataTypes.VIRTUAL,
         get() {
