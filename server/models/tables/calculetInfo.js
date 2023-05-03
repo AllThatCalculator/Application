@@ -92,6 +92,11 @@ module.exports = function (sequelize, DataTypes) {
         defaultValue: 0,
         field: "report_cnt",
       },
+      type: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        defaultValue: 0,
+      },
       statistics: {
         type: DataTypes.VIRTUAL,
         get() {
