@@ -3,9 +3,10 @@ import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import WorkIcon from "@mui/icons-material/Work";
 import useSx from "../../hooks/useSx";
 import usePage from "../../hooks/usePage";
+import ProfileSkeletonPage from "./ProfileSkeletonPage";
 
-function ProfileHeader({ userInfo }) {
-  const { userName, bio, job, profileImgSrc } = userInfo;
+function ProfileHeader({ userInfo, isProfileLoading }) {
+  const { userName, bio, job, profileImgSrc, isMe } = userInfo;
 
   const { settingAccountPage } = usePage();
   const { isWindowMdDown } = useSx();
@@ -42,16 +43,29 @@ function ProfileHeader({ userInfo }) {
     );
   }
 
-  /** 정보 수정 버튼 */
-  function EditInfoButton() {
+  /** 정보 수정 & 계산기 관리 버튼들 : 내 프로필 일 때만 보임 */
+  function ManageButtons() {
     return (
-      <Button
-        variant="contained"
-        sx={{ maxWidth: isWindowMdDown && "18rem" }}
-        onClick={settingAccountPage}
-      >
-        정보 수정
-      </Button>
+      <FlexBox gap="1.2rem">
+        <Button
+          variant="contained"
+          size="small"
+          disableElevation
+          sx={{ maxWidth: isWindowMdDown && "12rem" }}
+          onClick={settingAccountPage}
+        >
+          정보 수정
+        </Button>
+        <Button
+          variant="contained"
+          size="small"
+          disableElevation
+          sx={{ maxWidth: isWindowMdDown && "12rem" }}
+          onClick={() => {}}
+        >
+          계산기 관리
+        </Button>
+      </FlexBox>
     );
   }
 
@@ -68,32 +82,37 @@ function ProfileHeader({ userInfo }) {
           gap: { xs: "2.4rem", sm: "2.8rem", md: "3.2rem" },
         }}
       >
-        <Grid item>
-          <Avatar
-            component={Paper}
-            elevation={2}
-            src={profileImgSrc}
-            sx={{ width: imageSx, height: imageSx }}
-          />
-        </Grid>
-        <Grid item xs>
-          <FlexColumnBox gap="0.4rem">
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              {userName}
-            </Typography>
-            {isWindowMdDown && <EditInfoButton />}
-            {!isWindowMdDown && <ProfileHeaderBottom />}
-          </FlexColumnBox>
-        </Grid>
-        {!isWindowMdDown && (
-          <Grid item sx={{ alignSelf: "flex-start" }}>
-            <EditInfoButton />
-          </Grid>
-        )}
-        {isWindowMdDown && (
-          <Grid container>
-            <ProfileHeaderBottom />
-          </Grid>
+        {isProfileLoading && <ProfileSkeletonPage />}
+        {!isProfileLoading && (
+          <>
+            <Grid item>
+              <Avatar
+                component={Paper}
+                elevation={2}
+                src={profileImgSrc}
+                sx={{ width: imageSx, height: imageSx }}
+              />
+            </Grid>
+            <Grid item xs>
+              <FlexColumnBox gap="0.4rem">
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  {userName}
+                </Typography>
+                {isMe && isWindowMdDown && <ManageButtons />}
+                {!isWindowMdDown && <ProfileHeaderBottom />}
+              </FlexColumnBox>
+            </Grid>
+            {isMe && !isWindowMdDown && (
+              <Grid item sx={{ alignSelf: "flex-start" }}>
+                <ManageButtons />
+              </Grid>
+            )}
+            {isWindowMdDown && (
+              <Grid container>
+                <ProfileHeaderBottom />
+              </Grid>
+            )}
+          </>
         )}
       </Grid>
     </Paper>

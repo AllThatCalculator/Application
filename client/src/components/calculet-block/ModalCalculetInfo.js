@@ -8,6 +8,7 @@ import {
   Divider,
   IconButton,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import useSx from "../../hooks/useSx";
@@ -16,6 +17,8 @@ import CakeIcon from "@mui/icons-material/Cake";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { formatDay } from "../../utils/formatTime";
 import { useSelector } from "react-redux";
+import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
+import usePage from "../../hooks/usePage";
 
 /**
  * 계산기 정보 팝업창에 들어갈 내용
@@ -37,7 +40,6 @@ import { useSelector } from "react-redux";
  */
 function ModalCalculetInfo({
   contributor,
-  contributorImgSrc,
   statistics,
   title,
   categoryMainId,
@@ -47,6 +49,7 @@ function ModalCalculetInfo({
   onClick,
 }) {
   const { isWindowSmDown } = useSx();
+  const { profileUserIdPage } = usePage();
   const dateSx = { xs: "10rem", sm: "11rem", md: "12rem" };
 
   const { calculetCategory } = useSelector((state) => ({
@@ -55,13 +58,51 @@ function ModalCalculetInfo({
   const categoryMainName = calculetCategory[categoryMainId].name;
   const categorySubName = calculetCategory[categoryMainId][categorySubId];
 
+  // contributor
+  function ContributorInfo() {
+    const { id, userName, profileImgSrc } = contributor;
+
+    return (
+      <Tooltip title={"프로필 보러가기"} placement="top">
+        <FlexColumnBox
+          sx={{ gap: "0.8rem", alignItems: "center", cursor: "pointer" }}
+          onClick={() => {
+            profileUserIdPage(id);
+          }}
+        >
+          <Avatar src={profileImgSrc} sx={{ width: 56, height: 56 }} />
+          <Typography variant="body1">{userName}</Typography>
+        </FlexColumnBox>
+      </Tooltip>
+    );
+  }
+
+  // 누적 연산 수, 누적 사용자 수
+  function StatisticsInfo() {
+    const { calculation, user } = statistics;
+    return (
+      <>
+        <FlexColumnBox sx={{ gap: "0.4rem" }}>
+          <Typography variant="subtitle2" color="grey">
+            누적 연산 수
+          </Typography>
+          <Typography variant="body1">{calculation}</Typography>
+        </FlexColumnBox>
+        <FlexColumnBox sx={{ gap: "0.4rem" }}>
+          <Typography variant="subtitle2" color="grey">
+            누적 사용자 수
+          </Typography>
+          <Typography variant="body1">{user}</Typography>
+        </FlexColumnBox>
+      </>
+    );
+  }
+
   // sm up
   function CalculetProfileMd() {
     return (
-      <Box
+      <FlexColumnBox
         sx={{
-          display: "flex",
-          flexDirection: "column",
           gap: "2.4rem",
           p: "2.4rem 1.6rem",
           borderRight: 1,
@@ -70,43 +111,10 @@ function ModalCalculetInfo({
           width: "36rem", // 임의로 조절
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.8rem",
-            alignItems: "center",
-          }}
-        >
-          <Avatar src={contributorImgSrc} sx={{ width: 56, height: 56 }} />
-          <Typography variant="body1">{contributor}</Typography>
-        </Box>
+        <ContributorInfo />
         <Divider />
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.4rem",
-          }}
-        >
-          <Typography variant="subtitle2" color="grey">
-            누적 연산 수
-          </Typography>
-          <Typography variant="body1">{statistics.calculation}</Typography>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "0.4rem",
-          }}
-        >
-          <Typography variant="subtitle2" color="grey">
-            누적 사용자 수
-          </Typography>
-          <Typography variant="body1">{statistics.user}</Typography>
-        </Box>
-      </Box>
+        <StatisticsInfo />
+      </FlexColumnBox>
     );
   }
   // sm down
@@ -118,9 +126,8 @@ function ModalCalculetInfo({
             <ArrowBackIcon />
           </IconButton>
         </Toolbar>
-        <Box
+        <FlexBox
           sx={{
-            display: "flex",
             gap: "2.4rem",
             p: "0.4rem 1.6rem 1.6rem",
             borderBottom: 1,
@@ -128,43 +135,10 @@ function ModalCalculetInfo({
             backgroundColor: "white",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.8rem",
-              alignItems: "center",
-            }}
-          >
-            <Avatar src={contributorImgSrc} sx={{ width: 56, height: 56 }} />
-            <Typography variant="body1">{contributor}</Typography>
-          </Box>
+          <ContributorInfo />
           <Divider orientation="vertical" />
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.4rem",
-            }}
-          >
-            <Typography variant="subtitle2" color="grey">
-              누적 연산 수
-            </Typography>
-            <Typography variant="body1">{statistics.calculation}</Typography>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.4rem",
-            }}
-          >
-            <Typography variant="subtitle2" color="grey">
-              누적 사용자 수
-            </Typography>
-            <Typography variant="body1">{statistics.user}</Typography>
-          </Box>
-        </Box>
+          <StatisticsInfo />
+        </FlexBox>
       </>
     );
   }

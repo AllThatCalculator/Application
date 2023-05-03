@@ -1,6 +1,5 @@
-import { FormControl, MenuItem, Select } from "@mui/material";
+import { FormControl, Grid, MenuItem, Select } from "@mui/material";
 import { useSelector } from "react-redux";
-import { FlexBox } from "./FlexBox";
 
 const KEY_TOTAL_MAIN = "대분류 전체";
 const KEY_TOTAL_SUB = "소분류 전체";
@@ -10,6 +9,8 @@ const KEY_TOTAL_SUB = "소분류 전체";
  * @param {*} param0
  */
 function SearchFilter({
+  searchTarget,
+  handleChangeSearchTarget,
   categoryMainId,
   handleChangeCategoryMain,
   categorySubId,
@@ -24,7 +25,25 @@ function SearchFilter({
   }));
 
   return (
-    <FlexBox gap="0.4rem">
+    <Grid container sx={{ gap: "0.4rem", justifyContent: "flex-end" }}>
+      {!!searchTarget && (
+        <FormControl size="small" sx={{ width: SELECT_BOX_WIDTH }}>
+          <Select value={searchTarget} onChange={handleChangeSearchTarget}>
+            {[
+              { value: "all", data: "통합 검색" },
+              { value: "title", data: "계산기 제목" },
+              { value: "desc", data: "계산기 설명" },
+            ].map((targets) => {
+              const { value, data } = targets;
+              return (
+                <MenuItem key={data} value={value}>
+                  {data}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </FormControl>
+      )}
       <FormControl size="small" sx={{ width: SELECT_BOX_WIDTH }}>
         <Select
           value={categoryMainId}
@@ -94,7 +113,7 @@ function SearchFilter({
           ))}
         </Select>
       </FormControl>
-    </FlexBox>
+    </Grid>
   );
 }
 export default SearchFilter;

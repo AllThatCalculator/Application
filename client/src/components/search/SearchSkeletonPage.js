@@ -1,6 +1,7 @@
 import { Grid, Skeleton } from "@mui/material";
 
-function SkeletonPage() {
+// search page skeleton
+function SearchSkeletonPage() {
   return (
     <Grid
       container
@@ -16,4 +17,4 @@ function SkeletonPage() {
     </Grid>
   );
 }
-export default SkeletonPage;
+export default SearchSkeletonPage;

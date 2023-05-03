@@ -13,10 +13,11 @@ function Shortcut({ contentsShortcut, isActive, setIsActive }) {
    * - 각 버튼마다 id부여하여 index로 접근해서 활성화 여부 알기
    * - 각 버튼에 맞는 대분류 ref로 가기
    */
-  function onClickShortcut(event, currentRef) {
-    setIsActive(parseInt(event.target.id));
+  function onClickShortcut(event, currentRef, index) {
+    setIsActive(index);
     currentRef.onMoveToElement();
   }
+
   return (
     <FlexColumnBox gap="1.4rem">
       <Typography variant="body1">바로가기</Typography>
@@ -28,12 +29,11 @@ function Shortcut({ contentsShortcut, isActive, setIsActive }) {
             backgroundColor: index === isActive && "atcBlue.100",
             color: index !== isActive && "grey.600",
           }}
-          onClick={(event) => onClickShortcut(event, cont.itemRef)}
+          onClick={(event) => onClickShortcut(event, cont.itemRef, index)}
         >
           <FlexColumnBox
             sx={{ alignItems: "center", whiteSpace: "pre-wrap", gap: "0.4rem" }}
           >
-            {cont.icon}
             <Typography
               variant="body2"
               sx={{ fontWeight: index === isActive && "bold" }}

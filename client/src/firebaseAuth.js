@@ -193,9 +193,29 @@ async function updateNewPassword(newPassword) {
 async function getAuthState(refresh) {
   try {
     let result = false;
-    await auth.currentUser.getIdToken(refresh).then((token) => {
-      result = token;
-    });
+    const user = auth.currentUser;
+    if (user !== null) {
+      await user.getIdToken(refresh).then((token) => {
+        result = token;
+      });
+    }
+    return result;
+  } catch (error) {
+    return error.code;
+  }
+}
+
+/**
+ * get user uid
+ * @returns
+ */
+async function getAuthUuid() {
+  try {
+    let result = false;
+    const user = auth.currentUser;
+    if (user !== null) {
+      result = await user.uid;
+    }
     return result;
   } catch (error) {
     return error.code;
@@ -215,5 +235,6 @@ const firebaseAuth = {
   signInWithCredential,
   updateNewPassword,
   getAuthState,
+  getAuthUuid,
 };
 export default firebaseAuth;

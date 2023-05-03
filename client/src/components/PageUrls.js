@@ -40,9 +40,12 @@ const URL = {
   CATEGORY_MAIN_ID: "categoryMain",
   CATEGORY_SUB_ID: "categorySub",
   LEN_ID: "len",
+  TARGET_ID: "target",
   /** 설정 id */
   MENU_ID: "menu", // :menu
   ACCOUNT_ID: "account", // 계정
   PASSWORD_ID: "password", // 비밀번호 변경
+  /** uuid */
+  USERUID_ID: "who", // uuid
 };
 export default URL;

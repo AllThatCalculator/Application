@@ -2,6 +2,8 @@ import styled from "styled-components";
 import useCalculetRecord from "../../hooks/useCalculetRecord";
 import { setCalculetInOutputObj } from "../../utils/setCalculetInOutputObj";
 import CalculetManual from "./CalculetManual";
+import CalculetSkeleton from "./CalculetSkeleton";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -21,11 +23,15 @@ function CalculetBlock({ srcCode, manual, calculetId, isPreview = false }) {
   // console.log(srcCode);
   const { handleSetCalculetObj, handleGetCalculetRecords } =
     useCalculetRecord();
+
+  const [isLoading, setIsLoading] = useState(true);
   /**
    * 받아온 html을 넣는 iframe의 크기를 원본 html 크기 맞게 조절하는 함수
    * @param {event object} e
    */
   function adjustHeight(e) {
+    setIsLoading(true);
+
     const frame = e.target;
     frame.style.width = "100%";
     frame.style.height = `${frame.contentDocument.body.scrollHeight}px`;
@@ -36,10 +42,12 @@ function CalculetBlock({ srcCode, manual, calculetId, isPreview = false }) {
     if (!isPreview) {
       handleGetCalculetRecords(calculetId);
     }
+    setIsLoading(false);
   }
   // console.log(srcCode);
   return (
     <Wrapper>
+      {isLoading && <CalculetSkeleton />}
       <iframe
         srcDoc={
           `<link href="/static-files/css/calculet.css" rel="stylesheet">

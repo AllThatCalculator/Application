@@ -1,4 +1,3 @@
-import React, { useCallback, useEffect } from "react";
 import { FlexColumnBox } from "../global-components/FlexBox";
 import { ButtonBase, Divider, Grid, Typography } from "@mui/material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -25,48 +24,48 @@ function CalculetItemList({
   const { subTitleSx } = useSx();
   const { getCategoryMainName, getCategorySubName } = useGetCategoryName(); // 카테고리 가져오기
 
-  /**
-   * 각 바로가기 버튼에 맞는 대분류의 위치 얻기
-   * @param {int} index 바로가기 버튼의 index
-   */
-  const locationRef = useCallback(
-    (index) => {
-      // return Math.round(
-      //   contentsShortcut[index].itemRef.element.current.getBoundingClientRect()
-      //     .top +
-      //     window.pageYOffset -
-      //     80
-      // );
-    },
-    // [contentsShortcut]
-    []
-  );
+  // /**
+  //  * 각 바로가기 버튼에 맞는 대분류의 위치 얻기
+  //  * @param {int} index 바로가기 버튼의 index
+  //  */
+  // const locationRef = useCallback(
+  //   (index) => {
+  //     // return Math.round(
+  //     //   contentsShortcut[index].itemRef.element.current.getBoundingClientRect()
+  //     //     .top +
+  //     //     window.pageYOffset -
+  //     //     80
+  //     // );
+  //   },
+  //   // [contentsShortcut]
+  //   []
+  // );
 
-  /**
-   * Ref의 위치와 스크롤 Y 위치를 비교하여, 스크롤 Y 에 따라 바로가기 버튼 활성화
-   * @param {int} index 바로가기 버튼의 index
-   */
-  const checkScroll = useCallback(
-    (index) => {
-      const scrollY = Math.round(scrollPosition);
-      return (
-        scrollY >= locationRef(index) &&
-        contentsShortcut[index] &&
-        scrollY < locationRef(index + 1)
-      );
-    },
-    [contentsShortcut, locationRef, scrollPosition]
-  );
-  const onHandlerSetIsActive = useCallback(() => {
-    for (let i = 0; i < contentsShortcut.length; i++)
-      if (checkScroll(i)) setIsActive(i);
-  }, [checkScroll, contentsShortcut.length, setIsActive]);
+  // /**
+  //  * Ref의 위치와 스크롤 Y 위치를 비교하여, 스크롤 Y 에 따라 바로가기 버튼 활성화
+  //  * @param {int} index 바로가기 버튼의 index
+  //  */
+  // const checkScroll = useCallback(
+  //   (index) => {
+  //     const scrollY = Math.round(scrollPosition);
+  //     return (
+  //       scrollY >= locationRef(index) &&
+  //       contentsShortcut[index] &&
+  //       scrollY < locationRef(index + 1)
+  //     );
+  //   },
+  //   [contentsShortcut, locationRef, scrollPosition]
+  // );
+  // const onHandlerSetIsActive = useCallback(() => {
+  //   for (let i = 0; i < contentsShortcut.length; i++)
+  //     if (checkScroll(i)) setIsActive(i);
+  // }, [checkScroll, contentsShortcut.length, setIsActive]);
   /**
    * useEffect 경고 막기 위함
    */
-  useEffect(() => {
-    onHandlerSetIsActive();
-  }, [onHandlerSetIsActive]);
+  // useEffect(() => {
+  //   onHandlerSetIsActive();
+  // }, [onHandlerSetIsActive]);
 
   /**
    * 계산기 나열
@@ -171,7 +170,7 @@ function CalculetItemList({
           {/* 대분류 버튼 */}
           <ButtonBase
             sx={{ maxWidth: "fit-content", gap: "1.2rem" }}
-            ref={contentsShortcut[mainIndex].itemRef.element}
+            // ref={contentsShortcut[mainIndex].itemRef.element}
           >
             <Typography sx={{ ...subTitleSx }}>
               {getCategoryMainName(mainId)}
