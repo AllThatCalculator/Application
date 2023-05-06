@@ -13,6 +13,16 @@ function publishCalculet(record) {
   record.updatedAt = new Date(); // updated_at 갱신
   record.blocked = 0; // blocked 초기화
 
+  // 데이터 존재 여부 확인
+  const data = models.calculetInfoTemp.findByPk(record.id);
+  if (data === null) {
+    throw "CustomNotExitError";
+  }
+
+  // 임시 계산기의 calculetId로 id 변경
+  const tempId = record.id;
+  record.id = record.calculetId;
+
   return sequelize.transaction(async (t) => {
     // move to calculetInfo table
     if (record.registered === true) {
@@ -33,11 +43,7 @@ function publishCalculet(record) {
 
     // delete from temporary table
     await models.calculetInfoTemp.destroy({
-      where: {
-        id: {
-          [Op.eq]: record.id,
-        },
-      },
+      where: { id: tempId },
       transaction: t,
     });
 
@@ -79,13 +85,24 @@ calculetTempResource.options.actions.publish = {
       };
     } catch (error) {
       console.error(error);
-      return {
-        record: record.toJSON(currentAdmin),
-        notice: {
-          message: "계산기 등록 실패",
-          type: "error",
-        },
-      };
+      if (error === "CustomNotExitError") {
+        return {
+          record: record.toJSON(currentAdmin),
+          redirectUrl: "/admin/resources/calculet_info_temp",
+          notice: {
+            message: "새로운 수정 사항이 생겼습니다.",
+            type: "error",
+          },
+        };
+      } else {
+        return {
+          record: record.toJSON(currentAdmin),
+          notice: {
+            message: "계산기 등록 실패",
+            type: "error",
+          },
+        };
+      }
     }
   },
   guard: "등록하시겠습니까?",
