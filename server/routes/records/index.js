@@ -4,6 +4,7 @@ const { auth } = require("../../middleware/auth");
 const { errorHandler } = require("../../middleware/errorHandler");
 const { record } = require("./calculetRecord");
 const { body } = require("express-validator");
+const { inputValidator } = require("../../middleware/inputValidator");
 
 /**
  * @swagger
@@ -30,6 +31,7 @@ router.post(
     body("recordArray").isArray(),
     body("recordArray.*.createdAt").isISO8601(),
     body("recordArray.*.outputObj").isObject(),
+    inputValidator,
   ],
   errorHandler.dbWrapper(record.post)
 );
@@ -69,6 +71,7 @@ router.delete(
     body("calculetId").isString(),
     body("recordIdList").isArray(),
     body("recordIdList.*").isString(),
+    inputValidator,
   ],
   errorHandler.dbWrapper(record.delete)
 );
