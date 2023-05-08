@@ -10,6 +10,7 @@ const { accessController } = require("../utils/accessController");
  */
 function publishCalculet(record) {
   // 본 테이블 등록
+  delete record.createdAt; // 임시 테이블의 생성 시간이므로 삭제
   record.updatedAt = new Date(); // updated_at 갱신
   record.blocked = 0; // blocked 초기화
 

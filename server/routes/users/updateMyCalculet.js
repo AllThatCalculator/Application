@@ -2,19 +2,19 @@ const { models } = require("../../models");
 const { CustomError } = require("../../utils/CustomError");
 const { matchedData } = require("express-validator");
 
-// check calculet's contributor id equals login user id
-function checkMyCalculet(calculet, res) {
-  if (calculet.contributorId !== res.locals.userId) {
-    throw new CustomError(403, 0);
-  }
-}
-
 async function updateMyCalculet(req, res) {
   const bodyData = matchedData(req, { locations: ["body"] });
   const { calculetInfo, updateMessage } = bodyData;
 
-  const whereOption = { where: { calculetId: calculetInfo.calculetId } };
-  const calculet = await models.calculetInfo.findByPk(calculetInfo.calculetId);
+  const whereOption = {
+    where: {
+      calculetId: calculetInfo.calculetId,
+      contributorId: res.locals.userId,
+    },
+  };
+  const calculet = await models.calculetInfo.findOne({
+    where: { id: calculetInfo.calculetId, contributorId: res.locals.userId },
+  });
   const calculetTemp = await models.calculetInfoTemp.findOne(whereOption);
 
   if (calculet === null && calculetTemp === null) {
@@ -23,18 +23,17 @@ async function updateMyCalculet(req, res) {
 
   // check exist calculet temp data
   if (calculetTemp !== null) {
-    // check my calculet
-    checkMyCalculet(calculetTemp, res);
-
-    // delete temp data & update log
+    // delete temp data & update log (latest)
     await models.calculetInfoTemp.destroy(whereOption);
-    await models.calculetUpdateLog.destroy(whereOption);
+    const latestUpdateLog = await models.calculetUpdateLog.findOne({
+      where: { calculetId: calculetInfo.calculetId },
+      order: [["createdAt", "DESC"]],
+      limit: 1,
+    });
+    latestUpdateLog.destroy();
   }
 
   if (calculet !== null) {
-    // check my calculet
-    checkMyCalculet(calculet, res);
-
     // create update log
     await models.calculetUpdateLog.create({
       calculetId: calculetInfo.calculetId,

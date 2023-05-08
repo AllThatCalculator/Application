@@ -14,7 +14,6 @@ async function postCalculets(req, res) {
     categorySubId: req.body.categorySubId,
     contributorId: res.locals.userId,
     type: req.body.type || 0,
-    calculetId: uuidv4(),
   };
 
   // create data
