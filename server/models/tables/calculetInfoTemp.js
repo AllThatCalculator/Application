@@ -87,6 +87,12 @@ module.exports = function (sequelize, DataTypes) {
           return 0;
         },
       },
+      isEdit: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return false;
+        },
+      },
     },
     {
       sequelize,

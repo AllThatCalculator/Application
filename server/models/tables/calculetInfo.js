@@ -110,6 +110,18 @@ module.exports = function (sequelize, DataTypes) {
           };
         },
       },
+      isEdit: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return this.calculetTemp?.length > 0 ? true : false;
+        },
+      },
+      calculetId: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return this.id;
+        },
+      },
     },
     {
       sequelize,
