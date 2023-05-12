@@ -262,7 +262,7 @@ components:
     calculetUpdate:
       type: object
       properties:
-        id:
+        calculetId:
           $ref: "#/components/schemas/calculetId"
         title:
           $ref: "#/components/schemas/calculet/properties/title"
@@ -276,3 +276,5 @@ components:
           $ref: "#/components/schemas/calculet/properties/categoryMainId"
         categorySubId:
           $ref: "#/components/schemas/calculet/properties/categorySubId"
+        type:
+          $ref: "#/components/schemas/calculet/properties/type"

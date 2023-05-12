@@ -1,7 +1,5 @@
 const { sequelize, models } = require("../../models");
 const { Op, col } = require("sequelize");
-const { CustomError } = require("../../utils/CustomError");
-const { validationResult } = require("express-validator");
 
 /**
  * set filter for db search
@@ -91,13 +89,6 @@ async function getSearchCalculetList(query, filter) {
  * 계산기 검색 함수
  */
 async function searchCalculets(req, res) {
-  const error = validationResult(req);
-  // request invalid
-  if (!error.isEmpty()) {
-    console.log(error.mapped());
-    throw new CustomError(400, 1);
-  }
-
   // set filter
   const filter = setFilter(req.query);
   const responseData = await getSearchCalculetList(req.query, filter);

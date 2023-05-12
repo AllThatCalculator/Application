@@ -3,6 +3,7 @@ const router = express.Router();
 // middleware
 const { auth } = require("../../middleware/auth");
 const { errorHandler } = require("../../middleware/errorHandler");
+const { inputValidator } = require("../../middleware/inputValidator");
 // api
 const { postProfile, deleteProfile } = require("../s3Bucket/profile");
 const { signUp } = require("./signUp");
@@ -141,7 +142,7 @@ router.get(
 /**
  * @swagger
  *  /api/users/me/calculet:
- *    patch:
+ *    put:
  *      tags: [users-calculet]
  *      summary: 로그인 한 사용자(본인)의 마이 계산기 수정 요청 <Auth>
  *      description: 마이 계산기 정보 수정하기 & 업데이트 로그 남기기
@@ -151,13 +152,12 @@ router.get(
  *        204:
  *          $ref: "#/components/responses/success204"
  */
-router.patch(
+router.put(
   "/me/calculet",
   [
     auth.validate,
-    body("calculetInfo.id").isUUID(),
+    body("calculetInfo.calculetId").isUUID(),
     body(["calculetInfo.categoryMainId", "calculetInfo.categorySubId"])
-      .optional()
       .isInt()
       .toInt(),
     body(["updateMessage", "calculetInfo.title", "calculetInfo.description"])
@@ -165,6 +165,8 @@ router.patch(
       .isLength({ min: 1, max: 100 }),
     body("calculetInfo.srcCode").notEmpty(),
     body("calculetInfo.manual").isString(),
+    body("calculetInfo.type").isInt({ min: 0, max: 1 }).toInt(),
+    inputValidator,
   ],
   errorHandler.dbWrapper(updateMyCalculet)
 );
@@ -197,6 +199,7 @@ router.delete(
     auth.validate,
     header("calculetId").isUUID(),
     header("blocked").isInt({ gt: -1, lt: 3 }).toInt(),
+    inputValidator,
   ],
   errorHandler.dbWrapper(deleteMyCalculet)
 );
@@ -219,7 +222,7 @@ router.delete(
 router.get(
   "/:userId/profile",
   // validate & sanitize query value
-  [auth.verify, param("userId").isString()],
+  [auth.verify, param("userId").isString(), inputValidator],
   errorHandler.dbWrapper(public.info)
 );
 
@@ -252,6 +255,7 @@ router.get(
     query("categorySubId").optional().isInt().toInt(),
     query("size").isInt({ gt: 0 }).toInt(),
     query("page").isInt({ gt: 0 }).toInt(),
+    inputValidator,
   ],
   errorHandler.dbWrapper(public.calculet)
 );
