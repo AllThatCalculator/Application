@@ -12,6 +12,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 ALTER TABLE `ATC_DB`.`calculet_info_temp` 
 ADD COLUMN `calculet_id` CHAR(36) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NOT NULL AFTER `type`;
 
+DROP TRIGGER calculet_info_temp_BEFORE_INSERT;
+
 DELIMITER $$
 
 USE `ATC_DB`$$
@@ -37,4 +39,3 @@ SET SQL_SAFE_UPDATES = 1;  # enable safe mode
 
 ALTER TABLE `ATC_DB`.`calculet_info_temp` 
 ADD UNIQUE INDEX `calculet_id_UNIQUE` (`calculet_id` ASC) VISIBLE;
-
