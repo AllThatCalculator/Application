@@ -37,6 +37,11 @@ function useGetCalculetBookmark() {
     await handleSetCalculetBookmarkLoading(false);
   }
 
-  return { bookmark, isLoading, getCalculetBookmark };
+  return {
+    bookmark,
+    isLoading,
+    handleSetCalculetBookmarkLoading,
+    getCalculetBookmark,
+  };
 }
 export default useGetCalculetBookmark;

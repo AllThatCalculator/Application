@@ -38,6 +38,11 @@ import PCBookmarkBar from "../components/bookmark-bar/PCBookmarkBar";
 import MobileBookmarkBar from "../components/bookmark-bar/MobileBookmarkBar";
 import useGetCalculetBookmark from "../hooks/useGetCalculetBookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
+import { handleGetCalculetBookmark } from "../utils/handleUserActions";
+import {
+  onSetCalculetBookmark,
+  onSetCalculetBookmarkLoading,
+} from "../modules/calculetBookmark";
 
 /**
  * 헤더에 있는 컴포넌트들
@@ -235,11 +240,20 @@ async function getAllCalculetList(setLoading) {
   await getCalculetConverters().then((data) => {
     /** set category converter */
     result.calculetConverters = data;
-
     // dispatch(onSetCalculetConverters(data));
   });
   await setLoading(true);
 
+  return result;
+}
+
+async function getCalculetBookmark(idToken) {
+  let result = [];
+  // is login?
+  if (!!idToken) {
+    const response = await handleGetCalculetBookmark(idToken);
+    result = response;
+  }
   return result;
 }
 
@@ -284,7 +298,6 @@ function Header({ isLoggedIn }) {
    * 페이지 렌더시 한 번만
    */
   const [loading, setLoading] = useState(false);
-
   const onGetAllCalculetList = useCallback(() => {
     getAllCalculetList(setLoading).then((result) => {
       dispatch(onSetCalculetList(result.calculetList));
@@ -311,14 +324,19 @@ function Header({ isLoggedIn }) {
 
   // md 에서의 bookmark bar state
   const [bookmarkState, setBookmarkState] = useState(false);
-  const {
-    bookmark,
-    isLoading: bookmarkIsLoading,
-    getCalculetBookmark,
-  } = useGetCalculetBookmark();
+  const { bookmark, isLoading: bookmarkIsLoading } = useGetCalculetBookmark();
+  const onGetCalculetBookmark = useCallback(() => {
+    getCalculetBookmark(idToken).then((result) => {
+      dispatch(onSetCalculetBookmarkLoading(true));
+      dispatch(onSetCalculetBookmark(result));
+      dispatch(onSetCalculetBookmarkLoading(false));
+    });
+  }, [dispatch, idToken]);
+
   useEffect(() => {
-    getCalculetBookmark(idToken);
-  }, [idToken]);
+    onGetCalculetBookmark();
+  }, [onGetCalculetBookmark]);
+
   const handleBookmarkState = (open) => (event) => {
     if (
       event &&

@@ -52,7 +52,9 @@ function BookmarkScreen({ isOpen, setIsOpen, isLoggedIn, isLoading }) {
           {isLoading && <BookmarkSkeleton />}
           {
             // no list
-            !!bookmark && bookmark.length === 0 && <BookmarkAddNotice />
+            !!bookmark && bookmark.length === 0 && !isLoading && (
+              <BookmarkAddNotice />
+            )
           }
           {!isLoading &&
             !!bookmark &&

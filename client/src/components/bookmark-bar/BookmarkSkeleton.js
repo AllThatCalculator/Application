@@ -1,4 +1,4 @@
-import { Grid, ListItem, Skeleton } from "@mui/material";
+import { ListItem, Skeleton } from "@mui/material";
 
 // bookmark bar skeleton
 function BookmarkSkeleton() {

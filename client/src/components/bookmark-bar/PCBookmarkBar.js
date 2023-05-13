@@ -63,7 +63,9 @@ function PCBookmarkBar({
               {isLoading && <BookmarkSkeleton />}
               {
                 // no list
-                !!contents && contents.length === 0 && <BookmarkAddNotice />
+                !!contents && contents.length === 0 && !isLoading && (
+                  <BookmarkAddNotice />
+                )
               }
               {!!contents &&
                 !isLoading &&
