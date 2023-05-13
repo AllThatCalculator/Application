@@ -17,6 +17,14 @@ function useSx() {
   /** is window xl down? */
   const isWindowXlDown = useMediaQuery((theme) => theme.breakpoints.down("xl"));
 
+  // 헤더 아이콘, 버튼 크기
+  const headerIconSizeSx = {
+    fontSize: { xs: "2.4rem", sm: "2.8rem", md: "2.8rem" },
+  };
+  const headerButtonSizeSx = {
+    fontSize: { xs: "1.1rem", sm: "1.3rem", md: "1.4rem" },
+  };
+
   // 계산기 블럭
   // 정보 컴포넌트 sx 정의
   const boxSx = { gap: "0.6rem", alignItems: "center" };
@@ -86,6 +94,8 @@ function useSx() {
     isWindowSmDown,
     isWindowLgDown,
     isWindowXlDown,
+    headerButtonSizeSx,
+    headerIconSizeSx,
     boxSx,
     atcLinearWhite,
     transitionDuration,

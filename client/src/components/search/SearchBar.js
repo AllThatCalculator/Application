@@ -1,4 +1,4 @@
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import { useState } from "react";
 import useSx from "../../hooks/useSx";
 import SearchIcon from "@mui/icons-material/Search";
@@ -11,7 +11,7 @@ import SearchPopup from "./SearchPopup";
  * is Window Md up   ? 검색바
  */
 function SearchBar() {
-  const { isWindowMdDown } = useSx();
+  const { isWindowMdDown, headerIconSizeSx } = useSx();
 
   // sm down : 검색창 (Full-Screen)
   const [isSearch, setIsSearch] = useState(false);
@@ -19,15 +19,18 @@ function SearchBar() {
     setIsSearch(true);
   }
 
-  const sizeSx = { fontSize: { xs: "2rem", sm: "2.4rem", md: "2.8rem" } };
-
   return (
     <>
       {isWindowMdDown ? (
         <>
-          <IconButton sx={{ ...sizeSx }} onClick={handleIsSearchOpen}>
-            <SearchIcon sx={{ color: "white", ...sizeSx }} fontSize="inherit" />
-          </IconButton>
+          <Tooltip title="검색">
+            <IconButton
+              sx={{ ...headerIconSizeSx }}
+              onClick={handleIsSearchOpen}
+            >
+              <SearchIcon sx={{ color: "white" }} fontSize="inherit" />
+            </IconButton>
+          </Tooltip>
           <SearchScreen isSearch={isSearch} setIsSearch={setIsSearch} />
         </>
       ) : (

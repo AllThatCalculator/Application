@@ -10,6 +10,7 @@ import {
   Box,
   IconButton,
   Toolbar,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -32,6 +33,11 @@ import { FlexBox } from "../components/global-components/FlexBox";
 import SearchBar from "../components/search/SearchBar";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import useSx from "../hooks/useSx";
+import PCBookmarkBar from "../components/bookmark-bar/PCBookmarkBar";
+import MobileBookmarkBar from "../components/bookmark-bar/MobileBookmarkBar";
+import useGetCalculetBookmark from "../hooks/useGetCalculetBookmark";
+import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 
 /**
  * 헤더에 있는 컴포넌트들
@@ -39,8 +45,15 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
  * @param {function} onIsOpen 버튼 이벤트 (카테고리바 버튼 이벤트)
  * @param {function} onLogout 로그아웃 이벤트 (로그아웃 버튼 이벤트)
  */
-function Contents({ isLoggedIn, onIsOpen, onLogout }) {
+function Contents({
+  isLoggedIn,
+  onIsOpen,
+  onLogout,
+  bookmarkIsLoading,
+  handleBookmarkState,
+}) {
   const { loginPage, signUpPage, profilePage, settingPage } = usePage();
+  const { isWindowMdDown, headerIconSizeSx, headerButtonSizeSx } = useSx();
 
   const { userInfo } = useSelector((state) => ({
     userInfo: state.userInfo,
@@ -79,11 +92,7 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
     </Box>
   );
 
-  const sizeSx = { fontSize: { xs: "2rem", sm: "2.4rem", md: "2.8rem" } };
-  const buttonSizeSx = {
-    fontSize: { xs: "1.1rem", sm: "1.3rem", md: "1.4rem" },
-  };
-  const avatarSizeSx = { xs: "2.8rem", sm: "3.6rem", md: "4rem" };
+  const avatarSizeSx = { xs: "2.4rem", sm: "3.6rem", md: "4rem" };
 
   const HeaderPopupLists = [
     // 내 계정
@@ -117,7 +126,7 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
       >
         <FlexBox sx={{ alignItems: "center" }}>
           <IconButton
-            sx={{ ...sizeSx }}
+            sx={{ ...headerIconSizeSx }}
             edge="start"
             color="inherit"
             onClick={onIsOpen}
@@ -129,7 +138,7 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
         <FlexBox
           sx={{
             alignItems: "center",
-            gap: { xs: "0.4rem", sm: "1.8rem", md: "2.4rem" },
+            gap: { xs: "0.4rem", sm: "0.8rem", md: "2.4rem" },
             width: "100%",
             justifyContent: "flex-end",
           }}
@@ -143,37 +152,65 @@ function Contents({ isLoggedIn, onIsOpen, onLogout }) {
               <>
                 {/* 검색창 */}
                 <SearchBar />
+                {/* SM 북마크 */}
+                {isWindowMdDown && (
+                  <MobileBookmarkBar
+                    isLoggedIn={isLoggedIn}
+                    isLoading={bookmarkIsLoading}
+                  />
+                )}
+                {
+                  // (임시) MD 북마크
+                  !isWindowMdDown && (
+                    <Tooltip title="북마크">
+                      <IconButton
+                        sx={{ ...headerIconSizeSx }}
+                        onClick={handleBookmarkState((pre) => !pre)}
+                      >
+                        <BookmarkBorderIcon
+                          sx={{ color: "white" }}
+                          fontSize="inherit"
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  )
+                }
                 {
                   /* 로그인 상태 ? 프로필 : 로그인 버튼 */
                   isLoggedIn ? (
                     HeaderPopupLists.map(
                       (popupData, index) =>
                         popupData.isMd && (
-                          <PopupList
-                            key={index}
-                            popupIcon={popupData.popupIcon}
-                            popupTitle={popupData.popupTitle}
-                            popupListData={popupData.popupListData}
-                            popupContent={popupData.popupContent}
-                          />
+                          <FlexBox key={index} sx={{ ml: "0.8rem" }}>
+                            <PopupList
+                              popupIcon={popupData.popupIcon}
+                              popupTitle={popupData.popupTitle}
+                              popupListData={popupData.popupListData}
+                              popupContent={popupData.popupContent}
+                            />
+                          </FlexBox>
                         )
                     )
                   ) : (
                     // 로그인 | 회원가입 버튼
                     <>
-                      <InvertTextButton
-                        sx={{ ...buttonSizeSx, mr: "0.4rem" }}
-                        onClick={loginPage}
-                      >
-                        로그인
-                      </InvertTextButton>
-                      <InvertButton
-                        sx={{ ...buttonSizeSx }}
-                        variant="contained"
-                        onClick={signUpPage}
-                      >
-                        회원가입
-                      </InvertButton>
+                      <Tooltip title="로그인">
+                        <InvertTextButton
+                          sx={{ ...headerButtonSizeSx, mr: "0.4rem" }}
+                          onClick={loginPage}
+                        >
+                          로그인
+                        </InvertTextButton>
+                      </Tooltip>
+                      <Tooltip title="회원가입">
+                        <InvertButton
+                          sx={{ ...headerButtonSizeSx }}
+                          variant="contained"
+                          onClick={signUpPage}
+                        >
+                          회원가입
+                        </InvertButton>
+                      </Tooltip>
                     </>
                   )
                 }
@@ -213,8 +250,13 @@ async function getAllCalculetList(setLoading) {
  *
  */
 function Header({ isLoggedIn }) {
+  const { isWindowMdDown } = useSx();
+
   /** Redux State */
   const dispatch = useDispatch();
+  const { idToken } = useSelector((state) => ({
+    idToken: state.userInfo.idToken,
+  }));
   // calculet list
   const { calculetList } = useGetCategoryList();
 
@@ -267,6 +309,27 @@ function Header({ isLoggedIn }) {
     });
   }
 
+  // md 에서의 bookmark bar state
+  const [bookmarkState, setBookmarkState] = useState(false);
+  const {
+    bookmark,
+    isLoading: bookmarkIsLoading,
+    getCalculetBookmark,
+  } = useGetCalculetBookmark();
+  useEffect(() => {
+    getCalculetBookmark(idToken);
+  }, [idToken]);
+  const handleBookmarkState = (open) => (event) => {
+    if (
+      event &&
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setBookmarkState(open);
+  };
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -276,6 +339,8 @@ function Header({ isLoggedIn }) {
               isLoggedIn={isLoggedIn}
               onIsOpen={setIsActive(true)}
               onLogout={onHandlerLogout}
+              bookmarkIsLoading={bookmarkIsLoading}
+              handleBookmarkState={handleBookmarkState}
             />
           </Toolbar>
         </AppBar>
@@ -285,6 +350,16 @@ function Header({ isLoggedIn }) {
           contents={calculetList}
           isActive={categoryState}
           setIsActive={setIsActive}
+        />
+      )}
+      {/* MD 북마크 */}
+      {!isWindowMdDown && (
+        <PCBookmarkBar
+          isLoggedIn={isLoggedIn}
+          isLoading={bookmarkIsLoading}
+          contents={bookmark}
+          isActive={bookmarkState}
+          setIsActive={handleBookmarkState}
         />
       )}
     </>

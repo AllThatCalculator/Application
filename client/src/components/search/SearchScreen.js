@@ -1,20 +1,9 @@
-import {
-  AppBar,
-  Dialog,
-  IconButton,
-  List,
-  Slide,
-  Toolbar,
-} from "@mui/material";
-import { forwardRef } from "react";
+import { AppBar, Dialog, IconButton, List, Toolbar } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import BoxSearchInput from "../atom-components/BoxSearchInput";
 import { useSelector } from "react-redux";
 import StyledResultListItem from "./StyledResultListItem";
-
-const Transition = forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+import { TransitionSlide } from "../atom-components/Transitions";
 
 function SearchScreen({ isSearch, setIsSearch }) {
   const { resultPreviewList } = useSelector((state) => ({
@@ -30,7 +19,7 @@ function SearchScreen({ isSearch, setIsSearch }) {
       fullScreen
       open={isSearch}
       onClose={handleIsSearchClose}
-      TransitionComponent={Transition}
+      TransitionComponent={TransitionSlide}
       keepMounted
     >
       <AppBar sx={{ position: "relative", width: "100%" }}>
