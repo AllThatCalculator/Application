@@ -27,7 +27,7 @@ function BookmarkLoginNotice({ onClickClose }) {
         <Button variant="contained" onClick={handleClickButton}>
           로그인
         </Button>
-        <Typography>로그인하셔서 즐겨찾는 계산기를 북마크하세요.</Typography>
+        <Typography>로그인하고 즐겨찾는 계산기를 북마크하세요.</Typography>
       </Stack>
     );
   }
