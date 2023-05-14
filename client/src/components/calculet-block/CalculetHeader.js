@@ -274,8 +274,8 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
     },
   ];
 
-  function handleUrlShare() {
-    const currUrl = window.location.href; // 현재 url
+  function handleUrlShare(calculetId) {
+    const currUrl = `${window.location.origin}/${calculetId}`; // 현재 url
     navigator.clipboard.writeText(currUrl).then(() => {
       openSnackbar(
         "basic",
@@ -294,7 +294,7 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
       {
         name: "링크 공유",
         icon: <ShareIcon />,
-        onClickFuntion: handleUrlShare,
+        onClickFuntion: () => handleUrlShare(calculetObj.id),
       },
     ],
   ];
