@@ -41,6 +41,15 @@ let theme = createTheme({
       100: "#FB8C00",
     },
   },
+  /**
+   * shadow default : 0 - 10
+   * custom : 11 - 24
+   */
+  shadows: [
+    ...createTheme({}).shadows.map((shadow, i) =>
+      i === 1 ? "0px 1px 8px 1px rgba(0, 0, 0, 0.08)" : shadow
+    ),
+  ],
   typography: {
     fontFamily: "S-CoreDream-4Regular",
     htmlFontSize: 10,

@@ -8,11 +8,16 @@ import { useRef } from "react";
  */
 function useMoveScroll() {
   const element = useRef(null);
-  function onMoveToElement() {
-    const location = element.current.offsetTop;
-    window.scroll({ top: location - 80, behavior: "instant" });
-  }
-  return { element, onMoveToElement };
+  const location = element.current?.offsetTop;
+  const onMoveToElement = () => {
+    element.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  // const element = useRef(null);
+  // function onMoveToElement() {
+  //   const location = element.current.offsetTop;
+  //   window.scroll({ top: location - 80, behavior: "instant" });
+  // }
+  return { element, location, onMoveToElement };
 }
 
 export default useMoveScroll;
