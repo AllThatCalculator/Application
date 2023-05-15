@@ -80,8 +80,6 @@ function RegisterTest() {
     }
   }, [isRender, transformerHandler]);
 
-  console.log(inputs);
-
   return (
     <PageScreenBox gap="2.4rem">
       {components.map((component, index) => (
