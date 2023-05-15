@@ -1,6 +1,5 @@
 const { QueryTypes } = require("sequelize");
 const { sequelize } = require("../../models");
-const { models } = require("../../models");
 
 /**
  * 마이 계산기 리스트 얻어오는 함수
