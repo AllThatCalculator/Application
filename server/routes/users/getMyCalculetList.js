@@ -6,63 +6,38 @@ const { models } = require("../../models");
  * 마이 계산기 리스트 얻어오는 함수
  */
 exports.getMyCalculetList = async (req, res) => {
-  const attributeOption = [
-    "id",
-    "title",
-    "description",
-    "categoryMainId",
-    "categorySubId",
-    "createdAt",
-    "blocked",
-    "viewCnt",
-    "likeCnt",
-    "bookmarkCnt",
-    "isEdit",
-    "calculetId",
-  ];
-
-  // create association temporarily because of join
-  models.calculetInfoTemp.belongsTo(models.calculetInfo, {
-    foreignKey: "calculetId",
-  });
-  models.calculetInfo.hasMany(models.calculetInfoTemp, {
-    as: "calculetTemp",
-    foreignKey: "calculetId",
-  });
-
-  // get calculet info table
-  const myCalculetList = await models.calculetInfo.findAll({
-    attributes: attributeOption,
-    where: {
-      contributorId: res.locals.userId,
-    },
-    include: [
-      // calculet temp
-      {
-        model: models.calculetInfoTemp,
-        attributes: attributeOption,
-        as: "calculetTemp",
-      },
-    ],
-    order: [["createdAt"]],
-  });
-
-  // get calculet info temp table
+  // get calculet info & calculet info temp full outer join
   const sql = `
-    SELECT Temp.id, Temp.title, Temp.description, Temp.category_main_id as categoryMainId, Temp.category_sub_id as categorySubId, Temp.created_at as createdAt, 
-    2 as blocked, 0 as viewCnt, 0 as likeCnt, 0 as bookmarkCnt, false as isEdit, Temp.calculet_id as calculetId
-    FROM calculet_info Info
-    RIGHT JOIN calculet_info_temp Temp ON Info.id = Temp.calculet_id
-    WHERE Info.id is NULL and Temp.contributor_id = '${res.locals.userId}'
+  SELECT Temp.id, Temp.title, Temp.description, Temp.category_main_id as categoryMainId, Temp.category_sub_id as categorySubId, Temp.created_at as createdAt, 
+  0 as viewCnt, 0 as likeCnt, 0 as bookmarkCnt, 2 as blocked, False as isEdit, Temp.calculet_id as calculetId
+  FROM calculet_info Info
+  RIGHT JOIN calculet_info_temp Temp ON Info.id = Temp.calculet_id
+  WHERE Info.id is NULL and Temp.contributor_id = '${res.locals.userId}'
+  ORDER BY createdAt
   `;
-  const myCalculetTempList = await sequelize.query(sql, {
+  const myCalculetList = await sequelize.query(sql, {
     type: QueryTypes.SELECT,
     nest: true,
   });
-  myCalculetList.push(...myCalculetTempList);
-  myCalculetList.sort(function (a, b) {
-    // 등록 일자순
-    return a.createdAt - b.createdAt;
-  });
   res.status(200).send(myCalculetList);
 };
+
+/**
+ * Temp.id as tempId, Temp.title as tempTitle, Temp.description as tempDesc, Temp.category_main_id as tempCategoryMainId, Temp.category_sub_id as tempCategorySubId, Temp.created_at as tempCreatedAt, 
+    2 as tempBlocked, 0 as tempViewCnt, 0 as tempLikeCnt, 0 as tempBookmarkCnt, False as tempIsEdit, Temp.calculet_id as tempCalculetId
+    
+ */
+/**
+ * SELECT Info.id, Info.title, Info.description, Info.category_main_id as categoryMainId, Info.category_sub_id as categorySubId, Info.created_at as createdAt,
+    Info.view_cnt as viewCnt, Info.like_cnt as likeCnt, Info.bookmark_cnt as bookmarkCnt, Info.blocked, IF(Temp.id != null, True, False) as isEdit, Info.id as calculetId,
+    FROM calculet_info Info
+    LEFT JOIN calculet_info_temp Temp ON Info.id = Temp.calculet_id
+    WHERE Info.contributor_id = '${res.locals.userId}'
+ *     UNION
+    SELECT Temp.id, Temp.title, Temp.description, Temp.category_main_id as categoryMainId, Temp.category_sub_id as categorySubId, Temp.created_at as createdAt, 
+    0 as viewCnt, 0 as likeCnt, 0 as bookmarkCnt, 2 as blocked, False as isEdit, Temp.calculet_id as calculetId
+    FROM calculet_info Info
+    RIGHT JOIN calculet_info_temp Temp ON Info.id = Temp.calculet_id
+    WHERE Info.id is NULL and Temp.contributor_id = '${res.locals.userId}'
+    ORDER BY createdAt
+ */

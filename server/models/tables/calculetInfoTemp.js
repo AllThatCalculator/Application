@@ -69,36 +69,6 @@ module.exports = function (sequelize, DataTypes) {
         unique: true,
         defaultValue: Sequelize.Sequelize.fn("uuid"),
       },
-      blocked: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return 2;
-        },
-      },
-      viewCnt: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return 0;
-        },
-      },
-      likeCnt: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return 0;
-        },
-      },
-      bookmarkCnt: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return 0;
-        },
-      },
-      isEdit: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return false;
-        },
-      },
     },
     {
       sequelize,
