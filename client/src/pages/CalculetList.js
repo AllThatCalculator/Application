@@ -141,10 +141,7 @@ function CalculetList() {
               zIndex: (theme) => theme.zIndex.appBar - 1,
             }}
           >
-            <PageScreenBox
-              sx={{ padding: "1.2rem 0.8rem 0.3rem" }}
-              gap="0.4rem"
-            >
+            <PageScreenBox sx={{ padding: "1.2rem 0.8rem 0" }} gap="0.4rem">
               <Title content="계산기 전체 목록" />
               <FloatingTabs
                 value={mainCategoryTab}
@@ -161,6 +158,7 @@ function CalculetList() {
                       value={index}
                       onClick={() => onClickMoveToElement(index)}
                       isActive={mainCategoryTabActive === index}
+                      disableRipple
                     />
                   );
                 })}
