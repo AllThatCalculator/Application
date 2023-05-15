@@ -18,17 +18,17 @@ const FloatingTab = styled(({ isActive, ...props }) => <Tab {...props} />)(
     margin: "0.4rem 0.8rem",
     width: "11.2rem",
 
-    color: isActive ? "black" : grey[600],
+    color: isActive ? "white" : grey[600],
     "&.Mui-selected": {
-      color: isActive ? "black" : grey[600],
+      color: isActive ? "white" : grey[600],
     },
 
     fontWeight: isActive
       ? theme.typography.fontWeightBold
       : theme.typography.fontWeightRegular,
 
-    boxShadow: isActive ? theme.shadows[1] : "",
-    backgroundColor: isActive ? theme.palette.atcBlue[100] : "",
+    boxShadow: isActive ? theme.shadows[2] : "",
+    backgroundColor: isActive ? theme.palette.primary.light : "",
     borderRadius: "6px",
   })
 );

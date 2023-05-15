@@ -141,7 +141,10 @@ function CalculetList() {
               zIndex: (theme) => theme.zIndex.appBar - 1,
             }}
           >
-            <PageScreenBox sx={{ padding: "1.2rem 0.8rem 0rem" }} gap="0.4rem">
+            <PageScreenBox
+              sx={{ padding: "1.2rem 0.8rem 0.3rem" }}
+              gap="0.4rem"
+            >
               <Title content="계산기 전체 목록" />
               <FloatingTabs
                 value={mainCategoryTab}
@@ -173,8 +176,8 @@ function CalculetList() {
                   return (
                     <FlexColumnBox
                       key={"id-main-category-" + mainId}
-                      sx={{ pt: "6rem" }}
-                      gap="6rem"
+                      sx={{ pt: "4rem" }}
+                      gap="4rem"
                       // (2) 할당
                       ref={(element) =>
                         (mainCategoryRef.current[index] = element)
