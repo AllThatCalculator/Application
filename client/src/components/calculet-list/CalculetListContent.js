@@ -12,7 +12,7 @@ import BoxNoItem from "../atom-components/BoxNoItem";
  * @returns
  */
 function CalculetListContent({ calculetContent }) {
-  const { calculetIdPage } = usePage();
+  const { calculetIdPage, calculetSubListPage } = usePage();
   const { subTitleSx } = useSx();
   const { mainCategoryName, mainId, subContent } = calculetContent;
 
@@ -72,9 +72,12 @@ function CalculetListContent({ calculetContent }) {
 
   return (
     <>
-      <FlexColumnBox gap="1.6rem">
+      <FlexColumnBox gap="3.2rem">
         {/* 대분류 버튼 */}
-        <ButtonBase sx={{ maxWidth: "fit-content", gap: "1.2rem" }}>
+        <ButtonBase
+          onClick={() => calculetSubListPage(mainId)}
+          sx={{ maxWidth: "fit-content", gap: "1.2rem" }}
+        >
           <Typography sx={{ ...subTitleSx }}>{mainCategoryName}</Typography>
           <KeyboardArrowRightIcon />
         </ButtonBase>

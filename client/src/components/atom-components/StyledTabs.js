@@ -13,7 +13,7 @@ const FloatingTabs = styled((props) => <Tabs {...props} />)({
 const FloatingTab = styled(({ isActive, ...props }) => <Tab {...props} />)(
   ({ theme, isActive }) => ({
     margin: "0rem 0.8rem",
-    width: "10.2rem",
+    // width: "10.2rem",
 
     color: isActive ? theme.palette.primary.main : grey[600],
     "&.Mui-selected": {
@@ -24,7 +24,7 @@ const FloatingTab = styled(({ isActive, ...props }) => <Tab {...props} />)(
       ? theme.typography.fontWeightBold
       : theme.typography.fontWeightRegular,
 
-    borderBottom: isActive ? "2px solid" : "",
+    borderBottom: isActive ? "3px solid" : "",
     borderColor: theme.palette.primary.main,
   })
 );

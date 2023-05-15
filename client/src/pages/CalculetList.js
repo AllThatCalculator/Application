@@ -12,11 +12,16 @@ import {
   FloatingTab,
   FloatingTabs,
 } from "../components/atom-components/StyledTabs";
+import useGetUrlParam from "../hooks/useGetUrlParam";
+import CalculetSubList from "./CalculetSubList";
 
 /**
  * 계산기 전체 목록 페이지
  */
 function CalculetList() {
+  // 소분류로 가도록
+  const { categoryMain } = useGetUrlParam();
+
   // (1) 선언
   // (2) 할당 -> 컴포넌트 렌더될 때 할당
   // (3) 사용 -> mainCategoryRef.current[index]? 있는지 확인 필수
@@ -113,7 +118,7 @@ function CalculetList() {
             // key 있는지 확인하고 리스트 push
             calculetList.hasOwnProperty(mainId) &&
             calculetList[mainId].hasOwnProperty(subId)
-              ? calculetList[mainId][subId]
+              ? calculetList[mainId][subId].slice(0, 6) // 6개
               : [],
         });
       }
@@ -129,66 +134,69 @@ function CalculetList() {
 
   return (
     <>
-      {calculetListContent.length !== 0 && (
-        <>
-          <AppBar
-            elevation={1}
-            position="fixed"
-            sx={{
-              backgroundColor: "white",
-              opacity: "90%",
-              paddingTop: "6.4rem",
-              zIndex: (theme) => theme.zIndex.appBar - 1,
-            }}
-          >
-            <PageScreenBox sx={{ padding: "1.2rem 0.8rem 0" }} gap="0.4rem">
-              <Title content="계산기 전체 목록" />
-              <FloatingTabs
-                value={mainCategoryTab}
-                onChange={onChangeMainCategoryTabs}
-                variant="scrollable"
-              >
-                {calculetListContent.map((content, index) => {
-                  const { mainCategoryName, mainId } = content;
-                  return (
-                    <FloatingTab
-                      id={ID_MAIN_CATEGORY_TAB}
-                      key={"id-main-category-tab" + mainCategoryName}
-                      label={mainCategoryName}
-                      value={index}
-                      onClick={() => onClickMoveToElement(index)}
-                      isActive={mainCategoryTabActive === index}
-                      disableRipple
-                    />
-                  );
-                })}
-              </FloatingTabs>
-            </PageScreenBox>
-          </AppBar>
-          <Grid container sx={{ backgroundColor: "white" }}>
-            <PageScreenBox sx={{ p: "14rem 0.8rem 100rem" }}>
-              <FlexColumnBox>
-                {calculetListContent.map((content, index) => {
-                  const { mainId } = content;
+      {categoryMain === undefined ? (
+        calculetListContent.length !== 0 && (
+          <>
+            <AppBar
+              elevation={1}
+              position="fixed"
+              sx={{
+                backgroundColor: "white",
+                opacity: "90%",
+                paddingTop: "6.4rem",
+                zIndex: (theme) => theme.zIndex.appBar - 1,
+              }}
+            >
+              <PageScreenBox sx={{ padding: "1.2rem 0.8rem 0" }} gap="0.4rem">
+                <Title content="계산기 전체 목록" />
+                <FloatingTabs
+                  value={mainCategoryTab}
+                  onChange={onChangeMainCategoryTabs}
+                  variant="scrollable"
+                >
+                  {calculetListContent.map((content, index) => {
+                    const { mainCategoryName, mainId } = content;
+                    return (
+                      <FloatingTab
+                        id={ID_MAIN_CATEGORY_TAB}
+                        key={"id-main-category-tab" + mainCategoryName}
+                        label={mainCategoryName}
+                        value={index}
+                        onClick={() => onClickMoveToElement(index)}
+                        isActive={mainCategoryTabActive === index}
+                      />
+                    );
+                  })}
+                </FloatingTabs>
+              </PageScreenBox>
+            </AppBar>
+            <Grid container sx={{ backgroundColor: "white" }}>
+              <PageScreenBox sx={{ p: "16rem 0.8rem 100rem" }}>
+                <FlexColumnBox>
+                  {calculetListContent.map((content, index) => {
+                    const { mainId } = content;
 
-                  return (
-                    <FlexColumnBox
-                      key={"id-main-category-" + mainId}
-                      sx={{ pt: "4rem" }}
-                      gap="4rem"
-                      // (2) 할당
-                      ref={(element) =>
-                        (mainCategoryRef.current[index] = element)
-                      }
-                    >
-                      <CalculetListContent calculetContent={content} />
-                    </FlexColumnBox>
-                  );
-                })}
-              </FlexColumnBox>
-            </PageScreenBox>
-          </Grid>
-        </>
+                    return (
+                      <FlexColumnBox
+                        key={"id-main-category-" + mainId}
+                        sx={{ pt: "4rem" }}
+                        gap="4rem"
+                        // (2) 할당
+                        ref={(element) =>
+                          (mainCategoryRef.current[index] = element)
+                        }
+                      >
+                        <CalculetListContent calculetContent={content} />
+                      </FlexColumnBox>
+                    );
+                  })}
+                </FlexColumnBox>
+              </PageScreenBox>
+            </Grid>
+          </>
+        )
+      ) : (
+        <CalculetSubList />
       )}
     </>
   );

@@ -30,6 +30,10 @@ function usePage() {
   function calculetListPage() {
     navigate(URL.CALCULET_LIST);
   }
+  // 계산기 목록
+  function calculetSubListPage(mainId) {
+    navigate(URL.CALCULET_LIST + "/" + mainId);
+  }
 
   // 로그인
   function loginPage() {
@@ -166,6 +170,7 @@ function usePage() {
     calculetIdPage,
     registerPage,
     calculetListPage,
+    calculetSubListPage,
     loginPage,
     signUpPage,
     backPage,
