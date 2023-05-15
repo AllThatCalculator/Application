@@ -102,6 +102,7 @@ router.get(
     query("target").optional().toLowerCase().isIn(["title", "desc", "all"]),
     query("size").isInt({ gt: 0 }).toInt(),
     query("page").isInt({ gt: 0 }).toInt(),
+    inputValidator,
   ],
   errorHandler.dbWrapper(search)
 );

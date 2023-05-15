@@ -1,16 +1,7 @@
 const { Op } = require("sequelize");
 const { models } = require("../../models");
-const { CustomError } = require("../../utils/CustomError");
-const { validationResult } = require("express-validator");
 
 async function postRecords(req, res) {
-  const error = validationResult(req);
-  // request invalid
-  if (!error.isEmpty()) {
-    console.log(error.mapped());
-    throw new CustomError(400, 1);
-  }
-
   const calculetId = req.body.calculetId;
   const userId = res.locals.userId;
 
@@ -64,13 +55,6 @@ async function getRecords(req, res) {
 }
 
 async function deleteRecords(req, res) {
-  const error = validationResult(req);
-  // request invalid
-  if (!error.isEmpty()) {
-    console.log(error.mapped());
-    throw new CustomError(400, 1);
-  }
-
   // delete records
   await models.calculetRecord.destroy({
     where: {

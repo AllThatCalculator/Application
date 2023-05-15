@@ -63,6 +63,12 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
         defaultValue: 0,
       },
+      calculetId: {
+        type: DataTypes.CHAR(36),
+        allowNull: false,
+        unique: true,
+        defaultValue: Sequelize.Sequelize.fn("uuid"),
+      },
       blocked: {
         type: DataTypes.VIRTUAL,
         get() {
@@ -121,6 +127,12 @@ module.exports = function (sequelize, DataTypes) {
           name: "calculet_info_temp_ibfk_2_idx",
           using: "BTREE",
           fields: [{ name: "category_main_id" }, { name: "category_sub_id" }],
+        },
+        {
+          name: "calculet_id_UNIQUE",
+          unique: true,
+          using: "BTREE",
+          fields: [{ name: "calculet_id" }],
         },
       ],
     }

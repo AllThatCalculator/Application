@@ -1,16 +1,8 @@
 const { models } = require("../../models");
 const { Op } = require("sequelize");
 const { CustomError } = require("../../utils/CustomError");
-const { validationResult } = require("express-validator");
 
 exports.deleteMyCalculet = async (req, res) => {
-  const error = validationResult(req);
-  // request invalid
-  if (!error.isEmpty()) {
-    console.log(error.mapped());
-    throw new CustomError(400, 1);
-  }
-
   const blocked = req.get("blocked");
   const calculetId = req.get("calculetId");
   const option = {
