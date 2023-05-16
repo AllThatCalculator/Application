@@ -9,6 +9,7 @@ import useTabs from "../hooks/useTabs";
 import {
   ID_MAIN_CATEGORY_TAB,
   ID_MAIN_CONVERTER,
+  NAME_MAIN_CONVERTER,
 } from "../constants/calculetList";
 import CalculetListContent from "../components/calculet-list/CalculetListContent";
 import {
@@ -19,8 +20,6 @@ import useGetUrlParam from "../hooks/useGetUrlParam";
 import CalculetSubList from "./CalculetSubList";
 import { MoveTopFab } from "../components/atom-components/StyledFabs";
 import useScrollPosition from "../hooks/useScrollPosition";
-import useGetCategoryList from "../hooks/useGetCategoryList";
-import useGetCategoryName from "../hooks/useGetCategoryName";
 import BoxNoItem from "../components/atom-components/BoxNoItem";
 import TabSkeleton from "../components/calculet-list/TabSkeleton";
 import SearchSkeletonPage from "../components/search/SearchSkeletonPage";
@@ -31,9 +30,6 @@ import SearchSkeletonPage from "../components/search/SearchSkeletonPage";
 function CalculetList() {
   // 소분류로 가도록
   const { categoryMain } = useGetUrlParam();
-
-  // 카테고리 이름
-  const { getCategoryMainName, getCategorySubName } = useGetCategoryName();
 
   // (1) 선언
   // (2) 할당 -> 컴포넌트 렌더될 때 할당
@@ -68,7 +64,7 @@ function CalculetList() {
     return () => {
       window.removeEventListener("scroll", updateScroll);
     };
-  }, [scrollPosition]);
+  }, [updateScroll, scrollPosition]);
 
   function handleActiveMainCategoryTab() {
     const mainCategoryCurrentRef = mainCategoryRef.current;
@@ -86,9 +82,7 @@ function CalculetList() {
       }
     }
   }
-  useEffect(() => {
-    handleActiveMainCategoryTab();
-  }, [scrollPosition]);
+  useEffect(handleActiveMainCategoryTab, [handleActiveMainCategoryTab]);
 
   const { calculetCategory, calculetList } = useSelector((state) => ({
     calculetCategory: state.calculetCategory.category,
@@ -165,7 +159,7 @@ function CalculetList() {
 
     result = [
       {
-        mainCategoryName: getCategoryMainName(ID_MAIN_CONVERTER),
+        mainCategoryName: NAME_MAIN_CONVERTER,
         mainId: ID_MAIN_CONVERTER,
         subContent: converterResult,
       },
@@ -204,7 +198,7 @@ function CalculetList() {
                 {!calculetListLoading &&
                   calculetListContent.length !== 0 &&
                   calculetListContent.map((content, index) => {
-                    const { mainCategoryName, mainId } = content;
+                    const { mainCategoryName } = content;
                     return (
                       <FloatingTab
                         id={ID_MAIN_CATEGORY_TAB}

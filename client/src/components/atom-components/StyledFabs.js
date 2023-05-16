@@ -1,6 +1,5 @@
 import { Fab, Zoom } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import useScrollPosition from "../../hooks/useScrollPosition";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 
 // floating
