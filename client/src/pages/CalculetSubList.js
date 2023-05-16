@@ -1,23 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { AppBar, Grid, Pagination, Tab, Tabs } from "@mui/material";
-import {
-  PageScreenBox,
-  PageWhiteScreenBox,
-} from "../components/global-components/PageScreenBox";
+import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import { FlexColumnBox } from "../components/global-components/FlexBox";
 import Title from "../components/global-components/Title";
 import { useSelector } from "react-redux";
 import useTabs from "../hooks/useTabs";
-import {
-  ID_MAIN_CATEGORY_TAB,
-  ID_SUB_CATEGORY_TAB,
-} from "../constants/calculetList";
-import CalculetListContent from "../components/calculet-list/CalculetListContent";
-import {
-  FloatingTab,
-  FloatingTabs,
-} from "../components/atom-components/StyledTabs";
+import { ID_SUB_CATEGORY_TAB } from "../constants/calculetList";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import usePage from "../hooks/usePage";
 import getSearchRequestBody from "../utils/getSearchRequestBody";
@@ -25,6 +14,8 @@ import getCalculetFind from "../user-actions/calculets/getCalculetFind";
 import TotalCount from "../components/atom-components/TotalCount";
 import SearchCalculetList from "../components/global-components/SearchCalculetList";
 import SearchSkeletonPage from "../components/search/SearchSkeletonPage";
+import { MoveTopFab } from "../components/atom-components/StyledFabs";
+import useScrollPosition from "../hooks/useScrollPosition";
 
 // get calculet list
 async function getCalculetResult(
@@ -124,6 +115,19 @@ function CalculetSubList() {
   }, [categoryMain, subCategoryTab, resultLimit, currentPage]);
   // console.log(calculetSubListContent);
 
+  const { scrollPosition, updateScroll, isMoveScroll, topScroll } =
+    useScrollPosition();
+  /**
+   * 스크롤 위치 감지
+   * 이벤트 등록 후, clean up 을 위해 return 에서 이벤트 제거
+   */
+  useEffect(() => {
+    window.addEventListener("scroll", updateScroll);
+    return () => {
+      window.removeEventListener("scroll", updateScroll);
+    };
+  }, [scrollPosition]);
+
   return (
     <>
       {categoryMain !== undefined && (
@@ -164,8 +168,8 @@ function CalculetSubList() {
               </Tabs>
             </PageScreenBox>
           </AppBar>
-          <PageWhiteScreenBox>
-            <PageScreenBox sx={{ p: "20rem 0.8rem 24rem" }}>
+          <Grid container sx={{ backgroundColor: "white" }}>
+            <PageScreenBox sx={{ p: "20rem 0.8rem 100rem" }}>
               <FlexColumnBox gap="2.4rem">
                 <TotalCount length={calculetSubCount} />
                 {!isLoading && (
@@ -189,9 +193,10 @@ function CalculetSubList() {
                 </Grid>
               </FlexColumnBox>
             </PageScreenBox>
-          </PageWhiteScreenBox>
+          </Grid>
         </>
       )}
+      <MoveTopFab isActive={isMoveScroll()} onClick={topScroll} />
     </>
   );
 }

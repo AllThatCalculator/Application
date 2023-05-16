@@ -14,6 +14,8 @@ import {
 } from "../components/atom-components/StyledTabs";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import CalculetSubList from "./CalculetSubList";
+import { MoveTopFab } from "../components/atom-components/StyledFabs";
+import useScrollPosition from "../hooks/useScrollPosition";
 
 /**
  * 계산기 전체 목록 페이지
@@ -43,12 +45,9 @@ function CalculetList() {
   /** 스크롤 위치에 따라 tab 색 바뀜 */
   const [mainCategoryTabActive, setMainCategoryTabActive] = useState(0);
 
-  // 스크롤 위치
-  const [scrollPosition, setScrollPosition] = useState(window.pageYOffset);
-  // 스크롤 위치 변화에 따라 'scrollPosition' 변화
-  function updateScroll() {
-    setScrollPosition(window.pageYOffset);
-  }
+  /** 스크롤 위치 hook */
+  const { scrollPosition, updateScroll, isMoveScroll, topScroll } =
+    useScrollPosition();
   /**
    * 스크롤 위치 감지
    * 이벤트 등록 후, clean up 을 위해 return 에서 이벤트 제거
@@ -198,6 +197,7 @@ function CalculetList() {
       ) : (
         <CalculetSubList />
       )}
+      <MoveTopFab isActive={isMoveScroll()} onClick={topScroll} />
     </>
   );
 }
