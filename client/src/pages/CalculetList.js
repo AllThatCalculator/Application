@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useState } from "react";
 import { AppBar, Grid } from "@mui/material";
 import { PageScreenBox } from "../components/global-components/PageScreenBox";
@@ -102,7 +102,7 @@ function CalculetList() {
    */
   const [calculetListContent, setCalculetListContent] = useState([]);
   const [calculetListLoading, setCalculetListLoading] = useState(true);
-  useEffect(() => {
+  const setCalculetContent = useCallback(() => {
     // 세팅
     setCalculetListContent([]);
     setCalculetListLoading(true);
@@ -168,6 +168,9 @@ function CalculetList() {
     setCalculetListContent(result);
     setCalculetListLoading(false);
   }, [calculetList, calculetCategory]);
+  useEffect(() => {
+    setCalculetContent();
+  }, [setCalculetContent]);
 
   return (
     <>
