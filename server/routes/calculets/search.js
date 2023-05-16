@@ -15,7 +15,7 @@ function setFilter(query) {
     };
   }
 
-  if (query.categorySubId) {
+  if (query.categorySubId || query.categorySubId === 0) {
     filter.categorySubId = {
       [Op.eq]: query.categorySubId,
     };
