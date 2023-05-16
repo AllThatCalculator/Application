@@ -2,7 +2,7 @@
 
 docker system prune -af
 # unzip frontend build file
-git pull
+git pull origin production
 sudo tar -xzvf ./client/build.tar.gz -C ./client/
 
 IS_BLUE_RUNNING=$(docker ps | grep api_blue)

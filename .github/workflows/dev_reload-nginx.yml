@@ -18,4 +18,4 @@ jobs:
           host: ${{ secrets.DEV_EC2_IP_ADDRESS }}
           username: ${{ secrets.DEV_EC2_USER }}
           key: ${{ secrets.DEV_EC2_PRIVATE_KEY }}
-          script: "cd /home/ubuntu/project/application; git pull; docker exec frontend nginx -s reload;"
+          script: "cd /home/ubuntu/project/application; git pull origin develop; docker exec frontend nginx -s reload;"
