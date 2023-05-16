@@ -76,6 +76,7 @@ function CalculetListContent({ calculetContent }) {
         {/* 대분류 버튼 : 단위 변환기는 소분류 페이지 없음 */}
         {mainId !== "0" && (
           <ButtonBase
+            disableRipple
             onClick={() => calculetSubListPage(mainId)}
             sx={{ maxWidth: "fit-content", gap: "1.2rem" }}
           >

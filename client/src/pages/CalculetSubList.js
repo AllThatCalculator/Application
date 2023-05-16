@@ -57,7 +57,7 @@ function CalculetSubList() {
   const { calculetListPage } = usePage();
   // 무슨 대분류인지
   const { categoryMain } = useGetUrlParam();
-  console.log(calculetCategory);
+
   // 로딩 상태
   const [isLoading, setIsLoading] = useState(true);
 
@@ -105,7 +105,7 @@ function CalculetSubList() {
     getCalculetResult(
       setIsLoading,
       categoryMain,
-      subCategoryTab,
+      categoryMain === "99999" ? "99999" : subCategoryTab,
       KEY_DEFAULT_LEN,
       currentPage
     ).then(({ calculetList, count }) => {
