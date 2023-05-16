@@ -6,7 +6,10 @@ import { FlexColumnBox } from "../components/global-components/FlexBox";
 import Title from "../components/global-components/Title";
 import { useSelector } from "react-redux";
 import useTabs from "../hooks/useTabs";
-import { ID_MAIN_CATEGORY_TAB } from "../constants/calculetList";
+import {
+  ID_MAIN_CATEGORY_TAB,
+  ID_MAIN_CONVERTER,
+} from "../constants/calculetList";
 import CalculetListContent from "../components/calculet-list/CalculetListContent";
 import {
   FloatingTab,
@@ -16,6 +19,11 @@ import useGetUrlParam from "../hooks/useGetUrlParam";
 import CalculetSubList from "./CalculetSubList";
 import { MoveTopFab } from "../components/atom-components/StyledFabs";
 import useScrollPosition from "../hooks/useScrollPosition";
+import useGetCategoryList from "../hooks/useGetCategoryList";
+import useGetCategoryName from "../hooks/useGetCategoryName";
+import BoxNoItem from "../components/atom-components/BoxNoItem";
+import TabSkeleton from "../components/calculet-list/TabSkeleton";
+import SearchSkeletonPage from "../components/search/SearchSkeletonPage";
 
 /**
  * 계산기 전체 목록 페이지
@@ -23,6 +31,9 @@ import useScrollPosition from "../hooks/useScrollPosition";
 function CalculetList() {
   // 소분류로 가도록
   const { categoryMain } = useGetUrlParam();
+
+  // 카테고리 이름
+  const { getCategoryMainName, getCategorySubName } = useGetCategoryName();
 
   // (1) 선언
   // (2) 할당 -> 컴포넌트 렌더될 때 할당
@@ -96,13 +107,22 @@ function CalculetList() {
    *                  }
    */
   const [calculetListContent, setCalculetListContent] = useState([]);
+  const [calculetListLoading, setCalculetListLoading] = useState(true);
   useEffect(() => {
     // 세팅
-    if (!(!!calculetList && !!calculetCategory)) return;
     setCalculetListContent([]);
+    setCalculetListLoading(true);
 
-    // 01. 대분류
+    if (
+      Object.keys(calculetList).length === 0 ||
+      Object.keys(calculetCategory).length === 0
+    )
+      return;
+
     let mainResult = [];
+    let converterResult = []; // 각 대분류 돌면서 단위변환기 추출해냄
+    let result = [];
+    // 01. 대분류
     for (let [mainId, mainContent] of Object.entries(calculetCategory)) {
       const { name: mainCategoryName, ...subContent } = mainContent;
 
@@ -120,6 +140,20 @@ function CalculetList() {
               ? calculetList[mainId][subId].slice(0, 6) // 6개
               : [],
         });
+
+        // 단위 변환기
+        if (subId === ID_MAIN_CONVERTER) {
+          converterResult.push({
+            subCategoryName: mainCategoryName,
+            subId: mainId,
+            subCalculetList:
+              // key 있는지 확인하고 리스트 push
+              calculetList.hasOwnProperty(subId) &&
+              calculetList[subId].hasOwnProperty(mainId)
+                ? calculetList[subId][mainId].slice(0, 6) // 6개
+                : [],
+          });
+        }
       }
       // 대분류 이름, id, 소분류 content
       mainResult.push({
@@ -128,32 +162,48 @@ function CalculetList() {
         subContent: subResult,
       });
     }
-    setCalculetListContent(mainResult);
+
+    result = [
+      {
+        mainCategoryName: getCategoryMainName(ID_MAIN_CONVERTER),
+        mainId: ID_MAIN_CONVERTER,
+        subContent: converterResult,
+      },
+      ...mainResult,
+    ];
+    setCalculetListContent(result);
+    setCalculetListLoading(false);
   }, [calculetList, calculetCategory]);
 
   return (
     <>
       {categoryMain === undefined ? (
-        calculetListContent.length !== 0 && (
-          <>
-            <AppBar
-              elevation={1}
-              position="fixed"
-              sx={{
-                backgroundColor: "white",
-                opacity: "90%",
-                paddingTop: "6.4rem",
-                zIndex: (theme) => theme.zIndex.appBar - 1,
-              }}
-            >
-              <PageScreenBox sx={{ padding: "1.2rem 0.8rem 0" }} gap="0.4rem">
-                <Title content="계산기 전체 목록" />
-                <FloatingTabs
-                  value={mainCategoryTab}
-                  onChange={onChangeMainCategoryTabs}
-                  variant="scrollable"
-                >
-                  {calculetListContent.map((content, index) => {
+        <>
+          <AppBar
+            elevation={1}
+            position="fixed"
+            sx={{
+              backgroundColor: "white",
+              opacity: "90%",
+              paddingTop: "6.4rem",
+              zIndex: (theme) => theme.zIndex.appBar - 1,
+            }}
+          >
+            <PageScreenBox sx={{ padding: "1.2rem 0.8rem 0" }} gap="0.4rem">
+              <Title content="계산기 전체 목록" />
+              <FloatingTabs
+                value={mainCategoryTab}
+                onChange={onChangeMainCategoryTabs}
+                variant="scrollable"
+                scrollButtons={false}
+              >
+                {calculetListLoading && <TabSkeleton />}
+                {!calculetListLoading && calculetListContent.length === 0 && (
+                  <></>
+                )}
+                {!calculetListLoading &&
+                  calculetListContent.length !== 0 &&
+                  calculetListContent.map((content, index) => {
                     const { mainCategoryName, mainId } = content;
                     return (
                       <FloatingTab
@@ -166,15 +216,26 @@ function CalculetList() {
                       />
                     );
                   })}
-                </FloatingTabs>
-              </PageScreenBox>
-            </AppBar>
-            <Grid container sx={{ backgroundColor: "white" }}>
-              <PageScreenBox sx={{ p: "16rem 0.8rem 100rem" }}>
-                <FlexColumnBox>
-                  {calculetListContent.map((content, index) => {
+              </FloatingTabs>
+            </PageScreenBox>
+          </AppBar>
+          <Grid container sx={{ backgroundColor: "white" }}>
+            <PageScreenBox sx={{ p: "16rem 0.8rem 100rem" }}>
+              <FlexColumnBox>
+                {calculetListLoading && (
+                  <Grid item sx={{ pt: "3.2rem" }}>
+                    <SearchSkeletonPage />
+                  </Grid>
+                )}
+                {!calculetListLoading && calculetListContent.length === 0 && (
+                  <Grid item sx={{ pt: "3.2rem" }}>
+                    <BoxNoItem />
+                  </Grid>
+                )}
+                {!calculetListLoading &&
+                  calculetListContent.length !== 0 &&
+                  calculetListContent.map((content, index) => {
                     const { mainId } = content;
-
                     return (
                       <FlexColumnBox
                         key={"id-main-category-" + mainId}
@@ -189,11 +250,10 @@ function CalculetList() {
                       </FlexColumnBox>
                     );
                   })}
-                </FlexColumnBox>
-              </PageScreenBox>
-            </Grid>
-          </>
-        )
+              </FlexColumnBox>
+            </PageScreenBox>
+          </Grid>
+        </>
       ) : (
         <CalculetSubList />
       )}

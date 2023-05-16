@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { AppBar, Grid, Pagination, Tab, Tabs } from "@mui/material";
+import { AppBar, Box, Grid, Pagination, Tab, Tabs } from "@mui/material";
 import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import { FlexColumnBox } from "../components/global-components/FlexBox";
 import Title from "../components/global-components/Title";
@@ -142,34 +142,51 @@ function CalculetSubList() {
               zIndex: (theme) => theme.zIndex.appBar - 1,
             }}
           >
-            <PageScreenBox sx={{ padding: "1.2rem 0.8rem 0" }} gap="0.4rem">
+            <PageScreenBox
+              sx={{
+                padding:
+                  categoryMain !== "99999"
+                    ? "1.2rem 0.8rem 0"
+                    : "1.2rem 0.8rem 1.2rem",
+              }}
+              gap="0.4rem"
+            >
               <Title
                 content={calculetCategory[categoryMain].name}
                 isPage
                 onClickPage={calculetListPage}
               />
-              <Tabs
-                value={subCategoryTab}
-                onChange={onChangeSubCategoryTabs}
-                variant="scrollable"
-              >
-                {calculetSubCategoryContent.map((content, index) => {
-                  const { subCategoryName, subId } = content;
+              {categoryMain !== "99999" && (
+                <Tabs
+                  value={subCategoryTab}
+                  onChange={onChangeSubCategoryTabs}
+                  variant="scrollable"
+                >
+                  {calculetSubCategoryContent.map((content, index) => {
+                    const { subCategoryName, subId } = content;
 
-                  return (
-                    <Tab
-                      id={ID_SUB_CATEGORY_TAB}
-                      key={"id-sub-category-tab" + subCategoryName}
-                      label={subCategoryName}
-                      value={subId}
-                    />
-                  );
-                })}
-              </Tabs>
+                    return (
+                      <Tab
+                        id={ID_SUB_CATEGORY_TAB}
+                        key={"id-sub-category-tab" + subCategoryName}
+                        label={subCategoryName}
+                        value={subId}
+                      />
+                    );
+                  })}
+                </Tabs>
+              )}
             </PageScreenBox>
           </AppBar>
           <Grid container sx={{ backgroundColor: "white" }}>
-            <PageScreenBox sx={{ p: "20rem 0.8rem 100rem" }}>
+            <PageScreenBox
+              sx={{
+                p:
+                  categoryMain !== "99999"
+                    ? "20rem 0.8rem 36rem"
+                    : "16rem 0.8rem 36rem",
+              }}
+            >
               <FlexColumnBox gap="2.4rem">
                 <TotalCount length={calculetSubCount} />
                 {!isLoading && (

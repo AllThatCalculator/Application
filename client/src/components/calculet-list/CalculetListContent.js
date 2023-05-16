@@ -73,17 +73,21 @@ function CalculetListContent({ calculetContent }) {
   return (
     <>
       <FlexColumnBox gap="3.2rem">
-        {/* 대분류 버튼 */}
-        <ButtonBase
-          onClick={() => calculetSubListPage(mainId)}
-          sx={{ maxWidth: "fit-content", gap: "1.2rem" }}
-        >
+        {/* 대분류 버튼 : 단위 변환기는 소분류 페이지 없음 */}
+        {mainId !== "0" && (
+          <ButtonBase
+            onClick={() => calculetSubListPage(mainId)}
+            sx={{ maxWidth: "fit-content", gap: "1.2rem" }}
+          >
+            <Typography sx={{ ...subTitleSx }}>{mainCategoryName}</Typography>
+            <KeyboardArrowRightIcon />
+          </ButtonBase>
+        )}
+        {mainId === "0" && (
           <Typography sx={{ ...subTitleSx }}>{mainCategoryName}</Typography>
-          <KeyboardArrowRightIcon />
-        </ButtonBase>
+        )}
         {subContent.map((content) => {
           const { subCategoryName, subId, subCalculetList } = content;
-
           return (
             // 소분류, calculet list들
             <div key={"id-sub-category-" + subId}>
