@@ -6,11 +6,7 @@ import { FlexColumnBox } from "../components/global-components/FlexBox";
 import Title from "../components/global-components/Title";
 import { useSelector } from "react-redux";
 import useTabs from "../hooks/useTabs";
-import {
-  ID_MAIN_CATEGORY_TAB,
-  ID_MAIN_CONVERTER,
-  NAME_MAIN_CONVERTER,
-} from "../constants/calculetList";
+import { ID_MAIN_CATEGORY_TAB } from "../constants/calculetList";
 import CalculetListContent from "../components/calculet-list/CalculetListContent";
 import {
   FloatingTab,
@@ -114,8 +110,6 @@ function CalculetList() {
       return;
 
     let mainResult = [];
-    let converterResult = []; // 각 대분류 돌면서 단위변환기 추출해냄
-    let result = [];
     // 01. 대분류
     for (let [mainId, mainContent] of Object.entries(calculetCategory)) {
       const { name: mainCategoryName, ...subContent } = mainContent;
@@ -134,20 +128,6 @@ function CalculetList() {
               ? calculetList[mainId][subId].slice(0, 6) // 6개
               : [],
         });
-
-        // 단위 변환기
-        if (subId === ID_MAIN_CONVERTER) {
-          converterResult.push({
-            subCategoryName: mainCategoryName,
-            subId: mainId,
-            subCalculetList:
-              // key 있는지 확인하고 리스트 push
-              calculetList.hasOwnProperty(subId) &&
-              calculetList[subId].hasOwnProperty(mainId)
-                ? calculetList[subId][mainId].slice(0, 6) // 6개
-                : [],
-          });
-        }
       }
       // 대분류 이름, id, 소분류 content
       mainResult.push({
@@ -156,16 +136,7 @@ function CalculetList() {
         subContent: subResult,
       });
     }
-
-    result = [
-      {
-        mainCategoryName: NAME_MAIN_CONVERTER,
-        mainId: ID_MAIN_CONVERTER,
-        subContent: converterResult,
-      },
-      ...mainResult,
-    ];
-    setCalculetListContent(result);
+    setCalculetListContent(mainResult);
     setCalculetListLoading(false);
   }, [calculetList, calculetCategory]);
   useEffect(() => {
@@ -205,7 +176,7 @@ function CalculetList() {
                     return (
                       <FloatingTab
                         id={ID_MAIN_CATEGORY_TAB}
-                        key={"id-main-category-tab" + mainCategoryName}
+                        key={`id-main-category-tab-${mainCategoryName}`}
                         label={mainCategoryName}
                         value={index}
                         onClick={() => onClickMoveToElement(index)}
@@ -235,7 +206,7 @@ function CalculetList() {
                     const { mainId } = content;
                     return (
                       <FlexColumnBox
-                        key={"id-main-category-" + mainId}
+                        key={`id-main-category-${mainId}`}
                         sx={{ pt: "4rem" }}
                         gap="4rem"
                         // (2) 할당

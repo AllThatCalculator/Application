@@ -6,7 +6,11 @@ import { FlexColumnBox } from "../components/global-components/FlexBox";
 import Title from "../components/global-components/Title";
 import { useSelector } from "react-redux";
 import useTabs from "../hooks/useTabs";
-import { ID_SUB_CATEGORY_TAB } from "../constants/calculetList";
+import {
+  ID_MAIN_CONVERTER,
+  ID_MAIN_ETC,
+  ID_SUB_CATEGORY_TAB,
+} from "../constants/calculetList";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import usePage from "../hooks/usePage";
 import getSearchRequestBody from "../utils/getSearchRequestBody";
@@ -75,7 +79,15 @@ function CalculetSubList() {
   /** tabs로 관리되는 값들 */
   const { values: subCategoryTabs, onChange: onChangeSubCategoryTabs } =
     useTabs({
-      subCategoryTab: "0", // 소분류 tabs (default Id : 0)
+      subCategoryTab:
+        //소분류 tabs : default Id 단위 변환기 ID
+        // 단위변환기 ? 첫 번째 대분류 ID
+        // 기타 ? 기타 ID
+        categoryMain === ID_MAIN_CONVERTER
+          ? Object.keys(calculetCategory[ID_MAIN_CONVERTER])[0]
+          : categoryMain === ID_MAIN_ETC
+          ? ID_MAIN_ETC
+          : ID_MAIN_CONVERTER,
     });
   const { subCategoryTab } = subCategoryTabs;
   const [calculetSubCategoryContent, setCalculetSubCategoryContent] = useState(
@@ -101,18 +113,27 @@ function CalculetSubList() {
   }, [categoryMain, calculetCategory]);
 
   useEffect(() => {
+    let requestCategoryMainId =
+      categoryMain === ID_MAIN_CONVERTER ? subCategoryTab : categoryMain; // 대분류가 단위변환기면 -> 대분류, 소분류 바꿔서 요청
+    let requestCategorySubId =
+      categoryMain === ID_MAIN_CONVERTER ? categoryMain : subCategoryTab;
+    // (categoryMain === ID_MAIN_ETC ? ID_MAIN_ETC : subCategoryTab); // 대분류가 기타면 소분류도 기타
+    // console.log(requestCategoryMainId);
+    // console.log(subCategoryTab);
     // get result
     getCalculetResult(
       setIsLoading,
-      categoryMain,
-      categoryMain === "99999" ? "99999" : subCategoryTab,
+      requestCategoryMainId,
+      requestCategorySubId,
       KEY_DEFAULT_LEN,
       currentPage
     ).then(({ calculetList, count }) => {
+      // console.log(calculetList);
       setCalculetSubListContent(calculetList);
       setCalculetSubCount(count);
     });
   }, [categoryMain, subCategoryTab, KEY_DEFAULT_LEN, currentPage]);
+  // console.log(subCategoryTab);
   // console.log(calculetSubListContent);
 
   const { scrollPosition, updateScroll, isMoveScroll, topScroll } =
@@ -143,7 +164,7 @@ function CalculetSubList() {
         <PageScreenBox
           sx={{
             padding:
-              categoryMain !== "99999"
+              categoryMain !== ID_MAIN_ETC
                 ? "1.2rem 0.8rem 0"
                 : "1.2rem 0.8rem 1.2rem",
           }}
@@ -154,7 +175,7 @@ function CalculetSubList() {
             isPage
             onClickPage={calculetListPage}
           />
-          {categoryMain !== "99999" && (
+          {categoryMain !== ID_MAIN_ETC && (
             <Tabs
               value={subCategoryTab}
               onChange={onChangeSubCategoryTabs}
@@ -166,7 +187,7 @@ function CalculetSubList() {
                 return (
                   <Tab
                     id={ID_SUB_CATEGORY_TAB}
-                    key={"id-sub-category-tab" + subCategoryName}
+                    key={`id-sub-category-tab-${subCategoryName}`}
                     label={subCategoryName}
                     value={subId}
                   />
@@ -180,7 +201,7 @@ function CalculetSubList() {
         <PageScreenBox
           sx={{
             p:
-              categoryMain !== "99999"
+              categoryMain !== ID_MAIN_ETC
                 ? "20rem 0.8rem 36rem"
                 : "16rem 0.8rem 36rem",
           }}

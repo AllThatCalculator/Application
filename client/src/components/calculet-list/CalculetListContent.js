@@ -5,6 +5,7 @@ import usePage from "../../hooks/usePage";
 import useSx from "../../hooks/useSx";
 import BoxCalculetItem from "../atom-components/BoxCalculetItem";
 import BoxNoItem from "../atom-components/BoxNoItem";
+import { ID_MAIN_ETC } from "../../constants/calculetList";
 
 /**
  * 대분류, 소분류, 계산기 목록들을 나열하여 반환하는 컴포넌트
@@ -31,7 +32,7 @@ function CalculetListContent({ calculetContent }) {
         {subCalculetList.length !== 0 ? (
           subCalculetList.map((calculet) => (
             <Grid
-              key={"id-category-list" + calculet.id}
+              key={`id-category-list-${calculet.id}`}
               item
               xs={1}
               sm={1}
@@ -74,32 +75,27 @@ function CalculetListContent({ calculetContent }) {
     <>
       <FlexColumnBox gap="3.2rem">
         {/* 대분류 버튼 : 단위 변환기는 소분류 페이지 없음 */}
-        {mainId !== "0" && (
-          <ButtonBase
-            disableRipple
-            onClick={() => calculetSubListPage(mainId)}
-            sx={{ maxWidth: "fit-content", gap: "1.2rem" }}
-          >
-            <Typography sx={{ ...subTitleSx }}>{mainCategoryName}</Typography>
-            <KeyboardArrowRightIcon />
-          </ButtonBase>
-        )}
-        {mainId === "0" && (
+        <ButtonBase
+          disableRipple
+          onClick={() => calculetSubListPage(mainId)}
+          sx={{ maxWidth: "fit-content", gap: "1.2rem" }}
+        >
           <Typography sx={{ ...subTitleSx }}>{mainCategoryName}</Typography>
-        )}
+          <KeyboardArrowRightIcon />
+        </ButtonBase>
         {subContent.map((content) => {
           const { subCategoryName, subId, subCalculetList } = content;
           return (
             // 소분류, calculet list들
-            <div key={"id-sub-category-" + subId}>
-              {mainId !== "99999" && (
+            <div key={`id-sub-category-${subId}`}>
+              {mainId !== ID_MAIN_ETC && (
                 <SubCategoryContent
                   subCategoryName={subCategoryName}
                   subId={subId}
                   subCalculetList={subCalculetList}
                 />
               )}
-              {mainId === "99999" && (
+              {mainId === ID_MAIN_ETC && (
                 <CalculetList subCalculetList={subCalculetList} />
               )}
             </div>
