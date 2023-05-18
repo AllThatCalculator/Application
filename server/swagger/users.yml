@@ -59,20 +59,29 @@ components:
                   $ref: "#/components/schemas/calculetId"
                 title:
                   $ref: "#/components/schemas/calculet/properties/title"
+                description:
+                  $ref: "#/components/schemas/calculet/properties/description"
                 categoryMainId:
                   $ref: "#/components/schemas/calculet/properties/categoryMainId"
                 categorySubId:
                   $ref: "#/components/schemas/calculet/properties/categorySubId"
                 createdAt:
                   $ref: "#/components/schemas/dateTimeLive"
-                blocked:
-                  $ref: "#/components/schemas/calculet/properties/blocked"
                 viewCnt:
                   $ref: "#/components/schemas/statistics/properties/view"
                 likeCnt:
                   $ref: "#/components/schemas/statistics/properties/like"
                 bookmarkCnt:
                   $ref: "#/components/schemas/statistics/properties/bookmark"
+                blocked:
+                  $ref: "#/components/schemas/calculet/properties/blocked"
+                isEdit:
+                  type: boolean
+                  description: 현재 수정중인 계산기가 있는지에 대한 여부
+                calculetId:
+                  $ref: "#/components/schemas/calculetId"
+                calculetTemp:
+                  $ref: "#/components/schemas/myCalculetInfo"
     userPublicInfo:
       description: 유저 공개 프로필 (정보)
       content:
