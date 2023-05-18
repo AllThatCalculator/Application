@@ -13,8 +13,8 @@ function TextComponent(props) {
       label={props.param.label}
       defaultValue={props.value}
       onChange={props.onChange}
-      required={props.isRequire}
-      disabled={props.isDisable}
+      required={props.isRequired}
+      disabled={props.isDisabled}
     />
   );
 }

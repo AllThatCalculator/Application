@@ -13,10 +13,11 @@ function RegisterTest() {
   const [components, setComponents] = useState([]);
   const [testObj] = useState([
     {
+      isInput: true,
       isOutput: false,
-      isCopy: true,
-      isRequire: true,
-      isDisable: false,
+      copyButton: true,
+      isRequired: true,
+      isDisabled: false,
       type: "STRING",
       param: {
         name: "test",
@@ -24,10 +25,11 @@ function RegisterTest() {
       },
     },
     {
-      isOutput: false,
-      isCopy: true,
-      isRequire: true,
-      isDisable: false,
+      isInput: false,
+      isOutput: true,
+      copyButton: true,
+      isRequired: true,
+      isDisabled: false,
       type: "STRING",
       param: {
         name: "test2",
@@ -51,19 +53,25 @@ function RegisterTest() {
     const tempComponents = [];
     testObj.forEach((data) => {
       const valId = data.param.name;
-      if (!data.isOutput) {
+      if (data.isInput) {
         tempInputs[valId] = "";
         data = {
           ...data,
           value: tempInputs[valId],
           onChange: onInputsChange,
         };
-      } else {
+      }
+      if (data.isOutput) {
         tempOutputs[valId] = "";
         data = {
           ...data,
           value: tempOutputs[valId],
-          onChange: onOutputsChange,
+          onChange: data.isInput
+            ? (e) => {
+                onInputsChange(e);
+                onOutputsChange(e);
+              }
+            : onOutputsChange,
         };
       }
       tempComponents.push(data);
