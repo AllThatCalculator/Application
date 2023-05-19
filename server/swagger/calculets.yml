@@ -278,3 +278,31 @@ components:
           $ref: "#/components/schemas/calculet/properties/categorySubId"
         type:
           $ref: "#/components/schemas/calculet/properties/type"
+    myCalculetInfo:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/calculetId"
+        title:
+          $ref: "#/components/schemas/calculet/properties/title"
+        description:
+          $ref: "#/components/schemas/calculet/properties/description"
+        categoryMainId:
+          $ref: "#/components/schemas/calculet/properties/categoryMainId"
+        categorySubId:
+          $ref: "#/components/schemas/calculet/properties/categorySubId"
+        createdAt:
+          $ref: "#/components/schemas/dateTimeLive"
+        viewCnt:
+          $ref: "#/components/schemas/statistics/properties/view"
+        likeCnt:
+          $ref: "#/components/schemas/statistics/properties/like"
+        bookmarkCnt:
+          $ref: "#/components/schemas/statistics/properties/bookmark"
+        blocked:
+          $ref: "#/components/schemas/calculet/properties/blocked"
+        isEdit:
+          type: boolean
+          description: 현재 수정중인 계산기가 있는지에 대한 여부
+        calculetId:
+          $ref: "#/components/schemas/calculetId"
