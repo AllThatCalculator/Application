@@ -1,3 +1,4 @@
+import React from "react";
 import { TextField } from "@mui/material";
 
 /**
@@ -6,7 +7,7 @@ import { TextField } from "@mui/material";
  * props: 사용자가 입력한 텍스트 컴포넌트에 관한 정보들
  * @returns
  */
-function TextComponent(props) {
+const TextComponent = React.memo(function TextComponent(props) {
   return (
     <TextField
       id={props.param.name}
@@ -17,6 +18,6 @@ function TextComponent(props) {
       disabled={props.isDisabled}
     />
   );
-}
+});
 
 export default TextComponent;

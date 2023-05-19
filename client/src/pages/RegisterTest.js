@@ -14,7 +14,7 @@ function RegisterTest() {
   const [testObj] = useState([
     {
       isInput: true,
-      isOutput: false,
+      isOutput: true,
       copyButton: true,
       isRequired: true,
       isDisabled: false,
