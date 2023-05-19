@@ -78,8 +78,6 @@ components:
                 isEdit:
                   type: boolean
                   description: 현재 수정중인 계산기가 있는지에 대한 여부
-                calculetId:
-                  $ref: "#/components/schemas/calculetId"
                 calculetTemp:
                   $ref: "#/components/schemas/myCalculetInfo"
     userPublicInfo:
