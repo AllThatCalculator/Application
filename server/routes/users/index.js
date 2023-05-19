@@ -156,7 +156,7 @@ router.put(
   "/me/calculet",
   [
     auth.validate,
-    body("calculetInfo.calculetId").isUUID(),
+    body("calculetInfo.id").isUUID(),
     body(["calculetInfo.categoryMainId", "calculetInfo.categorySubId"])
       .isInt()
       .toInt(),
@@ -166,6 +166,7 @@ router.put(
     body("calculetInfo.srcCode").notEmpty(),
     body("calculetInfo.manual").isString(),
     body("calculetInfo.type").isInt({ min: 0, max: 1 }).toInt(),
+    body("calculetInfo.blocked").isInt({ min: 0, max: 2 }).toInt(),
     inputValidator,
   ],
   errorHandler.dbWrapper(updateMyCalculet)

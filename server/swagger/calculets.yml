@@ -262,7 +262,7 @@ components:
     calculetUpdate:
       type: object
       properties:
-        calculetId:
+        id:
           $ref: "#/components/schemas/calculetId"
         title:
           $ref: "#/components/schemas/calculet/properties/title"
@@ -278,6 +278,8 @@ components:
           $ref: "#/components/schemas/calculet/properties/categorySubId"
         type:
           $ref: "#/components/schemas/calculet/properties/type"
+        blocked:
+          $ref: "#/components/schemas/calculet/properties/blocked"
     myCalculetInfo:
       type: object
       properties:
