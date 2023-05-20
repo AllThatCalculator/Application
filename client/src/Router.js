@@ -15,6 +15,7 @@ import CalculetList from "./pages/CalculetList";
 import Profile from "./pages/Profile";
 import Setting from "./pages/Setting";
 import CalculetSubList from "./pages/CalculetSubList";
+import RegisterTest from "./pages/RegisterTest";
 
 // google-analytics
 import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
@@ -48,6 +49,7 @@ function AppRouter({ isLoggedIn }) {
             <Auth isLoggedIn={isLoggedIn} authComponent={<Register />} />
           }
         />
+        <Route path={URL.REGISTER_TEST} element={<RegisterTest />} />
         <Route
           path={URL.LOGIN}
           element={<LoginContainer isLoggedIn={isLoggedIn} />}
