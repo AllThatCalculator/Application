@@ -69,6 +69,12 @@ module.exports = function (sequelize, DataTypes) {
         unique: true,
         defaultValue: Sequelize.Sequelize.fn("uuid"),
       },
+      blocked: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return 2;
+        },
+      },
     },
     {
       sequelize,

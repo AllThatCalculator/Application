@@ -57,6 +57,12 @@ components:
       schema:
         type: string
       example: title
+    blocked:
+      in: query
+      required: true
+      name: blocked
+      schema:
+        $ref: "#/components/schemas/calculet/properties/blocked"
   responses:
     likeResult:
       content:

@@ -47,6 +47,15 @@ components:
       schema:
         $ref: "#/components/schemas/userInfo/properties/id"
   responses:
+    myCalculetInfo:
+      description: 계산기 불러오기 성공
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/calculet"
+            properties:
+              id:
+                $ref: "#/components/schemas/calculetId"
     myCalculetList:
       description: 마이 계산기 리스트
       content:
