@@ -29,6 +29,9 @@ const URL = {
   // 설정
   SETTING: "/setting",
 
+  // 마이 계산기
+  MY_CALCULET: "/my-calculet",
+
   // 회원탈퇴 완료 페이지
   DELETE_COMPLETE: "/delete-complete",
 

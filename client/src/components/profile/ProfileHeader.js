@@ -8,7 +8,7 @@ import ProfileSkeletonPage from "./ProfileSkeletonPage";
 function ProfileHeader({ userInfo, isProfileLoading }) {
   const { userName, bio, job, profileImgSrc, isMe } = userInfo;
 
-  const { settingAccountPage } = usePage();
+  const { settingAccountPage, myCalculetPage } = usePage();
   const { isWindowMdDown } = useSx();
 
   const imageSx = { xs: "8rem", sm: "10rem", md: "12.4rem" };
@@ -61,7 +61,7 @@ function ProfileHeader({ userInfo, isProfileLoading }) {
           size="small"
           disableElevation
           sx={{ maxWidth: isWindowMdDown && "12rem" }}
-          onClick={() => {}}
+          onClick={myCalculetPage}
         >
           계산기 관리
         </Button>

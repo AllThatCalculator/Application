@@ -23,6 +23,7 @@ import DeleteComplete from "./pages/guide/DeleteComplete";
 
 // container
 import LoginContainer from "./containers/LoginContainer";
+import MyCalculet from "./pages/MyCalculet";
 
 function AppRouter({ isLoggedIn }) {
   const PATH_CALCULET_ID = ":" + URL.CALCULET_ID;
@@ -66,6 +67,12 @@ function AppRouter({ isLoggedIn }) {
         <Route
           path={URL.PROFILE}
           element={<Auth isLoggedIn={isLoggedIn} authComponent={<Profile />} />}
+        />
+        <Route
+          path={URL.MY_CALCULET}
+          element={
+            <Auth isLoggedIn={isLoggedIn} authComponent={<MyCalculet />} />
+          }
         />
 
         {/* 설정 - 계정, 저작 권한, 비밀번호 변경 */}

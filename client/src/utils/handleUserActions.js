@@ -8,6 +8,7 @@ import firebaseAuth from "../firebaseAuth";
 import getUserIdCalculetList from "../user-actions/users-calculet/getUserIdCalculetList";
 import getUserIdProfile from "../user-actions/users/getUserIdProfile";
 import getCalculetBookmark from "../user-actions/bookmark/getCalculetBookmark";
+import getMyCalculetList from "../user-actions/users-calculet/getMyCalculetList";
 /**
  * 사용자 정보 가져오는 처리
  * @param {*} idToken
@@ -101,6 +102,25 @@ async function handleGetUserIdCalculetList(idToken, uuid, body) {
     return error.code;
   }
 }
+
+/**
+ * 사용자 마이 계산기 리스트
+ * @param {*} idToken
+ */
+async function handleGetMyCalculetList(idToken) {
+  try {
+    /** get my calculet list */
+    const response = await getMyCalculetList(idToken);
+    if (!!response) {
+      return response;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return error.code;
+  }
+}
+
 /**
  * get user calculet bookmark
  * @param {*} idToken
@@ -203,5 +223,6 @@ export {
   handleDeleteUser,
   handleErrorUserActions,
   handleGetUserIdCalculetList,
+  handleGetMyCalculetList,
   handleGetUserIdProfile,
 };
