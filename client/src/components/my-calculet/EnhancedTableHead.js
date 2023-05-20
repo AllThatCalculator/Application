@@ -50,7 +50,7 @@ function EnhancedTableHead(props) {
                   indeterminate={numSelected > 0 && numSelected < rowCount}
                   checked={rowCount > 0 && numSelected === rowCount}
                   onChange={onSelectAllClick}
-                  size="small"
+                  // size="small"
                 />
                 {/* <RecordSelectedOption
                   isPopUpOpen={isRecordSelectedOption}

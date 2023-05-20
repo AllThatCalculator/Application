@@ -6,4 +6,11 @@ const DATA_MY_CALCULET_HEAD_CELLS = [
   { headCell: "좋아요", align: "right" },
   { headCell: "북마크", align: "right" },
 ];
-export { DATA_MY_CALCULET_HEAD_CELLS };
+
+const DATA_MY_CALCULET_BLOCKED = [
+  { id: 0, status: "공개", color: "success.light" },
+  { id: 1, status: "신고 받은 계산기", color: "error.main" },
+  { id: 2, status: "임시 계산기", color: "text.disabled" },
+];
+
+export { DATA_MY_CALCULET_HEAD_CELLS, DATA_MY_CALCULET_BLOCKED };

@@ -9,6 +9,7 @@ import getUserIdCalculetList from "../user-actions/users-calculet/getUserIdCalcu
 import getUserIdProfile from "../user-actions/users/getUserIdProfile";
 import getCalculetBookmark from "../user-actions/bookmark/getCalculetBookmark";
 import getMyCalculetList from "../user-actions/users-calculet/getMyCalculetList";
+import deleteMyCalculet from "../user-actions/users-calculet/deleteMyCalculet";
 /**
  * 사용자 정보 가져오는 처리
  * @param {*} idToken
@@ -122,6 +123,19 @@ async function handleGetMyCalculetList(idToken) {
 }
 
 /**
+ * 사용자 마이 계산기 삭제
+ * @param {*} idToken
+ */
+async function handleDeleteMyCalculet(idToken, body) {
+  try {
+    /** delete my calculet list */
+    await deleteMyCalculet(idToken, body);
+  } catch (error) {
+    return error.code;
+  }
+}
+
+/**
  * get user calculet bookmark
  * @param {*} idToken
  */
@@ -225,4 +239,5 @@ export {
   handleGetUserIdCalculetList,
   handleGetMyCalculetList,
   handleGetUserIdProfile,
+  handleDeleteMyCalculet,
 };
