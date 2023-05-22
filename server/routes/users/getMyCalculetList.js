@@ -13,16 +13,18 @@ function mergeCalculets({ myCalculetList, myCalculetTempList }) {
   let tempIdx = 0;
   myCalculetList.map((calculet) => {
     if (calculet.isEdit) {
+      let calculetTemp = null;
       if (calculet.id === myCalculetTempList[tempIdx].calculetId) {
-        calculet.calculetTemp = myCalculetTempList[tempIdx++];
+        calculetTemp = myCalculetTempList[tempIdx++];
       } else {
         // 만약 id가 일치하지 않는다면 find연산으로 수정중인 계산기 찾기
         console.log("id 불일치로 find연산 실행");
-        const calculetTemp = myCalculetTempList.find(
+        calculetTemp = myCalculetTempList.find(
           (e) => e.calculetId === calculet.id
         );
-        calculet.calculetTemp = calculetTemp;
       }
+      delete calculetTemp.calculetId;
+      calculet.calculetTemp = calculetTemp;
     }
   });
   return myCalculetList;
@@ -56,13 +58,13 @@ exports.getMyCalculetList = async (req, res) => {
   // get calculet info & calculet info temp (full outer join)
   const sqlFull = `
     SELECT Info.id as id, Info.title, Info.description, Info.category_main_id as categoryMainId, Info.category_sub_id as categorySubId, Info.created_at as createdAt,
-    Info.view_cnt as viewCnt, Info.like_cnt as likeCnt, Info.bookmark_cnt as bookmarkCnt, Info.blocked, IF(Temp.id is NULL, False, True) as isEdit, Info.id as calculetId, NULL as calculetTemp
+    Info.view_cnt as viewCnt, Info.like_cnt as likeCnt, Info.bookmark_cnt as bookmarkCnt, Info.blocked, IF(Temp.id is NULL, False, True) as isEdit, NULL as calculetTemp
     FROM calculet_info Info
     LEFT JOIN calculet_info_temp Temp ON Info.id = Temp.calculet_id
     WHERE Info.contributor_id = '${res.locals.userId}'
     UNION
     SELECT Temp.id, Temp.title, Temp.description, Temp.category_main_id as categoryMainId, Temp.category_sub_id as categorySubId, Temp.created_at as createdAt, 
-    0 as viewCnt, 0 as likeCnt, 0 as bookmarkCnt, 2 as blocked, False as isEdit, Temp.calculet_id as calculetId, NULL as calculetTemp
+    0 as viewCnt, 0 as likeCnt, 0 as bookmarkCnt, 2 as blocked, False as isEdit, NULL as calculetTemp
     FROM calculet_info Info
     RIGHT JOIN calculet_info_temp Temp ON Info.id = Temp.calculet_id
     WHERE Info.id is NULL and Temp.contributor_id = '${res.locals.userId}'

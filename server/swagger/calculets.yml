@@ -57,6 +57,12 @@ components:
       schema:
         type: string
       example: title
+    blocked:
+      in: query
+      required: true
+      name: blocked
+      schema:
+        $ref: "#/components/schemas/calculet/properties/blocked"
   responses:
     likeResult:
       content:
@@ -262,7 +268,7 @@ components:
     calculetUpdate:
       type: object
       properties:
-        calculetId:
+        id:
           $ref: "#/components/schemas/calculetId"
         title:
           $ref: "#/components/schemas/calculet/properties/title"
@@ -278,6 +284,8 @@ components:
           $ref: "#/components/schemas/calculet/properties/categorySubId"
         type:
           $ref: "#/components/schemas/calculet/properties/type"
+        blocked:
+          $ref: "#/components/schemas/calculet/properties/blocked"
     myCalculetInfo:
       type: object
       properties:
@@ -304,5 +312,3 @@ components:
         isEdit:
           type: boolean
           description: 현재 수정중인 계산기가 있는지에 대한 여부
-        calculetId:
-          $ref: "#/components/schemas/calculetId"

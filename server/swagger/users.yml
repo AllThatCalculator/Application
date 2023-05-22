@@ -47,6 +47,15 @@ components:
       schema:
         $ref: "#/components/schemas/userInfo/properties/id"
   responses:
+    myCalculetInfo:
+      description: 계산기 불러오기 성공
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/calculet"
+            properties:
+              id:
+                $ref: "#/components/schemas/calculetId"
     myCalculetList:
       description: 마이 계산기 리스트
       content:
@@ -78,8 +87,6 @@ components:
                 isEdit:
                   type: boolean
                   description: 현재 수정중인 계산기가 있는지에 대한 여부
-                calculetId:
-                  $ref: "#/components/schemas/calculetId"
                 calculetTemp:
                   $ref: "#/components/schemas/myCalculetInfo"
     userPublicInfo:
