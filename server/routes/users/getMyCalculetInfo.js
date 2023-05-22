@@ -37,7 +37,7 @@ exports.getMyCalculetInfo = async (req, res) => {
   }
 
   if (calculet === null) {
-    throw new CustomError(400, 0);
+    throw new CustomError(404, 0);
   }
   res.status(200).send(calculet);
 };

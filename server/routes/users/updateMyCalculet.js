@@ -56,7 +56,7 @@ async function updateMyCalculet(req, res) {
   const calculet = await getCalculet(calculetInfo, whereIdOption);
 
   if (calculet === null) {
-    throw new CustomError(400, 0);
+    throw new CustomError(404, 0);
   }
 
   // if blocked === 2, then delete temp & update log
