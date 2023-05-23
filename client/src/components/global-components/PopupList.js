@@ -1,4 +1,3 @@
-import * as React from "react";
 import {
   Box,
   ListItem,
@@ -12,6 +11,7 @@ import {
 } from "@mui/material";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import useSx from "../../hooks/useSx";
+import { useState } from "react";
 
 /**
  * 헤더에 있는 팝업창 리스트 컴포넌트
@@ -30,7 +30,7 @@ function PopupList({
   const { isWindowSmDown } = useSx();
 
   /** 팝업 버튼 */
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const popUpOpen = Boolean(anchorEl);
 
   function handleClick(event) {
@@ -137,25 +137,16 @@ function PopupList({
   };
 
   return (
-    <ClickAwayListener
-      mouseEvent="onMouseDown"
-      touchEvent="onTouchStart"
-      onClickAway={handleClickAway}
-    >
-      <Box>
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <div>
         <Tooltip title={popupTitle}>
-          <IconButton
-            type="button"
-            onClick={handleClick}
-            edge="start"
-            color="primary"
-          >
+          <IconButton onClick={handleClick} edge="start" color="primary">
             {popupIcon}
           </IconButton>
         </Tooltip>
         {isWindowSmDown && popUpOpen ? <SmPopup /> : null}
         {!isWindowSmDown && popUpOpen ? <MdPopup /> : null}
-      </Box>
+      </div>
     </ClickAwayListener>
   );
 }

@@ -10,6 +10,7 @@ const { signUp } = require("./signUp");
 const { updateUser } = require("./updateUser");
 const { deleteUser } = require("./deleteUser");
 const { me } = require("./getMyInfo");
+const { getMyCalculetInfo } = require("./getMyCalculetInfo");
 const { getMyCalculetList } = require("./getMyCalculetList");
 const { updateMyCalculet } = require("./updateMyCalculet");
 const { deleteMyCalculet } = require("./deleteMyCalculet");
@@ -124,6 +125,31 @@ router.get("/me", auth.validate, errorHandler.dbWrapper(me.default));
 
 /**
  * @swagger
+ *  /api/users/me/calculet/{calculetId}:
+ *    get:
+ *      parameters:
+ *        - $ref: "#/components/parameters/calculetId"
+ *        - $ref: "#/components/parameters/blocked"
+ *      tags: [users-calculet]
+ *      summary: 로그인 한 사용자(본인)의 특정 마이 계산기 요청 <Auth>
+ *      description: 마이 계산기 정보
+ *      responses:
+ *        200:
+ *          $ref: "#/components/responses/myCalculetInfo"
+ */
+router.get(
+  "/me/calculet/:calculetId",
+  auth.validate,
+  [
+    param("calculetId").isUUID(),
+    query("blocked").isInt({ gt: -1, lt: 3 }).toInt(),
+    inputValidator,
+  ],
+  errorHandler.dbWrapper(getMyCalculetInfo)
+);
+
+/**
+ * @swagger
  *  /api/users/me/calculet:
  *    get:
  *      tags: [users-calculet]
@@ -156,7 +182,7 @@ router.put(
   "/me/calculet",
   [
     auth.validate,
-    body("calculetInfo.calculetId").isUUID(),
+    body("calculetInfo.id").isUUID(),
     body(["calculetInfo.categoryMainId", "calculetInfo.categorySubId"])
       .isInt()
       .toInt(),
@@ -166,6 +192,7 @@ router.put(
     body("calculetInfo.srcCode").notEmpty(),
     body("calculetInfo.manual").isString(),
     body("calculetInfo.type").isInt({ min: 0, max: 1 }).toInt(),
+    body("calculetInfo.blocked").isInt({ min: 0, max: 2 }).toInt(),
     inputValidator,
   ],
   errorHandler.dbWrapper(updateMyCalculet)

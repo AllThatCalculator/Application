@@ -14,6 +14,8 @@ import Search from "./pages/Search";
 import CalculetList from "./pages/CalculetList";
 import Profile from "./pages/Profile";
 import Setting from "./pages/Setting";
+import CalculetSubList from "./pages/CalculetSubList";
+import RegisterTest from "./pages/RegisterTest";
 
 // google-analytics
 import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
@@ -29,6 +31,8 @@ function AppRouter({ isLoggedIn }) {
   const PATH_SEARCH_ID = "?" + URL.SEARCH_ID + "=:" + URL.SEARCH_ID;
   /** setting/"" */
   const PATH_SETTING_ID = ":" + URL.MENU_ID;
+  /** calculet-list/"" */
+  const PATH_CALCULET_LIST_ID = ":" + URL.CATEGORY_MAIN_ID;
 
   return (
     <BrowserRouter>
@@ -45,6 +49,7 @@ function AppRouter({ isLoggedIn }) {
             <Auth isLoggedIn={isLoggedIn} authComponent={<Register />} />
           }
         />
+        <Route path={URL.REGISTER_TEST} element={<RegisterTest />} />
         <Route
           path={URL.LOGIN}
           element={<LoginContainer isLoggedIn={isLoggedIn} />}
@@ -56,7 +61,9 @@ function AppRouter({ isLoggedIn }) {
         <Route path={URL.SEARCH} element={<Search />}>
           <Route path={PATH_SEARCH_ID} element={<Search />} />
         </Route>
-        <Route path={URL.CALCULET_LIST} element={<CalculetList />} />
+        <Route path={URL.CALCULET_LIST} element={<CalculetList />}>
+          <Route path={PATH_CALCULET_LIST_ID} element={<CalculetSubList />} />
+        </Route>
 
         <Route
           path={URL.PROFILE}

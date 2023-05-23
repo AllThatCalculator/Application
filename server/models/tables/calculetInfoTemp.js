@@ -75,24 +75,6 @@ module.exports = function (sequelize, DataTypes) {
           return 2;
         },
       },
-      viewCnt: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return 0;
-        },
-      },
-      likeCnt: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return 0;
-        },
-      },
-      bookmarkCnt: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return 0;
-        },
-      },
     },
     {
       sequelize,

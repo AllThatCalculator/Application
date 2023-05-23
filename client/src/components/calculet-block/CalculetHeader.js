@@ -29,11 +29,13 @@ import putCalculetBookmark from "../../user-actions/bookmark/putCalculetBookmark
 import { useSelector } from "react-redux";
 import usePage from "../../hooks/usePage";
 import useSnackbar from "../../hooks/useSnackbar";
+import useGetCalculetBookmark from "../../hooks/useGetCalculetBookmark";
 
 function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
   const { boxSx } = useSx();
   const { loginPage, profileUserIdPage } = usePage();
   const { openSnackbar } = useSnackbar();
+  const { getCalculetBookmark } = useGetCalculetBookmark();
 
   // calculet object
   const { statistics, userCalculet, contributor, title, isMe } = calculetObj;
@@ -127,12 +129,22 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
           number: result.bookmarkCnt,
           bookmarked: !prev.bookmarked,
         }));
+        getCalculetBookmark(idToken);
+        openSnackbar(
+          "basic",
+          `북마크가 ${bookmarkObj.bookmarked ? "삭제" : "추가"}되었습니다.`,
+          false,
+          "bottom",
+          "left",
+          1600 // 지속시간
+        );
       })
       .catch((result) => {
         setBookmarkObj((prev) => ({
           number: result.bookmarkCnt,
           bookmarked: prev.bookmarked,
         }));
+        getCalculetBookmark(idToken);
       });
   }
   /**
@@ -262,8 +274,8 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
     },
   ];
 
-  function handleUrlShare() {
-    const currUrl = window.location.href; // 현재 url
+  function handleUrlShare(calculetId) {
+    const currUrl = `${window.location.origin}/${calculetId}`; // 현재 url
     navigator.clipboard.writeText(currUrl).then(() => {
       openSnackbar(
         "basic",
@@ -282,7 +294,7 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
       {
         name: "링크 공유",
         icon: <ShareIcon />,
-        onClickFuntion: handleUrlShare,
+        onClickFuntion: () => handleUrlShare(calculetObj.id),
       },
     ],
   ];
@@ -360,13 +372,14 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
             })}
             {!isPreview &&
               MorePopupLists.map((popupData, index) => (
-                <PopupList
-                  key={index}
-                  popupIcon={popupData.popupIcon}
-                  popupTitle={popupData.popupTitle}
-                  popupListData={popupData.popupListData}
-                  popupContent={popupData.popupContent}
-                />
+                <FlexBox key={index} sx={{ ml: "0.8rem" }}>
+                  <PopupList
+                    popupIcon={popupData.popupIcon}
+                    popupTitle={popupData.popupTitle}
+                    popupListData={popupData.popupListData}
+                    popupContent={popupData.popupContent}
+                  />
+                </FlexBox>
               ))}
           </FlexBox>
         </Grid>

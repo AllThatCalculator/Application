@@ -1,7 +1,7 @@
 #!/bin/bash
 
 docker system prune -af
-git pull
+git pull origin develop
 
 IS_BLUE_RUNNING=$(docker ps | grep api_blue)
 NGINX_CONFIG_FILE="./nginx/nginx.dev-server/green-blue.conf"
