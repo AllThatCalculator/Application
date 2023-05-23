@@ -12,10 +12,11 @@ const TextComponent = React.memo(function TextComponent(props) {
     <TextField
       id={props.param.name}
       label={props.param.label}
-      defaultValue={props.value}
+      // defaultValue={props.value}
       onChange={props.onChange}
       required={props.isRequired}
       disabled={props.isDisabled}
+      value={props.value}
     />
   );
 });
