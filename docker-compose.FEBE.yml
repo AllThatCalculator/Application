@@ -14,6 +14,8 @@ services:
     networks:
       - app-tier
     tty: true
+    ports:
+      - 3000:3000
     restart: always
     depends_on:
       - backend
