@@ -94,7 +94,9 @@ exports.getMyCalculetList = async (req, res) => {
     }
     filterSql += `
     SELECT Temp.id, Temp.title, Temp.description, Temp.category_main_id as categoryMainId, Temp.category_sub_id as categorySubId, Temp.created_at as createdAt, 
-    0 as viewCnt, 0 as likeCnt, 0 as bookmarkCnt, 2 as blocked, False as isEdit
+    0 as viewCnt, 0 as likeCnt, 0 as bookmarkCnt, 2 as blocked, False as isEdit,
+    Info.id as tempId, Info.title as tempTitle, Info.description as tempDesc, Info.category_main_id as tempCategoryMainId, Info.category_sub_id as tempCategorySubId, Info.created_at as tempCreatedAt, 
+    2 as tempBlocked, 0 as tempViewCnt, 0 as tempLikeCnt, 0 as tempBookmarkCnt, False as tempIsEdit
     FROM calculet_info Info
     RIGHT JOIN calculet_info_temp Temp ON Info.id = Temp.calculet_id
     WHERE Info.id is NULL AND Temp.contributor_id = '${res.locals.userId}'
