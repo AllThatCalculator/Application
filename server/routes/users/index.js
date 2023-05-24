@@ -165,8 +165,8 @@ router.get(
  *        - $ref: "#/components/parameters/size"
  *        - $ref: "#/components/parameters/page"
  *      tags: [users-calculet]
- *      summary: 로그인 한 사용자(본인)의 마이 계산기 목록 요청 <Auth>
- *      description: 마이 계산기 목록들 (임시 계산기 포함)
+ *      summary: 로그인 한 사용자(본인)의 마이 계산기 목록 요청 - offset pagination <Auth>
+ *      description: 마이 계산기 목록들 (임시 계산기 포함), blocked 필터는 (?blocked=0&blocked=1) 과 같이 보내주면 됨
  *      responses:
  *        200:
  *          $ref: "#/components/responses/myCalculetList"
