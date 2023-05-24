@@ -55,20 +55,50 @@ function mergeCalculets({ myCalculetList, myCalculetTempList }) {
  *  - 따라서 1번 계산기를 한 번 돌리면서, isEdit이 True인 필드에 calculet_info_temp 정보를 넣어줌
  */
 exports.getMyCalculetList = async (req, res) => {
-  // get calculet info & calculet info temp (full outer join)
-  const sqlFull = `
+  const filter =
+    req.query.blocked !== undefined ? req.query.blocked : [0, 1, 2];
+  const { size, page } = req.query;
+
+  // set where option from blocked filter
+  let whereOption = "";
+  if (filter.includes(0) && !filter.includes(1)) {
+    whereOption = "Info.blocked = 0 AND";
+  } else if (filter.includes(1) && !filter.includes(0)) {
+    whereOption = "Info.blocked = 1 AND";
+  }
+
+  // set full sql
+  let filterSql = "";
+  if (filter.includes(0) || filter.includes(1)) {
+    filterSql += `
     SELECT Info.id as id, Info.title, Info.description, Info.category_main_id as categoryMainId, Info.category_sub_id as categorySubId, Info.created_at as createdAt,
     Info.view_cnt as viewCnt, Info.like_cnt as likeCnt, Info.bookmark_cnt as bookmarkCnt, Info.blocked, IF(Temp.id is NULL, False, True) as isEdit, NULL as calculetTemp
     FROM calculet_info Info
     LEFT JOIN calculet_info_temp Temp ON Info.id = Temp.calculet_id
-    WHERE Info.contributor_id = '${res.locals.userId}'
-    UNION
+    WHERE ${whereOption} Info.contributor_id = '${res.locals.userId}'
+    `;
+  }
+  if (filter.includes(2)) {
+    if (filterSql !== "") {
+      filterSql += `
+      UNION
+      `;
+    }
+    filterSql += `
     SELECT Temp.id, Temp.title, Temp.description, Temp.category_main_id as categoryMainId, Temp.category_sub_id as categorySubId, Temp.created_at as createdAt, 
     0 as viewCnt, 0 as likeCnt, 0 as bookmarkCnt, 2 as blocked, False as isEdit, NULL as calculetTemp
     FROM calculet_info Info
     RIGHT JOIN calculet_info_temp Temp ON Info.id = Temp.calculet_id
-    WHERE Info.id is NULL and Temp.contributor_id = '${res.locals.userId}'
+    WHERE Info.id is NULL AND Temp.contributor_id = '${res.locals.userId}'
+    `;
+  }
+
+  // get calculet info & calculet info temp (full outer join)
+  const sqlFull = `
+    ${filterSql}
     ORDER BY createdAt
+    LIMIT ${size}
+    OFFSET ${size * (page - 1)}
   `;
   // get calculet info temp intersection (inner join)
   const sqlTemp = `
@@ -76,7 +106,7 @@ exports.getMyCalculetList = async (req, res) => {
     2 as blocked, 0 as viewCnt, 0 as likeCnt, 0 as bookmarkCnt, False as isEdit, Temp.calculet_id as calculetId
     FROM calculet_info Info
     JOIN calculet_info_temp Temp ON Info.id = Temp.calculet_id
-    WHERE Info.contributor_id = '${res.locals.userId}'
+    WHERE ${whereOption} Info.contributor_id = '${res.locals.userId}'
     ORDER BY Info.created_at
   `;
 
@@ -102,7 +132,9 @@ exports.getMyCalculetList = async (req, res) => {
     });
 
     const myCalculetList = mergeCalculets(result);
-    res.status(200).send(myCalculetList);
+    res
+      .status(200)
+      .send({ calculetList: myCalculetList, count: myCalculetList.length });
   } catch (error) {
     console.log(error);
     throw new CustomError(400, 0);
