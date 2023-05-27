@@ -11,6 +11,9 @@ const URL = {
   // 계산기 저작
   REGISTER: "/register",
 
+  // 계산기 저작 테스트 페이지
+  REGISTER_TEST: "/register-test",
+
   // 검색 리스트
   SEARCH: "/search",
 

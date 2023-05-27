@@ -47,41 +47,28 @@ components:
       schema:
         $ref: "#/components/schemas/userInfo/properties/id"
   responses:
+    myCalculetInfo:
+      description: 계산기 불러오기 성공
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/calculet"
+            properties:
+              id:
+                $ref: "#/components/schemas/calculetId"
     myCalculetList:
       description: 마이 계산기 리스트
       content:
         application/json:
           schema:
-            type: array
-            items:
-              properties:
-                id:
-                  $ref: "#/components/schemas/calculetId"
-                title:
-                  $ref: "#/components/schemas/calculet/properties/title"
-                description:
-                  $ref: "#/components/schemas/calculet/properties/description"
-                categoryMainId:
-                  $ref: "#/components/schemas/calculet/properties/categoryMainId"
-                categorySubId:
-                  $ref: "#/components/schemas/calculet/properties/categorySubId"
-                createdAt:
-                  $ref: "#/components/schemas/dateTimeLive"
-                viewCnt:
-                  $ref: "#/components/schemas/statistics/properties/view"
-                likeCnt:
-                  $ref: "#/components/schemas/statistics/properties/like"
-                bookmarkCnt:
-                  $ref: "#/components/schemas/statistics/properties/bookmark"
-                blocked:
-                  $ref: "#/components/schemas/calculet/properties/blocked"
-                isEdit:
-                  type: boolean
-                  description: 현재 수정중인 계산기가 있는지에 대한 여부
-                calculetId:
-                  $ref: "#/components/schemas/calculetId"
-                calculetTemp:
-                  $ref: "#/components/schemas/myCalculetInfo"
+            type: object
+            properties:
+              calculetList:
+                type: array
+                items:
+                  $ref: "#/components/schemas/myCalculetList"
+              count:
+                $ref: "#/components/schemas/calculetListCount"
     userPublicInfo:
       description: 유저 공개 프로필 (정보)
       content:
