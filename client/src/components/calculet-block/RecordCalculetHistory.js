@@ -228,7 +228,11 @@ function EnhancedTableToolbar(props) {
             저장
           </Button>
           <></>
-          <Button variant="text" onClick={onDeleteCalculetRecords}>
+          <Button
+            variant="text"
+            onClick={onDeleteCalculetRecords}
+            color="error"
+          >
             삭제
           </Button>
           <Typography

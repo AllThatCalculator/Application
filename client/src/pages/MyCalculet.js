@@ -1,6 +1,4 @@
 import {
-  Box,
-  CardContent,
   Checkbox,
   Collapse,
   IconButton,
@@ -8,8 +6,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableContainer,
-  TableHead,
   TablePagination,
   TableRow,
   Typography,
@@ -40,6 +36,30 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import WarningDialog from "../components/global-components/WarningDialog";
 import useSnackbar from "../hooks/useSnackbar";
 import EnhancedTableToolbar from "../components/my-calculet/EnhancedTableToolbar";
+
+async function handleMyCalculetList(
+  setIsCalculetListLoading,
+  idToken,
+  selectedFilter,
+  rowsPerPage,
+  page,
+  setMyCalculetList
+) {
+  await setIsCalculetListLoading(true);
+
+  if (idToken !== "") {
+    let body = {
+      blocked: selectedFilter.map((row) => row.id), // id array
+      size: rowsPerPage,
+      page: page,
+    };
+    const response = await handleGetMyCalculetList(idToken, body);
+    if (response) {
+      setMyCalculetList(response);
+      setIsCalculetListLoading(false);
+    }
+  }
+}
 
 function TableRowBox({
   myCalculet,
@@ -184,7 +204,7 @@ function TableRowBox({
                       }}
                     >
                       <TableCell padding="checkbox">
-                        <Checkbox
+                        {/* <Checkbox
                           color="primary"
                           checked={isSelectedMyCalculet(calculetTemp.id)}
                           inputProps={{
@@ -197,7 +217,7 @@ function TableRowBox({
                               calculetTemp.id
                             )
                           }
-                        />
+                        /> */}
                       </TableCell>
                       <FitTableCell>
                         <MyCalculetInfoBox
@@ -277,7 +297,6 @@ function TableRowBox({
  * 마이 계산기
  */
 function MyCalculet() {
-  const { loginPage } = usePage;
   const { openSnackbar } = useSnackbar();
   // user id token
   const { idToken } = useSelector((state) => ({
@@ -367,7 +386,45 @@ function MyCalculet() {
       "left",
       1600 // 지속시간
     );
-    await handleMyCalculetList();
+    await handleMyCalculetList(
+      setIsCalculetListLoading,
+      idToken,
+      selectedFilter,
+      rowsPerPage,
+      page,
+      setMyCalculetList
+    );
+  }
+  // 선택한 거 전체 삭제
+  async function handleAllDeleteCalculet() {
+    await selectedMyCalculetList.forEach((calculetId) => {
+      // id로 계산기 찾아서 blocked 추출
+      let body = {
+        calculetId: calculetId,
+        blocked: calculetList.find((n) => n.id === calculetId).blocked,
+      };
+      handleDeleteMyCalculet(idToken, body);
+      console.log(calculetId);
+    });
+
+    await openSnackbar(
+      "basic",
+      "삭제되었습니다.",
+      false,
+      "bottom",
+      "left",
+      1600 // 지속시간
+    );
+    await handleMyCalculetList(
+      setIsCalculetListLoading,
+      idToken,
+      selectedFilter,
+      rowsPerPage,
+      page,
+      setMyCalculetList
+    );
+
+    await setSelectedMyCalculetList([]);
   }
 
   // page change
@@ -381,28 +438,6 @@ function MyCalculet() {
   };
 
   const [isCalculetListLoading, setIsCalculetListLoading] = useState(true);
-  async function handleMyCalculetList() {
-    await setIsCalculetListLoading(true);
-    // 로그인 안 한 경우
-    if (idToken === "") {
-      loginPage();
-    }
-    // 로그인 한 경우
-    else {
-      let body = {
-        blocked: selectedFilter.map((row) => row.id), // id array
-        size: rowsPerPage,
-        page: page,
-      };
-      const response = await handleGetMyCalculetList(idToken, body);
-      if (response) {
-        {
-          setMyCalculetList(response);
-          setIsCalculetListLoading(false);
-        }
-      }
-    }
-  }
 
   // 선택 여부 handler
   function handleSelectedFilter(value) {
@@ -419,8 +454,17 @@ function MyCalculet() {
   }
 
   useEffect(() => {
-    handleMyCalculetList();
-  }, [selectedFilter, rowsPerPage]);
+    if (idToken !== "") {
+      handleMyCalculetList(
+        setIsCalculetListLoading,
+        idToken,
+        selectedFilter,
+        rowsPerPage,
+        page,
+        setMyCalculetList
+      );
+    }
+  }, [idToken, selectedFilter, rowsPerPage, page]);
 
   // table cell padding sx
   const paddingSx = { padding: "1.4rem 1.6rem" };
@@ -433,24 +477,16 @@ function MyCalculet() {
         <Title content="마이 계산기" />
         <Paper sx={{ width: "100%" }}>
           <EnhancedTableToolbar
-            // numSelected={selectedMyCalculetList.length}
             selectedFilter={selectedFilter}
+            numSelected={selectedMyCalculetList.length}
+            handleAllDeleteCalculet={handleAllDeleteCalculet}
             handleSelectedFilter={handleSelectedFilter}
-            // onDeleteCalculetRecords={handleOnDeleteWarning}
-            // onSaveCalculetRecords={handleSaveCalculetRecords}
-            // onAddCalculetRecords={handleAddCalculetRecords}
           />
-
           {!isCalculetListLoading && (
             <Table>
               <EnhancedTableHead
                 numSelected={selectedMyCalculetList.length}
-                // order={order}
-                onSelectAll={handleSelectAll}
                 onSelectAllClick={handleSelectAllClick}
-                // onSelectRecentClick={handleSelectRecentClick}
-                // onSelectRecordClick={handleSelectRecordClick}
-                // onRequestSort={handleRequestSort}
                 rowCount={myCalculetListCount}
                 headCells={DATA_MY_CALCULET_HEAD_CELLS}
               />

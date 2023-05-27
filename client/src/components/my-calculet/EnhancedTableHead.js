@@ -15,17 +15,7 @@ function TableHeadCellBox({ headCell, align }) {
  * @param {*} props : 헤더 열 데이터
  */
 function EnhancedTableHead(props) {
-  const {
-    onSelectAll,
-    onSelectAllClick,
-    onSelectRecentClick,
-    onSelectRecordClick,
-    order,
-    numSelected,
-    rowCount,
-    onRequestSort,
-    headCells,
-  } = props;
+  const { onSelectAllClick, numSelected, rowCount, headCells } = props;
 
   //   // 계산 내역 선택 팝업창
   //   const [isRecordSelectedOption, setIsRecordSelectedOption] = useState(false);
@@ -52,11 +42,6 @@ function EnhancedTableHead(props) {
                   onChange={onSelectAllClick}
                   // size="small"
                 />
-                {/* <RecordSelectedOption
-                  isPopUpOpen={isRecordSelectedOption}
-                  setIsPopUpOpen={setIsRecordSelectedOption}
-                  clickFunctionList={clickFunctionList}
-                /> */}
               </FlexBox>
             </TableCell>
             {headCells &&
