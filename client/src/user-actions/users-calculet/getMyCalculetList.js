@@ -5,9 +5,10 @@ import { handleErrorUserActions } from "../../utils/handleUserActions";
  * get my calculet list
  * @param {*} userId
  */
-async function getMyCalculetList(userId) {
+async function getMyCalculetList(userId, dataToSubmit = {}) {
   try {
     const response = await axios.get(`/api/users/me/calculet`, {
+      params: dataToSubmit,
       headers: {
         Authorization: `Bearer ${userId}`,
       },

@@ -108,10 +108,10 @@ async function handleGetUserIdCalculetList(idToken, uuid, body) {
  * 사용자 마이 계산기 리스트
  * @param {*} idToken
  */
-async function handleGetMyCalculetList(idToken) {
+async function handleGetMyCalculetList(idToken, body) {
   try {
     /** get my calculet list */
-    const response = await getMyCalculetList(idToken);
+    const response = await getMyCalculetList(idToken, body);
     if (!!response) {
       return response;
     } else {

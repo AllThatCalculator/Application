@@ -21,24 +21,9 @@ function EnhancedTableToolbar(props) {
     // onDeleteCalculetRecords,
     // onSaveCalculetRecords,
     // onAddCalculetRecords,
+    selectedFilter,
+    handleSelectedFilter,
   } = props;
-
-  // 필터 선택
-  const [selectedFilter, setSelectedFilter] = useState([]);
-
-  // 선택 여부 handler
-  function handleSelectedFilter(value) {
-    const { id } = value;
-    const currentIndex = selectedFilter.findIndex((item) => item.id === id);
-    const newSelectedFilter = [...selectedFilter];
-
-    if (currentIndex === -1) {
-      newSelectedFilter.push(value);
-    } else {
-      newSelectedFilter.splice(currentIndex, 1);
-    }
-    setSelectedFilter(newSelectedFilter);
-  }
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);

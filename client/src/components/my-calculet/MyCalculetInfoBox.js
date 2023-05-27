@@ -8,13 +8,25 @@ function MyCalculetInfoBox({
   description,
   categoryMainId,
   categorySubId,
+  onClickCalculetIdPage,
+  blocked,
 }) {
   const { getCategoryMainName, getCategorySubName } = useGetCategoryName();
   const { ellipsis } = useSx();
-
   return (
     <FlexColumnBox sx={{ maxWidth: "18rem" }}>
-      <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+      <Typography
+        variant="body1"
+        sx={{
+          fontWeight: "bold",
+
+          "&:hover": {
+            cursor: blocked === 0 && "pointer", //공개일 때만 가능
+            textDecoration: blocked === 0 && "underline",
+          },
+        }}
+        onClick={onClickCalculetIdPage}
+      >
         {title}
       </Typography>
       <Typography

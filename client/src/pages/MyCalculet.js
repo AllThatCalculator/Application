@@ -48,6 +48,8 @@ function TableRowBox({
   onClickSelectedMyCalculetList,
   handleDeleteCalculet,
 }) {
+  const { calculetIdPage } = usePage();
+
   // 계산기 정보
   const {
     id,
@@ -121,6 +123,10 @@ function TableRowBox({
               description={description}
               categoryMainId={categoryMainId}
               categorySubId={categorySubId}
+              onClickCalculetIdPage={() => {
+                if (blocked === 0) calculetIdPage(id);
+              }}
+              blocked={blocked}
             />
             <FlexBox
               sx={{ alignItems: "center" }}
@@ -277,13 +283,35 @@ function MyCalculet() {
   }));
 
   // 마이 계산기 list
-  const [myCalculetList, setMyCalculetList] = useState([]);
+  const [myCalculetList, setMyCalculetList] = useState({
+    calculetList: [
+      {
+        id: "",
+        title: "",
+        description: "",
+        categoryMainId: "",
+        categorySubId: "",
+        viewCnt: 0,
+        contributor: {
+          id: "",
+          userName: "",
+          profileImgSrc: "",
+        },
+      },
+    ],
+    count: 0,
+  });
+  const { calculetList, count: myCalculetListCount } = myCalculetList;
+
   // 선택한 마이 계산기 list
   const [selectedMyCalculetList, setSelectedMyCalculetList] = useState([]);
   // 현재 page
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   // 한 번에 볼 목록 개수
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  // 필터 선택
+  const [selectedFilter, setSelectedFilter] = useState([]);
 
   // ========== handle selected ==============
   function isSelectedMyCalculet(id) {
@@ -310,7 +338,7 @@ function MyCalculet() {
   }
   // (option) 전체 선택 handling
   const handleSelectAll = () => {
-    const newSelected = myCalculetList.map((n) => n.id).filter((n) => n);
+    const newSelected = calculetList.map((n) => n.id).filter((n) => n);
     setSelectedMyCalculetList(newSelected); // update
   };
   // (checkBox) 전체 선택 handling
@@ -346,27 +374,51 @@ function MyCalculet() {
   };
   // per page row
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setRowsPerPage(parseInt(event.target.value));
+    setPage(1);
   };
 
-  function handleMyCalculetList() {
+  const [isCalculetListLoading, setIsCalculetListLoading] = useState(true);
+  async function handleMyCalculetList() {
+    await setIsCalculetListLoading(true);
     // 로그인 안 한 경우
     if (idToken === "") {
-      setMyCalculetList([]);
       loginPage();
     }
     // 로그인 한 경우
     else {
-      handleGetMyCalculetList(idToken).then((data) => {
-        setMyCalculetList(data);
-      });
+      let body = {
+        blocked: selectedFilter.map((row) => row.id), // id array
+        size: rowsPerPage,
+        page: page,
+      };
+      const response = await handleGetMyCalculetList(idToken, body);
+      if (response) {
+        {
+          setMyCalculetList(response);
+          setIsCalculetListLoading(false);
+        }
+      }
     }
+  }
+
+  // 선택 여부 handler
+  function handleSelectedFilter(value) {
+    const { id } = value;
+    const currentIndex = selectedFilter.findIndex((item) => item.id === id);
+    const newSelectedFilter = [...selectedFilter];
+
+    if (currentIndex === -1) {
+      newSelectedFilter.push(value);
+    } else {
+      newSelectedFilter.splice(currentIndex, 1);
+    }
+    setSelectedFilter(newSelectedFilter);
   }
 
   useEffect(() => {
     handleMyCalculetList();
-  }, []);
+  }, [selectedFilter, rowsPerPage]);
 
   // table cell padding sx
   const paddingSx = { padding: "1.4rem 1.6rem" };
@@ -379,27 +431,30 @@ function MyCalculet() {
         <Title content="마이 계산기" />
         <Paper sx={{ width: "100%" }}>
           <EnhancedTableToolbar
-            numSelected={selectedMyCalculetList.length}
+            // numSelected={selectedMyCalculetList.length}
+            selectedFilter={selectedFilter}
+            handleSelectedFilter={handleSelectedFilter}
             // onDeleteCalculetRecords={handleOnDeleteWarning}
             // onSaveCalculetRecords={handleSaveCalculetRecords}
             // onAddCalculetRecords={handleAddCalculetRecords}
           />
-          <Table>
-            <EnhancedTableHead
-              numSelected={selectedMyCalculetList.length}
-              // order={order}
-              onSelectAll={handleSelectAll}
-              onSelectAllClick={handleSelectAllClick}
-              // onSelectRecentClick={handleSelectRecentClick}
-              // onSelectRecordClick={handleSelectRecordClick}
-              // onRequestSort={handleRequestSort}
-              rowCount={myCalculetList && myCalculetList.length}
-              headCells={DATA_MY_CALCULET_HEAD_CELLS}
-            />
-            <TableBody>
-              {myCalculetList &&
-                myCalculetList
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+
+          {!isCalculetListLoading && (
+            <Table>
+              <EnhancedTableHead
+                numSelected={selectedMyCalculetList.length}
+                // order={order}
+                onSelectAll={handleSelectAll}
+                onSelectAllClick={handleSelectAllClick}
+                // onSelectRecentClick={handleSelectRecentClick}
+                // onSelectRecordClick={handleSelectRecordClick}
+                // onRequestSort={handleRequestSort}
+                rowCount={myCalculetListCount}
+                headCells={DATA_MY_CALCULET_HEAD_CELLS}
+              />
+              <TableBody>
+                {calculetList
+                  // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((myCalculet) => {
                     const { id } = myCalculet;
                     // id로 식별해서 selected
@@ -419,11 +474,13 @@ function MyCalculet() {
                       />
                     );
                   })}
-            </TableBody>
-          </Table>
+              </TableBody>
+            </Table>
+          )}
+
           {
             // list 아무 것도 없는 경우
-            myCalculetList && myCalculetList.length === 0 && (
+            myCalculetListCount === 0 && (
               <Typography color="text.disabled" sx={{ ...paddingSx }}>
                 등록한 계산기가 없습니다.
               </Typography>
@@ -433,9 +490,13 @@ function MyCalculet() {
             labelRowsPerPage="목록 개수"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={myCalculetList && myCalculetList.length}
+            count={
+              myCalculetListCount === 0
+                ? 1
+                : Math.ceil(myCalculetListCount / rowsPerPage)
+            }
             rowsPerPage={rowsPerPage}
-            page={page}
+            page={page - 1}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
