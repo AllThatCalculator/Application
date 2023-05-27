@@ -1,0 +1,3 @@
+const CALCULET_DEFAULT_ID = "76ad0be9-3433-49d7-9ea4-af06ca5a0ff9";
+
+export { CALCULET_DEFAULT_ID };

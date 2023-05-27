@@ -36,6 +36,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import WarningDialog from "../components/global-components/WarningDialog";
 import useSnackbar from "../hooks/useSnackbar";
 import EnhancedTableToolbar from "../components/my-calculet/EnhancedTableToolbar";
+import { CALCULET_DEFAULT_ID } from "../constants/calculet";
 
 async function handleMyCalculetList(
   setIsCalculetListLoading,
@@ -371,13 +372,26 @@ function MyCalculet() {
     setSelectedMyCalculetList([]);
   };
 
+  function deleteOftenUsedCalculet(id) {
+    if (localStorage.getItem("oftenCalculet") === id) {
+      localStorage.setItem("oftenCalculet", CALCULET_DEFAULT_ID);
+    }
+    if (localStorage.getItem("previousCalculet") === id) {
+      localStorage.setItem("previousCalculet", CALCULET_DEFAULT_ID);
+      localStorage.setItem("continueCnt", 0);
+    }
+  }
+
   // 삭제
+  // 삭제 시 주의, 삭제한 계산기가 자주 쓰는 계산기였다면
+  // 삭제 되었는데도 계속 참조할 테니 로컬 스토리지도 지워주자
   async function handleDeleteCalculet(id, blocked) {
     let body = {
       calculetId: id,
       blocked: blocked,
     };
     await handleDeleteMyCalculet(idToken, body);
+    await deleteOftenUsedCalculet(id);
     await openSnackbar(
       "basic",
       "삭제되었습니다.",
@@ -404,7 +418,7 @@ function MyCalculet() {
         blocked: calculetList.find((n) => n.id === calculetId).blocked,
       };
       handleDeleteMyCalculet(idToken, body);
-      console.log(calculetId);
+      deleteOftenUsedCalculet(calculetId);
     });
 
     await openSnackbar(
