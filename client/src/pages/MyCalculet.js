@@ -171,7 +171,7 @@ function TableRowBox({
             </IconButton>
           </FitTableCell>
         </TableRow>
-        {isEdit && !!calculetTemp && (
+        {isEdit ? (
           <TableRow>
             <TableCell sx={{ padding: "0" }} colSpan={100}>
               <Collapse in={open} timeout="auto" unmountOnExit>
@@ -245,6 +245,8 @@ function TableRowBox({
               </Collapse>
             </TableCell>
           </TableRow>
+        ) : (
+          <></>
         )}
       </Fragment>
       <WarningDialog
