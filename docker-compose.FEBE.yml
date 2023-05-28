@@ -11,43 +11,31 @@ services:
     volumes:
       - /client/node_modules
       - ./client/:/client
-    # networks:
-    #   - app-tier
     tty: true
-    ports:
-      - 3001:3000
     restart: always
     depends_on:
       - backend
-#   nginx:
-#     container_name: nginx
-#     build: ./nginx
-#     ports:
-#       - 8080:8080
-#     volumes:
-#       - ./nginx/nginx.FEBE:/etc/nginx/conf.d
-#       - ./scripts/dev/auto-reload-nginx.sh:/scripts/auto-reload-nginx.sh
-#     depends_on:
-#       - frontend
-#       - backend
-#     networks:
-#       - app-tier
-#     restart: always
-#     command: ["/scripts/auto-reload-nginx.sh"]
+  nginx:
+    container_name: nginx
+    build: ./nginx
+    ports:
+      - 8080:8080
+    volumes:
+      - ./nginx/nginx.FEBE:/etc/nginx/conf.d
+      - ./scripts/dev/auto-reload-nginx.sh:/scripts/auto-reload-nginx.sh
+    depends_on:
+      - frontend
+      - backend
+    restart: always
+    command: ["/scripts/auto-reload-nginx.sh"]
 
-#   backend:
-#     container_name: backend
-#     build:
-#       context: ./server
-#       dockerfile: Dockerfile.dev
-#     env_file: ./server/.env
-#     volumes:
-#       - /server/node_modules
-#       - ./server/:/server
-#     networks:
-#       - app-tier
-#     restart: always
-
-# networks:
-#   app-tier:
-#     driver: bridge
+  backend:
+    container_name: backend
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    env_file: ./server/.env
+    volumes:
+      - /server/node_modules
+      - ./server/:/server
+    restart: always
