@@ -29,6 +29,7 @@ import {
   setCalculetInOutputObj,
 } from "../../utils/setCalculetInOutputObj";
 import WarningDialog from "../global-components/WarningDialog";
+import { FitTableCell } from "../atom-components/StyledTables";
 
 // orderBy key constant
 const KEY_CREATED_AT = "createdAt";
@@ -227,7 +228,11 @@ function EnhancedTableToolbar(props) {
             저장
           </Button>
           <></>
-          <Button variant="text" onClick={onDeleteCalculetRecords}>
+          <Button
+            variant="text"
+            onClick={onDeleteCalculetRecords}
+            color="error"
+          >
             삭제
           </Button>
           <Typography
@@ -614,46 +619,29 @@ function RecordCalculetHistory({ calculetId, isPreview }) {
                                 size="small"
                               />
                             </TableCell>
-                            <TableCell
-                              sx={{
-                                ...paddingSx,
-                                fontWeight: isItemRecentData && "bold",
-                              }}
-                              component="th"
-                              scope="row"
-                            >
+                            <FitTableCell isBold={isItemRecentData}>
                               {formatDayTime(row.createdAt)}
-                            </TableCell>
+                            </FitTableCell>
                             {row.inputObj &&
                               Object.values(row.inputObj).map((data, index) => (
-                                <TableCell
+                                <FitTableCell
                                   key={index}
-                                  sx={{
-                                    ...paddingSx,
-                                    fontWeight: isItemRecentData && "bold",
-                                  }}
-                                  component="th"
-                                  scope="row"
+                                  isBold={isItemRecentData}
                                   align="left"
                                 >
                                   {data}
-                                </TableCell>
+                                </FitTableCell>
                               ))}
                             {row.outputObj &&
                               Object.values(row.outputObj).map(
                                 (data, index) => (
-                                  <TableCell
+                                  <FitTableCell
                                     key={index}
-                                    sx={{
-                                      ...paddingSx,
-                                      fontWeight: isItemRecentData && "bold",
-                                    }}
-                                    component="th"
-                                    scope="row"
+                                    isBold={isItemRecentData}
                                     align="right"
                                   >
                                     {data}
-                                  </TableCell>
+                                  </FitTableCell>
                                 )
                               )}
                           </TableRow>

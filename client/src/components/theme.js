@@ -47,7 +47,11 @@ let theme = createTheme({
    */
   shadows: [
     ...createTheme({}).shadows.map((shadow, i) =>
-      i === 1 ? "0px 1px 8px 1px rgba(0, 0, 0, 0.08)" : shadow
+      i === 1
+        ? "0px 1px 8px 1px rgba(0, 0, 0, 0.08)"
+        : i === 11
+        ? "inset 0px 1px 5px rgba(0, 0, 0, 0.25)"
+        : shadow
     ),
   ],
   typography: {

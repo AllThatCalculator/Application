@@ -159,6 +159,11 @@ function usePage() {
     navigate(URL.SETTING + "/" + URL.PASSWORD_ID);
   }
 
+  // 마이 계산기
+  function myCalculetPage() {
+    navigate(URL.MY_CALCULET);
+  }
+
   // 회원탈퇴완료
   function deleteCompletePage() {
     navigate(URL.DELETE_COMPLETE);
@@ -184,6 +189,7 @@ function usePage() {
     settingAccountPage,
     settingPasswordPage,
     deleteCompletePage,
+    myCalculetPage,
   };
 }
 export default usePage;

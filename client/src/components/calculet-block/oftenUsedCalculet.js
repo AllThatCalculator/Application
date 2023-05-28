@@ -1,3 +1,5 @@
+import { CALCULET_DEFAULT_ID } from "../../constants/calculet";
+
 function updateCalculetCount(calculetId) {
   if (calculetId !== localStorage.getItem("previousCalculet")) {
     // console.log("update!", calculetId);
@@ -27,9 +29,8 @@ function loadOftenUsedCalculet() {
 
   // 만약 자주 쓰는 계산기가 비어있다면 초기화
   if (localStorage.getItem("oftenCalculet") === null) {
-    const DEFAULT_ID = "76ad0be9-3433-49d7-9ea4-af06ca5a0ff9";
-    localStorage.setItem("oftenCalculet", DEFAULT_ID);
-    localStorage.setItem("previousCalculet", DEFAULT_ID);
+    localStorage.setItem("oftenCalculet", CALCULET_DEFAULT_ID);
+    localStorage.setItem("previousCalculet", CALCULET_DEFAULT_ID);
     localStorage.setItem("continueCnt", 0);
   }
 

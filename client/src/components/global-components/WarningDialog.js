@@ -28,17 +28,24 @@ function WarningDialog({
     setIsOpen(false);
   };
 
+  async function onClickAction() {
+    await handleOnClick();
+    await handleClose();
+  }
+
   return (
     <Dialog open={isOpen} onClose={handleClose}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <DialogContentText>{contentText}</DialogContentText>
+        <DialogContentText sx={{ whiteSpace: "pre-wrap" }}>
+          {contentText}
+        </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="inherit">
           취소
         </Button>
-        <Button variant="contained" onClick={handleOnClick} color="error">
+        <Button variant="contained" onClick={onClickAction} color="error">
           {actionText}
         </Button>
       </DialogActions>
