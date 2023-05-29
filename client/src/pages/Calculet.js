@@ -101,7 +101,7 @@ function Calculet() {
   useEffect(() => {
     if (!!calculetObj) setIsLoading(false);
   }, [calculetObj]);
-  console.log(calculetObj);
+  // console.log(calculetObj);
   return (
     <>
       {isLoading && <LoadingPage />}

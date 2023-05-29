@@ -2,13 +2,11 @@ import { useSelector } from "react-redux";
 import usePage from "../hooks/usePage";
 import useSnackbar from "../hooks/useSnackbar";
 import Register from "../pages/Register";
-import useInput from "../hooks/useInput";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   changeCategoryMain,
   changeCategorySub,
 } from "../utils/changeCategorySelect";
-import postRegisterCalculetTemp from "../user-actions/calculets/postRegisterCalculetTemp";
 import useInputs from "../hooks/useInputs";
 import useSelects from "../hooks/useSelects";
 import {
@@ -16,8 +14,6 @@ import {
   ID_INPUT_DESCRIPTION,
   ID_INPUT_CATEGORY_MAIN_ID,
   ID_INPUT_CATEGORY_SUB_ID,
-  ID_INPUT_SRC_CODE,
-  ID_INPUT_MANUAL,
 } from "../constants/register";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import {
@@ -26,14 +22,21 @@ import {
   handlePostCalculet,
 } from "../utils/handleUserActions";
 
+/**
+ * 수정 페이지에서 useEffect로 calculet을 가져올 때 리렌더링 현상이 심함
+ * -> cnt를 정해서 1번만 불러오도록 하기 위해 변수 선언
+ */
+let loadCalculetCnt = 0;
+
 function RegisterContainer() {
-  const { loginPage, calculetPage, myCalculetPage } = usePage();
+  const { loginPage, myCalculetPage } = usePage();
   const { openSnackbar } = useSnackbar();
 
   /**
    * 현재 url에서 저작한 계산기 id 뽑아 내기 => 계산기 저작 || 수정 구분을 위해
    */
   const { id, blockedUrlId } = useGetUrlParam();
+
   function isEditMode() {
     // 수정 하기 모드인지
     return id !== undefined;
@@ -61,11 +64,11 @@ function RegisterContainer() {
     inputDescription: "",
     inputUpdate: "", // 업데이트 내용
   });
+
   const { inputTitle, inputDescription, inputUpdate } = registerInputs;
 
   const {
     values: registerSelects,
-    onChange: onChangeRegisterSelects,
     onSetValue: setRegisterSelect,
     onSetValues: setRegisterSelects,
   } = useSelects({
@@ -183,7 +186,7 @@ function RegisterContainer() {
 
   //-------------- (2) 수정하기 : id를 통해 calculet info 받아오고 값 채워넣기 ----------------
   const [isLoading, setIsLoading] = useState(true);
-  async function getMyCalculetWithId() {
+  const getMyCalculetWithId = useCallback(async () => {
     await setIsLoading(true);
     /** get param */
     let params = {
@@ -204,7 +207,7 @@ function RegisterContainer() {
     } = response;
 
     // type
-    setCalceultType(type);
+    await setCalceultType(type);
 
     // 이름, 요약 설명
     await onSetRegisterInputs([
@@ -224,13 +227,15 @@ function RegisterContainer() {
     await setManual(manual);
 
     await setIsLoading(false);
-  }
+  }, [blockedUrlId, id, idToken, onSetRegisterInputs, setRegisterSelects]);
+
   useEffect(() => {
-    // quizId 있으면 update, 없으면 write
-    if (isEditMode()) {
+    if (id !== undefined && loadCalculetCnt === 0) {
+      // Id 있으면 수정, 없으면 등록
       getMyCalculetWithId();
+      loadCalculetCnt++;
     }
-  }, [id]);
+  }, [id, getMyCalculetWithId]);
 
   return (
     <Register

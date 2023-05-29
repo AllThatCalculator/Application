@@ -317,7 +317,7 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
     },
   ];
 
-  console.log(calculetObj);
+  // console.log(calculetObj);
 
   return (
     <>

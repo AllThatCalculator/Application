@@ -103,7 +103,7 @@ async function handleGetUserIdCalculetList(idToken, uuid, body) {
       return false;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return error.code;
   }
 }
@@ -122,7 +122,7 @@ async function handleGetMyCalculet(idToken, params, body) {
       return false;
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return error.code;
   }
 }

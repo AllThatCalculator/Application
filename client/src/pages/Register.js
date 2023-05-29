@@ -1,21 +1,11 @@
 import WriteCode from "../components/register/WriteCode";
 import WriteInform from "../components/register/WriteInform";
-import { useState } from "react";
-import useInput from "../hooks/useInput";
 import { Box, Grid } from "@mui/material";
 import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import Title from "../components/global-components/Title";
 import PageScreenBottom from "../components/global-components/PageScreenBottom";
 import CheckIcon from "@mui/icons-material/Check";
-import postRegisterCalculetTemp from "../user-actions/calculets/postRegisterCalculetTemp";
-import usePage from "../hooks/usePage";
 import PreviewCalculet from "../components/register/PreviewCalculet";
-import { useSelector } from "react-redux";
-import useSnackbar from "../hooks/useSnackbar";
-import {
-  changeCategoryMain,
-  changeCategorySub,
-} from "../utils/changeCategorySelect";
 import LoadingPage from "../components/global-components/LoadingPage";
 import WriteUpdate from "../components/register/WriteUpdate";
 
