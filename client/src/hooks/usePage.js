@@ -26,6 +26,11 @@ function usePage() {
     navigate(URL.REGISTER);
   }
 
+  // 계산기 수정
+  function editPage(id, blocked) {
+    navigate(`${URL.REGISTER}/${id}?${URL.BLOCKED_ID}=${blocked}`);
+  }
+
   // 계산기 목록
   function calculetListPage() {
     navigate(URL.CALCULET_LIST);
@@ -190,6 +195,7 @@ function usePage() {
     settingPasswordPage,
     deleteCompletePage,
     myCalculetPage,
+    editPage,
   };
 }
 export default usePage;

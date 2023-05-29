@@ -12,6 +12,12 @@ import useSx from "../../hooks/useSx";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import BoxRecCalculator from "../atom-components/BoxRecCalculator";
 import { useSelector } from "react-redux";
+import {
+  ID_INPUT_CATEGORY_MAIN_ID,
+  ID_INPUT_CATEGORY_SUB_ID,
+  ID_INPUT_DESCRIPTION,
+  ID_INPUT_TITLE,
+} from "../../constants/register";
 
 /**
  * 계산기 정보 입력창 컴포넌트 (정보 입력 + 배너 미리보기)
@@ -19,6 +25,16 @@ import { useSelector } from "react-redux";
  * props: 계산기에 대한 정보 state들
  */
 function WriteInform(props) {
+  const {
+    title,
+    description,
+    categoryMainId,
+    categorySubId,
+    onChangeInputs,
+    onChangeCategoryMain,
+    onChangeCategorySub,
+  } = props;
+
   const { subTitleSx } = useSx();
   const { userInfo, calculetCategory } = useSelector((state) => ({
     userInfo: state.userInfo,
@@ -31,25 +47,27 @@ function WriteInform(props) {
         <FlexColumnBox gap="1.6rem">
           <Typography sx={{ ...subTitleSx }}>계산기 정보 입력</Typography>
           <TextField
+            id={ID_INPUT_TITLE}
             label="계산기 이름"
-            value={props.title}
-            onChange={props.changeTitle}
+            value={title}
+            onChange={onChangeInputs}
             required
           />
           <TextField
+            id={ID_INPUT_DESCRIPTION}
             label="계산기 요약 설명"
-            value={props.description}
-            onChange={props.changeDescription}
+            value={description}
+            onChange={onChangeInputs}
             required
           />
           <Grid container gap="0.8rem">
             <Grid item xs>
-              <FormControl fullWidth required>
+              <FormControl name={ID_INPUT_CATEGORY_MAIN_ID} fullWidth required>
                 <InputLabel>대분류</InputLabel>
                 <Select
                   label="대분류"
-                  value={props.categoryMainId}
-                  onChange={props.changeCategoryMain}
+                  value={categoryMainId}
+                  onChange={onChangeCategoryMain}
                 >
                   {calculetCategory &&
                     Object.entries(calculetCategory).map((data) => {
@@ -66,15 +84,16 @@ function WriteInform(props) {
             </Grid>
             <Grid item xs>
               <FormControl
+                name={ID_INPUT_CATEGORY_SUB_ID}
                 fullWidth
                 required
-                disabled={props.categoryMainId === ""}
+                disabled={categoryMainId === ""}
               >
                 <InputLabel>소분류</InputLabel>
                 <Select
                   label="소분류"
-                  value={props.categorySubId}
-                  onChange={props.changeCategorySub}
+                  value={categorySubId}
+                  onChange={onChangeCategorySub}
                 >
                   {calculetCategory &&
                     Object.entries(calculetCategory).map((data) => {
@@ -82,7 +101,7 @@ function WriteInform(props) {
                       const mainValue = data[1];
                       const { name, ...subList } = mainValue; // name 제외하고 순회
                       return (
-                        mainId === props.categoryMainId &&
+                        mainId === categoryMainId &&
                         Object.entries(subList).map((subData) => {
                           const key = subData[0];
                           const value = subData[1];
@@ -118,9 +137,9 @@ function WriteInform(props) {
             }}
           >
             <BoxRecCalculator
-              name={props.title}
+              name={title}
               nickName={userInfo.userName}
-              description={props.description}
+              description={description}
               profile={userInfo.profileImgSrc}
             />
           </Paper>

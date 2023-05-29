@@ -15,6 +15,8 @@ function useGetUrlParam() {
 
   let uuidUrlId = param.get(URL.USERUID_ID);
 
+  let blockedUrlId = param.get(URL.BLOCKED_ID);
+
   // URL에 포함되어있는 Key, Value 형식의 객체를 반환
   // /:id
   let { id, menu, categoryMain } = useParams();
@@ -29,6 +31,7 @@ function useGetUrlParam() {
     id,
     menu,
     categoryMain,
+    blockedUrlId,
   };
 }
 export default useGetUrlParam;

@@ -53,5 +53,7 @@ const URL = {
   PASSWORD_ID: "password", // 비밀번호 변경
   /** uuid */
   USERUID_ID: "who", // uuid
+  // blocked
+  BLOCKED_ID: "blocked",
 };
 export default URL;

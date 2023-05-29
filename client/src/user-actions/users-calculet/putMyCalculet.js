@@ -1,12 +1,10 @@
 import axios from "axios";
 import { handleErrorUserActions } from "../../utils/handleUserActions";
 
-/**
- * calculet_info_temp에 계산기 임시 등록 post 요청 보내는 함수
- */
-async function postRegisterCalculetTemp(userId, dataToSubmit = {}) {
+async function putMyCalculet(userId, dataToSubmit = {}) {
+  let data;
   try {
-    const response = await axios.post(`/api/calculets`, dataToSubmit, {
+    const response = await axios.put(`/api/users/me/calculet`, dataToSubmit, {
       headers: {
         Authorization: `Bearer ${userId}`,
       },
@@ -15,6 +13,7 @@ async function postRegisterCalculetTemp(userId, dataToSubmit = {}) {
   } catch (error) {
     handleErrorUserActions(error.response);
   }
+  return data;
 }
 
-export default postRegisterCalculetTemp;
+export default putMyCalculet;

@@ -10,6 +10,9 @@ import getUserIdProfile from "../user-actions/users/getUserIdProfile";
 import getCalculetBookmark from "../user-actions/bookmark/getCalculetBookmark";
 import getMyCalculetList from "../user-actions/users-calculet/getMyCalculetList";
 import deleteMyCalculet from "../user-actions/users-calculet/deleteMyCalculet";
+import getMyCalculet from "../user-actions/users-calculet/getMyCalculet";
+import putMyCalculet from "../user-actions/users-calculet/putMyCalculet";
+import postRegisterCalculetTemp from "../user-actions/calculets/postRegisterCalculetTemp";
 /**
  * 사용자 정보 가져오는 처리
  * @param {*} idToken
@@ -100,6 +103,26 @@ async function handleGetUserIdCalculetList(idToken, uuid, body) {
       return false;
     }
   } catch (error) {
+    console.log(error);
+    return error.code;
+  }
+}
+
+/**
+ * 마이 계산기 id로 가져오기
+ * @param {*} idToken
+ */
+async function handleGetMyCalculet(idToken, params, body) {
+  try {
+    /** get user calculet list */
+    const response = await getMyCalculet(idToken, params, body);
+    if (!!response) {
+      return response;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
     return error.code;
   }
 }
@@ -130,6 +153,36 @@ async function handleDeleteMyCalculet(idToken, body) {
   try {
     /** delete my calculet list */
     await deleteMyCalculet(idToken, body);
+  } catch (error) {
+    return error.code;
+  }
+}
+/**
+ * 사용자 마이 계산기 수정
+ * @param {*} idToken
+ */
+async function handleEditMyCalculet(idToken, body) {
+  try {
+    /** edit my calculet list */
+    await putMyCalculet(idToken, body);
+    return true;
+  } catch (error) {
+    return error.code;
+  }
+}
+/**
+ * 계산기 등록
+ * @param {*} idToken
+ */
+async function handlePostCalculet(idToken, body) {
+  try {
+    /** post my calculet list */
+    const response = await postRegisterCalculetTemp(idToken, body);
+    if (response === "/") {
+      return true;
+    } else {
+      return false;
+    }
   } catch (error) {
     return error.code;
   }
@@ -237,7 +290,10 @@ export {
   handleDeleteUser,
   handleErrorUserActions,
   handleGetUserIdCalculetList,
+  handleGetMyCalculet,
   handleGetMyCalculetList,
   handleGetUserIdProfile,
   handleDeleteMyCalculet,
+  handleEditMyCalculet,
+  handlePostCalculet,
 };
