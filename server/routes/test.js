@@ -107,6 +107,7 @@ router.delete("/users", auth.validate, async (req, res) => {
  */
 router.delete("/users/database", auth.validate, async (req, res) => {
   try {
+    await admin.auth().setCustomUserClaims(res.locals.userId, {});
     await deleteUser.database(res.locals.userId);
     res.status(200).send(`user "${res.locals.email}" deleted from database`);
   } catch (error) {
