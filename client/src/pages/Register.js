@@ -77,7 +77,7 @@ function Register() {
       !title.value ||
       !description.value ||
       !categoryMainId ||
-      !categorySubId
+      (categorySubId !== 0 && !categorySubId)
     ) {
       openSnackbar(
         "error",

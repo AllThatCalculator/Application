@@ -12,6 +12,7 @@ import useSx from "../../hooks/useSx";
 import { FlexBox, FlexColumnBox } from "../global-components/FlexBox";
 import BoxRecCalculator from "../atom-components/BoxRecCalculator";
 import { useSelector } from "react-redux";
+import { ID_MAIN_CONVERTER } from "../../constants/calculetList";
 
 /**
  * 계산기 정보 입력창 컴포넌트 (정보 입력 + 배너 미리보기)
@@ -56,9 +57,11 @@ function WriteInform(props) {
                       const mainId = Number(data[0]);
                       const mainName = data[1].name;
                       return (
-                        <MenuItem key={mainId} value={mainId}>
-                          {mainName}
-                        </MenuItem>
+                        mainId !== Number(ID_MAIN_CONVERTER) && (
+                          <MenuItem key={mainId} value={mainId}>
+                            {mainName}
+                          </MenuItem>
+                        )
                       );
                     })}
                 </Select>
@@ -84,7 +87,7 @@ function WriteInform(props) {
                       return (
                         mainId === props.categoryMainId &&
                         Object.entries(subList).map((subData) => {
-                          const key = subData[0];
+                          const key = Number(subData[0]);
                           const value = subData[1];
                           return (
                             <MenuItem key={key} value={key}>
