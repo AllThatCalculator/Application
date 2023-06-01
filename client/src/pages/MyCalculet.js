@@ -493,6 +493,7 @@ function MyCalculet() {
   const paddingSx = { padding: "1.4rem 1.6rem" };
 
   //   console.log(myCalculetList);
+  // console.log(myCalculetListCount);
 
   return (
     <PageWhiteScreenBox>

@@ -21,12 +21,13 @@ import {
   handleGetMyCalculet,
   handlePostCalculet,
 } from "../utils/handleUserActions";
+import { ID_MAIN_CONVERTER } from "../constants/calculetList";
 
 /**
  * 수정 페이지에서 useEffect로 calculet을 가져올 때 리렌더링 현상이 심함
  * -> cnt를 정해서 1번만 불러오도록 하기 위해 변수 선언
  */
-let loadCalculetCnt = 0;
+let isloadedCalculet = false;
 
 function RegisterContainer() {
   const { loginPage, myCalculetPage } = usePage();
@@ -113,7 +114,8 @@ function RegisterContainer() {
       !inputTitle ||
       !inputDescription ||
       !inputCategoryMainId ||
-      !inputCategorySubId ||
+      (inputCategorySubId !== Number(ID_MAIN_CONVERTER) &&
+        !inputCategorySubId) ||
       (isEditMode() && !inputUpdate)
     ) {
       openSnackbar(
@@ -230,10 +232,10 @@ function RegisterContainer() {
   }, [blockedUrlId, id, idToken, onSetRegisterInputs, setRegisterSelects]);
 
   useEffect(() => {
-    if (id !== undefined && loadCalculetCnt === 0) {
+    if (id !== undefined && !isloadedCalculet) {
       // Id 있으면 수정, 없으면 등록
       getMyCalculetWithId();
-      loadCalculetCnt++;
+      isloadedCalculet = true;
     }
   }, [id, getMyCalculetWithId]);
 

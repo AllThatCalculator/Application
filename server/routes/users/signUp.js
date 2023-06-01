@@ -20,7 +20,7 @@ exports.signUp = async (req, res) => {
     sex: userInfo.sex,
     birthdate: userInfo.birthdate,
     job: userInfo.job,
-    profileImg: res.locals.profileUUID,
+    profileImgSrc: res.locals.profileUUID,
   });
 
   await admin.auth().setCustomUserClaims(res.locals.userId, {
