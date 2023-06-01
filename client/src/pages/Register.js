@@ -1,133 +1,43 @@
 import WriteCode from "../components/register/WriteCode";
 import WriteInform from "../components/register/WriteInform";
-import { useState } from "react";
-import useInput from "../hooks/useInput";
 import { Box, Grid } from "@mui/material";
 import { PageScreenBox } from "../components/global-components/PageScreenBox";
 import Title from "../components/global-components/Title";
 import PageScreenBottom from "../components/global-components/PageScreenBottom";
 import CheckIcon from "@mui/icons-material/Check";
-import postRegisterCalculetTemp from "../user-actions/calculets/postRegisterCalculetTemp";
-import usePage from "../hooks/usePage";
 import PreviewCalculet from "../components/register/PreviewCalculet";
-import { useSelector } from "react-redux";
-import useSnackbar from "../hooks/useSnackbar";
-import {
-  changeCategoryMain,
-  changeCategorySub,
-} from "../utils/changeCategorySelect";
+import LoadingPage from "../components/global-components/LoadingPage";
+import WriteUpdate from "../components/register/WriteUpdate";
 
 /**
  * 계산기 등록 페이지 컴포넌트
  * - 여러 컴포넌트에서 관리하는 state들을 관리
  */
-function Register() {
-  const { loginPage, calculetPage } = usePage();
-  const { openSnackbar } = useSnackbar();
-
-  const { idToken, userInfo } = useSelector((state) => ({
-    idToken: state.userInfo.idToken,
-    userInfo: state.userInfo,
-  }));
-
-  const title = useInput("");
-  // markdown
-  const description = useInput("");
-
-  // 선택된 대분류, 소분류 id
-  const [categoryMainId, setCategoryMainId] = useState("");
-  const [categorySubId, setCategorySubId] = useState("");
-
-  const [srcCode, setSrcCode] = useState(
-    `<!DOCTYPE html>\n<html lang="ko">\n<head>\n  <meta charset="UTF-8">\n  <title>계산기 이름</title>\n</head>\n<body>\n  <h1>본인이 구현한 계산기 코드를 작성해주세요.</h1>\n  <input id="input" type="text" class="atc-input atc-calculet-input" atcDesc="입력" value="입력 예시"/>\n  <div id="output" class="atc-output atc-calculet-output" atcDesc="결과">결과 예시</div>\n  <button id="button" class="atc-button">버튼 예시</button>\n</body>\n</html>`
-  );
-
-  // const [srcCode, setSrcCode] = useState(`<!DOCTYPE html>`);
-  const [manual, setManual] = useState(
-    "# 계산기 이름\n본인이 구현한 계산기에 대한 설명을 작성해주세요."
-  );
-
-  function handleChangeCategoryMain(event) {
-    // 대분류 타겟 value 값
-    let value = event.target.value;
-    changeCategoryMain(value, setCategoryMainId, setCategorySubId);
-  }
-  function handleChangeCategorySub(event) {
-    // 소분류 타겟 value 값
-    let value = event.target.value;
-    changeCategorySub(value, setCategorySubId);
-  }
-
-  // 미리보기 활성화
-  const [isPreview, setPreview] = useState(false);
-  function handleIsPreview() {
-    setPreview((prev) => !prev);
-  }
-
-  /**
-   * 계산기 등록
-   */
-  function registerCalculet() {
-    if (!idToken) {
-      loginPage();
-      return;
-    }
-
-    if (
-      !title.value ||
-      !description.value ||
-      !categoryMainId ||
-      (categorySubId !== 0 && !categorySubId)
-    ) {
-      openSnackbar(
-        "error",
-        "모든 사항을 입력해주세요.",
-        true,
-        "top",
-        "center",
-        2400 // 지속시간
-      );
-      return;
-    }
-
-    let body = {
-      title: title.value,
-      srcCode: srcCode,
-      manual: manual,
-      description: description.value,
-      categoryMainId: categoryMainId,
-      categorySubId: categorySubId,
-    };
-
-    const request = postRegisterCalculetTemp(body, idToken);
-    request.then((res) => {
-      // console.log(res);
-      if (res === "/") {
-        // 안내 팝업창
-        calculetPage();
-        // console.log("성공!");
-        openSnackbar(
-          "success",
-          "성공적으로 임시 등록되었습니다.",
-          true,
-          "top",
-          "center",
-          2400 // 지속시간
-        );
-      } else {
-        // 실패 팝업 처리
-        openSnackbar(
-          "error",
-          "계산기 등록에 실패했습니다. 다시 시도해 주세요.",
-          true,
-          "top",
-          "center",
-          2400 // 지속시간
-        );
-      }
-    });
-  }
-
+function Register({
+  isEditMode,
+  isLoading,
+  getRegisterPageTitle,
+  isPreview,
+  handleIsPreview,
+  //
+  title,
+  description,
+  categoryMainId,
+  categorySubId,
+  onChangeInputs,
+  onChangeCategoryMain,
+  onChangeCategorySub,
+  //
+  srcCode,
+  manual,
+  setSrcCode,
+  setManual,
+  //
+  userInfo,
+  registerCalculet,
+  //
+  inputUpdate,
+}) {
   return (
     <>
       <Grid container sx={{ backgroundColor: "white" }}>
@@ -136,34 +46,43 @@ function Register() {
           gap="2.4rem"
           sx={{ display: isPreview ? "none" : "" }}
         >
-          <Title content="계산기 저작" />
-          <WriteInform
-            title={title.value}
-            description={description.value}
-            categoryMainId={categoryMainId}
-            categorySubId={categorySubId}
-            changeTitle={title.onChange}
-            changeDescription={description.onChange}
-            changeCategoryMain={handleChangeCategoryMain}
-            changeCategorySub={handleChangeCategorySub}
-          />
-          <WriteCode
-            // 계산기 코드 입력
-            srcCode={srcCode}
-            manual={manual}
-            setSrcCode={setSrcCode}
-            setManual={setManual}
-            handleIsPreview={handleIsPreview}
-          />
+          <Title content={`계산기 ${getRegisterPageTitle()}`} />
+          {isLoading ? (
+            <LoadingPage />
+          ) : (
+            <>
+              <WriteInform
+                title={title}
+                description={description}
+                categoryMainId={categoryMainId}
+                categorySubId={categorySubId}
+                onChangeInputs={onChangeInputs}
+                onChangeCategoryMain={onChangeCategoryMain}
+                onChangeCategorySub={onChangeCategorySub}
+              />
+              <WriteCode
+                // 계산기 코드 입력
+                srcCode={srcCode}
+                manual={manual}
+                setSrcCode={setSrcCode}
+                setManual={setManual}
+                handleIsPreview={handleIsPreview}
+              />
+              {isEditMode && (
+                // 계산기 업데이트 내용
+                <WriteUpdate value={inputUpdate} onChange={onChangeInputs} />
+              )}
+            </>
+          )}
         </PageScreenBox>
-        {isPreview && (
+        {isPreview && ( // {{ display:  "none" }} 대신, 입력한 소스코드에 따라 컴포넌트 업데이트 되도록
           <PageScreenBox
             // 미리보기
             gap="2.4rem"
             // sx={{ display:  "none" }}
           >
             <PreviewCalculet
-              title={title.value}
+              title={title}
               userName={userInfo.userName}
               profileImgSrc={userInfo.profileImgSrc}
               srcCode={srcCode}
@@ -177,7 +96,7 @@ function Register() {
       <Box sx={{ pb: "24rem" }}>
         <PageScreenBottom
           helpText="계산기를 등록하세요!"
-          buttonText="계산기 등록"
+          buttonText={`${getRegisterPageTitle()} 완료`}
           handleButton={registerCalculet}
           buttonIcon={<CheckIcon />}
         />

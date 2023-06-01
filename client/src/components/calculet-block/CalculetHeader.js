@@ -30,6 +30,7 @@ import { useSelector } from "react-redux";
 import usePage from "../../hooks/usePage";
 import useSnackbar from "../../hooks/useSnackbar";
 import useGetCalculetBookmark from "../../hooks/useGetCalculetBookmark";
+import { BLOCKED_PUBLISH_ID } from "../../constants/calculet";
 
 function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
   const { boxSx } = useSx();
@@ -214,7 +215,15 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
     },
   ];
   // =================계산기 이름, 정보=================
-  function CalculetTitle() {
+  function CalculetTitle({ calculetId }) {
+    const { editPage } = usePage();
+    // 편집 버튼 클릭 이벤트
+    function onClickEdit() {
+      // 메인 페이지에서 보이는 계산기들은 0이기 때문에
+      // 그냥 0 보내주기
+      editPage(calculetId, BLOCKED_PUBLISH_ID);
+    }
+
     return (
       <Grid container sx={{ alignItems: "center" }}>
         <Title content={title} />
@@ -235,7 +244,7 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
                   maxHeight: "3.2rem",
                 },
               }}
-              onClick={() => {}}
+              onClick={onClickEdit}
             >
               계산기 편집
             </Button>
@@ -308,6 +317,8 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
     },
   ];
 
+  // console.log(calculetObj);
+
   return (
     <>
       {!isPreview && modalOpen && (
@@ -323,7 +334,7 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
         />
       )}
       {/* 계산기 타이틀, 계산기 정보 */}
-      <CalculetTitle />
+      <CalculetTitle calculetId={calculetObj.id} />
       <Grid container sx={{ alignItems: "center" }}>
         {/* 사용자, 뷰 */}
         <Grid item xs>

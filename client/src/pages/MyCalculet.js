@@ -36,7 +36,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import WarningDialog from "../components/global-components/WarningDialog";
 import useSnackbar from "../hooks/useSnackbar";
 import EnhancedTableToolbar from "../components/my-calculet/EnhancedTableToolbar";
-import { CALCULET_DEFAULT_ID } from "../constants/calculet";
+import { BLOCKED_PUBLISH_ID, CALCULET_DEFAULT_ID } from "../constants/calculet";
 
 async function handleMyCalculetList(
   setIsCalculetListLoading,
@@ -69,7 +69,7 @@ function TableRowBox({
   onClickSelectedMyCalculetList,
   handleDeleteCalculet,
 }) {
-  const { calculetIdPage } = usePage();
+  const { calculetIdPage, editPage } = usePage();
 
   // 계산기 정보
   const {
@@ -117,6 +117,11 @@ function TableRowBox({
     setIsEditDeleteWarning(true);
   }
 
+  // 편집 버튼 클릭 이벤트
+  function onClickEdit(id, blocked) {
+    editPage(id, blocked);
+  }
+
   return (
     <>
       <Fragment>
@@ -145,25 +150,27 @@ function TableRowBox({
               categoryMainId={categoryMainId}
               categorySubId={categorySubId}
               onClickCalculetIdPage={() => {
-                if (blocked === 0) calculetIdPage(id);
+                if (blocked === BLOCKED_PUBLISH_ID) calculetIdPage(id);
               }}
               blocked={blocked}
             />
-            <FlexBox
-              sx={{ alignItems: "center" }}
-              color={isEdit ? "black" : "text.disabled"}
-            >
-              <Typography variant="subtitle2">{`수정 중인 계산기 ${
-                isEdit ? 1 : 0
-              }개`}</Typography>
-              <IconButton
-                disabled={!isEdit}
-                size="small"
-                onClick={() => setOpen(!open)}
+            {blocked === BLOCKED_PUBLISH_ID && (
+              <FlexBox
+                sx={{ alignItems: "center" }}
+                color={isEdit ? "black" : "text.disabled"}
               >
-                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </IconButton>
-            </FlexBox>
+                <Typography variant="subtitle2">{`수정 중인 계산기 ${
+                  isEdit ? 1 : 0
+                }개`}</Typography>
+                <IconButton
+                  disabled={!isEdit}
+                  size="small"
+                  onClick={() => setOpen(!open)}
+                >
+                  {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </IconButton>
+              </FlexBox>
+            )}
           </FitTableCell>
           <FitTableCell sx={{ color: changeBlockedStatus(blocked).color }}>
             {changeBlockedStatus(blocked).status}
@@ -177,7 +184,7 @@ function TableRowBox({
               size="small"
               color="primary"
               disabled={isEdit}
-              onClick={() => {}}
+              onClick={() => onClickEdit(id, blocked)}
             >
               <EditIcon />
             </IconButton>
@@ -246,7 +253,9 @@ function TableRowBox({
                         <IconButton
                           size="small"
                           color="primary"
-                          onClick={() => {}}
+                          onClick={() =>
+                            onClickEdit(calculetTemp.id, calculetTemp.blocked)
+                          }
                         >
                           <EditIcon />
                         </IconButton>
@@ -484,6 +493,7 @@ function MyCalculet() {
   const paddingSx = { padding: "1.4rem 1.6rem" };
 
   //   console.log(myCalculetList);
+  // console.log(myCalculetListCount);
 
   return (
     <PageWhiteScreenBox>
@@ -496,14 +506,15 @@ function MyCalculet() {
             handleAllDeleteCalculet={handleAllDeleteCalculet}
             handleSelectedFilter={handleSelectedFilter}
           />
-          {!isCalculetListLoading && (
-            <Table>
-              <EnhancedTableHead
-                numSelected={selectedMyCalculetList.length}
-                onSelectAllClick={handleSelectAllClick}
-                rowCount={myCalculetListCount}
-                headCells={DATA_MY_CALCULET_HEAD_CELLS}
-              />
+
+          <Table>
+            <EnhancedTableHead
+              numSelected={selectedMyCalculetList.length}
+              onSelectAllClick={handleSelectAllClick}
+              rowCount={myCalculetListCount}
+              headCells={DATA_MY_CALCULET_HEAD_CELLS}
+            />
+            {!isCalculetListLoading && (
               <TableBody>
                 {calculetList
                   // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -527,9 +538,8 @@ function MyCalculet() {
                     );
                   })}
               </TableBody>
-            </Table>
-          )}
-
+            )}
+          </Table>
           {
             // list 아무 것도 없는 경우
             myCalculetListCount === 0 && (

@@ -18,6 +18,19 @@ function useInputs(initialValue) {
     });
   }
 
-  return { values, onChange };
+  // (한 번에 여러 개) 직접 입력
+  function onSetValues(newValues) {
+    let result = {};
+    for (let { id, value } of newValues) {
+      result = { [id]: value, ...result };
+    }
+
+    setValues({
+      ...values,
+      ...result,
+    });
+  }
+
+  return { values, onChange, onSetValues };
 }
 export default useInputs;

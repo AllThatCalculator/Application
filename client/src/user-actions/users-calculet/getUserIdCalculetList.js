@@ -9,17 +9,12 @@ import { handleErrorUserActions } from "../../utils/handleUserActions";
  */
 async function getUserIdCalculetList(userId, uuid, dataToSubmit = {}) {
   try {
-    const response = await axios.get(
-      `/api/users/${uuid}/calculet`,
-      {
-        params: dataToSubmit,
+    const response = await axios.get(`/api/users/${uuid}/calculet`, {
+      params: dataToSubmit,
+      headers: {
+        Authorization: `Bearer ${userId}`,
       },
-      {
-        headers: {
-          Authorization: `Bearer ${userId}`,
-        },
-      }
-    );
+    });
     return response.data;
   } catch (error) {
     handleErrorUserActions(error.response);
