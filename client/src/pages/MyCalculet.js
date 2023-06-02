@@ -52,7 +52,7 @@ async function handleMyCalculetList(
     let body = {
       blocked: selectedFilter.map((row) => row.id), // id array
       size: rowsPerPage,
-      page: page,
+      page: page + 1,
     };
     const response = await handleGetMyCalculetList(idToken, body);
     if (response) {
@@ -337,7 +337,7 @@ function MyCalculet() {
   // 선택한 마이 계산기 list
   const [selectedMyCalculetList, setSelectedMyCalculetList] = useState([]);
   // 현재 page
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   // 한 번에 볼 목록 개수
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -456,8 +456,8 @@ function MyCalculet() {
   };
   // per page row
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value));
-    setPage(1);
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const [isCalculetListLoading, setIsCalculetListLoading] = useState(true);
@@ -494,6 +494,7 @@ function MyCalculet() {
 
   //   console.log(myCalculetList);
   // console.log(myCalculetListCount);
+  // console.log(myCalculetListCount / rowsPerPage);
 
   return (
     <PageWhiteScreenBox>
@@ -552,13 +553,9 @@ function MyCalculet() {
             labelRowsPerPage="목록 개수"
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={
-              myCalculetListCount === 0
-                ? 1
-                : Math.ceil(myCalculetListCount / rowsPerPage)
-            }
+            count={myCalculetListCount}
             rowsPerPage={rowsPerPage}
-            page={page - 1}
+            page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
