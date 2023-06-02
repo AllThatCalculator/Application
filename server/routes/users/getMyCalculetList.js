@@ -20,7 +20,7 @@ function bindTempCalculet(myCalculetList) {
       likeCnt: calculet.likeCnt,
       bookmarkCnt: calculet.bookmarkCnt,
       blocked: calculet.blocked,
-      isEdit: calculet.isEdit,
+      isEdit: !!calculet.isEdit,
       calculetTemp: null,
     };
     if (calculet.tempId != null) {
@@ -35,7 +35,7 @@ function bindTempCalculet(myCalculetList) {
         viewCnt: calculet.tempViewCnt,
         likeCnt: calculet.tempLikeCnt,
         bookmarkCnt: calculet.tempBookmarkCnt,
-        isEdit: calculet.tempIsEdit,
+        isEdit: !!calculet.tempIsEdit,
       };
     }
     result.push(obj);
@@ -77,7 +77,7 @@ exports.getMyCalculetList = async (req, res) => {
   let filterSql = "";
   if (filter.includes(0) || filter.includes(1)) {
     filterSql += `
-    SELECT Info.id, Info.title, Info.description, Info.category_main_id as categoryMainId, Info.category_sub_id as categorySubId, Info.created_at as createdAt,
+    SELECT SQL_CALC_FOUND_ROWS Info.id, Info.title, Info.description, Info.category_main_id as categoryMainId, Info.category_sub_id as categorySubId, Info.created_at as createdAt,
     Info.view_cnt as viewCnt, Info.like_cnt as likeCnt, Info.bookmark_cnt as bookmarkCnt, Info.blocked, IF(Temp.id is NULL, False, True) as isEdit, 
     Temp.id as tempId, Temp.title as tempTitle, Temp.description as tempDesc, Temp.category_main_id as tempCategoryMainId, Temp.category_sub_id as tempCategorySubId, Temp.created_at as tempCreatedAt, 
     2 as tempBlocked, 0 as tempViewCnt, 0 as tempLikeCnt, 0 as tempBookmarkCnt, False as tempIsEdit
@@ -87,13 +87,10 @@ exports.getMyCalculetList = async (req, res) => {
     `;
   }
   if (filter.includes(2)) {
-    if (filterSql !== "") {
-      filterSql += `
-      UNION
-      `;
-    }
+    filterSql +=
+      filterSql === "" ? "SELECT SQL_CALC_FOUND_ROWS" : "UNION SELECT";
     filterSql += `
-    SELECT Temp.id, Temp.title, Temp.description, Temp.category_main_id as categoryMainId, Temp.category_sub_id as categorySubId, Temp.created_at as createdAt, 
+    Temp.id, Temp.title, Temp.description, Temp.category_main_id as categoryMainId, Temp.category_sub_id as categorySubId, Temp.created_at as createdAt, 
     0 as viewCnt, 0 as likeCnt, 0 as bookmarkCnt, 2 as blocked, False as isEdit,
     Info.id as tempId, Info.title as tempTitle, Info.description as tempDesc, Info.category_main_id as tempCategoryMainId, Info.category_sub_id as tempCategorySubId, Info.created_at as tempCreatedAt, 
     2 as tempBlocked, 0 as tempViewCnt, 0 as tempLikeCnt, 0 as tempBookmarkCnt, False as tempIsEdit
@@ -110,14 +107,17 @@ exports.getMyCalculetList = async (req, res) => {
     LIMIT ${size}
     OFFSET ${size * (page - 1)}
   `;
+  const sqlCount = "SELECT FOUND_ROWS() as count";
 
   const result = await sequelize.query(sqlFull, {
     type: QueryTypes.SELECT,
     nest: true,
   });
+  const [total] = await sequelize.query(sqlCount, {
+    type: QueryTypes.SELECT,
+    nest: true,
+  });
 
   const myCalculetList = bindTempCalculet(result);
-  res
-    .status(200)
-    .send({ calculetList: myCalculetList, count: myCalculetList.length });
+  res.status(200).send({ calculetList: myCalculetList, count: total.count });
 };
