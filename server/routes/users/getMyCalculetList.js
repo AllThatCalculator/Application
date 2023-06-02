@@ -20,7 +20,7 @@ function bindTempCalculet(myCalculetList) {
       likeCnt: calculet.likeCnt,
       bookmarkCnt: calculet.bookmarkCnt,
       blocked: calculet.blocked,
-      isEdit: calculet.isEdit ? true : false,
+      isEdit: !!calculet.isEdit,
       calculetTemp: null,
     };
     if (calculet.tempId != null) {
@@ -35,7 +35,7 @@ function bindTempCalculet(myCalculetList) {
         viewCnt: calculet.tempViewCnt,
         likeCnt: calculet.tempLikeCnt,
         bookmarkCnt: calculet.tempBookmarkCnt,
-        isEdit: calculet.tempIsEdit ? true : false,
+        isEdit: !!calculet.tempIsEdit,
       };
     }
     result.push(obj);
