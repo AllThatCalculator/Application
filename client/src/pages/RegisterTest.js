@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { PageScreenBox } from "../components/global-components/PageScreenBox";
-import Transformer from "../components/register-test/Transformer";
+import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
+import Transformer from "../components/organisms/register-test/Transformer";
 import { Grid } from "@mui/material";
 
 /**

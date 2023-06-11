@@ -3,17 +3,17 @@ import { useEffect, useMemo, useState } from "react";
 import {
   PageScreenBox,
   PageWhiteScreenBox,
-} from "../components/global-components/PageScreenBox";
-import Account from "../components/setting/account/Account";
+} from "../components/organisms/common/PageScreenBox";
+import Account from "../components/organisms/setting/account/Account";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import usePage from "../hooks/usePage";
 import URL from "../components/PageUrls";
-import { FlexColumnBox } from "../components/global-components/FlexBox";
-import Password from "../components/setting/Password";
+import { FlexColumnBox } from "../components/organisms/common/FlexBox";
+import Password from "../components/organisms/setting/Password";
 import useSx from "../hooks/useSx";
-import SettingMenu from "../components/setting/SettingMenu";
+import SettingMenu from "../components/organisms/setting/SettingMenu";
 
 function Setting() {
   // 설정 - 계정, 비밀번호 변경

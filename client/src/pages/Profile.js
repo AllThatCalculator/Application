@@ -4,10 +4,10 @@ import { useSelector } from "react-redux";
 import {
   PageScreenBox,
   PageWhiteScreenBox,
-} from "../components/global-components/PageScreenBox";
-import Title from "../components/global-components/Title";
-import ProfileHeader from "../components/profile/ProfileHeader";
-import UserCalculetList from "../components/profile/UserCalculetList";
+} from "../components/organisms/common/PageScreenBox";
+import Title from "../components/organisms/common/Title";
+import ProfileHeader from "../components/organisms/profile/ProfileHeader";
+import UserCalculetList from "../components/organisms/profile/UserCalculetList";
 import {
   handleGetUserIdCalculetList,
   handleGetUserIdProfile,

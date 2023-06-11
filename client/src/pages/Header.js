@@ -1,5 +1,5 @@
-import LogoHeader from "../components/atom-components/LogoHeader";
-import CategoryBar from "../components/global-components/CategoryBar";
+import LogoHeader from "../components/organisms/common/LogoHeader";
+import CategoryBar from "../components/organisms/common/CategoryBar";
 import { useCallback, useState } from "react";
 import { useEffect } from "react";
 import URL from "../components/PageUrls";
@@ -17,9 +17,9 @@ import MenuIcon from "@mui/icons-material/Menu";
 import {
   InvertButton,
   InvertTextButton,
-} from "../components/atom-components/Buttons";
+} from "../components/organisms/common/Buttons";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import PopupList from "../components/global-components/PopupList";
+import PopupList from "../components/organisms/common/PopupList";
 import usePage from "../hooks/usePage";
 import { useDispatch, useSelector } from "react-redux";
 import getCalculetList from "../user-actions/calculets/getCalculetList";
@@ -29,13 +29,13 @@ import {
 } from "../modules/calculetList";
 import useGetCategoryList from "../hooks/useGetCategoryList";
 import getCalculetConverters from "../user-actions/calculets/getCalculetConverters";
-import { FlexBox } from "../components/global-components/FlexBox";
-import SearchBar from "../components/search/SearchBar";
+import { FlexBox } from "../components/organisms/common/FlexBox";
+import SearchBar from "../components/organisms/search/SearchBar";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import useSx from "../hooks/useSx";
-import PCBookmarkBar from "../components/bookmark-bar/PCBookmarkBar";
-import MobileBookmarkBar from "../components/bookmark-bar/MobileBookmarkBar";
+import PCBookmarkBar from "../components/organisms/bookmark-bar/PCBookmarkBar";
+import MobileBookmarkBar from "../components/organisms/bookmark-bar/MobileBookmarkBar";
 import useGetCalculetBookmark from "../hooks/useGetCalculetBookmark";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { handleGetCalculetBookmark } from "../utils/handleUserActions";

@@ -1,13 +1,13 @@
-import WriteCode from "../components/register/WriteCode";
-import WriteInform from "../components/register/WriteInform";
+import WriteCode from "../components/organisms/register/WriteCode";
+import WriteInform from "../components/organisms/register/WriteInform";
 import { Box, Grid } from "@mui/material";
-import { PageScreenBox } from "../components/global-components/PageScreenBox";
-import Title from "../components/global-components/Title";
-import PageScreenBottom from "../components/global-components/PageScreenBottom";
+import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
+import Title from "../components/organisms/common/Title";
+import PageScreenBottom from "../components/organisms/common/PageScreenBottom";
 import CheckIcon from "@mui/icons-material/Check";
-import PreviewCalculet from "../components/register/PreviewCalculet";
-import LoadingPage from "../components/global-components/LoadingPage";
-import WriteUpdate from "../components/register/WriteUpdate";
+import PreviewCalculet from "../components/organisms/register/PreviewCalculet";
+import LoadingPage from "../components/organisms/common/LoadingPage";
+import WriteUpdate from "../components/organisms/register/WriteUpdate";
 
 /**
  * 계산기 등록 페이지 컴포넌트

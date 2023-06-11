@@ -13,8 +13,8 @@ import {
 import {
   PageScreenBox,
   PageWhiteScreenBox,
-} from "../components/global-components/PageScreenBox";
-import Title from "../components/global-components/Title";
+} from "../components/organisms/common/PageScreenBox";
+import Title from "../components/organisms/common/Title";
 import { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -23,19 +23,19 @@ import {
 } from "../utils/handleUserActions";
 import usePage from "../hooks/usePage";
 import { formatDayTime } from "../utils/formatTime";
-import EnhancedTableHead from "../components/my-calculet/EnhancedTableHead";
+import EnhancedTableHead from "../components/organisms/my-calculet/EnhancedTableHead";
 import { DATA_MY_CALCULET_HEAD_CELLS } from "../constants/myCalculet";
-import { FitTableCell } from "../components/atom-components/StyledTables";
+import { FitTableCell } from "../components/organisms/common/StyledTables";
 import changeBlockedStatus from "../utils/changeBlockedStatus";
-import { FlexBox } from "../components/global-components/FlexBox";
+import { FlexBox } from "../components/organisms/common/FlexBox";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import MyCalculetInfoBox from "../components/my-calculet/MyCalculetInfoBox";
+import MyCalculetInfoBox from "../components/organisms/my-calculet/MyCalculetInfoBox";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import WarningDialog from "../components/global-components/WarningDialog";
+import WarningDialog from "../components/organisms/common/WarningDialog";
 import useSnackbar from "../hooks/useSnackbar";
-import EnhancedTableToolbar from "../components/my-calculet/EnhancedTableToolbar";
+import EnhancedTableToolbar from "../components/organisms/my-calculet/EnhancedTableToolbar";
 import { BLOCKED_PUBLISH_ID, CALCULET_DEFAULT_ID } from "../constants/calculet";
 
 async function handleMyCalculetList(

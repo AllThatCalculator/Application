@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import { AppBar, Grid, Pagination, Tab, Tabs } from "@mui/material";
-import { PageScreenBox } from "../components/global-components/PageScreenBox";
-import { FlexColumnBox } from "../components/global-components/FlexBox";
-import Title from "../components/global-components/Title";
+import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
+import { FlexColumnBox } from "../components/organisms/common/FlexBox";
+import Title from "../components/organisms/common/Title";
 import { useSelector } from "react-redux";
 import useTabs from "../hooks/useTabs";
 import {
@@ -15,10 +15,10 @@ import useGetUrlParam from "../hooks/useGetUrlParam";
 import usePage from "../hooks/usePage";
 import getSearchRequestBody from "../utils/getSearchRequestBody";
 import getCalculetFind from "../user-actions/calculets/getCalculetFind";
-import TotalCount from "../components/atom-components/TotalCount";
-import SearchCalculetList from "../components/global-components/SearchCalculetList";
-import SearchSkeletonPage from "../components/search/SearchSkeletonPage";
-import { MoveTopFab } from "../components/atom-components/StyledFabs";
+import TotalCount from "../components/organisms/common/TotalCount";
+import SearchCalculetList from "../components/organisms/common/SearchCalculetList";
+import SearchSkeletonPage from "../components/organisms/search/SearchSkeletonPage";
+import { MoveTopFab } from "../components/organisms/common/StyledFabs";
 import useScrollPosition from "../hooks/useScrollPosition";
 
 // get calculet list

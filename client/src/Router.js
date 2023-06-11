@@ -18,8 +18,8 @@ import CalculetSubList from "./pages/CalculetSubList";
 import RegisterTest from "./pages/RegisterTest";
 
 // google-analytics
-import RouteChangeTracker from "./components/google-analytics/RouteChangeTracker";
-import Snackbars from "./components/global-components/Snackbars";
+import RouteChangeTracker from "./components/organisms/google-analytics/RouteChangeTracker";
+import Snackbars from "./components/organisms/common/Snackbars";
 import DeleteComplete from "./pages/guide/DeleteComplete";
 
 // container
