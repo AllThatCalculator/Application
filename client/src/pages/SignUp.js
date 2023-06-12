@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import SignUpFirebase from "../components/sign-up/SignUpFirebase";
-import SignUpInform from "../components/sign-up/SignUpInform";
+import SignUpFirebase from "../components/organisms/sign-up/SignUpFirebase";
+import SignUpInform from "../components/organisms/sign-up/SignUpInform";
 import usePreventLeave from "../hooks/usePreventLeave";
-import { PageWhiteScreenBox } from "../components/global-components/PageScreenBox";
-import { FlexColumnBox } from "../components/global-components/FlexBox";
+import { PageWhiteScreenBox } from "../components/organisms/common/PageScreenBox";
+import { FlexColumnBox } from "../components/organisms/common/FlexBox";
 import useSx from "../hooks/useSx";
 import { useDispatch, useSelector } from "react-redux";
 import { LinearProgress } from "@mui/material";
-import StyledImg from "../components/atom-components/StyledImg";
+import StyledImg from "../components/atoms/StyledImg";
 import usePage from "../hooks/usePage";
 import useLoading from "../hooks/useLoading";
 import useError from "../hooks/useError";

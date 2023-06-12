@@ -1,24 +1,24 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useState } from "react";
 import { AppBar, Grid } from "@mui/material";
-import { PageScreenBox } from "../components/global-components/PageScreenBox";
-import { FlexColumnBox } from "../components/global-components/FlexBox";
-import Title from "../components/global-components/Title";
+import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
+import { FlexColumnBox } from "../components/organisms/common/FlexBox";
+import Title from "../components/organisms/common/Title";
 import { useSelector } from "react-redux";
 import useTabs from "../hooks/useTabs";
 import { ID_MAIN_CATEGORY_TAB } from "../constants/calculetList";
-import CalculetListContent from "../components/calculet-list/CalculetListContent";
+import CalculetListContent from "../components/organisms/calculet-list/CalculetListContent";
 import {
   FloatingTab,
   FloatingTabs,
-} from "../components/atom-components/StyledTabs";
+} from "../components/organisms/common/StyledTabs";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import CalculetSubList from "./CalculetSubList";
-import { MoveTopFab } from "../components/atom-components/StyledFabs";
+import { MoveTopFab } from "../components/organisms/common/StyledFabs";
 import useScrollPosition from "../hooks/useScrollPosition";
-import BoxNoItem from "../components/atom-components/BoxNoItem";
-import TabSkeleton from "../components/calculet-list/TabSkeleton";
-import SearchSkeletonPage from "../components/search/SearchSkeletonPage";
+import BoxNoItem from "../components/organisms/common/BoxNoItem";
+import TabSkeleton from "../components/organisms/calculet-list/TabSkeleton";
+import SearchSkeletonPage from "../components/organisms/search/SearchSkeletonPage";
 
 /**
  * 계산기 전체 목록 페이지

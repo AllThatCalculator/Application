@@ -1,20 +1,20 @@
-import CalculetBlock from "../components/calculet-block/CalculetBlock";
+import CalculetBlock from "../components/organisms/calculet-block/CalculetBlock";
 import { useCallback, useEffect, useState } from "react";
-import CalculetHeader from "../components/calculet-block/CalculetHeader";
+import CalculetHeader from "../components/organisms/calculet-block/CalculetHeader";
 import {
   updateCalculetCount,
   loadOftenUsedCalculet,
-} from "../components/calculet-block/oftenUsedCalculet";
-import FooterRecommend from "../components/global-components/FooterRecommend";
+} from "../components/organisms/calculet-block/oftenUsedCalculet";
+import FooterRecommend from "../components/organisms/common/FooterRecommend";
 import calculetInfo from "../user-actions/calculets/calculetInfo";
 import { Grid } from "@mui/material";
-import { PageScreenBox } from "../components/global-components/PageScreenBox";
-import LoadingPage from "../components/global-components/LoadingPage";
+import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
+import LoadingPage from "../components/organisms/common/LoadingPage";
 import UploadIcon from "@mui/icons-material/Upload";
 import usePage from "../hooks/usePage";
 import getCalculetUpdateLog from "../user-actions/calculets/getCalculetUpdateLog";
 import getUserIdToken from "../utils/getUserIdToken";
-import PageScreenBottom from "../components/global-components/PageScreenBottom";
+import PageScreenBottom from "../components/organisms/common/PageScreenBottom";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 
 async function handleGetCalculetInfo(id, setCalculetObj) {

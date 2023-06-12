@@ -3,23 +3,23 @@ import { Divider, Grid, Pagination, Typography } from "@mui/material";
 import {
   PageScreenBox,
   PageWhiteScreenBox,
-} from "../components/global-components/PageScreenBox";
-import Title from "../components/global-components/Title";
+} from "../components/organisms/common/PageScreenBox";
+import Title from "../components/organisms/common/Title";
 import useSx from "../hooks/useSx";
-import { FlexBox } from "../components/global-components/FlexBox";
+import { FlexBox } from "../components/organisms/common/FlexBox";
 import { useDispatch, useSelector } from "react-redux";
 import { onSetSearchResult, onSetSearchResultCount } from "../modules/search";
 import usePage from "../hooks/usePage";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import getCalculetFind from "../user-actions/calculets/getCalculetFind";
 import getSearchRequestBody from "../utils/getSearchRequestBody";
-import SearchFilter from "../components/global-components/SearchFilter";
+import SearchFilter from "../components/organisms/common/SearchFilter";
 import {
   changeCategoryMain,
   changeCategorySub,
 } from "../utils/changeCategorySelect";
-import SearchSkeletonPage from "../components/search/SearchSkeletonPage";
-import SearchCalculetList from "../components/global-components/SearchCalculetList";
+import SearchSkeletonPage from "../components/organisms/search/SearchSkeletonPage";
+import SearchCalculetList from "../components/organisms/common/SearchCalculetList";
 
 async function getCalculetResult(
   setIsLoading,

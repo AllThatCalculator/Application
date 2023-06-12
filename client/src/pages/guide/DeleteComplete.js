@@ -1,7 +1,7 @@
 import { Button, Typography } from "@mui/material";
-import StyledImg from "../../components/atom-components/StyledImg";
-import { FlexColumnBox } from "../../components/global-components/FlexBox";
-import { PageWhiteScreenBox } from "../../components/global-components/PageScreenBox";
+import StyledImg from "../../components/atoms/StyledImg";
+import { FlexColumnBox } from "../../components/organisms/common/FlexBox";
+import { PageWhiteScreenBox } from "../../components/organisms/common/PageScreenBox";
 import usePage from "../../hooks/usePage";
 
 /**

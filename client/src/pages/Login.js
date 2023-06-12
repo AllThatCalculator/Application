@@ -8,19 +8,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { PageWhiteScreenBox } from "../components/global-components/PageScreenBox";
-import {
-  FlexBox,
-  FlexColumnBox,
-} from "../components/global-components/FlexBox";
+import { PageWhiteScreenBox } from "../components/organisms/common/PageScreenBox";
+import { FlexBox, FlexColumnBox } from "../components/organisms/common/FlexBox";
 import {
   BasicButton,
   CaptionButton,
-} from "../components/atom-components/Buttons";
+} from "../components/organisms/common/Buttons";
 import useSx from "../hooks/useSx";
-import FindPwFormDialog from "../components/login/FindPwFormDialog";
-import StyledImg from "../components/atom-components/StyledImg";
-import StyledPwTextField from "../components/global-components/StyledPwTextField";
+import FindPwFormDialog from "../components/organisms/login/FindPwFormDialog";
+import StyledImg from "../components/atoms/StyledImg";
+import StyledPwTextField from "../components/organisms/common/StyledPwTextField";
 
 /**
  * 로그인 페이지
