@@ -103,7 +103,7 @@ exports.getMyCalculetList = async (req, res) => {
   // get calculet info & calculet info temp (full outer join)
   const sqlFull = `
     ${filterSql}
-    ORDER BY createdAt
+    ORDER BY createdAt DESC
     LIMIT ${size}
     OFFSET ${size * (page - 1)}
   `;
