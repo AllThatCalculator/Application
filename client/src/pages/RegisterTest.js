@@ -1,44 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import { Grid, MenuItem, Select } from "@mui/material";
 import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
-import Transformer from "../components/organisms/register-test/Transformer";
-import { Grid } from "@mui/material";
+import Transformer from "../components/organisms/register-editor/Transformer";
+import CopyButton from "../components/organisms/register-editor/CopyButton";
+import ComponentForm from "../components/organisms/register-editor/ComponentForm";
+import { Components } from "../components/organisms/register-editor/ComponentOptions";
+import useInput from "../hooks/useInput";
 
 /**
  * 계산기 심플 등록 테스트 페이지
- * - 사용자에게 입력받는 컴포넌트 정보를 testObj에 넣고, 이를 컴포넌트로 transform하는 로직
+ * - 사용자에게 입력받는 컴포넌트 정보를 객체로 바꿔서, transform하는 로직
  * - 사용자에게 입력받은 함수 문자열(functionStr)을 함수화해서 계산하기 버튼을 눌렀을 때 계산이 실행되도록 함
  */
 function RegisterTest() {
-  const [isRender, setIsRender] = useState(false);
-  const [inputs, setInputs] = useState({});
-  const [outputs, setOutputs] = useState({});
-  const [components, setComponents] = useState([]);
-  const [testObj] = useState([
-    {
-      isInput: true,
-      isOutput: true,
-      copyButton: true,
-      isRequired: true,
-      isDisabled: false,
-      type: "STRING",
-      param: {
-        name: "test",
-        label: "입력",
-      },
-    },
-    {
-      isInput: false,
-      isOutput: true,
-      copyButton: true,
-      isRequired: true,
-      isDisabled: false,
-      type: "STRING",
-      param: {
-        name: "test2",
-        label: "입력2",
-      },
-    },
-  ]);
+  const [inputs, setInputs] = useState({}); // 입력 객체
+  const [outputs, setOutputs] = useState({}); // 출력 객체 (계산하기 후, 입력 + 출력 모두 합쳐서 저장)
+  const [components, setComponents] = useState({}); // 컴포넌트 객체
+  const { value: type, onChange: onChangeType } = useInput("");
 
   // 함수 생성 보안 경고 무시
   // eslint-disable-next-line
@@ -49,89 +27,122 @@ function RegisterTest() {
     }`
   );
 
+  // 계산하기
   const calculate = useCallback(
     (userFunction) => {
-      const outputObj = { ...inputs, ...userFunction(inputs) };
-      setOutputs(outputObj);
-      setComponents((components) =>
-        components.map((element) => {
-          if (element.isOutput) {
-            element.value = outputObj[element.param.name];
-          }
-          return element;
-        })
-      );
+      const outputObj = { ...userFunction(inputs) };
+      for (const output in outputObj) {
+        setComponents((components) => ({
+          ...components,
+          [output]: { ...components[output], value: outputObj[output] },
+        }));
+      }
+
+      const fullObj = { ...inputs, ...outputObj };
+      setOutputs(fullObj);
     },
     [inputs]
   );
 
+  // 입력 값 onChange 함수
   const onInputsChange = useCallback(
     (e) => {
       const { id, value } = e.target;
       setInputs((inputs) => ({ ...inputs, [id]: value }));
-      setComponents((components) =>
-        components.map((element) => {
-          if (element.isInput) {
-            element.value = value;
-          }
-          return element;
-        })
-      );
+      setComponents((components) => ({
+        ...components,
+        [id]: {
+          ...components[id],
+          value: value,
+          InputProps: components[id].copyButton
+            ? { endAdornment: <CopyButton text={value} /> }
+            : null,
+        },
+      }));
     },
     [setInputs, setComponents]
   );
 
-  function onOutputsChange(e) {
-    const { id, value } = e.target;
-    setOutputs((outputs) => ({ ...outputs, [id]: value }));
-  }
-
-  const transformerHandler = useCallback(() => {
-    const tempInputs = inputs;
-    const tempOutputs = outputs;
-    const tempComponents = [];
-    testObj.forEach((data) => {
-      const valId = data.param.name;
+  // 컴포넌트 추가하는 함수
+  const addComponent = useCallback(
+    (data) => {
+      data = {
+        ...data,
+        value: "",
+      };
       if (data.isInput) {
-        tempInputs[valId] = "";
+        setInputs((inputs) => ({ ...inputs, [data.id]: "" }));
         data = {
           ...data,
-          value: tempInputs[valId],
           onChange: onInputsChange,
         };
       }
       if (data.isOutput) {
-        tempOutputs[valId] = "";
+        setOutputs((outputs) => ({ ...outputs, [data.id]: "" }));
+      }
+      if (data.copyButton) {
         data = {
           ...data,
-          value: tempOutputs[valId],
-          onChange: data.isInput
-            ? (e) => {
-                onInputsChange(e);
-                onOutputsChange(e);
-              }
-            : onOutputsChange,
+          InputProps: { endAdornment: <CopyButton text={data.value} /> },
         };
       }
-      tempComponents.push(data);
-    });
-    setInputs(tempInputs);
-    setOutputs(tempOutputs);
-    setComponents(tempComponents);
-  }, [inputs, outputs, testObj, onInputsChange]);
+      setComponents((components) => ({
+        ...components,
+        [data.id]: data,
+      }));
+    },
+    [onInputsChange]
+  );
 
-  useEffect(() => {
-    if (!isRender) {
-      transformerHandler();
-      setIsRender(true);
+  // 컴포넌트 삭제하는 함수
+  const deleteComponent = useCallback((data) => {
+    if (data.isInput) {
+      setInputs((inputs) => {
+        const { [data.id]: temp, ...rest } = inputs;
+        return rest;
+      });
     }
-  }, [isRender, transformerHandler]);
+    if (data.isOutput) {
+      setOutputs((outputs) => {
+        const { [data.id]: temp, ...rest } = outputs;
+        return rest;
+      });
+    }
+    setComponents((components) => {
+      const { [data.id]: temp, ...rest } = components;
+      return rest;
+    });
+  }, []);
+
+  // console.log("type", type);
+  // console.log("inputs", inputs);
+  // console.log("outputs", outputs);
+  // console.log("components", components);
 
   return (
     <Grid container sx={{ backgroundColor: "white" }}>
       <PageScreenBox gap="2.4rem">
-        {components.map((component, index) => (
-          <Transformer key={index} data={component} />
+        <Select value={type} onChange={onChangeType}>
+          {Object.entries(Components).map((component, index) => {
+            return (
+              component[0] !== "common" && (
+                <MenuItem key={index} value={component[0]}>
+                  {component[0]}
+                </MenuItem>
+              )
+            );
+          })}
+        </Select>
+        {type !== "" && (
+          <ComponentForm
+            type={type}
+            component={{ ...Components["common"], ...Components[type] }}
+            addComponent={addComponent}
+            deleteComponent={deleteComponent}
+          />
+        )}
+        {Object.entries(components).map((component, index) => (
+          <Transformer key={index} data={component[1]} />
         ))}
         <button onClick={() => calculate(userFunction)}>계산하기</button>
       </PageScreenBox>
