@@ -65,7 +65,7 @@ const Components = {
       name: "placeholder",
       required: false,
     },
-    defaultValue: { type: "string", name: "기본값", required: false },
+    value: { type: "string", name: "기본값", required: false },
   },
 };
 

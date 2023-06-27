@@ -14,7 +14,7 @@ import useInput from "../hooks/useInput";
  */
 function RegisterTest() {
   const [inputs, setInputs] = useState({}); // 입력 객체
-  const [outputs, setOutputs] = useState({}); // 출력 객체 (계산하기 후, 입력 + 출력 모두 합쳐서 저장)
+  // const [outputs, setOutputs] = useState({}); // 출력 객체 (계산하기 후, 입력 + 출력 모두 합쳐서 저장)
   const [components, setComponents] = useState({}); // 컴포넌트 객체
   const { value: type, onChange: onChangeType } = useInput("");
 
@@ -38,8 +38,8 @@ function RegisterTest() {
         }));
       }
 
-      const fullObj = { ...inputs, ...outputObj };
-      setOutputs(fullObj);
+      // const fullObj = { ...inputs, ...outputObj };
+      // setOutputs(fullObj);
     },
     [inputs]
   );
@@ -66,10 +66,13 @@ function RegisterTest() {
   // 컴포넌트 추가하는 함수
   const addComponent = useCallback(
     (data) => {
-      data = {
-        ...data,
-        value: "",
-      };
+      if (!data.value) {
+        data = {
+          ...data,
+          value: "",
+        };
+      }
+
       if (data.isInput) {
         setInputs((inputs) => ({ ...inputs, [data.id]: "" }));
         data = {
@@ -77,9 +80,9 @@ function RegisterTest() {
           onChange: onInputsChange,
         };
       }
-      if (data.isOutput) {
-        setOutputs((outputs) => ({ ...outputs, [data.id]: "" }));
-      }
+      // if (data.isOutput) {
+      //   setOutputs((outputs) => ({ ...outputs, [data.id]: "" }));
+      // }
       if (data.copyButton) {
         data = {
           ...data,
@@ -102,12 +105,12 @@ function RegisterTest() {
         return rest;
       });
     }
-    if (data.isOutput) {
-      setOutputs((outputs) => {
-        const { [data.id]: temp, ...rest } = outputs;
-        return rest;
-      });
-    }
+    // if (data.isOutput) {
+    //   setOutputs((outputs) => {
+    //     const { [data.id]: temp, ...rest } = outputs;
+    //     return rest;
+    //   });
+    // }
     setComponents((components) => {
       const { [data.id]: temp, ...rest } = components;
       return rest;
