@@ -6,12 +6,14 @@ import { TextField } from "@mui/material";
  * @param {*} props
  * props: 사용자가 입력한 컴포넌트 한 개의 정보들
  */
-function Transformer(props) {
-  const { data } = props;
+function Transformer({ data }) {
   const { isInput, isOutput, copyButton, componentType, ...options } = data;
   // console.log("추가된 컴포넌트", options);
-  if (data.componentType === "textField") {
-    return <TextField {...options} />;
+  switch (data.componentType) {
+    case "textField":
+      return <TextField {...options} />;
+    default:
+      return;
   }
 }
 export default React.memo(Transformer);

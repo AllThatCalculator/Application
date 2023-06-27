@@ -123,11 +123,11 @@ function RegisterTest() {
     <Grid container sx={{ backgroundColor: "white" }}>
       <PageScreenBox gap="2.4rem">
         <Select value={type} onChange={onChangeType}>
-          {Object.entries(Components).map((component, index) => {
+          {Object.entries(Components).map(([id, data], index) => {
             return (
-              component[0] !== "common" && (
-                <MenuItem key={index} value={component[0]}>
-                  {component[0]}
+              id !== "common" && (
+                <MenuItem key={index} value={id}>
+                  {id}
                 </MenuItem>
               )
             );
@@ -141,8 +141,8 @@ function RegisterTest() {
             deleteComponent={deleteComponent}
           />
         )}
-        {Object.entries(components).map((component, index) => (
-          <Transformer key={index} data={component[1]} />
+        {Object.entries(components).map(([id, data], index) => (
+          <Transformer key={index} data={data} />
         ))}
         <button onClick={() => calculate(userFunction)}>계산하기</button>
       </PageScreenBox>

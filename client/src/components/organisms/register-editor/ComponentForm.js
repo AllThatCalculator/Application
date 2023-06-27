@@ -17,47 +17,48 @@ import {
  * @returns
  */
 function TransformField({ id, data, value, onChange }) {
-  if (data.type === "string") {
-    return (
-      <TextField
-        id={id}
-        label={data.name}
-        value={value === undefined ? "" : value}
-        onChange={onChange}
-        required={data.required}
-      />
-    );
-  }
-  if (data.type === "bool") {
-    return (
-      <FormControlLabel
-        control={
-          <Checkbox
-            id={id}
-            checked={value === undefined ? false : value}
-            onChange={onChange}
-          />
-        }
-        label={data.name}
-        required={data.required}
-      />
-    );
-  }
-  if (data.type === "select") {
-    return (
-      <Select
-        name={id}
-        value={value === undefined ? data.options[0].value : value}
-        onChange={onChange}
-        required={data.required}
-      >
-        {data.options.map((option, index) => (
-          <MenuItem key={index} value={option.value}>
-            {option.name}
-          </MenuItem>
-        ))}
-      </Select>
-    );
+  switch (data.type) {
+    case "string":
+      return (
+        <TextField
+          id={id}
+          label={data.name}
+          value={value === undefined ? "" : value}
+          onChange={onChange}
+          required={data.required}
+        />
+      );
+    case "bool":
+      return (
+        <FormControlLabel
+          control={
+            <Checkbox
+              id={id}
+              checked={value === undefined ? false : value}
+              onChange={onChange}
+            />
+          }
+          label={data.name}
+          required={data.required}
+        />
+      );
+    case "select":
+      return (
+        <Select
+          name={id}
+          value={value === undefined ? data.options[0].value : value}
+          onChange={onChange}
+          required={data.required}
+        >
+          {data.options.map((option, index) => (
+            <MenuItem key={index} value={option.value}>
+              {option.name}
+            </MenuItem>
+          ))}
+        </Select>
+      );
+    default:
+      return;
   }
 }
 
@@ -107,12 +108,12 @@ function ComponentForm({ type, component, addComponent, deleteComponent }) {
   return (
     <Grid container sx={{ backgroundColor: "white" }}>
       <>
-        {Object.entries(component).map((option, index) => (
+        {Object.entries(component).map(([id, data], index) => (
           <TransformField
             key={index}
-            id={option[0]}
-            data={option[1]}
-            value={inputs[option[0]]}
+            id={id}
+            data={data}
+            value={inputs[id]}
             onChange={onInputsChange}
           />
         ))}
@@ -122,8 +123,6 @@ function ComponentForm({ type, component, addComponent, deleteComponent }) {
           const data = { ...inputs, componentType: type };
           if (invalidComponentOption(data)) {
             addComponent(data);
-          } else {
-            console.log("컴포넌트 추가 불가");
           }
         }}
       >
