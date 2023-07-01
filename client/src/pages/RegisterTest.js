@@ -50,7 +50,12 @@ function RegisterTest() {
   // 입력 값 onChange 함수
   const onInputsChange = useCallback(
     (e) => {
-      const { id, value } = e.target;
+      let { id, value } = e.target;
+      if (id && components[id].componentType === "check") {
+        value = e.target.checked;
+      } else if (id === undefined) {
+        id = e.target.name;
+      }
       setInputs((inputs) => ({ ...inputs, [id]: value }));
       setComponents((components) => ({
         ...components,
@@ -63,7 +68,7 @@ function RegisterTest() {
         },
       }));
     },
-    [setInputs, setComponents]
+    [components, setInputs, setComponents]
   );
 
   // 컴포넌트 추가하는 함수

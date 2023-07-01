@@ -1,5 +1,6 @@
 import React from "react";
 import { TextField } from "@mui/material";
+import SelectComponent from "./SelectComponent";
 
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
@@ -12,6 +13,8 @@ function Transformer({ data }) {
   switch (data.componentType) {
     case "textField":
       return <TextField {...properties} />;
+    case "select":
+      return <SelectComponent data={properties} />;
     default:
       return;
   }

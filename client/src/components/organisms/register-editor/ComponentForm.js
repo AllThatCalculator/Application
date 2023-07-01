@@ -140,7 +140,6 @@ function ComponentForm({ type, component, addComponent, deleteComponent }) {
   const onOptionsChange = useCallback((e) => {
     let { id, value } = e.target;
     const [name, idx] = id.split(" "); // 속성 이름과 옵션 번호
-    console.log(name, idx);
     setInputs((inputs) => ({
       ...inputs,
       options: {
@@ -150,8 +149,8 @@ function ComponentForm({ type, component, addComponent, deleteComponent }) {
     }));
   }, []);
 
-  console.log("속성 컴포넌트 정보", property);
-  console.log("컴포넌트 옵션 정보", inputs);
+  // console.log("속성 컴포넌트 정보", property);
+  // console.log("컴포넌트 옵션 정보", inputs);
 
   return (
     <Grid container sx={{ backgroundColor: "white" }}>
@@ -190,7 +189,10 @@ function ComponentForm({ type, component, addComponent, deleteComponent }) {
       )}
       <button
         onClick={() => {
-          const data = { ...inputs, componentType: type };
+          let data = { ...inputs, componentType: type };
+          if (type !== "textField" && type !== "typography") {
+            data = { ...data, isInput: true };
+          }
           if (invalidComponentOption(data)) {
             addComponent(data);
           }
