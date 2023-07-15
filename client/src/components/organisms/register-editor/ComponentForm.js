@@ -138,7 +138,7 @@ function ComponentForm({ type, component, addComponent, deleteComponent }) {
 
   // 옵션 onChange 함수
   const onOptionsChange = useCallback((e) => {
-    let { id, value } = e.target;
+    const { id, value } = e.target;
     const [name, idx] = id.split(" "); // 속성 이름과 옵션 번호
     setInputs((inputs) => ({
       ...inputs,
@@ -174,8 +174,8 @@ function ComponentForm({ type, component, addComponent, deleteComponent }) {
                 ([id, data2], index2) =>
                   id !== "id" && (
                     <TransformField
-                      key={id + data.id}
-                      id={id + " " + data.id}
+                      key={`${id}${data.id}`}
+                      id={`${id} ${data.id}`}
                       data={data2}
                       value={inputs.options[data.id][id]}
                       onChange={onOptionsChange}
