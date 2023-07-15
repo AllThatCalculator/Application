@@ -1,11 +1,14 @@
 import { useCallback, useState } from "react";
 import { Grid, MenuItem, Select } from "@mui/material";
+import useInput from "../hooks/useInput";
 import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
 import Transformer from "../components/organisms/register-editor/Transformer";
 import CopyButton from "../components/organisms/register-editor/CopyButton";
 import ComponentForm from "../components/organisms/register-editor/ComponentForm";
-import { Components } from "../components/organisms/register-editor/ComponentOptions";
-import useInput from "../hooks/useInput";
+import {
+  Common,
+  Components,
+} from "../components/organisms/register-editor/ComponentOptions";
 
 /**
  * 계산기 심플 등록 테스트 페이지
@@ -47,7 +50,10 @@ function RegisterTest() {
   // 입력 값 onChange 함수
   const onInputsChange = useCallback(
     (e) => {
-      const { id, value } = e.target;
+      let { id, value } = e.target;
+      if (id === undefined) {
+        id = e.target.name;
+      }
       setInputs((inputs) => ({ ...inputs, [id]: value }));
       setComponents((components) => ({
         ...components,
@@ -128,18 +134,16 @@ function RegisterTest() {
         <Select value={type} onChange={onChangeType}>
           {Object.entries(Components).map(([id, data], index) => {
             return (
-              id !== "common" && (
-                <MenuItem key={index} value={id}>
-                  {id}
-                </MenuItem>
-              )
+              <MenuItem key={index} value={id}>
+                {id}
+              </MenuItem>
             );
           })}
         </Select>
         {type !== "" && (
           <ComponentForm
             type={type}
-            component={{ ...Components["common"], ...Components[type] }}
+            component={{ ...Common, ...Components[type] }}
             addComponent={addComponent}
             deleteComponent={deleteComponent}
           />
