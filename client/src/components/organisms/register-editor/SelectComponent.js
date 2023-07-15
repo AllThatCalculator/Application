@@ -1,14 +1,9 @@
 import { Select, MenuItem } from "@mui/material";
 
 function SelectComponent({ data }) {
+  const { InputProps, ...rest } = data;
   return (
-    <Select
-      name={data.id}
-      label={data.label}
-      value={data.value}
-      onChange={data.onChange}
-      required={data.required}
-    >
+    <Select {...rest} name={data.id}>
       {Object.entries(data.options).map(([id, option], index) => (
         <MenuItem key={index} value={option.value}>
           {option.label}

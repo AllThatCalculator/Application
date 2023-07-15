@@ -149,8 +149,8 @@ function ComponentForm({ type, component, addComponent, deleteComponent }) {
     }));
   }, []);
 
-  // console.log("속성 컴포넌트 정보", property);
-  // console.log("컴포넌트 옵션 정보", inputs);
+  console.log("속성 컴포넌트 정보", property);
+  console.log("컴포넌트 옵션 정보", inputs);
 
   return (
     <Grid container sx={{ backgroundColor: "white" }}>
