@@ -63,7 +63,7 @@ function LanguageHelp({ language, helpText }) {
  * - handleIsPreview : 미리 보기 컨트롤 함수
  */
 function WriteCode(props) {
-  const { HEIGHT_CODE_EDITOR, subTitleSx, isWindowSmDown } = useSx();
+  const { HEIGHT_CODE_EDITOR, subTitleSx } = useSx();
 
   return (
     <Grid container spacing={4}>

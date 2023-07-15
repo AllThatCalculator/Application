@@ -74,7 +74,7 @@ function RegisterPageScreenBottom({ onClickLeftButton, onClickRightButton }) {
           px: 8,
           py: 1.2,
           justifyContent: "space-between",
-          // alignItems: "center",
+          alignItems: "center",
         }}
       >
         <Button
