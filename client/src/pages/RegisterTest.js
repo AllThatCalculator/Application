@@ -73,9 +73,13 @@ function RegisterTest() {
   const addComponent = useCallback(
     (data) => {
       if (!data.value) {
+        let value = "";
+        if (data.componentType === "multiSelect") {
+          value = [];
+        }
         data = {
           ...data,
-          value: "",
+          value: value,
         };
       }
 
@@ -124,7 +128,7 @@ function RegisterTest() {
   }, []);
 
   // console.log("type", type);
-  // console.log("inputs", inputs);
+  console.log("inputs", inputs);
   // console.log("outputs", outputs);
   console.log("components", components);
 

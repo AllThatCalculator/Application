@@ -15,6 +15,9 @@ function Transformer({ data }) {
       return <TextField {...properties} />;
     case "select":
       return <SelectComponent data={properties} />;
+    case "multiSelect":
+      const newData = { ...properties, multiple: true };
+      return <SelectComponent data={newData} />;
     default:
       return;
   }

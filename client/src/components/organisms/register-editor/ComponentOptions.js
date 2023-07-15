@@ -89,6 +89,9 @@ const Components = {
   select: {
     options: [],
   },
+  multiSelect: {
+    options: [],
+  },
 };
 
 export { Common, Option, Components };
