@@ -136,7 +136,7 @@ function WriteInform(props) {
             sx={{
               pointerEvents: "none",
               width: "100%",
-              margin: { xs: "0 5.8rem", sm: "0 2.4rem", md: "0 5.8rem" },
+              margin: { xs: "0 1.2rem", sm: "0 2.4rem", md: "0 1.2rem" },
             }}
           >
             <BoxRecCalculator

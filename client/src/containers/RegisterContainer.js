@@ -57,7 +57,7 @@ function RegisterContainer() {
 
   // inputs handle
   const {
-    values: registerInputs,
+    values: { inputTitle, inputDescription, inputUpdate },
     onChange: onChangeRegisterInputs,
     onSetValues: onSetRegisterInputs,
   } = useInputs({
@@ -66,26 +66,27 @@ function RegisterContainer() {
     inputUpdate: "", // 업데이트 내용
   });
 
-  const { inputTitle, inputDescription, inputUpdate } = registerInputs;
-
   const {
-    values: registerSelects,
+    values: { inputCategoryMainId, inputCategorySubId },
     onSetValue: setRegisterSelect,
     onSetValues: setRegisterSelects,
   } = useSelects({
     inputCategoryMainId: "",
     inputCategorySubId: "",
   });
-  const { inputCategoryMainId, inputCategorySubId } = registerSelects;
 
+  // 계산기 만들기
   const [srcCode, setSrcCode] = useState(
     `<!DOCTYPE html>\n<html lang="ko">\n<head>\n  <meta charset="UTF-8">\n  <title>계산기 이름</title>\n</head>\n<body>\n  <h1>본인이 구현한 계산기 코드를 작성해주세요.</h1>\n  <input id="input" type="text" class="atc-input atc-calculet-input" atcDesc="입력" value="입력 예시"/>\n  <div id="output" class="atc-output atc-calculet-output" atcDesc="결과">결과 예시</div>\n  <button id="button" class="atc-button">버튼 예시</button>\n</body>\n</html>`
   );
 
-  // const [srcCode, setSrcCode] = useState(`<!DOCTYPE html>`);
-  const [manual, setManual] = useState(
-    "# 계산기 이름\n본인이 구현한 계산기에 대한 설명을 작성해주세요."
-  );
+  // 설명 입력하기
+  const [manual, setManual] = useState("");
+  // set manual CKEditor
+  function onChangeManual(event, editor) {
+    const data = editor.getData();
+    setManual(data);
+  }
 
   function handleChangeCategoryMain(event) {
     // 대분류 타겟 value 값
@@ -259,7 +260,7 @@ function RegisterContainer() {
       srcCode={srcCode}
       manual={manual}
       setSrcCode={setSrcCode}
-      setManual={setManual}
+      onChangeManual={onChangeManual}
       //
       userInfo={userInfo}
       registerCalculet={registerCalculet}

@@ -1,6 +1,6 @@
 import WriteCode from "../components/organisms/register/WriteCode";
 import WriteInform from "../components/organisms/register/WriteInform";
-import { Box, Button, Grid, Tab, Tabs, Toolbar } from "@mui/material";
+import { Alert, Box, Button, Grid, Tab, Tabs, Toolbar } from "@mui/material";
 import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
 import Title from "../components/organisms/common/Title";
 import PageScreenBottom, {
@@ -21,6 +21,39 @@ import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutli
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import useTabs from "../hooks/useTabs";
 import { ID_SELECT_REGISTER_INFO } from "../constants/register";
+import useSx from "../hooks/useSx";
+import CodeEditor from "../components/organisms/register/CodeEditor";
+import WriteManual from "../components/organisms/register/WriteManual";
+import { useState } from "react";
+
+function PageLayout({ children, isFull }) {
+  function ChildrenComponent() {
+    return (
+      <>
+        <Toolbar /** Header가 있는 자리 */ />
+        <Toolbar /** sub Header가 있는 자리 */ />
+        {children}
+      </>
+    );
+  }
+
+  return (
+    <>
+      {isFull ? (
+        <Box sx={{ pt: 3, px: 8, pb: 4 }}>
+          <ChildrenComponent />
+        </Box>
+      ) : (
+        <PageScreenBox
+          // 계산기 정보 입력 | 배너 미리보기
+          sx={{ pt: 3, px: 8, pb: 4 }}
+        >
+          <ChildrenComponent />
+        </PageScreenBox>
+      )}
+    </>
+  );
+}
 
 /**
  * 계산기 등록 페이지 컴포넌트
@@ -44,13 +77,15 @@ function Register({
   srcCode,
   manual,
   setSrcCode,
-  setManual,
+  onChangeManual,
   //
   userInfo,
   registerCalculet,
   //
   inputUpdate,
 }) {
+  const { isWindowSmDown } = useSx();
+
   const {
     values: { selectRegisterInfo },
     onChange: onChangeRegisterTabs,
@@ -64,15 +99,7 @@ function Register({
       label: "정보 입력하기",
       isComplete: false,
       content: (
-        <PageScreenBox
-          // 계산기 정보 입력 | 배너 미리보기
-          sx={{
-            // display: isPreview ? "none" : "",
-            py: 2,
-          }}
-        >
-          <Toolbar /** Header가 있는 자리 */ />
-          <Toolbar /** sub Header가 있는 자리 */ />
+        <PageLayout>
           <WriteInform
             title={title}
             description={description}
@@ -82,18 +109,32 @@ function Register({
             onChangeCategoryMain={onChangeCategoryMain}
             onChangeCategorySub={onChangeCategorySub}
           />
-        </PageScreenBox>
+        </PageLayout>
       ),
     },
     {
       label: "계산기 만들기",
       isComplete: true,
-      content: <></>,
+      content: (
+        <PageLayout isFull>
+          <WriteCode
+            // 계산기 코드 입력
+            srcCode={srcCode}
+            setSrcCode={setSrcCode}
+            handleIsPreview={handleIsPreview}
+          />
+        </PageLayout>
+      ),
     },
     {
       label: "설명 입력하기",
       isComplete: true,
-      content: <></>,
+      // 02. 계산기 설명
+      content: (
+        <PageLayout>
+          <WriteManual data={manual} onChange={onChangeManual} />
+        </PageLayout>
+      ),
     },
   ];
 
@@ -179,19 +220,28 @@ function Register({
             </FlexBox> */}
         </FlexBox>
       </SubHeader>
-      {tabRegisterInfoList.map((data, index) => {
-        const { label, content } = data;
 
-        return (
-          <Grid
-            container
-            key={"register-info-id" + label}
-            sx={{ backgroundColor: "white", py: 1.2 }}
-          >
-            {selectRegisterInfo === index && content}
-          </Grid>
-        );
-      })}
+      {/* {isWindowSmDown && (
+          <Alert severity="warning" sx={{ m: "1.2rem 0.8rem" }}>
+            스크린 크기를 키워주세요.
+          </Alert>
+        )} */}
+      {
+        // !isWindowSmDown &&
+        tabRegisterInfoList.map((data, index) => {
+          const { label, content } = data;
+
+          return (
+            <Box
+              key={"register-info-id" + label}
+              sx={{ flexGrow: 1, bgcolor: "white" }}
+            >
+              {selectRegisterInfo === index && content}
+            </Box>
+          );
+        })
+      }
+
       <RegisterPageScreenBottom />
 
       {/* <Grid container sx={{ backgroundColor: "white" }}>
