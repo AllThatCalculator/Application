@@ -99,6 +99,9 @@ const Components = {
       required: false,
     },
   },
+  multiCheckbox: {
+    options: [],
+  },
 };
 
 export { Common, Option, Components };

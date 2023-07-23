@@ -50,18 +50,31 @@ function RegisterTest() {
   // 입력 값 onChange 함수
   const onInputsChange = useCallback(
     (e) => {
+      console.log(e.target);
       let { id, value } = e.target;
       if (id && e.target.checked !== undefined) {
-        value = e.target.checked;
+        if (e.target.name !== undefined) {
+          value = {
+            [e.target.name]: e.target.checked,
+          };
+        } else {
+          value = e.target.checked;
+        }
       } else if (id === undefined) {
         id = e.target.name;
       }
-      setInputs((inputs) => ({ ...inputs, [id]: value }));
+      setInputs((inputs) => ({
+        ...inputs,
+        [id]: typeof value === "object" ? { ...inputs[id], ...value } : value,
+      }));
       setComponents((components) => ({
         ...components,
         [id]: {
           ...components[id],
-          value: value,
+          value:
+            typeof components[id].value === "object"
+              ? { ...components[id].value, ...value }
+              : value,
           InputProps: components[id].copyButton
             ? { endAdornment: <CopyButton text={value} /> }
             : null,
@@ -75,13 +88,20 @@ function RegisterTest() {
   const addComponent = useCallback(
     (data) => {
       let value = data.value;
-      if (!value && data.componentType !== "checkbox") {
-        value = "";
-        if (data.componentType === "multiSelect") {
-          value = [];
-        }
-      } else if (!data.value && data.componentType === "checkbox") {
+      if (!value && data.componentType === "multiSelect") {
+        value = [];
+      } else if (!value && data.componentType === "checkbox") {
         value = false;
+      } else if (!value && data.componentType === "multiCheckbox") {
+        value = {};
+        for (const key in data.options) {
+          value = {
+            ...value,
+            [data.options[key].value]: false,
+          };
+        }
+      } else if (!value) {
+        value = "";
       }
       data = {
         ...data,

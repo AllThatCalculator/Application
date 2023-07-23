@@ -2,6 +2,7 @@ import React from "react";
 import { TextField } from "@mui/material";
 import SelectComponent from "./SelectComponent";
 import CheckboxComponent from "./CheckboxComponent";
+import MultiCheckboxComponent from "./MultiCheckBoxComponent";
 
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
@@ -29,6 +30,8 @@ function Transformer({ data }) {
     case "checkbox":
       const { label: labelData, ...rest } = properties;
       return <CheckboxComponent data={rest} label={labelData} />;
+    case "multiCheckbox":
+      return <MultiCheckboxComponent data={properties} />;
     default:
       return;
   }
