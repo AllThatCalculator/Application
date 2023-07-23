@@ -51,7 +51,9 @@ function RegisterTest() {
   const onInputsChange = useCallback(
     (e) => {
       let { id, value } = e.target;
-      if (id === undefined) {
+      if (id && e.target.checked !== undefined) {
+        value = e.target.checked;
+      } else if (id === undefined) {
         id = e.target.name;
       }
       setInputs((inputs) => ({ ...inputs, [id]: value }));
@@ -72,19 +74,22 @@ function RegisterTest() {
   // 컴포넌트 추가하는 함수
   const addComponent = useCallback(
     (data) => {
-      if (!data.value) {
-        let value = "";
+      let value = data.value;
+      if (!value && data.componentType !== "checkbox") {
+        value = "";
         if (data.componentType === "multiSelect") {
           value = [];
         }
-        data = {
-          ...data,
-          value: value,
-        };
+      } else if (!data.value && data.componentType === "checkbox") {
+        value = false;
       }
+      data = {
+        ...data,
+        value: value,
+      };
 
       if (data.isInput) {
-        setInputs((inputs) => ({ ...inputs, [data.id]: "" }));
+        setInputs((inputs) => ({ ...inputs, [data.id]: value }));
         data = {
           ...data,
           onChange: onInputsChange,

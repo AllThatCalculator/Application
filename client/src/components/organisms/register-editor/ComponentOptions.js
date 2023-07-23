@@ -92,6 +92,13 @@ const Components = {
   multiSelect: {
     options: [],
   },
+  checkbox: {
+    value: {
+      type: "bool",
+      name: "체크 여부",
+      required: false,
+    },
+  },
 };
 
 export { Common, Option, Components };
