@@ -123,9 +123,9 @@ function RegisterTest() {
   }, []);
 
   // console.log("type", type);
-  console.log("inputs", inputs);
+  // console.log("inputs", inputs);
   // console.log("outputs", outputs);
-  console.log("components", components);
+  // console.log("components", components);
 
   return (
     <Grid container sx={{ backgroundColor: "white" }}>

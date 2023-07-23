@@ -60,7 +60,7 @@ function Transformer({ data, onChange, initInputs }) {
     }
   }, [data.id, data.isInput, initInputs, value]);
 
-  console.log("추가된 컴포넌트", properties);
+  // console.log("추가된 컴포넌트", properties);
 
   switch (data.componentType) {
     case "textField":
