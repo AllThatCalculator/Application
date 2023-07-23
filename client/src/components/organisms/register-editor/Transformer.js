@@ -12,8 +12,14 @@ import CopyButton from "./CopyButton";
  * props: 사용자가 입력한 컴포넌트 한 개의 정보들
  */
 function Transformer({ data, onChange, initInputs }) {
-  let { isInput, isOutput, copyButton, componentType, ...properties } = data;
-
+  let {
+    componentId,
+    isInput,
+    isOutput,
+    copyButton,
+    componentType,
+    ...properties
+  } = data;
   let value = data.value;
   if (!value) {
     switch (data.componentType) {

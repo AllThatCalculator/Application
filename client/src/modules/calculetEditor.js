@@ -47,8 +47,7 @@ export function onUpdateComponent(data) {
  */
 function createNewComponent(data) {
   const newComponent = { ...data };
-
-  Object.entries({ ...Common, ...Components[data.type] }).map(
+  Object.entries({ ...Common, ...Components[data.componentType] }).map(
     ([key, value]) => {
       if (value.default !== undefined) {
         newComponent[key] = value.default;
@@ -57,15 +56,31 @@ function createNewComponent(data) {
           case "string":
             newComponent[key] = "";
             break;
-          case "boolean":
+          case "bool":
             newComponent[key] = false;
             break;
           default:
+            newComponent[key] = null;
         }
       }
       return null;
     }
   );
+
+  switch (data.componentType) {
+    case "select":
+    case "multiSelect":
+    case "multiCheckbox":
+      newComponent.options = {
+        "-1": {
+          value: "default",
+          label: "기본값",
+        },
+      };
+      break;
+    default:
+  }
+
   return newComponent;
 }
 

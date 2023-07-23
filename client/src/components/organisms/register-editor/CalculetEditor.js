@@ -8,7 +8,7 @@ import useInput from "../../../hooks/useInput";
 import ComponentForm from "./ComponentForm";
 import Transformer from "./Transformer";
 
-function CalculetEditor() {
+function CalculetEditor({ onInputsChange, initInputs }) {
   const { components } = useSelector((state) => state.calculetEditor);
   const dispatch = useDispatch();
   const { value: componentType, onChange: onChangeComponentType } =
@@ -34,7 +34,11 @@ function CalculetEditor() {
       {Object.entries(components).map(([id, data]) => {
         return (
           <div key={id}>
-            <Transformer data={data} />
+            <Transformer
+              data={data}
+              onChange={onInputsChange}
+              initInputs={initInputs}
+            />
             <ComponentForm
               componentId={id}
               componentType={data.componentType}

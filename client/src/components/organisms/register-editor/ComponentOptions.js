@@ -78,6 +78,7 @@ const Components = {
         { value: "password", name: "비밀번호" },
       ],
       required: false,
+      default: "text",
     },
     placeholder: {
       type: "string",

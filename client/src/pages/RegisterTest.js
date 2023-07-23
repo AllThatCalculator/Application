@@ -1,10 +1,7 @@
-import { useCallback, useState } from "react";
-import { Grid, MenuItem, Select } from "@mui/material";
-import useInput from "../hooks/useInput";
+import { useCallback } from "react";
+import { Grid } from "@mui/material";
 import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
-import Transformer from "../components/organisms/register-editor/Transformer";
-import ComponentForm from "../components/organisms/register-editor/ComponentForm";
-import { Components } from "../components/organisms/register-editor/ComponentOptions";
+import CalculetEditor from "../components/organisms/register-editor/CalculetEditor";
 
 /**
  * 계산기 심플 등록 테스트 페이지
@@ -12,10 +9,8 @@ import { Components } from "../components/organisms/register-editor/ComponentOpt
  * - 사용자에게 입력받은 함수 문자열(functionStr)을 함수화해서 계산하기 버튼을 눌렀을 때 계산이 실행되도록 함
  */
 function RegisterTest() {
-  const [inputs, setInputs] = useState({}); // 입력 객체
+  // const [inputs, setInputs] = useState({}); // 입력 객체
   // const [outputs, setOutputs] = useState({}); // 출력 객체 (계산하기 후, 입력 + 출력 모두 합쳐서 저장)
-  const [components, setComponents] = useState({}); // 컴포넌트 객체
-  const { value: type, onChange: onChangeType } = useInput("");
 
   // 함수 생성 보안 경고 무시
   // eslint-disable-next-line
@@ -27,100 +22,43 @@ function RegisterTest() {
   );
 
   // 계산하기
-  const calculate = useCallback(
-    (userFunction) => {
-      const outputObj = { ...userFunction(inputs) };
-      for (const output in outputObj) {
-        setComponents((components) => ({
-          ...components,
-          [output]: { ...components[output], value: outputObj[output] },
-        }));
-      }
-
-      // const fullObj = { ...inputs, ...outputObj };
-      // setOutputs(fullObj);
-    },
-    [inputs]
-  );
+  const calculate = useCallback((userFunction) => {
+    // const outputObj = { ...userFunction(inputs) };
+    // setOutputs(outputObj);
+  }, []);
 
   // 입력 값 onChange 함수
-  const onInputsChange = useCallback(
-    (e) => {
-      let { id, value } = e.target;
-      if (e.target.type === "checkbox") {
-        if (e.target.name) {
-          value = {
-            [e.target.name]: e.target.checked,
-          };
-        } else {
-          value = e.target.checked;
-        }
-      } else if (id === undefined) {
-        id = e.target.name;
-      }
-      setInputs((inputs) => ({
-        ...inputs,
-        [id]:
-          typeof inputs[id] === "object" && !Array.isArray(inputs[id])
-            ? { ...inputs[id], ...value }
-            : value,
-      }));
-      setComponents((components) => ({
-        ...components,
-        [id]: {
-          ...components[id],
-          value:
-            typeof components[id].value === "object" &&
-            !Array.isArray(components[id].value)
-              ? { ...components[id].value, ...value }
-              : value,
-        },
-      }));
-    },
-    [setInputs, setComponents]
-  );
+  const onInputsChange = useCallback((e) => {
+    // let { id, value } = e.target;
+    // if (e.target.type === "checkbox") {
+    //   if (e.target.name) {
+    //     value = {
+    //       [e.target.name]: e.target.checked,
+    //     };
+    //   } else {
+    //     value = e.target.checked;
+    //   }
+    // } else if (id === undefined) {
+    //   id = e.target.name;
+    // }
+    // setInputs((inputs) => ({
+    //   ...inputs,
+    //   [id]:
+    //     typeof inputs[id] === "object" && !Array.isArray(inputs[id])
+    //       ? { ...inputs[id], ...value }
+    //       : value,
+    // }));
+  }, []);
 
   // inputs 값 초기화하는 함수
   const initInputs = useCallback((key, value) => {
-    setInputs((inputs) => ({ ...inputs, [key]: value }));
-    setComponents((components) => ({
-      ...components,
-      [key]: { ...components[key], value: value },
-    }));
+    // setInputs((inputs) => ({ ...inputs, [key]: value }));
   }, []);
 
   // outputs 값 초기화하는 함수
   // const initOutputs = useCallback((key, value) => {
   //   setOutputs((outputs) => ({ ...outputs, [key]: value }));
   // }, []);
-
-  // 컴포넌트 추가하는 함수
-  const addComponent = useCallback((data) => {
-    setComponents((components) => ({
-      ...components,
-      [data.id]: data,
-    }));
-  }, []);
-
-  // 컴포넌트 삭제하는 함수
-  const deleteComponent = useCallback((data) => {
-    if (data.isInput) {
-      setInputs((inputs) => {
-        const { [data.id]: temp, ...rest } = inputs;
-        return rest;
-      });
-    }
-    // if (data.isOutput) {
-    //   setOutputs((outputs) => {
-    //     const { [data.id]: temp, ...rest } = outputs;
-    //     return rest;
-    //   });
-    // }
-    setComponents((components) => {
-      const { [data.id]: temp, ...rest } = components;
-      return rest;
-    });
-  }, []);
 
   // console.log("type", type);
   // console.log("inputs", inputs);
@@ -130,30 +68,10 @@ function RegisterTest() {
   return (
     <Grid container sx={{ backgroundColor: "white" }}>
       <PageScreenBox gap="2.4rem">
-        <Select value={type} onChange={onChangeType}>
-          {Object.entries(Components).map(([id, data], index) => {
-            return (
-              <MenuItem key={index} value={id}>
-                {id}
-              </MenuItem>
-            );
-          })}
-        </Select>
-        {type !== "" && (
-          <ComponentForm
-            type={type}
-            addComponent={addComponent}
-            deleteComponent={deleteComponent}
-          />
-        )}
-        {Object.entries(components).map(([id, data], index) => (
-          <Transformer
-            key={index}
-            data={data}
-            onChange={onInputsChange}
-            initInputs={initInputs}
-          />
-        ))}
+        <CalculetEditor
+          onInputsChange={onInputsChange}
+          initInputs={initInputs}
+        />
         <button onClick={() => calculate(userFunction)}>계산하기</button>
       </PageScreenBox>
     </Grid>
