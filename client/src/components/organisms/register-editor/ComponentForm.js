@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   Grid,
   FormControlLabel,
@@ -7,7 +7,7 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { Option } from "./ComponentOptions";
+import { Common, Components, Option } from "./ComponentOptions";
 
 /**
  * 컴포넌트 속성 하나에 대한 정보를 받아서, 인풋 필드로 바꿔주는 함수
@@ -71,10 +71,17 @@ function TransformField({ id, data, value, onChange }) {
  * @param {function} deleteComponent 컴포넌트 삭제하는 함수
  * @returns
  */
-function ComponentForm({ type, component, addComponent, deleteComponent }) {
-  const [inputs, setInputs] = useState({}); // 컴포넌트 속성에 대한 인풋값
-  const [property, setProperty] = useState({ ...component });
+function ComponentForm({ type, addComponent, deleteComponent }) {
+  const [inputs, setInputs] = useState({ componentType: type }); // 컴포넌트 속성에 대한 인풋값
+  const [property, setProperty] = useState({ ...Common, ...Components[type] });
   const [optionIdx, setOptionIdx] = useState(0); // 단일 선택 컴포넌트에 대한 옵션 개수
+
+  // isInput 속성 관리
+  useEffect(() => {
+    if (type !== "textField" && type !== "typography") {
+      setInputs((inputs) => ({ ...inputs, isInput: true }));
+    }
+  }, [type]);
 
   // 컴포넌트 속성 인풋 onChange 함수
   const onInputsChange = useCallback(
@@ -189,12 +196,8 @@ function ComponentForm({ type, component, addComponent, deleteComponent }) {
       )}
       <button
         onClick={() => {
-          let data = { ...inputs, componentType: type };
-          if (type !== "textField" && type !== "typography") {
-            data = { ...data, isInput: true };
-          }
-          if (invalidComponentOption(data)) {
-            addComponent(data);
+          if (invalidComponentOption(inputs)) {
+            addComponent(inputs);
           }
         }}
       >

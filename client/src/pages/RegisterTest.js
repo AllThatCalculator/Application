@@ -3,12 +3,8 @@ import { Grid, MenuItem, Select } from "@mui/material";
 import useInput from "../hooks/useInput";
 import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
 import Transformer from "../components/organisms/register-editor/Transformer";
-import CopyButton from "../components/organisms/register-editor/CopyButton";
 import ComponentForm from "../components/organisms/register-editor/ComponentForm";
-import {
-  Common,
-  Components,
-} from "../components/organisms/register-editor/ComponentOptions";
+import { Components } from "../components/organisms/register-editor/ComponentOptions";
 
 /**
  * 계산기 심플 등록 테스트 페이지
@@ -78,62 +74,33 @@ function RegisterTest() {
             !Array.isArray(components[id].value)
               ? { ...components[id].value, ...value }
               : value,
-          InputProps: components[id].copyButton
-            ? { endAdornment: <CopyButton text={value} /> }
-            : null,
         },
       }));
     },
     [setInputs, setComponents]
   );
 
-  // 컴포넌트 추가하는 함수
-  const addComponent = useCallback(
-    (data) => {
-      let value = data.value;
-      if (!value && data.componentType === "multiSelect") {
-        value = [];
-      } else if (!value && data.componentType === "checkbox") {
-        value = false;
-      } else if (!value && data.componentType === "multiCheckbox") {
-        value = {};
-        for (const key in data.options) {
-          value = {
-            ...value,
-            [data.options[key].value]: false,
-          };
-        }
-      } else if (!value) {
-        value = "";
-      }
-      data = {
-        ...data,
-        value: value,
-      };
+  // inputs 값 초기화하는 함수
+  const initInputs = useCallback((key, value) => {
+    setInputs((inputs) => ({ ...inputs, [key]: value }));
+    setComponents((components) => ({
+      ...components,
+      [key]: { ...components[key], value: value },
+    }));
+  }, []);
 
-      if (data.isInput) {
-        setInputs((inputs) => ({ ...inputs, [data.id]: value }));
-        data = {
-          ...data,
-          onChange: onInputsChange,
-        };
-      }
-      // if (data.isOutput) {
-      //   setOutputs((outputs) => ({ ...outputs, [data.id]: "" }));
-      // }
-      if (data.copyButton) {
-        data = {
-          ...data,
-          InputProps: { endAdornment: <CopyButton text={data.value} /> },
-        };
-      }
-      setComponents((components) => ({
-        ...components,
-        [data.id]: data,
-      }));
-    },
-    [onInputsChange]
-  );
+  // outputs 값 초기화하는 함수
+  // const initOutputs = useCallback((key, value) => {
+  //   setOutputs((outputs) => ({ ...outputs, [key]: value }));
+  // }, []);
+
+  // 컴포넌트 추가하는 함수
+  const addComponent = useCallback((data) => {
+    setComponents((components) => ({
+      ...components,
+      [data.id]: data,
+    }));
+  }, []);
 
   // 컴포넌트 삭제하는 함수
   const deleteComponent = useCallback((data) => {
@@ -175,13 +142,17 @@ function RegisterTest() {
         {type !== "" && (
           <ComponentForm
             type={type}
-            component={{ ...Common, ...Components[type] }}
             addComponent={addComponent}
             deleteComponent={deleteComponent}
           />
         )}
         {Object.entries(components).map(([id, data], index) => (
-          <Transformer key={index} data={data} />
+          <Transformer
+            key={index}
+            data={data}
+            onChange={onInputsChange}
+            initInputs={initInputs}
+          />
         ))}
         <button onClick={() => calculate(userFunction)}>계산하기</button>
       </PageScreenBox>
