@@ -50,7 +50,7 @@ function createNewComponent(data) {
 
   Object.entries({ ...Common, ...Components[data.type] }).map(
     ([key, value]) => {
-      if (value.default) {
+      if (value.default !== undefined) {
         newComponent[key] = value.default;
       } else {
         switch (value.type) {
