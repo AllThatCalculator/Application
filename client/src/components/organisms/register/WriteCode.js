@@ -10,6 +10,13 @@ import {
   IconButton,
   Tooltip,
   Button,
+  CssBaseline,
+  AppBar,
+  Toolbar,
+  Drawer,
+  Divider,
+  TextField,
+  Checkbox,
 } from "@mui/material";
 import { FlexBox, FlexColumnBox } from "../common/FlexBox";
 import useSx from "../../../hooks/useSx";
@@ -19,6 +26,17 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import CodeEditor from "./CodeEditor";
 import CustomPanel from "./CustomPanel";
+import StyledScrollbar from "../../atoms/StyledScrollbar";
+import SubTitle from "../common/SubTitle";
+import {
+  EDITOR_HEIGHT_MAX,
+  EDITOR_HEIGHT_MIN,
+} from "../../../constants/register";
+import EditorComponent from "./EditorComponent";
+import EditorSidebar from "./EditorSidebar";
+import EditorContent from "./EditorContent";
+import "../../../../node_modules/react-grid-layout/css/styles.css";
+import "../../../../node_modules/react-resizable/css/styles.css";
 
 /**
  * 언어 도움말
@@ -63,14 +81,68 @@ function LanguageHelp({ language, helpText }) {
  * - handleIsPreview : 미리 보기 컨트롤 함수
  */
 function WriteCode(props) {
-  const { HEIGHT_CODE_EDITOR, subTitleSx } = useSx();
+  // editor row count : height
+  const [editorRowCount, setEditorRowCount] = useState(1);
+  function onChangeEditorRowCount(event) {
+    setEditorRowCount(Number(event.target.value));
+  }
+
+  const [userData, setUserData] = useState({});
+  const changeHandler = (index, data) => {
+    // console.log("changeHandler >>", data);
+    setUserData({ ...userData, [index]: [...data] });
+  };
+
+  const editorComponentList = [
+    { id: "textField", component: TextField },
+    { id: "checkbox", component: Checkbox },
+  ];
 
   return (
-    <Grid container spacing={4}>
-      <Grid item sx={{ width: "100%" }}>
-        <FlexColumnBox gap="1.6rem" sx={{ width: "100%" }}>
-          <Typography sx={{ ...subTitleSx }}>계산기 코드 입력</Typography>
-          <FlexColumnBox sx={{ width: "100%" }}>
+    <FlexBox>
+      <CssBaseline />
+      <EditorSidebar
+        editorRowCount={editorRowCount}
+        onChangeEditorRowCount={onChangeEditorRowCount}
+        editorComponentList={editorComponentList}
+      />
+      {/* <Box
+        component="main"
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          boxSizing: "border-box",
+        }}
+      >
+      </Box> */}
+      <StyledScrollbar>
+        <Box sx={{ width: "100%", flexGrow: 1 }}>
+          <SubTitle content="편집창" />
+          <Paper elevation={10} sx={{ m: 2 }}>
+            <div style={{ height: "100%" }}>
+              <FlexColumnBox gap={1}>
+                {[...Array(editorRowCount)].map((_, index) => {
+                  return (
+                    <EditorContent
+                      key={index}
+                      change={(data) => {
+                        changeHandler(index, data);
+                      }}
+                    />
+                  );
+                })}
+              </FlexColumnBox>
+            </div>
+          </Paper>
+        </Box>
+      </StyledScrollbar>
+    </FlexBox>
+  );
+}
+
+export default WriteCode;
+{
+  /* <FlexColumnBox sx={{ width: "100%" }}>
             <FlexBox
               sx={{
                 borderBottom: 1,
@@ -80,7 +152,6 @@ function WriteCode(props) {
               }}
             >
               <Grid container spacing={2}>
-                {/* 열 너비(각 차지하는 열 수) : 1 ~ 12 */}
                 <Grid item xs={8}>
                   <FlexBox sx={{ height: HEIGHT_CODE_EDITOR }}>
                     <CodeEditor
@@ -95,11 +166,5 @@ function WriteCode(props) {
                 </Grid>
               </Grid>
             </FlexBox>
-          </FlexColumnBox>
-        </FlexColumnBox>
-      </Grid>
-    </Grid>
-  );
+          </FlexColumnBox> */
 }
-
-export default WriteCode;

@@ -10,6 +10,15 @@ const ID_INPUT_UPDATE = "inputUpdate";
 // 계산기 등록 : 정보 입력하기 | 계산기 만들기 | 설명 입력하기
 const ID_SELECT_REGISTER_INFO = "selectRegisterInfo";
 
+// 계산기 편집창 높이
+const EDITOR_HEIGHT_MIN = 1;
+const EDITOR_HEIGHT_MAX = 100000;
+
+// Define Drag Types -> drag & drop 을 위함
+const EditorItemTypes = {
+  EDITOR: "editor",
+};
+
 export {
   ID_INPUT_TITLE,
   ID_INPUT_DESCRIPTION,
@@ -19,4 +28,7 @@ export {
   ID_INPUT_MANUAL,
   ID_INPUT_UPDATE,
   ID_SELECT_REGISTER_INFO,
+  EDITOR_HEIGHT_MIN,
+  EDITOR_HEIGHT_MAX,
+  EditorItemTypes,
 };

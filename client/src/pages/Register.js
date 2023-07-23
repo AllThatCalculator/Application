@@ -16,6 +16,9 @@ import useSx from "../hooks/useSx";
 import { ID_SELECT_REGISTER_INFO } from "../constants/register";
 import PreviewCalculet from "../components/organisms/register/PreviewCalculet";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
+
 // page layout
 function PageLayout({ children, isFull }) {
   const sx = { pt: 3, px: 8, pb: 4 };
@@ -99,7 +102,11 @@ function Register({
     {
       label: "계산기 만들기",
       isComplete: true,
-      content: <WriteCode srcCode={srcCode} setSrcCode={setSrcCode} />,
+      content: (
+        <DndProvider backend={HTML5Backend}>
+          <WriteCode srcCode={srcCode} setSrcCode={setSrcCode} />
+        </DndProvider>
+      ),
       isFull: true, // 페이지 레이아웃 full 여부
     },
     {
