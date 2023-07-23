@@ -50,10 +50,9 @@ function RegisterTest() {
   // 입력 값 onChange 함수
   const onInputsChange = useCallback(
     (e) => {
-      console.log(e.target);
       let { id, value } = e.target;
-      if (id && e.target.checked !== undefined) {
-        if (e.target.name !== undefined) {
+      if (e.target.type === "checkbox") {
+        if (e.target.name) {
           value = {
             [e.target.name]: e.target.checked,
           };
@@ -65,14 +64,18 @@ function RegisterTest() {
       }
       setInputs((inputs) => ({
         ...inputs,
-        [id]: typeof value === "object" ? { ...inputs[id], ...value } : value,
+        [id]:
+          typeof inputs[id] === "object" && !Array.isArray(inputs[id])
+            ? { ...inputs[id], ...value }
+            : value,
       }));
       setComponents((components) => ({
         ...components,
         [id]: {
           ...components[id],
           value:
-            typeof components[id].value === "object"
+            typeof components[id].value === "object" &&
+            !Array.isArray(components[id].value)
               ? { ...components[id].value, ...value }
               : value,
           InputProps: components[id].copyButton
