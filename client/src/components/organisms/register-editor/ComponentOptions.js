@@ -78,6 +78,7 @@ const Components = {
         { value: "password", name: "비밀번호" },
       ],
       required: false,
+      default: "text",
     },
     placeholder: {
       type: "string",
@@ -87,6 +88,19 @@ const Components = {
     value: { type: "string", name: "기본값", required: false },
   },
   select: {
+    options: [],
+  },
+  multiSelect: {
+    options: [],
+  },
+  checkbox: {
+    value: {
+      type: "bool",
+      name: "체크 여부",
+      required: false,
+    },
+  },
+  multiCheckbox: {
     options: [],
   },
 };
