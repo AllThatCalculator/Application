@@ -1,3 +1,4 @@
+// calculet component
 const TYPOGRAPHY = "typography";
 const TEXT_FIELD = "textField";
 const FILE = "file";
@@ -10,6 +11,11 @@ const MULTI_SELECT = "multiSelect";
 const MULTI_CHECK_BOX = "multiCheckbox";
 const INPUT_HELPER = "inputHelper";
 const CALCULET_BUTTON = "calculetButton";
+
+// calculet component option (property) type
+const PROPERTY_TYPE_STRING = "string";
+const PROPERTY_TYPE_BOOLEAN = "bool";
+const PROPERTY_TYPE_SELECT = "select";
 
 export {
   TYPOGRAPHY,
@@ -24,4 +30,7 @@ export {
   MULTI_CHECK_BOX,
   INPUT_HELPER,
   CALCULET_BUTTON,
+  PROPERTY_TYPE_STRING,
+  PROPERTY_TYPE_BOOLEAN,
+  PROPERTY_TYPE_SELECT,
 };

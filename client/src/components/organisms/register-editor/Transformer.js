@@ -79,15 +79,13 @@ function Transformer({ data, onChange, initInputs }) {
     case TEXT_FIELD:
       return <TextField {...properties} />;
     case SELECT:
-      return <SelectComponent data={properties} />;
+      return <SelectComponent {...properties} />;
     case MULTI_SELECT:
-      const newData = { ...properties, multiple: true };
-      return <SelectComponent data={newData} />;
+      return <SelectComponent {...properties} multiple={true} />;
     case CHECK_BOX:
-      const { label: labelData, ...rest } = properties;
-      return <CheckboxComponent data={rest} label={labelData} />;
+      return <CheckboxComponent {...properties} />;
     case MULTI_CHECK_BOX:
-      return <MultiCheckboxComponent data={properties} />;
+      return <MultiCheckboxComponent {...properties} />;
     default:
       return;
   }

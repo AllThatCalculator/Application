@@ -12,6 +12,8 @@ import {
   SELECT,
   MULTI_SELECT,
   MULTI_CHECK_BOX,
+  PROPERTY_TYPE_STRING,
+  PROPERTY_TYPE_BOOLEAN,
 } from "../constants/calculetComponent";
 
 const CALCULET_EDITOR_COMPONENTS_APPEND =
@@ -54,14 +56,14 @@ function createNewComponent(data) {
   const newComponent = { ...data };
   Object.entries({ ...Common, ...Components[data.componentType] }).map(
     ([key, value]) => {
-      if (value.default !== undefined) {
-        newComponent[key] = value.default;
+      if (value.value !== undefined) {
+        newComponent[key] = value.value;
       } else {
         switch (value.type) {
-          case "string":
+          case PROPERTY_TYPE_STRING:
             newComponent[key] = "";
             break;
-          case "bool":
+          case PROPERTY_TYPE_BOOLEAN:
             newComponent[key] = false;
             break;
           default:

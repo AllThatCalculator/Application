@@ -1,33 +1,44 @@
+import {
+  PROPERTY_TYPE_STRING,
+  PROPERTY_TYPE_BOOLEAN,
+  PROPERTY_TYPE_SELECT,
+} from "../../../constants/calculetComponent";
+
 /**
  * 컴포넌트들에 공통으로 쓰이는 속성
  * key : 속성 이름 (mui에서 쓰이는 속성 이름과 동일)
  * value :
- *   - type : string - text field, bool - checkbox, select - select box
- *   - name : 페이지에 표시되는 이름 (label)
+ *   - type : PROPERTY_TYPE_STRING - text field, PROPERTY_TYPE_BOOLEAN - checkbox, PROPERTY_TYPE_SELECT - select box
+ *   - value : 기본값
+ *   - label : 페이지에 표시되는 이름
  *   - required : 필수로 입력되어야 하는 속성인지
  *   - options : select box에 표시되는 옵션들
  *     - value : 옵션 id (mui에 넘어갈 value)
- *     - name : 페이지에 표시되는 이름 (label)
+ *     - label : 페이지에 표시되는 이름
  */
 const Common = {
   id: {
-    type: "string",
-    name: "변수명",
+    type: PROPERTY_TYPE_STRING,
+    label: "변수명",
+    value: "",
     required: true,
   },
   label: {
-    type: "string",
-    name: "설명",
+    type: PROPERTY_TYPE_STRING,
+    label: "설명",
+    value: "",
     required: true,
   },
   required: {
-    type: "bool",
-    name: "필수 여부",
+    type: PROPERTY_TYPE_BOOLEAN,
+    label: "필수 여부",
+    value: false,
     required: false,
   },
   disabled: {
-    type: "bool",
-    name: "비활성화",
+    type: PROPERTY_TYPE_BOOLEAN,
+    label: "비활성화",
+    value: false,
     required: false,
   },
 };
@@ -37,13 +48,15 @@ const Common = {
  */
 const Option = {
   value: {
-    type: "string",
-    name: "value",
+    type: PROPERTY_TYPE_STRING,
+    label: "value",
+    value: "",
     required: true,
   },
   label: {
-    type: "string",
-    name: "label",
+    type: PROPERTY_TYPE_STRING,
+    label: "label",
+    value: "",
     required: true,
   },
 };
@@ -54,38 +67,47 @@ const Option = {
 const Components = {
   textField: {
     isInput: {
-      type: "bool",
-      name: "입력 여부",
+      type: PROPERTY_TYPE_BOOLEAN,
+      label: "입력 여부",
+      value: false,
       required: false,
     },
     isOutput: {
-      type: "bool",
-      name: "출력 여부",
+      type: PROPERTY_TYPE_BOOLEAN,
+      label: "출력 여부",
+      value: false,
       required: false,
     },
     copyButton: {
-      type: "bool",
-      name: "복사 버튼",
+      type: PROPERTY_TYPE_BOOLEAN,
+      label: "복사 버튼",
+      value: false,
       required: false,
     },
     type: {
-      type: "select",
+      type: PROPERTY_TYPE_SELECT,
       options: [
-        { value: "text", name: "문자열" },
-        { value: "email", name: "이메일" },
-        { value: "tel", name: "전화번호" },
-        { value: "number", name: "숫자" },
-        { value: "password", name: "비밀번호" },
+        { value: "text", label: "문자열" },
+        { value: "email", label: "이메일" },
+        { value: "tel", label: "전화번호" },
+        { value: "number", label: "숫자" },
+        { value: "password", label: "비밀번호" },
       ],
       required: false,
-      default: "text",
+      value: "text",
     },
     placeholder: {
-      type: "string",
-      name: "placeholder",
+      type: PROPERTY_TYPE_STRING,
+      label: "placeholder",
+      value: "",
       required: false,
     },
-    value: { type: "string", name: "기본값", required: false },
+    value: {
+      type: PROPERTY_TYPE_STRING,
+      label: "기본값",
+      value: "",
+      required: false,
+    },
   },
   select: {
     options: [],
@@ -95,8 +117,9 @@ const Components = {
   },
   checkbox: {
     value: {
-      type: "bool",
-      name: "체크 여부",
+      type: PROPERTY_TYPE_BOOLEAN,
+      label: "체크 여부",
+      value: false,
       required: false,
     },
   },
