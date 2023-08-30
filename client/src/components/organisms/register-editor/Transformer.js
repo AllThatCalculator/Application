@@ -5,6 +5,13 @@ import SelectComponent from "./SelectComponent";
 import CheckboxComponent from "./CheckboxComponent";
 import MultiCheckboxComponent from "./MultiCheckBoxComponent";
 import CopyButton from "./CopyButton";
+import {
+  TEXT_FIELD,
+  SELECT,
+  MULTI_SELECT,
+  CHECK_BOX,
+  MULTI_CHECK_BOX,
+} from "../../../constants/calculetComponent";
 
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
@@ -23,13 +30,13 @@ function Transformer({ data, onChange, initInputs }) {
   let value = data.value;
   if (!value) {
     switch (data.componentType) {
-      case "multiSelect":
+      case MULTI_SELECT:
         value = [];
         break;
-      case "checkbox":
+      case CHECK_BOX:
         value = false;
         break;
-      case "multiCheckbox":
+      case MULTI_CHECK_BOX:
         value = {};
         for (const key in data.options) {
           value = {
@@ -69,17 +76,17 @@ function Transformer({ data, onChange, initInputs }) {
   // console.log("추가된 컴포넌트", properties);
 
   switch (data.componentType) {
-    case "textField":
+    case TEXT_FIELD:
       return <TextField {...properties} />;
-    case "select":
+    case SELECT:
       return <SelectComponent data={properties} />;
-    case "multiSelect":
+    case MULTI_SELECT:
       const newData = { ...properties, multiple: true };
       return <SelectComponent data={newData} />;
-    case "checkbox":
+    case CHECK_BOX:
       const { label: labelData, ...rest } = properties;
       return <CheckboxComponent data={rest} label={labelData} />;
-    case "multiCheckbox":
+    case MULTI_CHECK_BOX:
       return <MultiCheckboxComponent data={properties} />;
     default:
       return;

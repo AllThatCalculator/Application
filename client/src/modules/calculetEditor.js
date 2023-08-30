@@ -8,6 +8,11 @@ import {
   Common,
   Components,
 } from "../components/organisms/register-editor/ComponentOptions";
+import {
+  SELECT,
+  MULTI_SELECT,
+  MULTI_CHECK_BOX,
+} from "../constants/calculetComponent";
 
 const CALCULET_EDITOR_COMPONENTS_APPEND =
   "calculetEditor/CALCULET_EDITOR_COMPONENTS_APPEND";
@@ -68,9 +73,9 @@ function createNewComponent(data) {
   );
 
   switch (data.componentType) {
-    case "select":
-    case "multiSelect":
-    case "multiCheckbox":
+    case SELECT:
+    case MULTI_SELECT:
+    case MULTI_CHECK_BOX:
       newComponent.options = {
         "-1": {
           value: "default",

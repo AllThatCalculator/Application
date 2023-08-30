@@ -2,7 +2,7 @@
  * 컴포넌트들에 공통으로 쓰이는 속성
  * key : 속성 이름 (mui에서 쓰이는 속성 이름과 동일)
  * value :
- *   - type : string - textfield, bool - checkbox, select - select box
+ *   - type : string - text field, bool - checkbox, select - select box
  *   - name : 페이지에 표시되는 이름 (label)
  *   - required : 필수로 입력되어야 하는 속성인지
  *   - options : select box에 표시되는 옵션들

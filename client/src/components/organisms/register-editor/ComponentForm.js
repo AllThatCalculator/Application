@@ -10,6 +10,7 @@ import {
 import { Common, Components, Option } from "./ComponentOptions";
 import { useDispatch, useSelector } from "react-redux";
 import { onUpdateComponent } from "../../../modules/calculetEditor";
+import { TYPOGRAPHY, TEXT_FIELD } from "../../../constants/calculetComponent";
 
 /**
  * 컴포넌트 속성 하나에 대한 정보를 받아서, 인풋 필드로 바꿔주는 함수
@@ -85,8 +86,8 @@ function ComponentForm({ componentId, componentType }) {
   // isInput 속성 관리
   useEffect(() => {
     switch (componentType) {
-      case "textField":
-      case "typography":
+      case TEXT_FIELD:
+      case TYPOGRAPHY:
         dispatch(
           onUpdateComponent({ componentId, targetId: "isInput", value: true })
         );
