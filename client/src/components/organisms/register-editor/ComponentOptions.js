@@ -2,6 +2,7 @@ import {
   PROPERTY_TYPE_STRING,
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_SELECT,
+  PROPERTY_OPTION_START_NUMBER,
 } from "../../../constants/calculetComponent";
 
 /**
@@ -62,6 +63,21 @@ const Option = {
 };
 
 /**
+ * 옵션이 있는 컴포넌트의 기본 옵션에 대한 속성 정보
+ */
+const DefaultOption = {
+  id: PROPERTY_OPTION_START_NUMBER,
+  value: {
+    ...Option.value,
+    disabled: true,
+  },
+  label: {
+    ...Option.label,
+    disabled: true,
+  },
+};
+
+/**
  * 컴포넌트 속성들에 대한 정보를 담은 객체
  */
 const Components = {
@@ -110,10 +126,10 @@ const Components = {
     },
   },
   select: {
-    options: [],
+    options: [DefaultOption],
   },
   multiSelect: {
-    options: [],
+    options: [DefaultOption],
   },
   checkbox: {
     value: {
@@ -124,7 +140,7 @@ const Components = {
     },
   },
   multiCheckbox: {
-    options: [],
+    options: [DefaultOption],
   },
 };
 

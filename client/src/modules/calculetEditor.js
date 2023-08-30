@@ -14,6 +14,7 @@ import {
   MULTI_CHECK_BOX,
   PROPERTY_TYPE_STRING,
   PROPERTY_TYPE_BOOLEAN,
+  PROPERTY_OPTION_START_NUMBER,
 } from "../constants/calculetComponent";
 
 const CALCULET_EDITOR_COMPONENTS_APPEND =
@@ -79,7 +80,7 @@ function createNewComponent(data) {
     case MULTI_SELECT:
     case MULTI_CHECK_BOX:
       newComponent.options = {
-        "-1": {
+        [PROPERTY_OPTION_START_NUMBER]: {
           value: "default",
           label: "기본값",
         },

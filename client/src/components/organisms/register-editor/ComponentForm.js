@@ -11,6 +11,7 @@ import {
   PROPERTY_TYPE_STRING,
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_SELECT,
+  PROPERTY_OPTION_START_NUMBER,
 } from "../../../constants/calculetComponent";
 
 /**
@@ -50,7 +51,7 @@ function ComponentForm({ componentId, componentType }) {
     ...Common,
     ...Components[componentType],
   });
-  const [optionIdx, setOptionIdx] = useState(0); // 단일 선택 컴포넌트에 대한 옵션 개수
+  const [optionIdx, setOptionIdx] = useState(PROPERTY_OPTION_START_NUMBER + 1); // 단일 선택 컴포넌트에 대한 옵션 개수
 
   // isInput 속성 관리
   useEffect(() => {

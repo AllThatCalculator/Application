@@ -17,6 +17,9 @@ const PROPERTY_TYPE_STRING = "string";
 const PROPERTY_TYPE_BOOLEAN = "bool";
 const PROPERTY_TYPE_SELECT = "select";
 
+// calculet component option start number
+const PROPERTY_OPTION_START_NUMBER = 0;
+
 export {
   TYPOGRAPHY,
   TEXT_FIELD,
@@ -33,4 +36,5 @@ export {
   PROPERTY_TYPE_STRING,
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_SELECT,
+  PROPERTY_OPTION_START_NUMBER,
 };
