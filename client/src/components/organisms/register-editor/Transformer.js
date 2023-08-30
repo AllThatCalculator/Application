@@ -11,7 +11,9 @@ import {
   MULTI_SELECT,
   CHECK_BOX,
   MULTI_CHECK_BOX,
+  RADIO,
 } from "../../../constants/calculetComponent";
+import RadioComponent from "./RadioComponent";
 
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
@@ -86,6 +88,8 @@ function Transformer({ data, onChange, initInputs }) {
       return <CheckboxComponent {...properties} />;
     case MULTI_CHECK_BOX:
       return <MultiCheckboxComponent {...properties} />;
+    case RADIO:
+      return <RadioComponent {...properties} />;
     default:
       return;
   }

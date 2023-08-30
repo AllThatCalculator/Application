@@ -12,6 +12,7 @@ import {
   SELECT,
   MULTI_SELECT,
   MULTI_CHECK_BOX,
+  RADIO,
   PROPERTY_TYPE_STRING,
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_OPTION_START_NUMBER,
@@ -79,6 +80,7 @@ function createNewComponent(data) {
     case SELECT:
     case MULTI_SELECT:
     case MULTI_CHECK_BOX:
+    case RADIO:
       newComponent.options = {
         [PROPERTY_OPTION_START_NUMBER]: {
           value: "default",

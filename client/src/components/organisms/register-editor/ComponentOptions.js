@@ -142,6 +142,9 @@ const Components = {
   multiCheckbox: {
     options: [DefaultOption],
   },
+  radio: {
+    options: [DefaultOption],
+  },
 };
 
 export { Common, Option, Components };
