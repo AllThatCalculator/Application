@@ -5,10 +5,9 @@ import { onAppendNewComponent } from "../../../modules/calculetEditor";
 import { Components } from "./ComponentOptions";
 import { MenuItem, Select } from "@mui/material";
 import useInput from "../../../hooks/useInput";
-import ComponentForm from "./ComponentForm";
-import Transformer from "./Transformer";
+import ComponentEditor from "./ComponentEditor";
 
-function CalculetEditor({ onInputsChange, initInputs }) {
+function CalculetEditor({ initInputs }) {
   const { components } = useSelector((state) => state.calculetEditor);
   const dispatch = useDispatch();
   const { value: componentType, onChange: onChangeComponentType } =
@@ -32,19 +31,7 @@ function CalculetEditor({ onInputsChange, initInputs }) {
       </Select>
       <button onClick={() => addNewComponent(componentType)}>추가하기</button>
       {Object.entries(components).map(([id, data]) => {
-        return (
-          <div key={id}>
-            <Transformer
-              data={data}
-              onChange={onInputsChange}
-              initInputs={initInputs}
-            />
-            <ComponentForm
-              componentId={id}
-              componentType={data.componentType}
-            />
-          </div>
-        );
+        return <ComponentEditor key={id} id={id} data={data} />;
       })}
     </>
   );
