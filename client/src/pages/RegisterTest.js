@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+// import { useCallback } from "react";
 import { Grid } from "@mui/material";
 import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
 import CalculetEditor from "../components/organisms/register-editor/CalculetEditor";
@@ -14,46 +14,48 @@ function RegisterTest() {
 
   // 함수 생성 보안 경고 무시
   // eslint-disable-next-line
-  const userFunction = new Function(
-    "inputObj",
-    `return {
-      test2: inputObj.test * inputObj.test
-    }`
-  );
+  // const userFunction = new Function(
+  //   "inputObj",
+  //   `return {
+  //     test2: inputObj.test * inputObj.test
+  //   }`
+  // );
 
-  // 계산하기
-  const calculate = useCallback((userFunction) => {
-    // const outputObj = { ...userFunction(inputs) };
-    // setOutputs(outputObj);
-  }, []);
+  // // 계산하기
+  // const calculate = useCallback((userFunction) => {
+  //   // const outputObj = { ...userFunction(inputs) };
+  //   // setOutputs(outputObj);
+  // }, []);
 
-  // 입력 값 onChange 함수
-  const onInputsChange = useCallback((e) => {
-    // let { id, value } = e.target;
-    // if (e.target.type === "checkbox") {
-    //   if (e.target.name) {
-    //     value = {
-    //       [e.target.name]: e.target.checked,
-    //     };
-    //   } else {
-    //     value = e.target.checked;
-    //   }
-    // } else if (id === undefined) {
-    //   id = e.target.name;
-    // }
-    // setInputs((inputs) => ({
-    //   ...inputs,
-    //   [id]:
-    //     typeof inputs[id] === "object" && !Array.isArray(inputs[id])
-    //       ? { ...inputs[id], ...value }
-    //       : value,
-    // }));
-  }, []);
+  // // 입력 값 onChange 함수
+  // const onInputsChange = useCallback((e) => {
+  //   // console.log(e.target.value);
+  //   // let { id, value } = e.target;
+  //   // if (e.target.type === "checkbox") {
+  //   //   if (e.target.name) {
+  //   //     value = {
+  //   //       [e.target.name]: e.target.checked,
+  //   //     };
+  //   //   } else {
+  //   //     value = e.target.checked;
+  //   //   }
+  //   // } else if (id === undefined) {
+  //   //   id = e.target.name;
+  //   // }
+  //   // setInputs((inputs) => ({
+  //   //   ...inputs,
+  //   //   [id]:
+  //   //     typeof inputs[id] === "object" && !Array.isArray(inputs[id])
+  //   //       ? { ...inputs[id], ...value }
+  //   //       : value,
+  //   // }));
+  // }, []);
 
-  // inputs 값 초기화하는 함수
-  const initInputs = useCallback((key, value) => {
-    // setInputs((inputs) => ({ ...inputs, [key]: value }));
-  }, []);
+  // // inputs 값 초기화하는 함수
+  // const initInputs = useCallback((key, value) => {
+  //   // setInputs((inputs) => ({ ...inputs, [key]: value }));
+  //   // console.log(key, value);
+  // }, []);
 
   // outputs 값 초기화하는 함수
   // const initOutputs = useCallback((key, value) => {
@@ -68,11 +70,12 @@ function RegisterTest() {
   return (
     <Grid container sx={{ backgroundColor: "white" }}>
       <PageScreenBox gap="2.4rem">
-        <CalculetEditor
-          onInputsChange={onInputsChange}
-          initInputs={initInputs}
-        />
-        <button onClick={() => calculate(userFunction)}>계산하기</button>
+        <CalculetEditor />
+        <button
+        // onClick={() => calculate(userFunction)}
+        >
+          계산하기
+        </button>
       </PageScreenBox>
     </Grid>
   );
