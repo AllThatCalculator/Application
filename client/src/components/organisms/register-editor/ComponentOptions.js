@@ -1,6 +1,5 @@
 /**
- * 컴포넌트 속성들에 대한 정보를 담은 객체
- * common : 공통으로 쓰이는 속성
+ * 컴포넌트들에 공통으로 쓰이는 속성
  * key : 속성 이름 (mui에서 쓰이는 속성 이름과 동일)
  * value :
  *   - type : string - textfield, bool - checkbox, select - select box
@@ -10,29 +9,49 @@
  *     - value : 옵션 id (mui에 넘어갈 value)
  *     - name : 페이지에 표시되는 이름 (label)
  */
-const Components = {
-  common: {
-    id: {
-      type: "string",
-      name: "변수명",
-      required: true,
-    },
-    label: {
-      type: "string",
-      name: "설명",
-      required: true,
-    },
-    required: {
-      type: "bool",
-      name: "필수 여부",
-      required: false,
-    },
-    disabled: {
-      type: "bool",
-      name: "비활성화",
-      required: false,
-    },
+const Common = {
+  id: {
+    type: "string",
+    name: "변수명",
+    required: true,
   },
+  label: {
+    type: "string",
+    name: "설명",
+    required: true,
+  },
+  required: {
+    type: "bool",
+    name: "필수 여부",
+    required: false,
+  },
+  disabled: {
+    type: "bool",
+    name: "비활성화",
+    required: false,
+  },
+};
+
+/**
+ * 옵션이 있는 컴포넌트의 옵션에 대한 속성 정보
+ */
+const Option = {
+  value: {
+    type: "string",
+    name: "value",
+    required: true,
+  },
+  label: {
+    type: "string",
+    name: "label",
+    required: true,
+  },
+};
+
+/**
+ * 컴포넌트 속성들에 대한 정보를 담은 객체
+ */
+const Components = {
   textField: {
     isInput: {
       type: "bool",
@@ -59,6 +78,7 @@ const Components = {
         { value: "password", name: "비밀번호" },
       ],
       required: false,
+      default: "text",
     },
     placeholder: {
       type: "string",
@@ -67,6 +87,22 @@ const Components = {
     },
     value: { type: "string", name: "기본값", required: false },
   },
+  select: {
+    options: [],
+  },
+  multiSelect: {
+    options: [],
+  },
+  checkbox: {
+    value: {
+      type: "bool",
+      name: "체크 여부",
+      required: false,
+    },
+  },
+  multiCheckbox: {
+    options: [],
+  },
 };
 
-export { Components };
+export { Common, Option, Components };

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import {
   Grid,
   FormControlLabel,
@@ -7,6 +7,9 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
+import { Common, Components, Option } from "./ComponentOptions";
+import { useDispatch, useSelector } from "react-redux";
+import { onUpdateComponent } from "../../../modules/calculetEditor";
 
 /**
  * 컴포넌트 속성 하나에 대한 정보를 받아서, 인풋 필드로 바꿔주는 함수
@@ -64,51 +67,130 @@ function TransformField({ id, data, value, onChange }) {
 
 /**
  * 컴포넌트 type에 따라 속성을 입력하는 필드들을 모은 컴포넌트
- * @param {string} type 컴포넌트 타입
- * @param {object} component 컴포넌트 정보
- * @param {function} addComponent 컴포넌트 추가하는 함수
- * @param {function} deleteComponent 컴포넌트 삭제하는 함수
+ * @param {string} componentId 컴포넌트 UUID
+ * @param {string} componentType 컴포넌트 타입
  * @returns
  */
-function ComponentForm({ type, component, addComponent, deleteComponent }) {
-  const [inputs, setInputs] = useState({}); // 컴포넌트 속성에 대한 인풋값
+function ComponentForm({ componentId, componentType }) {
+  const dispatch = useDispatch();
+  const inputs = useSelector(
+    (state) => state.calculetEditor.components[componentId]
+  ); // 컴포넌트 속성에 대한 인풋값
+  const [property, setProperty] = useState({
+    ...Common,
+    ...Components[componentType],
+  });
+  const [optionIdx, setOptionIdx] = useState(0); // 단일 선택 컴포넌트에 대한 옵션 개수
+
+  // isInput 속성 관리
+  useEffect(() => {
+    switch (componentType) {
+      case "textField":
+      case "typography":
+        dispatch(
+          onUpdateComponent({ componentId, targetId: "isInput", value: true })
+        );
+        break;
+      default:
+    }
+  }, [componentType, componentId, dispatch]);
 
   // 컴포넌트 속성 인풋 onChange 함수
   const onInputsChange = useCallback(
     (e) => {
       let { id, value } = e.target;
-      if (id && component[id].type === "bool") {
+      if (id && property[id].type === "bool") {
         value = e.target.checked;
       } else if (id === undefined) {
         id = e.target.name;
       }
-      setInputs((inputs) => ({ ...inputs, [id]: value }));
+      dispatch(onUpdateComponent({ componentId, targetId: id, value }));
     },
-    [component, setInputs]
+    [property, componentId, dispatch]
   );
 
-  // 속성이 유효한지 확인하는 함수
-  const invalidComponentOption = useCallback(
-    (data) => {
-      for (const key in component) {
-        if (component[key].required && !inputs[key]) {
-          return false;
-        }
-      }
-      if (!data.isInput && !data.isOutput) {
-        return false;
-      }
-      return true;
+  // 입력 검증 필요
+  // // 속성이 유효한지 확인하는 함수
+  // const invalidComponentOption = useCallback(
+  //   (data) => {
+  //     for (const key in property) {
+  //       if (property[key].required && !inputs[key]) {
+  //         return false;
+  //       }
+  //     }
+  //     if (!data.isInput && !data.isOutput) {
+  //       return false;
+  //     }
+  //     return true;
+  //   },
+  //   [property, inputs]
+  // );
+
+  // 옵션 추가하는 함수
+  const addOption = useCallback(() => {
+    setProperty((property) => ({
+      ...property,
+      options: [...property.options, { ...Option, id: optionIdx }],
+    }));
+    if (!inputs.options) {
+      dispatch(
+        onUpdateComponent({ componentId, targetId: "options", value: {} })
+      );
+    }
+    dispatch(
+      onUpdateComponent({
+        componentId,
+        targetId: "options",
+        value: { ...inputs.options, [optionIdx]: {} },
+      })
+    );
+
+    setOptionIdx((optionIdx) => optionIdx + 1);
+  }, [inputs.options, optionIdx, setOptionIdx, componentId, dispatch]);
+
+  // 옵션 삭제하는 함수
+  const deleteOption = useCallback(
+    (e) => {
+      const target = e.target.parentElement;
+      setProperty((property) => ({
+        ...property,
+        options: property.options.filter((o) => o.id !== Number(target.id)),
+      }));
+      const { [target.id]: temp, ...rest } = inputs.options;
+      dispatch(
+        onUpdateComponent({ componentId, targetId: "options", value: rest })
+      );
     },
-    [component, inputs]
+    [inputs.options, componentId, dispatch]
   );
 
-  //   console.log("컴포넌트 옵션 정보", inputs);
+  // 옵션 onChange 함수
+  const onOptionsChange = useCallback(
+    (e) => {
+      const { id, value } = e.target;
+      const [name, idx] = id.split(" "); // 속성 이름과 옵션 번호
+
+      dispatch(
+        onUpdateComponent({
+          componentId,
+          targetId: "options",
+          value: {
+            ...inputs.options,
+            [idx]: { ...inputs.options[idx], [name]: value },
+          },
+        })
+      );
+    },
+    [inputs.options, componentId, dispatch]
+  );
+
+  // console.log("속성 컴포넌트 정보", property);
+  // console.log("컴포넌트 옵션 정보", inputs);
 
   return (
     <Grid container sx={{ backgroundColor: "white" }}>
       <>
-        {Object.entries(component).map(([id, data], index) => (
+        {Object.entries(property).map(([id, data], index) => (
           <TransformField
             key={index}
             id={id}
@@ -118,17 +200,28 @@ function ComponentForm({ type, component, addComponent, deleteComponent }) {
           />
         ))}
       </>
-      <button
-        onClick={() => {
-          const data = { ...inputs, componentType: type };
-          if (invalidComponentOption(data)) {
-            addComponent(data);
-          }
-        }}
-      >
-        추가
-      </button>
-      <button onClick={() => deleteComponent(inputs)}>삭제</button>
+      {property.options && (
+        <div>
+          <button onClick={addOption}>옵션 추가</button>
+          {property.options.map((data, index1) => (
+            <div id={data.id} key={index1}>
+              {Object.entries(data).map(
+                ([id, data2], index2) =>
+                  id !== "id" && (
+                    <TransformField
+                      key={`${id}${data.id}`}
+                      id={`${id} ${data.id}`}
+                      data={data2}
+                      value={inputs.options[data.id][id]}
+                      onChange={onOptionsChange}
+                    />
+                  )
+              )}
+              <button onClick={deleteOption}>옵션 삭제</button>
+            </div>
+          ))}
+        </div>
+      )}
     </Grid>
   );
 }
