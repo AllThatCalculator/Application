@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import { TextField } from "@mui/material";
 import SelectComponent from "./SelectComponent";
 import CheckboxComponent from "./CheckboxComponent";
@@ -19,10 +19,11 @@ import InputHelperComponent from "./InputHelperComponent";
 
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
- * @param {*} props
+ * @param {*} data 컴포넌트 정보
+ * @param {*} onChange 입력
  * props: 사용자가 입력한 컴포넌트 한 개의 정보들
  */
-function Transformer({ data, onChange, initInputs }) {
+function Transformer({ data }) {
   let {
     componentId,
     isInput,
@@ -61,7 +62,7 @@ function Transformer({ data, onChange, initInputs }) {
   if (data.isInput) {
     properties = {
       ...properties,
-      onChange: onChange,
+      // onChange: onChange,
     };
   }
   if (data.copyButton) {
@@ -71,11 +72,11 @@ function Transformer({ data, onChange, initInputs }) {
     };
   }
 
-  useEffect(() => {
-    if (data.isInput) {
-      initInputs(data.id, value);
-    }
-  }, [data.id, data.isInput, initInputs, value]);
+  // useEffect(() => {
+  //   if (data.isInput) {
+  //     initInputs(data.id, value);
+  //   }
+  // }, [data.id, data.isInput, initInputs, value]);
 
   // console.log("추가된 컴포넌트", properties);
 
