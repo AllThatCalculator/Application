@@ -145,6 +145,15 @@ const Components = {
   radio: {
     options: [DefaultOption],
   },
+  inputHelper: {
+    target: {
+      type: PROPERTY_TYPE_STRING,
+      label: "입력될 입력창의 변수명",
+      value: "",
+      required: true,
+    },
+    options: [DefaultOption],
+  },
 };
 
 export { Common, Option, Components };

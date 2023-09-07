@@ -16,6 +16,7 @@ import {
   PROPERTY_TYPE_STRING,
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_OPTION_START_NUMBER,
+  INPUT_HELPER,
 } from "../constants/calculetComponent";
 
 const CALCULET_EDITOR_COMPONENTS_APPEND =
@@ -81,6 +82,7 @@ function createNewComponent(data) {
     case MULTI_SELECT:
     case MULTI_CHECK_BOX:
     case RADIO:
+    case INPUT_HELPER:
       newComponent.options = {
         [PROPERTY_OPTION_START_NUMBER]: {
           value: "default",
