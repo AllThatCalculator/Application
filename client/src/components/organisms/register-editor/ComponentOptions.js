@@ -134,7 +134,7 @@ const Components = {
       type: PROPERTY_TYPE_STRING,
       label: "내용",
       value: "",
-      required: true,
+      required: false,
     },
   },
   textField: {
