@@ -78,30 +78,69 @@ const DefaultOption = {
 };
 
 /**
+ * 텍스트 컴포넌트에 들어가는 공통 속성 정보
+ */
+const TextOption = {
+  isInput: {
+    type: PROPERTY_TYPE_BOOLEAN,
+    label: "입력 여부",
+    value: false,
+    required: false,
+  },
+  isOutput: {
+    type: PROPERTY_TYPE_BOOLEAN,
+    label: "출력 여부",
+    value: false,
+    required: false,
+  },
+  copyButton: {
+    type: PROPERTY_TYPE_BOOLEAN,
+    label: "복사 버튼",
+    value: false,
+    required: false,
+  },
+};
+
+/**
  * 컴포넌트 속성들에 대한 정보를 담은 객체
  */
 const Components = {
+  typography: {
+    ...TextOption,
+    variant: {
+      type: PROPERTY_TYPE_SELECT,
+      label: "종류",
+      options: [
+        { value: "body1", label: "본문 1" },
+        { value: "body2", label: "본문 2" },
+        { value: "button", label: "굵은 글씨" },
+        { value: "caption", label: "설명 글씨" },
+        { value: "h1", label: "제목 1" },
+        { value: "h2", label: "제목 2" },
+        { value: "h3", label: "제목 3" },
+        { value: "h4", label: "제목 4" },
+        { value: "h5", label: "제목 5" },
+        { value: "h6", label: "제목 6" },
+        { value: "overline", label: "얇은 글씨" },
+        { value: "subtitle1", label: "소제목 1" },
+        { value: "subtitle2", label: "소제목 2" },
+        { value: "string", label: "텍스트" },
+      ],
+      required: false,
+      value: "body1",
+    },
+    content: {
+      type: PROPERTY_TYPE_STRING,
+      label: "내용",
+      value: "",
+      required: true,
+    },
+  },
   textField: {
-    isInput: {
-      type: PROPERTY_TYPE_BOOLEAN,
-      label: "입력 여부",
-      value: false,
-      required: false,
-    },
-    isOutput: {
-      type: PROPERTY_TYPE_BOOLEAN,
-      label: "출력 여부",
-      value: false,
-      required: false,
-    },
-    copyButton: {
-      type: PROPERTY_TYPE_BOOLEAN,
-      label: "복사 버튼",
-      value: false,
-      required: false,
-    },
+    ...TextOption,
     type: {
       type: PROPERTY_TYPE_SELECT,
+      label: "타입",
       options: [
         { value: "text", label: "문자열" },
         { value: "email", label: "이메일" },

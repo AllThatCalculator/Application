@@ -14,10 +14,12 @@ import {
   RADIO,
   INPUT_HELPER,
   CALCULET_BUTTON,
+  TYPOGRAPHY,
 } from "../../../constants/calculetComponent";
 import RadioComponent from "./RadioComponent";
 import InputHelperComponent from "./InputHelperComponent";
 import CalculetButtonComponent from "./CalculetButtonComponent";
+import TypographyComponent from "./TypographyComponent";
 
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
@@ -83,6 +85,8 @@ function Transformer({ data }) {
   // console.log("추가된 컴포넌트", properties);
 
   switch (data.componentType) {
+    case TYPOGRAPHY:
+      return <TypographyComponent {...properties} />;
     case TEXT_FIELD:
       return <TextField {...properties} />;
     case SELECT:
