@@ -32,6 +32,7 @@ function InputHelperComponent(props) {
       >
         {Object.entries(props.options).map(([id, option], index) => (
           <Button
+            sx={{ textTransform: "none" }}
             key={index}
             id={option.value}
             variant="contained"

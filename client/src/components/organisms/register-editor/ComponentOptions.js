@@ -154,6 +154,7 @@ const Components = {
     },
     options: [DefaultOption],
   },
+  calculetButton: {},
 };
 
 export { Common, Option, Components };
