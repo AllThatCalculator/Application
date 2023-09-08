@@ -13,9 +13,11 @@ import {
   MULTI_CHECK_BOX,
   RADIO,
   INPUT_HELPER,
+  CALCULET_BUTTON,
 } from "../../../constants/calculetComponent";
 import RadioComponent from "./RadioComponent";
 import InputHelperComponent from "./InputHelperComponent";
+import CalculetButtonComponent from "./CalculetButtonComponent";
 
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
@@ -95,6 +97,8 @@ function Transformer({ data }) {
       return <RadioComponent {...properties} />;
     case INPUT_HELPER:
       return <InputHelperComponent {...properties} />;
+    case CALCULET_BUTTON:
+      return <CalculetButtonComponent {...properties} />;
     default:
       return;
   }
