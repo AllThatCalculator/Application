@@ -1,9 +1,8 @@
 import { useCallback, useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 import { Grid, TextField } from "@mui/material";
 import { Common, Components, Option } from "./ComponentOptions";
-import { useDispatch, useSelector } from "react-redux";
-import SelectComponent from "./SelectComponent";
-import CheckboxComponent from "./CheckboxComponent";
 import { onUpdateComponent } from "../../../modules/calculetEditor";
 import {
   TYPOGRAPHY,
@@ -12,7 +11,12 @@ import {
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_SELECT,
   PROPERTY_OPTION_START_NUMBER,
+  // PROPERTY_TYPE_DATE,
 } from "../../../constants/calculetComponent";
+
+// import DatePickerComponent from "./DatePickerComponent";
+import SelectComponent from "./SelectComponent";
+import CheckboxComponent from "./CheckboxComponent";
 
 /**
  * 컴포넌트 속성 하나에 대한 정보를 받아서, 인풋 필드로 바꿔주는 함수
@@ -31,6 +35,8 @@ function TransformField(props) {
       return <CheckboxComponent {...properties} />;
     case PROPERTY_TYPE_SELECT:
       return <SelectComponent {...properties} />;
+    // case PROPERTY_TYPE_DATE:
+    //   return <DatePickerComponent {...properties} />;
     default:
       return;
   }

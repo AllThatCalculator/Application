@@ -1,10 +1,6 @@
 import React from "react";
 // import { useEffect } from "react";
 import { TextField } from "@mui/material";
-import SelectComponent from "./SelectComponent";
-import CheckboxComponent from "./CheckboxComponent";
-import MultiCheckboxComponent from "./MultiCheckBoxComponent";
-import CopyButton from "./CopyButton";
 import {
   TEXT_FIELD,
   SELECT,
@@ -15,11 +11,17 @@ import {
   INPUT_HELPER,
   CALCULET_BUTTON,
   TYPOGRAPHY,
+  // DATE_PICKER,
 } from "../../../constants/calculetComponent";
+import SelectComponent from "./SelectComponent";
+import CheckboxComponent from "./CheckboxComponent";
+import MultiCheckboxComponent from "./MultiCheckBoxComponent";
+import CopyButton from "./CopyButton";
 import RadioComponent from "./RadioComponent";
 import InputHelperComponent from "./InputHelperComponent";
 import CalculetButtonComponent from "./CalculetButtonComponent";
 import TypographyComponent from "./TypographyComponent";
+// import DatePickerComponent from "./DatePickerComponent";
 
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
@@ -89,6 +91,8 @@ function Transformer({ data }) {
       return <TypographyComponent {...properties} />;
     case TEXT_FIELD:
       return <TextField {...properties} />;
+    // case DATE_PICKER:
+    //   return <DatePickerComponent {...properties} />;
     case SELECT:
       return <SelectComponent {...properties} />;
     case MULTI_SELECT:
