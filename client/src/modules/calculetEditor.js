@@ -8,6 +8,16 @@ import {
   Common,
   Components,
 } from "../components/organisms/register-editor/ComponentOptions";
+import {
+  SELECT,
+  MULTI_SELECT,
+  MULTI_CHECK_BOX,
+  RADIO,
+  PROPERTY_TYPE_STRING,
+  PROPERTY_TYPE_BOOLEAN,
+  PROPERTY_OPTION_START_NUMBER,
+  INPUT_HELPER,
+} from "../constants/calculetComponent";
 
 const CALCULET_EDITOR_COMPONENTS_APPEND =
   "calculetEditor/CALCULET_EDITOR_COMPONENTS_APPEND";
@@ -49,14 +59,14 @@ function createNewComponent(data) {
   const newComponent = { ...data };
   Object.entries({ ...Common, ...Components[data.componentType] }).map(
     ([key, value]) => {
-      if (value.default !== undefined) {
-        newComponent[key] = value.default;
+      if (value.value !== undefined) {
+        newComponent[key] = value.value;
       } else {
         switch (value.type) {
-          case "string":
+          case PROPERTY_TYPE_STRING:
             newComponent[key] = "";
             break;
-          case "bool":
+          case PROPERTY_TYPE_BOOLEAN:
             newComponent[key] = false;
             break;
           default:
@@ -68,11 +78,13 @@ function createNewComponent(data) {
   );
 
   switch (data.componentType) {
-    case "select":
-    case "multiSelect":
-    case "multiCheckbox":
+    case SELECT:
+    case MULTI_SELECT:
+    case MULTI_CHECK_BOX:
+    case RADIO:
+    case INPUT_HELPER:
       newComponent.options = {
-        "-1": {
+        [PROPERTY_OPTION_START_NUMBER]: {
           value: "default",
           label: "기본값",
         },

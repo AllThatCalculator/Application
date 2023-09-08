@@ -1,10 +1,27 @@
 import React from "react";
 // import { useEffect } from "react";
 import { TextField } from "@mui/material";
+import {
+  TEXT_FIELD,
+  SELECT,
+  MULTI_SELECT,
+  CHECK_BOX,
+  MULTI_CHECK_BOX,
+  RADIO,
+  INPUT_HELPER,
+  CALCULET_BUTTON,
+  TYPOGRAPHY,
+  // DATE_PICKER,
+} from "../../../constants/calculetComponent";
 import SelectComponent from "./SelectComponent";
 import CheckboxComponent from "./CheckboxComponent";
 import MultiCheckboxComponent from "./MultiCheckBoxComponent";
 import CopyButton from "./CopyButton";
+import RadioComponent from "./RadioComponent";
+import InputHelperComponent from "./InputHelperComponent";
+import CalculetButtonComponent from "./CalculetButtonComponent";
+import TypographyComponent from "./TypographyComponent";
+// import DatePickerComponent from "./DatePickerComponent";
 
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
@@ -24,13 +41,13 @@ function Transformer({ data }) {
   let value = data.value;
   if (!value) {
     switch (data.componentType) {
-      case "multiSelect":
+      case MULTI_SELECT:
         value = [];
         break;
-      case "checkbox":
+      case CHECK_BOX:
         value = false;
         break;
-      case "multiCheckbox":
+      case MULTI_CHECK_BOX:
         value = {};
         for (const key in data.options) {
           value = {
@@ -70,18 +87,26 @@ function Transformer({ data }) {
   // console.log("추가된 컴포넌트", properties);
 
   switch (data.componentType) {
-    case "textField":
+    case TYPOGRAPHY:
+      return <TypographyComponent {...properties} />;
+    case TEXT_FIELD:
       return <TextField {...properties} />;
-    case "select":
-      return <SelectComponent data={properties} />;
-    case "multiSelect":
-      const newData = { ...properties, multiple: true };
-      return <SelectComponent data={newData} />;
-    case "checkbox":
-      const { label: labelData, ...rest } = properties;
-      return <CheckboxComponent data={rest} label={labelData} />;
-    case "multiCheckbox":
-      return <MultiCheckboxComponent data={properties} />;
+    // case DATE_PICKER:
+    //   return <DatePickerComponent {...properties} />;
+    case SELECT:
+      return <SelectComponent {...properties} />;
+    case MULTI_SELECT:
+      return <SelectComponent {...properties} multiple={true} />;
+    case CHECK_BOX:
+      return <CheckboxComponent {...properties} />;
+    case MULTI_CHECK_BOX:
+      return <MultiCheckboxComponent {...properties} />;
+    case RADIO:
+      return <RadioComponent {...properties} />;
+    case INPUT_HELPER:
+      return <InputHelperComponent {...properties} />;
+    case CALCULET_BUTTON:
+      return <CalculetButtonComponent {...properties} />;
     default:
       return;
   }
