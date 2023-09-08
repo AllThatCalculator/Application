@@ -11,10 +11,10 @@ import {
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_SELECT,
   PROPERTY_OPTION_START_NUMBER,
-  // PROPERTY_TYPE_DATE,
+  PROPERTY_TYPE_DATE,
 } from "../../../constants/calculetComponent";
 
-// import DatePickerComponent from "./DatePickerComponent";
+import DatePickerComponent from "./DatePickerComponent";
 import SelectComponent from "./SelectComponent";
 import CheckboxComponent from "./CheckboxComponent";
 
@@ -35,8 +35,8 @@ function TransformField(props) {
       return <CheckboxComponent {...properties} />;
     case PROPERTY_TYPE_SELECT:
       return <SelectComponent {...properties} />;
-    // case PROPERTY_TYPE_DATE:
-    //   return <DatePickerComponent {...properties} />;
+    case PROPERTY_TYPE_DATE:
+      return <DatePickerComponent {...properties} />;
     default:
       return;
   }

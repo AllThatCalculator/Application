@@ -3,7 +3,7 @@ import {
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_SELECT,
   PROPERTY_OPTION_START_NUMBER,
-  // PROPERTY_TYPE_DATE,
+  PROPERTY_TYPE_DATE,
 } from "../../../constants/calculetComponent";
 
 /**
@@ -165,14 +165,14 @@ const Components = {
       required: false,
     },
   },
-  // datePicker: {
-  //   value: {
-  //     type: PROPERTY_TYPE_DATE,
-  //     label: "기본값",
-  //     value: "",
-  //     required: false,
-  //   },
-  // },
+  datePicker: {
+    value: {
+      type: PROPERTY_TYPE_DATE,
+      label: "기본값",
+      value: "",
+      required: false,
+    },
+  },
   select: {
     options: [DefaultOption],
   },
