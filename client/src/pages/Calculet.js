@@ -31,7 +31,69 @@ async function handleGetCalculetInfo(id, setCalculetObj) {
   }
 
   if (calculetInfoRequest !== null) {
-    // return;
+    // for test
+    // calculetInfoRequest.type = 1;
+    switch (calculetInfoRequest.type) {
+      case 0:
+        break;
+      case 1: // 데이터 가공
+        // 테스트용 임시로직
+        // const srcCode = {
+        //   components: {
+        //     a: {
+        //       componentId: "a",
+        //       componentType: "textField",
+        //       copyButton: false,
+        //       disabled: false,
+        //       id: "a",
+        //       isInput: true,
+        //       isOutput: false,
+        //       label: "피연산자1",
+        //       placeholder: "",
+        //       required: false,
+        //       type: "text",
+        //       defaultValue: "10",
+        //     },
+        //     b: {
+        //       componentId: "b",
+        //       componentType: "textField",
+        //       copyButton: false,
+        //       disabled: false,
+        //       id: "b",
+        //       isInput: true,
+        //       isOutput: false,
+        //       label: "피연산자2",
+        //       placeholder: "",
+        //       required: false,
+        //       type: "text",
+        //       defaultValue: "5",
+        //     },
+        //     c: {
+        //       componentId: "c",
+        //       componentType: "textField",
+        //       copyButton: true,
+        //       disabled: true,
+        //       id: "c",
+        //       isInput: false,
+        //       isOutput: true,
+        //       label: "계산결과",
+        //       placeholder: "",
+        //       required: false,
+        //       type: "text",
+        //     },
+        //     // userFunction: (a, b) => a + b,
+        //   },
+        //   userFunction: `function main(x) {
+        //     console.warn(x);
+        //     return {c:parseInt(x.a)+parseInt(x.b)};
+        //   }`,
+        // };
+        // calculetInfoRequest.srcCode = srcCode;
+        calculetInfoRequest.srcCode = JSON.parse(calculetInfoRequest.srcCode);
+        break;
+      default:
+    }
+
     setCalculetObj(calculetInfoRequest);
   }
 }
@@ -123,6 +185,7 @@ function Calculet() {
                 srcCode={calculetObj.srcCode}
                 manual={calculetObj.manual}
                 calculetId={id}
+                type={calculetObj.type}
               />
             </PageScreenBox>
           </Grid>

@@ -24,10 +24,7 @@ import { formatDayTime } from "../../../utils/formatTime";
 import { FlexBox } from "../common/FlexBox";
 import RecordSelectedOption from "./RecordSelectedOption";
 import usePreventLeave from "../../../hooks/usePreventLeave";
-import {
-  getCalculetInOutputObj,
-  setCalculetInOutputObj,
-} from "../../../utils/setCalculetInOutputObj";
+import { getCalculetInOutputObj } from "../../../utils/setCalculetInOutputObj";
 import WarningDialog from "../common/WarningDialog";
 import { FitTableCell } from "../common/StyledTables";
 
@@ -83,6 +80,7 @@ function TableHeadCellBox({
   order = null,
   onRequestSort = () => {},
   headCell,
+  label,
   align,
 }) {
   const createSortHandler = (property) => (event) => {
@@ -107,7 +105,7 @@ function TableHeadCellBox({
           {headCell}
         </TableSortLabel>
       ) : (
-        headCell
+        label
       )}
     </TableCell>
   );
@@ -127,7 +125,7 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
-    headCells,
+    calculetObj,
   } = props;
 
   // 계산 내역 선택 팝업창
@@ -140,7 +138,7 @@ function EnhancedTableHead(props) {
 
   return (
     <>
-      {headCells.length !== 0 && (
+      {!!calculetObj.labelDict && (
         <TableHead>
           <TableRow>
             <TableCell
@@ -171,22 +169,33 @@ function EnhancedTableHead(props) {
               order={order}
               onRequestSort={onRequestSort}
               headCell={KEY_CREATED_NAME}
+              label={KEY_CREATED_NAME}
               align="left"
             />
             {
               // input - 왼쪽 정렬
-              headCells.inputObj &&
-                Object.keys(headCells.inputObj).map((data) => (
+              calculetObj.inputObj &&
+                calculetObj.inputObj.map((data) => (
                   // 이름만 보내주면 됨.
-                  <TableHeadCellBox key={data} headCell={data} align="left" />
+                  <TableHeadCellBox
+                    key={data}
+                    headCell={data}
+                    label={calculetObj.labelDict[data]}
+                    align="left"
+                  />
                 ))
             }
             {
               // output - 오른쪽 정렬
-              headCells.outputObj &&
-                Object.keys(headCells.outputObj).map((data) => (
+              calculetObj.outputObj &&
+                calculetObj.outputObj.map((data) => (
                   // 이름만 보내주면 됨.
-                  <TableHeadCellBox key={data} headCell={data} align="right" />
+                  <TableHeadCellBox
+                    key={data}
+                    headCell={data}
+                    label={calculetObj.labelDict[data]}
+                    align="right"
+                  />
                 ))
             }
           </TableRow>
@@ -271,11 +280,10 @@ function EnhancedTableToolbar(props) {
  * - 저장하기 버튼 누르면 먼저 iframe에 접근해서 값을 가져온 후, /record POST 요청으로 계산 이력 저장
  * @param {string} calculetId 계산기 번호
  */
-function RecordCalculetHistory({ calculetId, isPreview }) {
+function RecordCalculetHistory({ calculetId, isPreview, type }) {
   const { openSnackbar } = useSnackbar();
   const { loginPage } = usePage();
   const {
-    handleSetCalculetObj,
     handleGetCalculetRecords,
     handleAppendCalculetRecent,
     handleSetCellRecentDatas,
@@ -286,13 +294,15 @@ function RecordCalculetHistory({ calculetId, isPreview }) {
   const {
     idToken,
     recordList: cellRecordDatas,
-    calculetObj: headCells,
+    calculetObj,
     recentList: cellRecentDatas,
+    recentInputOutput,
   } = useSelector((state) => ({
     idToken: state.userInfo.idToken,
     recordList: state.calculetRecord.recordList,
     calculetObj: state.calculetRecord.calculetObj,
     recentList: state.calculetRecord.recentList,
+    recentInputOutput: state.calculetRecord.recentInputOutput,
   }));
   // table cell padding sx
   const paddingSx = { padding: "1.4rem 1.6rem" };
@@ -450,15 +460,24 @@ function RecordCalculetHistory({ calculetId, isPreview }) {
   // (임시) 현재 입력, 출력 긁어와서 row 추가하는 함수
   function handleAddCalculetRecords() {
     const createTime = new Date().toISOString();
-    setCalculetInOutputObj(calculetId, handleSetCalculetObj);
-    const { inputObj, outputObj } = getCalculetInOutputObj();
 
-    let data = {
+    let record;
+    switch (type) {
+      case 0:
+        record = getCalculetInOutputObj(calculetObj);
+        break;
+      case 1:
+        // inputoutput 객체 작성
+        record = recentInputOutput;
+        break;
+      default:
+    }
+    const data = {
       createdAt: createTime,
       id: `${KEY_RECENT_CALCULATION}-${calculetId}-${createTime}`,
-      inputObj: inputObj,
-      outputObj: outputObj,
+      ...record,
     };
+
     handleAppendCalculetRecent(data);
   }
 
@@ -564,7 +583,7 @@ function RecordCalculetHistory({ calculetId, isPreview }) {
                   cellRecentDatas &&
                   [...cellRecordDatas, ...cellRecentDatas].length
                 }
-                headCells={headCells}
+                calculetObj={calculetObj}
               />
               <TableBody>
                 {
@@ -597,7 +616,7 @@ function RecordCalculetHistory({ calculetId, isPreview }) {
                             selected={isItemSelected}
                             sx={{
                               // 최근 저장 내역인 경우 구분
-                              backgroundColor:
+                              "backgroundColor":
                                 isItemRecentData && "atcGreen.50",
                               "&.Mui-selected": {
                                 backgroundColor:
@@ -622,28 +641,26 @@ function RecordCalculetHistory({ calculetId, isPreview }) {
                             <FitTableCell isBold={isItemRecentData}>
                               {formatDayTime(row.createdAt)}
                             </FitTableCell>
-                            {row.inputObj &&
-                              Object.values(row.inputObj).map((data, index) => (
+                            {calculetObj.inputObj &&
+                              calculetObj.inputObj.map((id) => (
                                 <FitTableCell
-                                  key={index}
+                                  key={id}
                                   isBold={isItemRecentData}
                                   align="left"
                                 >
-                                  {data}
+                                  {row.inputObj[id]}
                                 </FitTableCell>
                               ))}
-                            {row.outputObj &&
-                              Object.values(row.outputObj).map(
-                                (data, index) => (
-                                  <FitTableCell
-                                    key={index}
-                                    isBold={isItemRecentData}
-                                    align="right"
-                                  >
-                                    {data}
-                                  </FitTableCell>
-                                )
-                              )}
+                            {calculetObj.outputObj &&
+                              calculetObj.outputObj.map((id) => (
+                                <FitTableCell
+                                  key={id}
+                                  isBold={isItemRecentData}
+                                  align="right"
+                                >
+                                  {row.outputObj[id]}
+                                </FitTableCell>
+                              ))}
                           </TableRow>
                         );
                       })
