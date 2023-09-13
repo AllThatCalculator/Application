@@ -1,10 +1,10 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
 
-function CheckboxComponent({ data, label }) {
+function CheckboxComponent(props) {
   return (
     <FormControlLabel
-      control={<Checkbox {...data} checked={data.value} />}
-      label={label}
+      control={<Checkbox {...props} checked={props.value} />}
+      label={props.label}
     />
   );
 }
