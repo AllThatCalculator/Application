@@ -47,8 +47,10 @@ function MarkdownCode({ content }) {
  * 계산기 설명서(매뉴얼)를 볼 것인지 선택하는 토글 버튼과 설명문을 포함하는 컴포넌트
  * @param {string} content 마크다운 문법으로 이루어진 string
  * @param {string} calculetId 계산기 번호
+ * @param {boolean} isPreview 미리보기인지 여부
+ * @param {type} type 계산기 작성 정보
  */
-function CalculetManual({ content, calculetId, isPreview }) {
+function CalculetManual({ content, calculetId, isPreview, type }) {
   /** tab 컨트롤 : 계산기 마크다운 정보, 계산 내역 */
   const [tabValue, setTabValue] = useState(0);
   /** tab state */
@@ -78,7 +80,7 @@ function CalculetManual({ content, calculetId, isPreview }) {
 
   // 더보기 버튼sx
   const fabAtcBlueStyle = {
-    bgcolor: "atcBlue.200",
+    "bgcolor": "atcBlue.200",
     "&:hover": {
       bgcolor: "atcBlue.100",
     },
@@ -166,7 +168,11 @@ function CalculetManual({ content, calculetId, isPreview }) {
   // 계산 내역 저장
   function CalculetSaveRecord() {
     return (
-      <RecordCalculetHistory calculetId={calculetId} isPreview={isPreview} />
+      <RecordCalculetHistory
+        calculetId={calculetId}
+        isPreview={isPreview}
+        type={type}
+      />
     );
   }
   // 탭 콘텐츠 컴포넌트
