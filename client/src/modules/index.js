@@ -9,6 +9,7 @@ import calculetRecord from "./calculetRecord";
 import search from "./search";
 import calculetBookmark from "./calculetBookmark";
 import calculetEditor from "./calculetEditor";
+import calculetInputOutput from "./calculetInputOutput";
 
 const rootReducer = combineReducers({
   calculetCategory,
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   search,
   calculetBookmark,
   calculetEditor,
+  calculetInputOutput,
 });
 
 export default rootReducer;
