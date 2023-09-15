@@ -7,7 +7,7 @@ import {
 } from "../../../constants/calculetComponent";
 
 /**
- * 컴포넌트들에 공통으로 쓰이는 속성
+ * 컴포넌트들에 공통으로 쓰이는 속성 (예외: typographpy, calculet_button)
  * key : 속성 이름 (mui에서 쓰이는 속성 이름과 동일)
  * value :
  *   - type : PROPERTY_TYPE_STRING - text field, PROPERTY_TYPE_BOOLEAN - checkbox, PROPERTY_TYPE_SELECT - select box
@@ -31,6 +31,12 @@ const Common = {
     value: "",
     required: true,
   },
+};
+
+/**
+ * 컴포넌트에 자주 쓰이는 속성
+ */
+const SemiCommon = {
   required: {
     type: PROPERTY_TYPE_BOOLEAN,
     label: "필수 여부",
@@ -68,18 +74,11 @@ const Option = {
  */
 const DefaultOption = {
   id: PROPERTY_OPTION_START_NUMBER,
-  value: {
-    ...Option.value,
-    disabled: true,
-  },
-  label: {
-    ...Option.label,
-    disabled: true,
-  },
+  ...Option,
 };
 
 /**
- * 텍스트 컴포넌트에 들어가는 공통 속성 정보
+ * 텍스트 입력 컴포넌트에 들어가는 공통 속성 정보
  */
 const TextOption = {
   isInput: {
@@ -107,7 +106,6 @@ const TextOption = {
  */
 const Components = {
   typography: {
-    ...TextOption,
     variant: {
       type: PROPERTY_TYPE_SELECT,
       label: "종류",
@@ -138,6 +136,8 @@ const Components = {
     },
   },
   textField: {
+    ...Common,
+    ...SemiCommon,
     ...TextOption,
     type: {
       type: PROPERTY_TYPE_SELECT,
@@ -166,6 +166,8 @@ const Components = {
     },
   },
   datePicker: {
+    ...Common,
+    disabled: SemiCommon.disabled,
     value: {
       type: PROPERTY_TYPE_DATE,
       label: "기본값",
@@ -174,12 +176,18 @@ const Components = {
     },
   },
   select: {
+    ...Common,
+    disabled: SemiCommon.disabled,
     options: [DefaultOption],
   },
   multiSelect: {
+    ...Common,
+    disabled: SemiCommon.disabled,
     options: [DefaultOption],
   },
   checkbox: {
+    ...Common,
+    ...SemiCommon,
     value: {
       type: PROPERTY_TYPE_BOOLEAN,
       label: "체크 여부",
@@ -188,12 +196,17 @@ const Components = {
     },
   },
   multiCheckbox: {
+    ...Common,
+    ...SemiCommon,
     options: [DefaultOption],
   },
   radio: {
+    ...Common,
+    ...SemiCommon,
     options: [DefaultOption],
   },
   inputHelper: {
+    ...Common,
     target: {
       type: PROPERTY_TYPE_STRING,
       label: "입력될 입력창의 변수명",
