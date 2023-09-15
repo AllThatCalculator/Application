@@ -81,6 +81,10 @@ async function handleGetCalculetInfo(id, setCalculetObj) {
         //       required: false,
         //       type: "text",
         //     },
+        //     d: {
+        //       componentId: "d",
+        //       componentType: "calculetButton",
+        //     },
         //     // userFunction: (a, b) => a + b,
         //   },
         //   userFunction: `function main(x) {

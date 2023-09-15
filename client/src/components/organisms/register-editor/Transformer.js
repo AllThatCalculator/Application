@@ -26,17 +26,17 @@ import TypographyComponent from "./TypographyComponent";
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
  * @param {*} data 컴포넌트 정보
- * @param {*} value 값
  * @param {*} updateValue 유저의 입력에 따라 store를 업데이트 하는 함수.
  * props: 사용자가 입력한 컴포넌트 한 개의 정보들
  */
-function Transformer({ data, value, updateValue }) {
+function Transformer({ data, updateValue }) {
   let {
     componentId,
     isInput,
     isOutput,
     copyButton,
     componentType,
+    value,
     ...properties
   } = data;
 

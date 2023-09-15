@@ -16,6 +16,7 @@ import {
   onSetCalculetObj,
   onUpdateRecentInputOutput,
 } from "../../../modules/calculetRecord";
+import { CALCULET_BUTTON } from "../../../constants/calculetComponent";
 
 const Wrapper = styled.div`
   display: flex;
@@ -98,12 +99,26 @@ function Calculet({ calculetId, srcCode, type, isPreview }) {
           {Object.entries(srcCode.components).map(([id, data]) => {
             // default 값 빼고 전달 - default값은 inputOutput 초기화 과정에서 설정됨
             const { defaultValue, ...rest } = data;
+            if (rest.componentType === CALCULET_BUTTON) {
+              rest.onClick = () => {
+                const record = {
+                  inputObj: calculetInputOutput,
+                  outputObj: userFunction(calculetInputOutput),
+                };
+                dispatch(onCalculetExecute(record.outputObj));
+                dispatch(onUpdateRecentInputOutput(record));
+              };
+
+              return <Transformer id={id} data={rest} key={id} />;
+            }
+
+            rest.value = calculetInputOutput[id];
+
             return (
               <Transformer
                 id={id}
                 data={rest}
                 key={id}
-                value={calculetInputOutput[id]}
                 updateValue={(newValue) => {
                   dispatch(
                     onUpdateCalculetInputOutput({
@@ -115,18 +130,6 @@ function Calculet({ calculetId, srcCode, type, isPreview }) {
               />
             );
           })}
-          <button
-            onClick={() => {
-              const record = {
-                inputObj: calculetInputOutput,
-                outputObj: userFunction(calculetInputOutput),
-              };
-              dispatch(onCalculetExecute(record.outputObj));
-              dispatch(onUpdateRecentInputOutput(record));
-            }}
-          >
-            계산하기
-          </button>
         </>
       );
     default:
