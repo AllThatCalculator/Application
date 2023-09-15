@@ -13,7 +13,6 @@ function RegisterTest() {
   // const [outputs, setOutputs] = useState({}); // 출력 객체 (계산하기 후, 입력 + 출력 모두 합쳐서 저장)
 
   // 함수 생성 보안 경고 무시
-  // eslint-disable-next-line
   // const userFunction = new Function(
   //   "inputObj",
   //   `return {

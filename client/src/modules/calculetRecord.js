@@ -8,6 +8,8 @@ const CALCULET_OBJECT = "calculetRecord/CALCULET_OBJECT";
 const CALCULET_RECENT_LIST = "calculetRecord/CALCULET_RECENT_LIST";
 const CALCULET_RECENT_LIST_APPEND =
   "calculetRecord/CALCULET_RECENT_LIST_APPEND";
+const CALCULET_RECENT_UPDATE_RECENT_INPUT_OUTPUT =
+  "calculetRecord/RECENT_UPDATE_RECENT_INPUT_OUTPUT";
 
 /** init State ( 초기 상태 ) */
 const initialState = {
@@ -15,9 +17,15 @@ const initialState = {
   recentList: [], // 최근에 계산한 내역(DB에 저장 안 됨)
   // obj
   calculetObj: {
+    inputObj: [],
+    outputObj: [],
+    labelDict: {}, // input, output의 대한 사용자 설명
+    calculetId: "",
+  },
+  // 최근 기록 - v1부터 사용함
+  recentInputOutput: {
     inputObj: {},
     outputObj: {},
-    calculetId: "",
   },
 };
 
@@ -34,29 +42,41 @@ export function onSetCalculetRecent(data) {
 export function onAppendCalculetRecent(data) {
   return { type: CALCULET_RECENT_LIST_APPEND, data };
 }
+export function onUpdateRecentInputOutput(data) {
+  return { type: CALCULET_RECENT_UPDATE_RECENT_INPUT_OUTPUT, data };
+}
 
 /** reducer정의 */
 function calculetRecord(state = initialState, action) {
-  switch (action.type) {
+  const { type, data } = action;
+  switch (type) {
     case CALCULET_RECORD_LIST:
       return {
         ...state,
-        recordList: action.data,
+        recordList: data,
       };
     case CALCULET_OBJECT:
       return {
         ...state,
-        calculetObj: action.data,
+        calculetObj: data,
       };
     case CALCULET_RECENT_LIST:
       return {
         ...state,
-        recentList: action.data,
+        recentList: data,
       };
     case CALCULET_RECENT_LIST_APPEND:
       return {
         ...state,
-        recentList: [...state.recentList, action.data],
+        recentList: [...state.recentList, data],
+      };
+    case CALCULET_RECENT_UPDATE_RECENT_INPUT_OUTPUT:
+      return {
+        ...state,
+        recentInputOutput: {
+          inputObj: { ...data.inputObj },
+          outputObj: { ...data.outputObj },
+        },
       };
     default:
       return state;

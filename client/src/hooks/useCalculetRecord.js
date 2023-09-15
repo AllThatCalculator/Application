@@ -15,8 +15,9 @@ function useCalculetRecord() {
   const dispatch = useDispatch();
 
   // user id token
-  const { idToken } = useSelector((state) => ({
+  const { idToken, calculetObj } = useSelector((state) => ({
     idToken: state.userInfo.idToken,
+    calculetObj: state.calculetRecord.calculetObj,
   }));
 
   // set user record list
@@ -34,7 +35,19 @@ function useCalculetRecord() {
   }
   // append new data
   function handleAppendCalculetRecent(data) {
-    dispatch(onAppendCalculetRecent(data));
+    // input output 속성이 있는 것만 남기기 - calculetObj 참조
+    const inputObj = calculetObj.inputObj.reduce((obj, key) => {
+      // const [id, data] = key;
+      obj[key] = data.inputObj[key];
+      return obj;
+    }, {});
+
+    const outputObj = calculetObj.outputObj.reduce((obj, key) => {
+      obj[key] = data.outputObj[key];
+      return obj;
+    }, {});
+
+    dispatch(onAppendCalculetRecent({ ...data, inputObj, outputObj }));
   }
 
   // 계산 이력 가져오기

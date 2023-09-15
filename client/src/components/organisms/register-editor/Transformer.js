@@ -26,19 +26,20 @@ import DatePickerComponent from "./DatePickerComponent";
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
  * @param {*} data 컴포넌트 정보
- * @param {*} onChange 입력
+ * @param {*} updateValue 유저의 입력에 따라 store를 업데이트 하는 함수.
  * props: 사용자가 입력한 컴포넌트 한 개의 정보들
  */
-function Transformer({ data }) {
+function Transformer({ data, updateValue }) {
   let {
     componentId,
     isInput,
     isOutput,
     copyButton,
     componentType,
+    value,
     ...properties
   } = data;
-  let value = data.value;
+
   if (!value) {
     switch (data.componentType) {
       case MULTI_SELECT:
@@ -77,20 +78,21 @@ function Transformer({ data }) {
       InputProps: { endAdornment: <CopyButton text={properties.value} /> },
     };
   }
-
-  // useEffect(() => {
-  //   if (data.isInput) {
-  //     initInputs(data.id, value);
-  //   }
-  // }, [data.id, data.isInput, initInputs, value]);
-
-  // console.log("추가된 컴포넌트", properties);
+  properties.value = value;
 
   switch (data.componentType) {
     case TYPOGRAPHY:
       return <TypographyComponent {...properties} />;
     case TEXT_FIELD:
-      return <TextField {...properties} />;
+      return (
+        <TextField
+          {...properties}
+          // 유저의 입력값 변화시 store를 업데이트 해줘야 함
+          onChange={(e) => {
+            updateValue(e.target.value);
+          }}
+        />
+      );
     case DATE_PICKER:
       return <DatePickerComponent {...properties} />;
     case SELECT:
