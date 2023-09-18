@@ -17,6 +17,7 @@ const PROPERTY_TYPE_STRING = "string";
 const PROPERTY_TYPE_BOOLEAN = "bool";
 const PROPERTY_TYPE_SELECT = "select";
 const PROPERTY_TYPE_DATE = "date";
+const PROPERTY_TYPE_OBJECT = "object";
 
 // calculet component option start number
 const PROPERTY_OPTION_START_NUMBER = 0;
@@ -38,5 +39,6 @@ export {
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_SELECT,
   PROPERTY_TYPE_DATE,
+  PROPERTY_TYPE_OBJECT,
   PROPERTY_OPTION_START_NUMBER,
 };

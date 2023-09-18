@@ -5,7 +5,6 @@ import { Grid, TextField } from "@mui/material";
 import { Common, Components, Option } from "./ComponentOptions";
 import { onUpdateComponent } from "../../../modules/calculetEditor";
 import {
-  TYPOGRAPHY,
   TEXT_FIELD,
   PROPERTY_TYPE_STRING,
   PROPERTY_TYPE_BOOLEAN,
@@ -53,7 +52,7 @@ function ComponentForm({ componentId, componentType }) {
   const inputs = useSelector(
     (state) => state.calculetEditor.components[componentId]
   ); // 컴포넌트 속성에 대한 인풋값
-  const [properties, setProperties] = useState({
+  const [properties] = useState({
     ...Common,
     ...Components[componentType],
   });
@@ -61,16 +60,29 @@ function ComponentForm({ componentId, componentType }) {
 
   // isInput 속성 관리
   useEffect(() => {
+    // 컴포넌트 타입별로 초기화할 속성 관리
     switch (componentType) {
       case TEXT_FIELD:
-      case TYPOGRAPHY:
         dispatch(
           onUpdateComponent({ componentId, targetId: "isInput", value: true })
         );
         break;
       default:
+        break;
     }
-  }, [componentType, componentId, dispatch]);
+    // option이 있는 컴포넌트의 optionIdx 값 초기화
+    if (properties.options) {
+      const inputOptions = Object.keys(inputs.options);
+      const lastOptionNum = Number(inputOptions[inputOptions.length - 1]);
+      setOptionIdx((optionIdx) => lastOptionNum + 1);
+    }
+  }, [
+    componentType,
+    componentId,
+    dispatch,
+    inputs.options,
+    properties.options,
+  ]);
 
   // 컴포넌트 속성 인풋 onChange 함수
   const onInputsChange = useCallback(
@@ -105,15 +117,6 @@ function ComponentForm({ componentId, componentType }) {
 
   // 옵션 추가하는 함수
   const addOption = useCallback(() => {
-    setProperties((properties) => ({
-      ...properties,
-      options: [...properties.options, { ...Option, id: optionIdx }],
-    }));
-    if (!inputs.options) {
-      dispatch(
-        onUpdateComponent({ componentId, targetId: "options", value: {} })
-      );
-    }
     dispatch(
       onUpdateComponent({
         componentId,
@@ -129,10 +132,6 @@ function ComponentForm({ componentId, componentType }) {
   const deleteOption = useCallback(
     (e) => {
       const target = e.target.parentElement;
-      setProperties((properties) => ({
-        ...properties,
-        options: properties.options.filter((op) => op.id !== Number(target.id)),
-      }));
       const { [target.id]: temp, ...rest } = inputs.options;
       dispatch(
         onUpdateComponent({ componentId, targetId: "options", value: rest })
@@ -180,24 +179,21 @@ function ComponentForm({ componentId, componentType }) {
       {properties.options && (
         <div>
           <button onClick={addOption}>옵션 추가</button>
-          {properties.options.map((option, optionIdx) => (
-            <div id={option.id} key={optionIdx}>
-              {Object.entries(option).map(
-                ([key, optionProperty]) =>
-                  key !== "id" && (
-                    <TransformField
-                      {...optionProperty}
-                      key={`${key}${option.id}`}
-                      id={`${key} ${option.id}`}
-                      value={
-                        inputs.options[option.id][key] === undefined
-                          ? optionProperty.value
-                          : inputs.options[option.id][key]
-                      }
-                      onChange={onOptionsChange}
-                    />
-                  )
-              )}
+          {Object.entries(inputs.options).map(([id, value], index) => (
+            <div id={id} key={index}>
+              {Object.entries(Option).map(([key, optionProperty]) => (
+                <TransformField
+                  {...optionProperty}
+                  key={`${key}${id}`}
+                  id={`${key} ${id}`}
+                  value={
+                    inputs.options[id][key] === undefined
+                      ? optionProperty.value
+                      : inputs.options[id][key]
+                  }
+                  onChange={onOptionsChange}
+                />
+              ))}
               <button onClick={deleteOption}>옵션 삭제</button>
             </div>
           ))}

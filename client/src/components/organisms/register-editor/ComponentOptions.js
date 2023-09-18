@@ -2,8 +2,8 @@ import {
   PROPERTY_TYPE_STRING,
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_SELECT,
-  PROPERTY_OPTION_START_NUMBER,
   PROPERTY_TYPE_DATE,
+  PROPERTY_TYPE_OBJECT,
 } from "../../../constants/calculetComponent";
 
 /**
@@ -49,6 +49,12 @@ const SemiCommon = {
     value: false,
     required: false,
   },
+  options: {
+    type: PROPERTY_TYPE_OBJECT,
+    label: "옵션",
+    value: {},
+    required: true,
+  },
 };
 
 /**
@@ -67,14 +73,6 @@ const Option = {
     value: "",
     required: true,
   },
-};
-
-/**
- * 옵션이 있는 컴포넌트의 기본 옵션에 대한 속성 정보
- */
-const DefaultOption = {
-  id: PROPERTY_OPTION_START_NUMBER,
-  ...Option,
 };
 
 /**
@@ -137,7 +135,8 @@ const Components = {
   },
   textField: {
     ...Common,
-    ...SemiCommon,
+    required: SemiCommon.required,
+    disabled: SemiCommon.disabled,
     ...TextOption,
     type: {
       type: PROPERTY_TYPE_SELECT,
@@ -158,7 +157,7 @@ const Components = {
       value: "",
       required: false,
     },
-    value: {
+    defaultValue: {
       type: PROPERTY_TYPE_STRING,
       label: "기본값",
       value: "",
@@ -168,7 +167,7 @@ const Components = {
   datePicker: {
     ...Common,
     disabled: SemiCommon.disabled,
-    value: {
+    defaultValue: {
       type: PROPERTY_TYPE_DATE,
       label: "기본값",
       value: "",
@@ -178,17 +177,18 @@ const Components = {
   select: {
     ...Common,
     disabled: SemiCommon.disabled,
-    options: [DefaultOption],
+    options: SemiCommon.options,
   },
   multiSelect: {
     ...Common,
     disabled: SemiCommon.disabled,
-    options: [DefaultOption],
+    options: SemiCommon.options,
   },
   checkbox: {
     ...Common,
-    ...SemiCommon,
-    value: {
+    required: SemiCommon.required,
+    disabled: SemiCommon.disabled,
+    defaultValue: {
       type: PROPERTY_TYPE_BOOLEAN,
       label: "체크 여부",
       value: false,
@@ -197,13 +197,15 @@ const Components = {
   },
   multiCheckbox: {
     ...Common,
-    ...SemiCommon,
-    options: [DefaultOption],
+    required: SemiCommon.required,
+    disabled: SemiCommon.disabled,
+    options: SemiCommon.options,
   },
   radio: {
     ...Common,
-    ...SemiCommon,
-    options: [DefaultOption],
+    required: SemiCommon.required,
+    disabled: SemiCommon.disabled,
+    options: SemiCommon.options,
   },
   inputHelper: {
     ...Common,
@@ -213,7 +215,7 @@ const Components = {
       value: "",
       required: true,
     },
-    options: [DefaultOption],
+    options: SemiCommon.options,
   },
   calculetButton: {},
 };

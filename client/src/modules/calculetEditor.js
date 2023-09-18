@@ -8,16 +8,7 @@ import {
   Common,
   Components,
 } from "../components/organisms/register-editor/ComponentOptions";
-import {
-  SELECT,
-  MULTI_SELECT,
-  MULTI_CHECK_BOX,
-  RADIO,
-  PROPERTY_TYPE_STRING,
-  PROPERTY_TYPE_BOOLEAN,
-  PROPERTY_OPTION_START_NUMBER,
-  INPUT_HELPER,
-} from "../constants/calculetComponent";
+import { PROPERTY_OPTION_START_NUMBER } from "../constants/calculetComponent";
 
 const CALCULET_EDITOR_COMPONENTS_APPEND =
   "calculetEditor/CALCULET_EDITOR_COMPONENTS_APPEND";
@@ -62,35 +53,19 @@ function createNewComponent(data) {
       if (value.value !== undefined) {
         newComponent[key] = value.value;
       } else {
-        switch (value.type) {
-          case PROPERTY_TYPE_STRING:
-            newComponent[key] = "";
-            break;
-          case PROPERTY_TYPE_BOOLEAN:
-            newComponent[key] = false;
-            break;
-          default:
-            newComponent[key] = null;
-        }
+        newComponent[key] = null;
       }
       return null;
     }
   );
 
-  switch (data.componentType) {
-    case SELECT:
-    case MULTI_SELECT:
-    case MULTI_CHECK_BOX:
-    case RADIO:
-    case INPUT_HELPER:
-      newComponent.options = {
-        [PROPERTY_OPTION_START_NUMBER]: {
-          value: "default",
-          label: "기본값",
-        },
-      };
-      break;
-    default:
+  if (newComponent.options) {
+    newComponent.options = {
+      [PROPERTY_OPTION_START_NUMBER]: {
+        value: "default",
+        label: "기본값",
+      },
+    };
   }
 
   return newComponent;
