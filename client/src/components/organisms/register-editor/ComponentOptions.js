@@ -11,7 +11,7 @@ import {
  * key : 속성 이름 (mui에서 쓰이는 속성 이름과 동일)
  * value :
  *   - type : PROPERTY_TYPE_STRING - text field, PROPERTY_TYPE_BOOLEAN - checkbox, PROPERTY_TYPE_SELECT - select box
- *   - value : 기본값
+ *   - defaultValue : 기본값
  *   - label : 페이지에 표시되는 이름
  *   - required : 필수로 입력되어야 하는 속성인지
  *   - options : select box에 표시되는 옵션들
@@ -22,13 +22,13 @@ const Common = {
   id: {
     type: PROPERTY_TYPE_STRING,
     label: "변수명",
-    value: "",
+    defaultValue: "",
     required: true,
   },
   label: {
     type: PROPERTY_TYPE_STRING,
     label: "설명",
-    value: "",
+    defaultValue: "",
     required: true,
   },
 };
@@ -40,19 +40,19 @@ const SemiCommon = {
   required: {
     type: PROPERTY_TYPE_BOOLEAN,
     label: "필수 여부",
-    value: false,
+    defaultValue: false,
     required: false,
   },
   disabled: {
     type: PROPERTY_TYPE_BOOLEAN,
     label: "비활성화",
-    value: false,
+    defaultValue: false,
     required: false,
   },
   options: {
     type: PROPERTY_TYPE_OBJECT,
     label: "옵션",
-    value: {},
+    defaultValue: {},
     required: true,
   },
 };
@@ -64,13 +64,13 @@ const Option = {
   value: {
     type: PROPERTY_TYPE_STRING,
     label: "value",
-    value: "",
+    defaultValue: "",
     required: true,
   },
   label: {
     type: PROPERTY_TYPE_STRING,
     label: "label",
-    value: "",
+    defaultValue: "",
     required: true,
   },
 };
@@ -82,19 +82,19 @@ const TextOption = {
   isInput: {
     type: PROPERTY_TYPE_BOOLEAN,
     label: "입력 여부",
-    value: false,
+    defaultValue: true,
     required: false,
   },
   isOutput: {
     type: PROPERTY_TYPE_BOOLEAN,
     label: "출력 여부",
-    value: false,
+    defaultValue: false,
     required: false,
   },
   copyButton: {
     type: PROPERTY_TYPE_BOOLEAN,
     label: "복사 버튼",
-    value: false,
+    defaultValue: false,
     required: false,
   },
 };
@@ -124,12 +124,12 @@ const Components = {
         { value: "string", label: "텍스트" },
       ],
       required: false,
-      value: "body1",
+      defaultValue: "body1",
     },
     content: {
       type: PROPERTY_TYPE_STRING,
       label: "내용",
-      value: "",
+      defaultValue: "",
       required: false,
     },
   },
@@ -149,18 +149,18 @@ const Components = {
         { value: "password", label: "비밀번호" },
       ],
       required: false,
-      value: "text",
+      defaultValue: "text",
     },
     placeholder: {
       type: PROPERTY_TYPE_STRING,
       label: "placeholder",
-      value: "",
+      defaultValue: "",
       required: false,
     },
     defaultValue: {
       type: PROPERTY_TYPE_STRING,
       label: "기본값",
-      value: "",
+      defaultValue: "",
       required: false,
     },
   },
@@ -170,7 +170,7 @@ const Components = {
     defaultValue: {
       type: PROPERTY_TYPE_DATE,
       label: "기본값",
-      value: "",
+      defaultValue: "",
       required: false,
     },
   },
@@ -191,7 +191,7 @@ const Components = {
     defaultValue: {
       type: PROPERTY_TYPE_BOOLEAN,
       label: "체크 여부",
-      value: false,
+      defaultValue: false,
       required: false,
     },
   },
@@ -212,7 +212,7 @@ const Components = {
     target: {
       type: PROPERTY_TYPE_STRING,
       label: "입력될 입력창의 변수명",
-      value: "",
+      defaultValue: "",
       required: true,
     },
     options: SemiCommon.options,

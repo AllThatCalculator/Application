@@ -36,10 +36,12 @@ function Transformer({ data, updateValue }) {
     isOutput,
     copyButton,
     componentType,
+    defaultValue,
     value,
     ...properties
   } = data;
 
+  // value 초기화
   if (!value) {
     switch (data.componentType) {
       case MULTI_SELECT:
@@ -61,24 +63,18 @@ function Transformer({ data, updateValue }) {
         value = "";
         break;
     }
-    properties = {
-      ...properties,
-      value: value,
-    };
-  }
-  if (data.isInput) {
-    properties = {
-      ...properties,
-      // onChange: onChange,
-    };
-  }
-  if (data.copyButton) {
-    properties = {
-      ...properties,
-      InputProps: { endAdornment: <CopyButton text={properties.value} /> },
-    };
+    if (defaultValue) {
+      // 만약 기본값이 있다면 기본값 사용
+      value = defaultValue;
+    }
   }
   properties.value = value;
+
+  if (data.copyButton) {
+    properties.InputProps = {
+      endAdornment: <CopyButton text={properties.value} />,
+    };
+  }
 
   switch (data.componentType) {
     case TYPOGRAPHY:
@@ -87,10 +83,10 @@ function Transformer({ data, updateValue }) {
       return (
         <TextField
           {...properties}
-          // 유저의 입력값 변화시 store를 업데이트 해줘야 함
-          onChange={(e) => {
-            updateValue(e.target.value);
-          }}
+          // // 유저의 입력값 변화시 store를 업데이트 해줘야 함
+          // onChange={(e) => {
+          //   updateValue(e.target.value);
+          // }}
         />
       );
     case DATE_PICKER:

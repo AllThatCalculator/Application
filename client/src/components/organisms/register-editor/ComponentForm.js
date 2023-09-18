@@ -5,7 +5,6 @@ import { Grid, TextField } from "@mui/material";
 import { Common, Components, Option } from "./ComponentOptions";
 import { onUpdateComponent } from "../../../modules/calculetEditor";
 import {
-  TEXT_FIELD,
   PROPERTY_TYPE_STRING,
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_SELECT,
@@ -26,7 +25,10 @@ import CheckboxComponent from "./CheckboxComponent";
  * @returns
  */
 function TransformField(props) {
-  const { type, ...properties } = props;
+  const { type, defaultValue, ...properties } = props;
+  if (properties.value === undefined) {
+    properties.value = defaultValue;
+  }
   switch (type) {
     case PROPERTY_TYPE_STRING:
       return <TextField {...properties} />;
@@ -58,31 +60,14 @@ function ComponentForm({ componentId, componentType }) {
   });
   const [optionIdx, setOptionIdx] = useState(PROPERTY_OPTION_START_NUMBER + 1); // 단일 선택 컴포넌트에 대한 옵션 개수
 
-  // isInput 속성 관리
   useEffect(() => {
-    // 컴포넌트 타입별로 초기화할 속성 관리
-    switch (componentType) {
-      case TEXT_FIELD:
-        dispatch(
-          onUpdateComponent({ componentId, targetId: "isInput", value: true })
-        );
-        break;
-      default:
-        break;
-    }
     // option이 있는 컴포넌트의 optionIdx 값 초기화
     if (properties.options) {
       const inputOptions = Object.keys(inputs.options);
       const lastOptionNum = Number(inputOptions[inputOptions.length - 1]);
       setOptionIdx((optionIdx) => lastOptionNum + 1);
     }
-  }, [
-    componentType,
-    componentId,
-    dispatch,
-    inputs.options,
-    properties.options,
-  ]);
+  }, [inputs.options, properties.options]);
 
   // 컴포넌트 속성 인풋 onChange 함수
   const onInputsChange = useCallback(
@@ -171,7 +156,7 @@ function ComponentForm({ componentId, componentType }) {
             {...property}
             key={index}
             id={id}
-            value={inputs[id] === undefined ? property.value : inputs[id]}
+            value={inputs[id]}
             onChange={onInputsChange}
           />
         ))}
@@ -186,11 +171,7 @@ function ComponentForm({ componentId, componentType }) {
                   {...optionProperty}
                   key={`${key}${id}`}
                   id={`${key} ${id}`}
-                  value={
-                    inputs.options[id][key] === undefined
-                      ? optionProperty.value
-                      : inputs.options[id][key]
-                  }
+                  value={inputs.options[id][key]}
                   onChange={onOptionsChange}
                 />
               ))}
