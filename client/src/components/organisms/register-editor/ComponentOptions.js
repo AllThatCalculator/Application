@@ -20,13 +20,13 @@ import {
  */
 const Common = {
   id: {
-    type: PROPERTY_TYPE_STRING,
+    componentType: PROPERTY_TYPE_STRING,
     label: "변수명",
     defaultValue: "",
     required: true,
   },
   label: {
-    type: PROPERTY_TYPE_STRING,
+    componentType: PROPERTY_TYPE_STRING,
     label: "설명",
     defaultValue: "",
     required: true,
@@ -38,19 +38,19 @@ const Common = {
  */
 const SemiCommon = {
   required: {
-    type: PROPERTY_TYPE_BOOLEAN,
+    componentType: PROPERTY_TYPE_BOOLEAN,
     label: "필수 여부",
     defaultValue: false,
     required: false,
   },
   disabled: {
-    type: PROPERTY_TYPE_BOOLEAN,
+    componentType: PROPERTY_TYPE_BOOLEAN,
     label: "비활성화",
     defaultValue: false,
     required: false,
   },
   options: {
-    type: PROPERTY_TYPE_OBJECT,
+    componentType: PROPERTY_TYPE_OBJECT,
     label: "옵션",
     defaultValue: {},
     required: true,
@@ -62,13 +62,13 @@ const SemiCommon = {
  */
 const Option = {
   value: {
-    type: PROPERTY_TYPE_STRING,
+    componentType: PROPERTY_TYPE_STRING,
     label: "value",
     defaultValue: "",
     required: true,
   },
   label: {
-    type: PROPERTY_TYPE_STRING,
+    componentType: PROPERTY_TYPE_STRING,
     label: "label",
     defaultValue: "",
     required: true,
@@ -80,19 +80,19 @@ const Option = {
  */
 const TextOption = {
   isInput: {
-    type: PROPERTY_TYPE_BOOLEAN,
+    componentType: PROPERTY_TYPE_BOOLEAN,
     label: "입력 여부",
     defaultValue: true,
     required: false,
   },
   isOutput: {
-    type: PROPERTY_TYPE_BOOLEAN,
+    componentType: PROPERTY_TYPE_BOOLEAN,
     label: "출력 여부",
     defaultValue: false,
     required: false,
   },
   copyButton: {
-    type: PROPERTY_TYPE_BOOLEAN,
+    componentType: PROPERTY_TYPE_BOOLEAN,
     label: "복사 버튼",
     defaultValue: false,
     required: false,
@@ -105,7 +105,7 @@ const TextOption = {
 const Components = {
   typography: {
     variant: {
-      type: PROPERTY_TYPE_SELECT,
+      componentType: PROPERTY_TYPE_SELECT,
       label: "종류",
       options: [
         { value: "body1", label: "본문 1" },
@@ -127,7 +127,7 @@ const Components = {
       defaultValue: "body1",
     },
     content: {
-      type: PROPERTY_TYPE_STRING,
+      componentType: PROPERTY_TYPE_STRING,
       label: "내용",
       defaultValue: "",
       required: false,
@@ -139,7 +139,7 @@ const Components = {
     disabled: SemiCommon.disabled,
     ...TextOption,
     type: {
-      type: PROPERTY_TYPE_SELECT,
+      componentType: PROPERTY_TYPE_SELECT,
       label: "타입",
       options: [
         { value: "text", label: "문자열" },
@@ -152,13 +152,13 @@ const Components = {
       defaultValue: "text",
     },
     placeholder: {
-      type: PROPERTY_TYPE_STRING,
+      componentType: PROPERTY_TYPE_STRING,
       label: "placeholder",
       defaultValue: "",
       required: false,
     },
     defaultValue: {
-      type: PROPERTY_TYPE_STRING,
+      componentType: PROPERTY_TYPE_STRING,
       label: "기본값",
       defaultValue: "",
       required: false,
@@ -168,9 +168,9 @@ const Components = {
     ...Common,
     disabled: SemiCommon.disabled,
     defaultValue: {
-      type: PROPERTY_TYPE_DATE,
+      componentType: PROPERTY_TYPE_DATE,
       label: "기본값",
-      defaultValue: "",
+      defaultValue: null,
       required: false,
     },
   },
@@ -189,7 +189,7 @@ const Components = {
     required: SemiCommon.required,
     disabled: SemiCommon.disabled,
     defaultValue: {
-      type: PROPERTY_TYPE_BOOLEAN,
+      componentType: PROPERTY_TYPE_BOOLEAN,
       label: "체크 여부",
       defaultValue: false,
       required: false,
@@ -210,7 +210,7 @@ const Components = {
   inputHelper: {
     ...Common,
     target: {
-      type: PROPERTY_TYPE_STRING,
+      componentType: PROPERTY_TYPE_STRING,
       label: "입력될 입력창의 변수명",
       defaultValue: "",
       required: true,

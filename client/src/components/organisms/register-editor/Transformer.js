@@ -1,5 +1,5 @@
 import React from "react";
-// import { useEffect } from "react";
+import { useCallback } from "react";
 import { TextField } from "@mui/material";
 import {
   TEXT_FIELD,
@@ -12,6 +12,10 @@ import {
   CALCULET_BUTTON,
   TYPOGRAPHY,
   DATE_PICKER,
+  PROPERTY_TYPE_STRING,
+  PROPERTY_TYPE_DATE,
+  PROPERTY_TYPE_BOOLEAN,
+  PROPERTY_TYPE_SELECT,
 } from "../../../constants/calculetComponent";
 import SelectComponent from "./SelectComponent";
 import CheckboxComponent from "./CheckboxComponent";
@@ -38,16 +42,18 @@ function Transformer({ data, updateValue }) {
     componentType,
     defaultValue,
     value,
+    onChange,
     ...properties
   } = data;
 
   // value 초기화
   if (!value) {
-    switch (data.componentType) {
+    switch (componentType) {
       case MULTI_SELECT:
         value = [];
         break;
       case CHECK_BOX:
+      case PROPERTY_TYPE_BOOLEAN:
         value = false;
         break;
       case MULTI_CHECK_BOX:
@@ -58,6 +64,10 @@ function Transformer({ data, updateValue }) {
             [data.options[key].value]: false,
           };
         }
+        break;
+      case DATE_PICKER:
+      case PROPERTY_TYPE_DATE:
+        value = null;
         break;
       default:
         value = "";
@@ -70,6 +80,78 @@ function Transformer({ data, updateValue }) {
   }
   properties.value = value;
 
+  // 다양한 onChange 함수들
+  const onValueChange = useCallback(
+    (e) => {
+      if (!updateValue) {
+        return;
+      }
+      updateValue(e.target.value);
+    },
+    [updateValue]
+  );
+
+  const onEventChange = useCallback(
+    (e) => {
+      if (!updateValue) {
+        return;
+      }
+      updateValue(e);
+    },
+    [updateValue]
+  );
+
+  const onCheckChange = useCallback(
+    (e) => {
+      if (!updateValue) {
+        return;
+      }
+      updateValue(e.target.checked);
+    },
+    [updateValue]
+  );
+
+  const onMultiCheckChange = useCallback(
+    (e) => {
+      if (!updateValue) {
+        return;
+      }
+      updateValue({
+        ...value,
+        [e.target.name]: e.target.checked,
+      });
+    },
+    [value, updateValue]
+  );
+
+  // onChange 초기화
+  if (!onChange) {
+    switch (componentType) {
+      case TEXT_FIELD:
+      case SELECT:
+      case MULTI_SELECT:
+      case RADIO:
+      case PROPERTY_TYPE_STRING:
+      case PROPERTY_TYPE_SELECT:
+        onChange = onValueChange;
+        break;
+      case DATE_PICKER:
+      case PROPERTY_TYPE_DATE:
+        onChange = onEventChange;
+        break;
+      case CHECK_BOX:
+      case PROPERTY_TYPE_BOOLEAN:
+        onChange = onCheckChange;
+        break;
+      case MULTI_CHECK_BOX:
+        onChange = onMultiCheckChange;
+        break;
+      default:
+        break;
+    }
+  }
+  properties.onChange = onChange;
+
   if (data.copyButton) {
     properties.InputProps = {
       endAdornment: <CopyButton text={properties.value} />,
@@ -80,22 +162,18 @@ function Transformer({ data, updateValue }) {
     case TYPOGRAPHY:
       return <TypographyComponent {...properties} />;
     case TEXT_FIELD:
-      return (
-        <TextField
-          {...properties}
-          // // 유저의 입력값 변화시 store를 업데이트 해줘야 함
-          // onChange={(e) => {
-          //   updateValue(e.target.value);
-          // }}
-        />
-      );
+    case PROPERTY_TYPE_STRING:
+      return <TextField {...properties} />;
     case DATE_PICKER:
+    case PROPERTY_TYPE_DATE:
       return <DatePickerComponent {...properties} />;
     case SELECT:
+    case PROPERTY_TYPE_SELECT:
       return <SelectComponent {...properties} />;
     case MULTI_SELECT:
       return <SelectComponent {...properties} multiple={true} />;
     case CHECK_BOX:
+    case PROPERTY_TYPE_BOOLEAN:
       return <CheckboxComponent {...properties} />;
     case MULTI_CHECK_BOX:
       return <MultiCheckboxComponent {...properties} />;
