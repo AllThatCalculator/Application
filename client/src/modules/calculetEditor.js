@@ -9,14 +9,13 @@ import {
   Components,
 } from "../components/organisms/register-editor/ComponentOptions";
 import {
-  SELECT,
-  MULTI_SELECT,
+  CHECK_BOX,
+  DATE_PICKER,
   MULTI_CHECK_BOX,
-  RADIO,
-  PROPERTY_TYPE_STRING,
-  PROPERTY_TYPE_BOOLEAN,
+  MULTI_SELECT,
   PROPERTY_OPTION_START_NUMBER,
-  INPUT_HELPER,
+  PROPERTY_TYPE_BOOLEAN,
+  PROPERTY_TYPE_DATE,
 } from "../constants/calculetComponent";
 
 const CALCULET_EDITOR_COMPONENTS_APPEND =
@@ -59,38 +58,53 @@ function createNewComponent(data) {
   const newComponent = { ...data };
   Object.entries({ ...Common, ...Components[data.componentType] }).map(
     ([key, value]) => {
-      if (value.value !== undefined) {
-        newComponent[key] = value.value;
+      if (value.defaultValue !== undefined) {
+        newComponent[key] = value.defaultValue;
       } else {
-        switch (value.type) {
-          case PROPERTY_TYPE_STRING:
-            newComponent[key] = "";
-            break;
-          case PROPERTY_TYPE_BOOLEAN:
-            newComponent[key] = false;
-            break;
-          default:
-            newComponent[key] = null;
-        }
+        newComponent[key] = null;
       }
       return null;
     }
   );
 
-  switch (data.componentType) {
-    case SELECT:
-    case MULTI_SELECT:
-    case MULTI_CHECK_BOX:
-    case RADIO:
-    case INPUT_HELPER:
-      newComponent.options = {
-        [PROPERTY_OPTION_START_NUMBER]: {
-          value: "default",
-          label: "기본값",
-        },
-      };
-      break;
-    default:
+  if (newComponent.options) {
+    newComponent.options = {
+      [PROPERTY_OPTION_START_NUMBER]: {
+        value: "default",
+        label: "기본값",
+      },
+    };
+  }
+
+  // defaultValue 초기화
+  if (!newComponent.defaultValue) {
+    let defaultValue = "";
+    switch (newComponent.componentType) {
+      case MULTI_SELECT:
+        defaultValue = [];
+        break;
+      case CHECK_BOX:
+      case PROPERTY_TYPE_BOOLEAN:
+        defaultValue = false;
+        break;
+      case MULTI_CHECK_BOX:
+        defaultValue = {};
+        for (const key in newComponent.options) {
+          defaultValue = {
+            ...defaultValue,
+            [newComponent.options[key].value]: false,
+          };
+        }
+        break;
+      case DATE_PICKER:
+      case PROPERTY_TYPE_DATE:
+        defaultValue = null;
+        break;
+      default:
+        defaultValue = "";
+        break;
+    }
+    newComponent.defaultValue = defaultValue;
   }
 
   return newComponent;

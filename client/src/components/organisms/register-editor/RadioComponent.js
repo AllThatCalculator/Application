@@ -9,14 +9,14 @@ import {
 function RadioComponent(props) {
   return (
     <FormControl>
-      <FormLabel>{props.label}</FormLabel>
+      <FormLabel {...props}>{props.label}</FormLabel>
       <RadioGroup {...props} name={props.id}>
         {Object.entries(props.options).map(([id, option], index) => (
           <FormControlLabel
+            {...option}
             key={index}
-            value={option.value}
+            disabled={Boolean(props.disabled)}
             control={<Radio />}
-            label={option.label}
           />
         ))}
       </RadioGroup>

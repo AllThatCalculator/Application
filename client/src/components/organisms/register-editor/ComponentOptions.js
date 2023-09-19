@@ -2,16 +2,16 @@ import {
   PROPERTY_TYPE_STRING,
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_SELECT,
-  PROPERTY_OPTION_START_NUMBER,
-  // PROPERTY_TYPE_DATE,
+  PROPERTY_TYPE_DATE,
+  PROPERTY_TYPE_OBJECT,
 } from "../../../constants/calculetComponent";
 
 /**
- * 컴포넌트들에 공통으로 쓰이는 속성
+ * 컴포넌트들에 공통으로 쓰이는 속성 (예외: typographpy, calculet_button)
  * key : 속성 이름 (mui에서 쓰이는 속성 이름과 동일)
  * value :
  *   - type : PROPERTY_TYPE_STRING - text field, PROPERTY_TYPE_BOOLEAN - checkbox, PROPERTY_TYPE_SELECT - select box
- *   - value : 기본값
+ *   - defaultValue : 기본값
  *   - label : 페이지에 표시되는 이름
  *   - required : 필수로 입력되어야 하는 속성인지
  *   - options : select box에 표시되는 옵션들
@@ -20,28 +20,40 @@ import {
  */
 const Common = {
   id: {
-    type: PROPERTY_TYPE_STRING,
+    componentType: PROPERTY_TYPE_STRING,
     label: "변수명",
-    value: "",
+    defaultValue: "",
     required: true,
   },
   label: {
-    type: PROPERTY_TYPE_STRING,
+    componentType: PROPERTY_TYPE_STRING,
     label: "설명",
-    value: "",
+    defaultValue: "",
     required: true,
   },
+};
+
+/**
+ * 컴포넌트에 자주 쓰이는 속성
+ */
+const SemiCommon = {
   required: {
-    type: PROPERTY_TYPE_BOOLEAN,
+    componentType: PROPERTY_TYPE_BOOLEAN,
     label: "필수 여부",
-    value: false,
+    defaultValue: false,
     required: false,
   },
   disabled: {
-    type: PROPERTY_TYPE_BOOLEAN,
+    componentType: PROPERTY_TYPE_BOOLEAN,
     label: "비활성화",
-    value: false,
+    defaultValue: false,
     required: false,
+  },
+  options: {
+    componentType: PROPERTY_TYPE_OBJECT,
+    label: "옵션",
+    defaultValue: {},
+    required: true,
   },
 };
 
@@ -50,54 +62,39 @@ const Common = {
  */
 const Option = {
   value: {
-    type: PROPERTY_TYPE_STRING,
+    componentType: PROPERTY_TYPE_STRING,
     label: "value",
-    value: "",
+    defaultValue: "",
     required: true,
   },
   label: {
-    type: PROPERTY_TYPE_STRING,
+    componentType: PROPERTY_TYPE_STRING,
     label: "label",
-    value: "",
+    defaultValue: "",
     required: true,
   },
 };
 
 /**
- * 옵션이 있는 컴포넌트의 기본 옵션에 대한 속성 정보
- */
-const DefaultOption = {
-  id: PROPERTY_OPTION_START_NUMBER,
-  value: {
-    ...Option.value,
-    disabled: true,
-  },
-  label: {
-    ...Option.label,
-    disabled: true,
-  },
-};
-
-/**
- * 텍스트 컴포넌트에 들어가는 공통 속성 정보
+ * 텍스트 입력 컴포넌트에 들어가는 공통 속성 정보
  */
 const TextOption = {
   isInput: {
-    type: PROPERTY_TYPE_BOOLEAN,
+    componentType: PROPERTY_TYPE_BOOLEAN,
     label: "입력 여부",
-    value: false,
+    defaultValue: true,
     required: false,
   },
   isOutput: {
-    type: PROPERTY_TYPE_BOOLEAN,
+    componentType: PROPERTY_TYPE_BOOLEAN,
     label: "출력 여부",
-    value: false,
+    defaultValue: false,
     required: false,
   },
   copyButton: {
-    type: PROPERTY_TYPE_BOOLEAN,
+    componentType: PROPERTY_TYPE_BOOLEAN,
     label: "복사 버튼",
-    value: false,
+    defaultValue: false,
     required: false,
   },
 };
@@ -107,9 +104,8 @@ const TextOption = {
  */
 const Components = {
   typography: {
-    ...TextOption,
     variant: {
-      type: PROPERTY_TYPE_SELECT,
+      componentType: PROPERTY_TYPE_SELECT,
       label: "종류",
       options: [
         { value: "body1", label: "본문 1" },
@@ -128,19 +124,22 @@ const Components = {
         { value: "string", label: "텍스트" },
       ],
       required: false,
-      value: "body1",
+      defaultValue: "body1",
     },
     content: {
-      type: PROPERTY_TYPE_STRING,
+      componentType: PROPERTY_TYPE_STRING,
       label: "내용",
-      value: "",
-      required: true,
+      defaultValue: "",
+      required: false,
     },
   },
   textField: {
+    ...Common,
+    required: SemiCommon.required,
+    disabled: SemiCommon.disabled,
     ...TextOption,
     type: {
-      type: PROPERTY_TYPE_SELECT,
+      componentType: PROPERTY_TYPE_SELECT,
       label: "타입",
       options: [
         { value: "text", label: "문자열" },
@@ -150,57 +149,73 @@ const Components = {
         { value: "password", label: "비밀번호" },
       ],
       required: false,
-      value: "text",
+      defaultValue: "text",
     },
     placeholder: {
-      type: PROPERTY_TYPE_STRING,
+      componentType: PROPERTY_TYPE_STRING,
       label: "placeholder",
-      value: "",
+      defaultValue: "",
       required: false,
     },
-    value: {
-      type: PROPERTY_TYPE_STRING,
+    defaultValue: {
+      componentType: PROPERTY_TYPE_STRING,
       label: "기본값",
-      value: "",
+      defaultValue: "",
       required: false,
     },
   },
-  // datePicker: {
-  //   value: {
-  //     type: PROPERTY_TYPE_DATE,
-  //     label: "기본값",
-  //     value: "",
-  //     required: false,
-  //   },
-  // },
+  datePicker: {
+    ...Common,
+    disabled: SemiCommon.disabled,
+    defaultValue: {
+      componentType: PROPERTY_TYPE_DATE,
+      label: "기본값",
+      defaultValue: null,
+      required: false,
+    },
+  },
   select: {
-    options: [DefaultOption],
+    ...Common,
+    disabled: SemiCommon.disabled,
+    options: SemiCommon.options,
   },
   multiSelect: {
-    options: [DefaultOption],
+    ...Common,
+    disabled: SemiCommon.disabled,
+    options: SemiCommon.options,
   },
   checkbox: {
-    value: {
-      type: PROPERTY_TYPE_BOOLEAN,
+    ...Common,
+    required: SemiCommon.required,
+    disabled: SemiCommon.disabled,
+    defaultValue: {
+      componentType: PROPERTY_TYPE_BOOLEAN,
       label: "체크 여부",
-      value: false,
+      defaultValue: false,
       required: false,
     },
   },
   multiCheckbox: {
-    options: [DefaultOption],
+    ...Common,
+    required: SemiCommon.required,
+    disabled: SemiCommon.disabled,
+    options: SemiCommon.options,
   },
   radio: {
-    options: [DefaultOption],
+    ...Common,
+    required: SemiCommon.required,
+    disabled: SemiCommon.disabled,
+    options: SemiCommon.options,
   },
   inputHelper: {
+    ...Common,
     target: {
-      type: PROPERTY_TYPE_STRING,
+      componentType: PROPERTY_TYPE_STRING,
       label: "입력될 입력창의 변수명",
-      value: "",
+      defaultValue: "",
       required: true,
     },
-    options: [DefaultOption],
+    options: SemiCommon.options,
   },
   calculetButton: {},
 };
