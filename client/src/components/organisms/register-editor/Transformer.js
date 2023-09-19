@@ -1,5 +1,4 @@
-import React from "react";
-// import { useEffect } from "react";
+import React, { useCallback } from "react";
 import { TextField } from "@mui/material";
 import {
   TEXT_FIELD,
@@ -11,7 +10,11 @@ import {
   INPUT_HELPER,
   CALCULET_BUTTON,
   TYPOGRAPHY,
-  // DATE_PICKER,
+  DATE_PICKER,
+  PROPERTY_TYPE_STRING,
+  PROPERTY_TYPE_DATE,
+  PROPERTY_TYPE_BOOLEAN,
+  PROPERTY_TYPE_SELECT,
 } from "../../../constants/calculetComponent";
 import SelectComponent from "./SelectComponent";
 import CheckboxComponent from "./CheckboxComponent";
@@ -21,7 +24,7 @@ import RadioComponent from "./RadioComponent";
 import InputHelperComponent from "./InputHelperComponent";
 import CalculetButtonComponent from "./CalculetButtonComponent";
 import TypographyComponent from "./TypographyComponent";
-// import DatePickerComponent from "./DatePickerComponent";
+import DatePickerComponent from "./DatePickerComponent";
 
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
@@ -36,77 +39,90 @@ function Transformer({ data, updateValue }) {
     isOutput,
     copyButton,
     componentType,
+    defaultValue,
     value,
+    onChange,
     ...properties
   } = data;
 
   if (!value) {
-    switch (data.componentType) {
-      case MULTI_SELECT:
-        value = [];
-        break;
-      case CHECK_BOX:
-        value = false;
-        break;
-      case MULTI_CHECK_BOX:
-        value = {};
-        for (const key in data.options) {
-          value = {
-            ...value,
-            [data.options[key].value]: false,
-          };
-        }
-        break;
-      default:
-        value = "";
-        break;
+    if (defaultValue === undefined) {
+      defaultValue = "";
     }
-    properties = {
-      ...properties,
-      value: value,
-    };
-  }
-  if (data.isInput) {
-    properties = {
-      ...properties,
-      // onChange: onChange,
-    };
-  }
-  if (data.copyButton) {
-    properties = {
-      ...properties,
-      InputProps: { endAdornment: <CopyButton text={properties.value} /> },
-    };
+    value = defaultValue;
   }
   properties.value = value;
+
+  // onChange 초기화
+  const newOnChange = useCallback(
+    (e) => {
+      if (!onChange && updateValue) {
+        switch (componentType) {
+          case TEXT_FIELD:
+          case SELECT:
+          case MULTI_SELECT:
+          case RADIO:
+          case PROPERTY_TYPE_STRING:
+          case PROPERTY_TYPE_SELECT:
+            updateValue(e.target.value);
+            break;
+          case DATE_PICKER:
+          case PROPERTY_TYPE_DATE:
+            updateValue(e);
+            break;
+          case CHECK_BOX:
+          case PROPERTY_TYPE_BOOLEAN:
+            updateValue(e.target.checked);
+            break;
+          case MULTI_CHECK_BOX:
+            updateValue({
+              ...properties.value,
+              [e.target.name]: e.target.checked,
+            });
+            break;
+          default:
+            break;
+        }
+      } else if (onChange instanceof Function) {
+        onChange(e);
+      }
+    },
+    [componentType, onChange, properties.value, updateValue]
+  );
+
+  if (newOnChange instanceof Function) {
+    properties.onChange = newOnChange;
+  }
+
+  if (data.copyButton) {
+    properties.InputProps = {
+      endAdornment: <CopyButton text={properties.value} />,
+    };
+  }
 
   switch (data.componentType) {
     case TYPOGRAPHY:
       return <TypographyComponent {...properties} />;
     case TEXT_FIELD:
-      return (
-        <TextField
-          {...properties}
-          // 유저의 입력값 변화시 store를 업데이트 해줘야 함
-          onChange={(e) => {
-            updateValue(e.target.value);
-          }}
-        />
-      );
-    // case DATE_PICKER:
-    //   return <DatePickerComponent {...properties} />;
+    case PROPERTY_TYPE_STRING:
+      return <TextField {...properties} />;
+    case DATE_PICKER:
+    case PROPERTY_TYPE_DATE:
+      return <DatePickerComponent {...properties} />;
     case SELECT:
+    case PROPERTY_TYPE_SELECT:
       return <SelectComponent {...properties} />;
     case MULTI_SELECT:
       return <SelectComponent {...properties} multiple={true} />;
     case CHECK_BOX:
+    case PROPERTY_TYPE_BOOLEAN:
       return <CheckboxComponent {...properties} />;
     case MULTI_CHECK_BOX:
       return <MultiCheckboxComponent {...properties} />;
     case RADIO:
       return <RadioComponent {...properties} />;
     case INPUT_HELPER:
-      return <InputHelperComponent {...properties} />;
+      return <InputHelperComponent {...properties} updateValue={updateValue} />;
     case CALCULET_BUTTON:
       return <CalculetButtonComponent {...properties} />;
     default:

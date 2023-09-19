@@ -9,8 +9,8 @@ import { Button } from "@mui/material";
 function CalculetButtonComponent(props) {
   return (
     <Button
+      {...props}
       variant="contained"
-      onClick={props.onClick}
       sx={{ width: "fit-content", height: "fit-content" }}
     >
       계산하기
