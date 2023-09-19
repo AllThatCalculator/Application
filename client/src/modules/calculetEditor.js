@@ -8,7 +8,15 @@ import {
   Common,
   Components,
 } from "../components/organisms/register-editor/ComponentOptions";
-import { PROPERTY_OPTION_START_NUMBER } from "../constants/calculetComponent";
+import {
+  CHECK_BOX,
+  DATE_PICKER,
+  MULTI_CHECK_BOX,
+  MULTI_SELECT,
+  PROPERTY_OPTION_START_NUMBER,
+  PROPERTY_TYPE_BOOLEAN,
+  PROPERTY_TYPE_DATE,
+} from "../constants/calculetComponent";
 
 const CALCULET_EDITOR_COMPONENTS_APPEND =
   "calculetEditor/CALCULET_EDITOR_COMPONENTS_APPEND";
@@ -66,6 +74,37 @@ function createNewComponent(data) {
         label: "기본값",
       },
     };
+  }
+
+  // defaultValue 초기화
+  if (!newComponent.defaultValue) {
+    let defaultValue = "";
+    switch (newComponent.componentType) {
+      case MULTI_SELECT:
+        defaultValue = [];
+        break;
+      case CHECK_BOX:
+      case PROPERTY_TYPE_BOOLEAN:
+        defaultValue = false;
+        break;
+      case MULTI_CHECK_BOX:
+        defaultValue = {};
+        for (const key in newComponent.options) {
+          defaultValue = {
+            ...defaultValue,
+            [newComponent.options[key].value]: false,
+          };
+        }
+        break;
+      case DATE_PICKER:
+      case PROPERTY_TYPE_DATE:
+        defaultValue = null;
+        break;
+      default:
+        defaultValue = "";
+        break;
+    }
+    newComponent.defaultValue = defaultValue;
   }
 
   return newComponent;

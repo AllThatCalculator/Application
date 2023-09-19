@@ -20,7 +20,7 @@ function MultiCheckboxComponent(props) {
               <Checkbox
                 id={props.id}
                 onChange={props.onChange}
-                disabled={props.disabled}
+                disabled={Boolean(props.disabled)}
                 name={option.value}
                 checked={Boolean(props.value[option.value])}
               />

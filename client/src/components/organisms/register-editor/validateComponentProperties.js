@@ -25,7 +25,11 @@ function validateOneComponent(components, inputs) {
       return false;
     }
   }
-  if (Boolean(validateDuplicatedId(components, inputs)) === false) {
+  // 변수명이 존재한다면
+  if (
+    properties.id &&
+    Boolean(validateDuplicatedId(components, inputs)) === false
+  ) {
     return false;
   }
   if (inputs.options) {

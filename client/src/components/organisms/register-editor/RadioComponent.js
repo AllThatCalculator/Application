@@ -15,7 +15,7 @@ function RadioComponent(props) {
           <FormControlLabel
             key={index}
             value={option.value}
-            control={<Radio disabled={props.disabled} />}
+            control={<Radio disabled={Boolean(props.disabled)} />}
             label={option.label}
           />
         ))}

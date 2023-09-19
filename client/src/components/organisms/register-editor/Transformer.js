@@ -1,5 +1,4 @@
-import React from "react";
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import { TextField } from "@mui/material";
 import {
   TEXT_FIELD,
@@ -46,111 +45,52 @@ function Transformer({ data, updateValue }) {
     ...properties
   } = data;
 
-  // value 초기화
   if (!value) {
-    switch (componentType) {
-      case MULTI_SELECT:
-        value = [];
-        break;
-      case CHECK_BOX:
-      case PROPERTY_TYPE_BOOLEAN:
-        value = false;
-        break;
-      case MULTI_CHECK_BOX:
-        value = {};
-        for (const key in data.options) {
-          value = {
-            ...value,
-            [data.options[key].value]: false,
-          };
-        }
-        break;
-      case DATE_PICKER:
-      case PROPERTY_TYPE_DATE:
-        value = null;
-        break;
-      default:
-        value = "";
-        break;
+    if (defaultValue === undefined) {
+      defaultValue = "";
     }
-    if (defaultValue) {
-      // 만약 기본값이 있다면 기본값 사용
-      value = defaultValue;
-    }
+    value = defaultValue;
   }
   properties.value = value;
 
-  // 다양한 onChange 함수들
-  const onValueChange = useCallback(
-    (e) => {
-      if (!updateValue) {
-        return;
-      }
-      updateValue(e.target.value);
-    },
-    [updateValue]
-  );
-
-  const onEventChange = useCallback(
-    (e) => {
-      if (!updateValue) {
-        return;
-      }
-      updateValue(e);
-    },
-    [updateValue]
-  );
-
-  const onCheckChange = useCallback(
-    (e) => {
-      if (!updateValue) {
-        return;
-      }
-      updateValue(e.target.checked);
-    },
-    [updateValue]
-  );
-
-  const onMultiCheckChange = useCallback(
-    (e) => {
-      if (!updateValue) {
-        return;
-      }
-      updateValue({
-        ...value,
-        [e.target.name]: e.target.checked,
-      });
-    },
-    [value, updateValue]
-  );
-
   // onChange 초기화
-  if (!onChange) {
-    switch (componentType) {
-      case TEXT_FIELD:
-      case SELECT:
-      case MULTI_SELECT:
-      case RADIO:
-      case PROPERTY_TYPE_STRING:
-      case PROPERTY_TYPE_SELECT:
-        onChange = onValueChange;
-        break;
-      case DATE_PICKER:
-      case PROPERTY_TYPE_DATE:
-        onChange = onEventChange;
-        break;
-      case CHECK_BOX:
-      case PROPERTY_TYPE_BOOLEAN:
-        onChange = onCheckChange;
-        break;
-      case MULTI_CHECK_BOX:
-        onChange = onMultiCheckChange;
-        break;
-      default:
-        break;
-    }
-  }
-  properties.onChange = onChange;
+  const newOnChange = useCallback(
+    (e) => {
+      if (!onChange && updateValue) {
+        switch (componentType) {
+          case TEXT_FIELD:
+          case SELECT:
+          case MULTI_SELECT:
+          case RADIO:
+          case PROPERTY_TYPE_STRING:
+          case PROPERTY_TYPE_SELECT:
+            updateValue(e.target.value);
+            break;
+          case DATE_PICKER:
+          case PROPERTY_TYPE_DATE:
+            updateValue(e);
+            break;
+          case CHECK_BOX:
+          case PROPERTY_TYPE_BOOLEAN:
+            updateValue(e.target.checked);
+            break;
+          case MULTI_CHECK_BOX:
+            updateValue({
+              ...properties.value,
+              [e.target.name]: e.target.checked,
+            });
+            break;
+          default:
+            break;
+        }
+      } else {
+        onChange(e);
+      }
+    },
+    [componentType, onChange, properties.value, updateValue]
+  );
+
+  properties.onChange = newOnChange;
 
   if (data.copyButton) {
     properties.InputProps = {
