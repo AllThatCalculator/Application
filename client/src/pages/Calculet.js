@@ -40,7 +40,7 @@ async function handleGetCalculetInfo(id, setCalculetObj) {
         // 테스트용 임시로직
         // const srcCode = {
         //   components: {
-        //     a: {
+        //     "a": {
         //       componentId: "a",
         //       componentType: "textField",
         //       copyButton: false,
@@ -54,7 +54,7 @@ async function handleGetCalculetInfo(id, setCalculetObj) {
         //       type: "text",
         //       defaultValue: "10",
         //     },
-        //     b: {
+        //     "b": {
         //       componentId: "b",
         //       componentType: "textField",
         //       copyButton: false,
@@ -68,7 +68,7 @@ async function handleGetCalculetInfo(id, setCalculetObj) {
         //       type: "text",
         //       defaultValue: "5",
         //     },
-        //     c: {
+        //     "c": {
         //       componentId: "c",
         //       componentType: "textField",
         //       copyButton: true,
@@ -81,10 +81,30 @@ async function handleGetCalculetInfo(id, setCalculetObj) {
         //       required: false,
         //       type: "text",
         //     },
-        //     d: {
+        //     "d": {
         //       componentId: "d",
         //       componentType: "calculetButton",
         //     },
+
+        //     "fb985e7c-3d99-49aa-889b-39226fb2d3e2": {
+        //       componentId: "fb985e7c-3d99-49aa-889b-39226fb2d3e2",
+        //       componentType: "inputHelper",
+        //       id: "var1",
+        //       label: "inputhelper",
+        //       target: "a",
+        //       options: {
+        //         0: {
+        //           value: "default",
+        //           label: "1",
+        //         },
+        //         1: {
+        //           value: "plus",
+        //           label: "2",
+        //         },
+        //       },
+        //       defaultValue: "",
+        //     },
+
         //     // userFunction: (a, b) => a + b,
         //   },
         //   userFunction: `function main(x) {

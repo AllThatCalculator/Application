@@ -16,7 +16,10 @@ import {
   onSetCalculetObj,
   onUpdateRecentInputOutput,
 } from "../../../modules/calculetRecord";
-import { CALCULET_BUTTON } from "../../../constants/calculetComponent";
+import {
+  CALCULET_BUTTON,
+  INPUT_HELPER,
+} from "../../../constants/calculetComponent";
 
 const Wrapper = styled.div`
   display: flex;
@@ -122,7 +125,8 @@ function Calculet({ calculetId, srcCode, type, isPreview }) {
                 updateValue={(newValue) => {
                   dispatch(
                     onUpdateCalculetInputOutput({
-                      componentId: id,
+                      componentId:
+                        rest.componentType === INPUT_HELPER ? rest.target : id,
                       value: newValue,
                     })
                   );

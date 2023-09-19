@@ -122,7 +122,7 @@ function Transformer({ data, updateValue }) {
     case RADIO:
       return <RadioComponent {...properties} />;
     case INPUT_HELPER:
-      return <InputHelperComponent {...properties} />;
+      return <InputHelperComponent {...properties} updateValue={updateValue} />;
     case CALCULET_BUTTON:
       return <CalculetButtonComponent {...properties} />;
     default:
