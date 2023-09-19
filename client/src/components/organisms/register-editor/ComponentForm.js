@@ -7,10 +7,10 @@ import { onUpdateComponent } from "../../../modules/calculetEditor";
 import { PROPERTY_OPTION_START_NUMBER } from "../../../constants/calculetComponent";
 
 import Transformer from "./Transformer";
-import {
-  validateAllComponents,
-  validateOneComponent,
-} from "./validateComponentProperties";
+// import {
+//   validateAllComponents,
+//   validateOneComponent,
+// } from "./validateComponentProperties";
 
 /**
  * 컴포넌트 type에 따라 속성을 입력하는 필드들을 모은 컴포넌트
@@ -20,7 +20,7 @@ import {
  */
 function ComponentForm({ componentId, componentType }) {
   const dispatch = useDispatch();
-  const components = useSelector((state) => state.calculetEditor.components);
+  // const components = useSelector((state) => state.calculetEditor.components);
   const inputs = useSelector(
     (state) => state.calculetEditor.components[componentId]
   ); // 컴포넌트 속성에 대한 인풋값
@@ -39,16 +39,16 @@ function ComponentForm({ componentId, componentType }) {
     }
   }, [inputs.options, properties.options]);
 
-  // 속성이 유효한지 확인하는 함수
-  const invalidComponentOption = useCallback(() => {
-    for (const key in components) {
-      console.log(
-        components[key].id,
-        validateOneComponent(components, components[key])
-      );
-    }
-    console.log("all", validateAllComponents(components));
-  }, [components]);
+  // // 속성이 유효한지 확인하는 함수
+  // const invalidComponentOption = useCallback(() => {
+  //   for (const key in components) {
+  //     console.log(
+  //       components[key].id,
+  //       validateOneComponent(components, components[key])
+  //     );
+  //   }
+  //   console.log("all", validateAllComponents(components));
+  // }, [components]);
 
   // 옵션 추가하는 함수
   const addOption = useCallback(() => {
@@ -97,7 +97,7 @@ function ComponentForm({ componentId, componentType }) {
 
   // console.log("속성 컴포넌트 정보", properties);
   // console.log("컴포넌트 옵션 정보", inputs);
-  invalidComponentOption();
+  // invalidComponentOption();
 
   return (
     <Grid container sx={{ backgroundColor: "white" }}>

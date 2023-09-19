@@ -16,11 +16,11 @@ function MultiCheckboxComponent(props) {
         {Object.entries(props.options).map(([id, option], index) => (
           <FormControlLabel
             key={index}
+            disabled={Boolean(props.disabled)}
             control={
               <Checkbox
                 id={props.id}
                 onChange={props.onChange}
-                disabled={Boolean(props.disabled)}
                 name={option.value}
                 checked={Boolean(props.value[option.value])}
               />

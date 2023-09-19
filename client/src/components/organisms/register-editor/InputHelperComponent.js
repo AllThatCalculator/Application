@@ -14,7 +14,7 @@ function InputHelperComponent(props) {
   function OnClickButton(event) {
     const target = document.getElementById(props.target);
     if (target != null) {
-      target.value = event.target.innerText;
+      target.value += event.target.innerText;
     }
   }
   return (

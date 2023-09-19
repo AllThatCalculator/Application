@@ -83,14 +83,16 @@ function Transformer({ data, updateValue }) {
           default:
             break;
         }
-      } else {
+      } else if (onChange instanceof Function) {
         onChange(e);
       }
     },
     [componentType, onChange, properties.value, updateValue]
   );
 
-  properties.onChange = newOnChange;
+  if (newOnChange instanceof Function) {
+    properties.onChange = newOnChange;
+  }
 
   if (data.copyButton) {
     properties.InputProps = {

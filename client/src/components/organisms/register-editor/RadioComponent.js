@@ -13,10 +13,10 @@ function RadioComponent(props) {
       <RadioGroup {...props} name={props.id}>
         {Object.entries(props.options).map(([id, option], index) => (
           <FormControlLabel
+            {...option}
             key={index}
-            value={option.value}
-            control={<Radio disabled={Boolean(props.disabled)} />}
-            label={option.label}
+            disabled={Boolean(props.disabled)}
+            control={<Radio />}
           />
         ))}
       </RadioGroup>
