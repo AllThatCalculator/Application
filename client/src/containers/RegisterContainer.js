@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import usePage from "../hooks/usePage";
 import useSnackbar from "../hooks/useSnackbar";
 import Register from "../pages/Register";
@@ -14,6 +14,7 @@ import {
   ID_INPUT_DESCRIPTION,
   ID_INPUT_CATEGORY_MAIN_ID,
   ID_INPUT_CATEGORY_SUB_ID,
+  DEFAULT_VALUE_INPUT_SRC_CODE,
 } from "../constants/register";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import {
@@ -22,6 +23,17 @@ import {
   handlePostCalculet,
 } from "../utils/handleUserActions";
 import { ID_MAIN_CONVERTER } from "../constants/calculetList";
+import useInput from "../hooks/useInput";
+import { v4 as uuidv4 } from "uuid";
+import {
+  onAppendNewComponent,
+  onUpdateUserComponent,
+  onUpdateUserFunction,
+} from "../modules/calculetEditor";
+import {
+  validateAllComponents,
+  validateOneComponent,
+} from "../components/organisms/register-editor/validateComponentProperties";
 
 /**
  * 수정 페이지에서 useEffect로 calculet을 가져올 때 리렌더링 현상이 심함
@@ -32,38 +44,44 @@ let isloadedCalculet = false;
 function RegisterContainer() {
   const { loginPage, myCalculetPage } = usePage();
   const { openSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
 
   /**
    * 현재 url에서 저작한 계산기 id 뽑아 내기 => 계산기 저작 || 수정 구분을 위해
    */
   const { id, blockedUrlId } = useGetUrlParam();
 
-  function isEditMode() {
-    // 수정 하기 모드인지
-    return id !== undefined;
-  }
-  function getRegisterPageTitle() {
-    // 저작 or 수정 페이지 제목
-    return isEditMode() ? "수정" : "저작";
-  }
+  // 수정 하기 모드인지
+  const isEditMode = id !== undefined;
 
-  const { idToken, userInfo } = useSelector((state) => ({
+  // 저작 or 수정 페이지 제목
+  const registerPageTitle = isEditMode ? "수정" : "저작";
+
+  const {
+    idToken,
+    userInfo,
+    components: userEditorComp,
+  } = useSelector((state) => ({
     idToken: state.userInfo.idToken,
     userInfo: state.userInfo,
+    // components
+    components: state.calculetEditor,
+    // layout
   }));
 
+  // console.log("userEditorComp >>", userEditorComp);
   // 계산기 수정에서 보낼 type
-  const [calculetType, setCalceultType] = useState(null);
+  const [calculetType, setCalceultType] = useState(1);
 
   // inputs handle
   const {
-    values: { inputTitle, inputDescription, inputUpdate },
+    values: { inputTitle, inputDescription, inputUpdateLog },
     onChange: onChangeRegisterInputs,
     onSetValues: onSetRegisterInputs,
   } = useInputs({
     inputTitle: "",
     inputDescription: "",
-    inputUpdate: "", // 업데이트 내용
+    inputUpdateLog: "", // 업데이트 내용
   });
 
   const {
@@ -76,9 +94,13 @@ function RegisterContainer() {
   });
 
   // 계산기 만들기
-  const [srcCode, setSrcCode] = useState(
-    `<!DOCTYPE html>\n<html lang="ko">\n<head>\n  <meta charset="UTF-8">\n  <title>계산기 이름</title>\n</head>\n<body>\n  <h1>본인이 구현한 계산기 코드를 작성해주세요.</h1>\n  <input id="input" type="text" class="atc-input atc-calculet-input" atcDesc="입력" value="입력 예시"/>\n  <div id="output" class="atc-output atc-calculet-output" atcDesc="결과">결과 예시</div>\n  <button id="button" class="atc-button">버튼 예시</button>\n</body>\n</html>`
-  );
+  // type 0
+  const [srcCode, setSrcCode] = useState(DEFAULT_VALUE_INPUT_SRC_CODE);
+  // type 1
+  // redux) 계산 함수 입력 초기화 이벤트
+  function onInitUserFunction(value) {
+    dispatch(onUpdateUserComponent(value));
+  }
 
   // 설명 입력하기
   const [manual, setManual] = useState("");
@@ -105,19 +127,32 @@ function RegisterContainer() {
     setPreview((prev) => !prev);
   }
 
+  // 속성이 유효한지 확인하는 함수
+  // const invalidComponentOption = useCallback(() => {
+  //   for (const key in userEditorComp) {
+  //     console.log(
+  //       userEditorComp[key].id,
+  //       validateOneComponent(userEditorComp, userEditorComp[key])
+  //     );
+  //   }
+  //   console.log("all", validateAllComponents(userEditorComp));
+  // }, [userEditorComp]);
+
+  // 계산기 등록
   async function registerCalculet() {
     if (!idToken) {
       loginPage();
       return;
     }
-
+    // inputs check
     if (
       !inputTitle ||
       !inputDescription ||
       !inputCategoryMainId ||
       (inputCategorySubId !== Number(ID_MAIN_CONVERTER) &&
         !inputCategorySubId) ||
-      (isEditMode() && !inputUpdate)
+      (isEditMode && !inputUpdateLog) ||
+      !validateAllComponents(userEditorComp.components)
     ) {
       openSnackbar(
         "error",
@@ -132,22 +167,23 @@ function RegisterContainer() {
 
     let body = {
       title: inputTitle,
-      srcCode: srcCode,
+      srcCode: JSON.stringify(userEditorComp),
       manual: manual,
       description: inputDescription,
       categoryMainId: inputCategoryMainId,
       categorySubId: inputCategorySubId,
+      type: calculetType,
     };
 
     let response = false;
     //-------------- (1) 저작하기 ----------------
-    if (!isEditMode()) {
+    if (!isEditMode) {
       response = await handlePostCalculet(idToken, body);
     }
     //-------------- (2) 수정하기 ----------------
     else {
       body = {
-        updateMessage: inputUpdate,
+        updateMessage: inputUpdateLog,
         calculetInfo: {
           id: id,
           type: calculetType,
@@ -165,7 +201,7 @@ function RegisterContainer() {
       openSnackbar(
         "success",
         `성공적으로 ${
-          isEditMode() ? "수정" : "임시 등록"
+          isEditMode ? "수정" : "임시 등록"
         }되었습니다. 공개 여부는 마이 계산기에서 확인할 수 있습니다.`,
         true,
         "top",
@@ -177,7 +213,7 @@ function RegisterContainer() {
       openSnackbar(
         "error",
         `계산기 ${
-          isEditMode() ? "수정" : "임시 등록"
+          isEditMode ? "수정" : "임시 등록"
         }에 실패했습니다. 다시 시도해 주세요.`,
         true,
         "top",
@@ -225,7 +261,17 @@ function RegisterContainer() {
     ]);
 
     // 계산기 코드
-    await setSrcCode(srcCode);
+    if (type === 0) {
+      await setSrcCode(srcCode);
+    } else if (type === 1) {
+      const srcCodeObj = JSON.parse(srcCode);
+      await onInitUserFunction({
+        components: srcCodeObj.components,
+        layout: srcCodeObj.layout,
+        userFunction: srcCodeObj.userFunction,
+      });
+    }
+
     // 계산기 설명
     await setManual(manual);
 
@@ -240,33 +286,41 @@ function RegisterContainer() {
     }
   }, [id, getMyCalculetWithId]);
 
+  // type 에 따른 소스코드
+  const typeSrcCode =
+    calculetType === 0 ? srcCode : calculetType === 1 ? userEditorComp : "";
+
   return (
-    <Register
-      isEditMode={isEditMode()}
-      isLoading={isEditMode() ? isLoading : false}
-      getRegisterPageTitle={getRegisterPageTitle}
-      //
-      isPreview={isPreview}
-      handleIsPreview={handleIsPreview}
-      //
-      title={inputTitle}
-      description={inputDescription}
-      categoryMainId={inputCategoryMainId}
-      categorySubId={inputCategorySubId}
-      onChangeInputs={onChangeRegisterInputs}
-      onChangeCategoryMain={handleChangeCategoryMain}
-      onChangeCategorySub={handleChangeCategorySub}
-      //
-      srcCode={srcCode}
-      manual={manual}
-      setSrcCode={setSrcCode}
-      onChangeManual={onChangeManual}
-      //
-      userInfo={userInfo}
-      registerCalculet={registerCalculet}
-      //
-      inputUpdate={inputUpdate}
-    />
+    <>
+      {((isEditMode && !isLoading) || !isEditMode) && (
+        <Register
+          isEditMode={isEditMode}
+          // isLoading={isEditMode ? isLoading : false}
+          registerPageTitle={registerPageTitle}
+          //
+          isPreview={isPreview}
+          handleIsPreview={handleIsPreview}
+          //
+          title={inputTitle}
+          description={inputDescription}
+          categoryMainId={inputCategoryMainId}
+          categorySubId={inputCategorySubId}
+          onChangeInputs={onChangeRegisterInputs}
+          onChangeCategoryMain={handleChangeCategoryMain}
+          onChangeCategorySub={handleChangeCategorySub}
+          type={calculetType}
+          //
+          srcCode={typeSrcCode}
+          manual={manual}
+          onChangeManual={onChangeManual}
+          //
+          userInfo={userInfo}
+          registerCalculet={registerCalculet}
+          //
+          updateLog={inputUpdateLog}
+        />
+      )}
+    </>
   );
 }
 export default RegisterContainer;

@@ -203,9 +203,7 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
       icon: contributor.profileImgSrc,
       text: contributor.userName,
       isProfile: true,
-      action: () => {
-        profileUserIdPage(contributor.id);
-      }, // 계산기 저작자 프로필 들어가기
+      action: onClickProfile, // 계산기 저작자 프로필 들어가기
     },
     {
       icon: <VisibilityIcon color="primary" />,
@@ -214,6 +212,15 @@ function CalculetHeader({ calculetObj, updateLog, isPreview = false }) {
       number: statistics.view,
     },
   ];
+
+  function onClickProfile() {
+    // 미리보기면 return
+    if (isPreview) {
+      return;
+    }
+    profileUserIdPage(contributor.id);
+  }
+
   // =================계산기 이름, 정보=================
   function CalculetTitle({ calculetId }) {
     const { editPage } = usePage();

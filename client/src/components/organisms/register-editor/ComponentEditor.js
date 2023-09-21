@@ -12,21 +12,18 @@ function ComponentEditor({ id, data }) {
   return (
     <>
       {/* 실제 컴포넌트 */}
-      <Transformer id={id} data={data} />
-      {/* 속성 입력창 */}
-      <div onClick={handleClick}>더보기</div>
-      <Popover
+      {/* <Transformer id={id} data={data} /> */}
+      {/* <Popover
         id={popoverId}
-        open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "left",
         }}
-      >
-        <ComponentForm componentId={id} componentType={data.componentType} />
-      </Popover>
+      > */}
+      <ComponentForm componentId={id} componentType={data.componentType} />
+      {/* </Popover> */}
     </>
   );
 }

@@ -1,12 +1,17 @@
 import { Button, Grid, Paper, Typography } from "@mui/material";
-import { MainButton } from "./Buttons";
-import { PageScreenBox } from "./PageScreenBox";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { PageScreenBox } from "./PageScreenBox";
+import { MainButton } from "./Buttons";
 import { FlexBox } from "./FlexBox";
-function PageScreenBottom({ children }) {
+
+function PageScreenBottom({ children, isBottom = false }) {
+  const bottom = isBottom
+    ? { position: "fixed", bottom: 0, left: 0, right: 0 }
+    : "";
+
   return (
-    <Paper elevation={5} sx={{ width: "100%" }}>
+    <Paper elevation={5} sx={{ width: "100%", ...bottom }}>
       <Grid container sx={{ backgroundColor: "atcBlue.100" }}>
         {children}
       </Grid>
@@ -26,9 +31,10 @@ function CalculetPageScreenBottom({
   buttonText,
   handleButton,
   buttonIcon = null,
+  isBottom = false,
 }) {
   return (
-    <PageScreenBottom>
+    <PageScreenBottom isBottom={isBottom}>
       <PageScreenBox
         sx={{
           width: 1,
@@ -65,9 +71,18 @@ function CalculetPageScreenBottom({
 /**
  * Register 페이지 바닥 패널 컴포넌트
  */
-function RegisterPageScreenBottom({ onClickLeftButton, onClickRightButton }) {
+function RegisterPageScreenBottom({
+  isFirstPage,
+  isLastPage,
+  onClickLeftButton,
+  onClickRightButton,
+  helpText,
+  isBottom = false,
+}) {
+  const isHelpText = helpText.length !== 0;
+
   return (
-    <PageScreenBottom>
+    <PageScreenBottom isBottom={isBottom}>
       <FlexBox
         sx={{
           width: 1,
@@ -77,20 +92,30 @@ function RegisterPageScreenBottom({ onClickLeftButton, onClickRightButton }) {
           alignItems: "center",
         }}
       >
-        <Button
-          variant="outlined"
-          startIcon={<KeyboardArrowLeftIcon />}
-          onClick={onClickLeftButton}
-        >
-          이전
-        </Button>
-        <Button
-          variant="contained"
-          endIcon={<KeyboardArrowRightIcon />}
-          onClick={onClickRightButton}
-        >
-          다음
-        </Button>
+        {isHelpText ? (
+          <Typography color="grey.600" align="right" sx={{ width: 1 }}>
+            {helpText}
+          </Typography>
+        ) : (
+          <>
+            <Button
+              variant="outlined"
+              startIcon={<KeyboardArrowLeftIcon />}
+              onClick={onClickLeftButton}
+              sx={{ visibility: isFirstPage ? "hidden" : "visible" }}
+            >
+              이전
+            </Button>
+            <Button
+              variant="contained"
+              endIcon={<KeyboardArrowRightIcon />}
+              onClick={onClickRightButton}
+              sx={{ visibility: isLastPage ? "hidden" : "visible" }}
+            >
+              다음
+            </Button>
+          </>
+        )}
       </FlexBox>
     </PageScreenBottom>
   );

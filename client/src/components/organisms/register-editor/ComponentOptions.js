@@ -24,12 +24,14 @@ const Common = {
     label: "변수명",
     defaultValue: "",
     required: true,
+    helperText: "변수명은 중복 불가합니다.",
   },
   label: {
     componentType: PROPERTY_TYPE_STRING,
-    label: "설명",
+    label: "설명 (최대 10자)",
     defaultValue: "",
     required: true,
+    maxLength: 10,
   },
 };
 

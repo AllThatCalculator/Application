@@ -6,6 +6,7 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 /**
  * 경고 팝업창
@@ -35,7 +36,10 @@ function WarningDialog({
 
   return (
     <Dialog open={isOpen} onClose={handleClose}>
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
+        <ErrorOutlineIcon color="error" />
+        {title}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText sx={{ whiteSpace: "pre-wrap" }}>
           {contentText}

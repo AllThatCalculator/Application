@@ -17,8 +17,7 @@ function PreviewCalculet({
   profileImgSrc,
   srcCode,
   manual,
-  // handleIsPreview,
-  isPreview,
+  type,
 }) {
   const calculetObj = {
     statistics: {
@@ -42,11 +41,11 @@ function PreviewCalculet({
   return (
     <>
       <CalculetHeader
+        isPreview
         // 계산기 블록 정보 & 팝업창 정보
         calculetObj={calculetObj}
-        isPreview={true}
       />
-      <CalculetBlock srcCode={srcCode} manual={manual} isPreview={isPreview} />
+      <CalculetBlock isPreview srcCode={srcCode} manual={manual} type={type} />
     </>
   );
 }

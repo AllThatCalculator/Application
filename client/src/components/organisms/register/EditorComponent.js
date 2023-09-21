@@ -1,32 +1,63 @@
-import { useDrag } from "react-dnd";
-import { EditorItemTypes } from "../../../constants/register";
+import { Tooltip } from "@mui/material";
+import { grey } from "@mui/material/colors";
+import DragIndicator from "../common/DragIndicator.js";
+import useHover from "../../../hooks/useHover";
 
 /**
  * 에디터 컴포넌트 (drag & drop)
  * @param {*} param0
- * @returns
  */
-function EditorComponent({ children, _id, component: Component }) {
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: EditorItemTypes.EDITOR,
-    item: {
-      id: _id,
-      component: Component,
-    },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  }));
+function EditorComponent({
+  children,
+  onClickDragIndicator = () => {},
+  tooltip = "",
+}) {
+  const { isHovered, handleMouseEnter, handleMouseLeave } = useHover();
 
   return (
     <div
-      ref={drag}
       style={{
-        opacity: isDragging ? 0.4 : 1,
+        // opacity: isDragging ? 0.4 : 1,
         cursor: "Move",
       }}
+      onMouseOver={handleMouseEnter}
+      onMouseOut={handleMouseLeave}
+      onClick={onClickDragIndicator}
     >
-      {children}
+      <Tooltip
+        title={<div style={{ whiteSpace: "pre-line" }}>{tooltip}</div>}
+        placement="bottom-start"
+        PopperProps={{
+          modifiers: [
+            {
+              name: "offset",
+              options: {
+                offset: [-10, 16],
+              },
+            },
+          ],
+        }}
+      >
+        <div
+          style={{
+            position: "relative",
+            zIndex: 2000,
+          }}
+        >
+          <DragIndicator
+            isVisible={isHovered}
+            sx={{ color: grey[800], left: -8 }}
+          />
+        </div>
+      </Tooltip>
+      <div
+        style={{
+          // opacity: isDragging ? 0.4 : 1,
+          pointerEvents: "none",
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 }

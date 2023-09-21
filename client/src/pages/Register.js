@@ -1,8 +1,10 @@
-import { Alert, Box, Button, Tab, Tabs, Toolbar } from "@mui/material";
+import { Box, Button, Dialog, Tab, Tabs, Toolbar, Zoom } from "@mui/material";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { RegisterPageScreenBottom } from "../components/organisms/common/PageScreenBottom";
+import PreviewCalculet from "../components/organisms/register/PreviewCalculet";
 import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
 import WriteManual from "../components/organisms/register/WriteManual";
 import WriteInform from "../components/organisms/register/WriteInform";
@@ -12,16 +14,27 @@ import WriteCode from "../components/organisms/register/WriteCode";
 import { FlexBox } from "../components/organisms/common/FlexBox";
 import Title from "../components/organisms/common/Title";
 import useTabs from "../hooks/useTabs";
-import useSx from "../hooks/useSx";
 import { ID_SELECT_REGISTER_INFO } from "../constants/register";
-import PreviewCalculet from "../components/organisms/register/PreviewCalculet";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
+import { useState } from "react";
+import UpdateLogDialog from "../components/organisms/register/UpdateLogDialog";
+import {
+  validateAllComponents,
+  validateExistCalculetButton,
+} from "../components/organisms/register-editor/validateComponentProperties";
 
-// page layout
-function PageLayout({ children, isFull }) {
-  const sx = { pt: 3, px: 8, pb: 4 };
+// page layout (editor page, bottom button)
+function PageLayout({
+  children,
+  isFull,
+  isPreview = false,
+  isFirstPage,
+  isLastPage,
+  setPage,
+}) {
+  const sx = { pt: 3, pb: 4 };
+  const psbPx = { px: 8 };
 
   const childrenComponent = (
     <>
@@ -31,13 +44,34 @@ function PageLayout({ children, isFull }) {
     </>
   );
 
+  function onClickLeftButton() {
+    setPage((pre) => pre - 1);
+  }
+  function onClickRightButton() {
+    setPage((pre) => pre + 1);
+  }
+
   return (
     <>
       {isFull ? (
         <Box sx={{ ...sx }}>{childrenComponent}</Box>
       ) : (
-        <PageScreenBox sx={{ ...sx }}>{childrenComponent}</PageScreenBox>
+        <PageScreenBox sx={{ ...sx, ...psbPx }}>
+          {childrenComponent}
+        </PageScreenBox>
       )}
+      <RegisterPageScreenBottom
+        isBottom={isFull}
+        isFirstPage={isFirstPage}
+        isLastPage={isLastPage}
+        onClickLeftButton={onClickLeftButton}
+        onClickRightButton={onClickRightButton}
+        helpText={`${
+          isPreview
+            ? "계산기 수정은 편집하기 모드에서 이어 할 수 있습니다."
+            : ""
+        }`}
+      />
     </>
   );
 }
@@ -48,8 +82,8 @@ function PageLayout({ children, isFull }) {
  */
 function Register({
   isEditMode,
-  isLoading,
-  getRegisterPageTitle,
+  // isLoading,
+  registerPageTitle,
   isPreview,
   handleIsPreview,
   //
@@ -60,32 +94,31 @@ function Register({
   onChangeInputs,
   onChangeCategoryMain,
   onChangeCategorySub,
+  type,
   //
   srcCode,
+  // userEditorComp,
+  // changeUserEditorComp,
+  // onClickClearUserEditorComp,
+  //
   manual,
-  setSrcCode,
   onChangeManual,
   //
   userInfo,
   registerCalculet,
   //
-  inputUpdate,
+  updateLog,
 }) {
-  const { isWindowSmDown } = useSx();
-
-  const {
-    values: { selectRegisterInfo },
-    onChange: onChangeRegisterTabs,
-  } = useTabs({
-    // 정보 입력하기 | 계산기 만들기 | 설명 입력하기
-    selectRegisterInfo: 0,
-  });
-
+  // 0: 정보 입력하기 | 1: 계산기 만들기 | 2: 설명 입력하기
+  const [selectRegisterInfo, setRegisterTabs] = useState(0);
+  function onChangeRegisterTabs(event, newValue) {
+    setRegisterTabs(newValue);
+  }
   // tab : 정보 입력하기 | 계산기 만들기 | 설명 입력하기
   const tabRegisterInfoList = [
     {
       label: "정보 입력하기", // label
-      isComplete: false, // 입력 완료 여부
+      isComplete: isCompleteInputInfo(), // 입력 완료 여부
       content: (
         // 해당 컴포넌트
         <WriteInform
@@ -101,20 +134,87 @@ function Register({
     },
     {
       label: "계산기 만들기",
-      isComplete: true,
+      isComplete: isCompleteInputSrcCode(),
       content: (
         <DndProvider backend={HTML5Backend}>
-          <WriteCode srcCode={srcCode} setSrcCode={setSrcCode} />
+          <WriteCode />
         </DndProvider>
       ),
       isFull: true, // 페이지 레이아웃 full 여부
     },
     {
       label: "설명 입력하기",
-      isComplete: true,
+      isComplete: isCompleteInputManual(),
       content: <WriteManual data={manual} onChange={onChangeManual} />,
     },
   ];
+
+  // 입력 검사) 정보 입력하기
+  function isCompleteInputInfo() {
+    return !(
+      title.length === 0 ||
+      description.length === 0 ||
+      categoryMainId.length === 0 ||
+      categorySubId.length === 0
+    );
+  }
+
+  // 입력 검사) 계산기 만들기
+  function isCompleteInputSrcCode() {
+    // 사용자 함수 입력했는지 확인
+    const userFunctionLen = !!srcCode.userFunction
+      ? Object.keys(srcCode.userFunction).length
+      : 0;
+    if (userFunctionLen === 0) {
+      return false;
+    }
+
+    // 컴포넌트 조합했는지 확인, 편집창에 있는 컴포넌트 개수와 저장되어 있는 컴포넌트 개수 맞는지 비교
+    const componentCnt = !!srcCode.components
+      ? Object.keys(srcCode.components).length
+      : 0;
+    const layoutCnt = !!srcCode.layout ? srcCode.layout.length : 0;
+    if (componentCnt === 0 || layoutCnt === 0 || componentCnt !== layoutCnt) {
+      return false;
+    }
+    //  속성 입력 했는지 확인
+    if (!validateAllComponents(srcCode.components)) {
+      return false;
+    }
+
+    // 중복된 변수명 있는지 확인
+    // ...
+    // validateDuplicatedId
+
+    // 계산하기 버튼 있는지 확인
+    if (!validateExistCalculetButton(srcCode.components)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  // 입력 검사) 설명 입력하기
+  function isCompleteInputManual() {
+    return !(manual.length === 0);
+  }
+
+  /**
+   * {bool} modalOpen 업데이트 로그 작성 모달창
+   */
+  const [modalOpen, setModalOpen] = useState(false);
+  function onModalOpen() {
+    setModalOpen(true);
+  }
+
+  /** 입력 완료 여부 */
+  function isComplete() {
+    return (
+      isCompleteInputInfo() &&
+      isCompleteInputSrcCode() &&
+      isCompleteInputManual()
+    );
+  }
 
   return (
     <>
@@ -129,7 +229,7 @@ function Register({
             alignItems: "center",
           }}
         >
-          <Title content={`계산기 ${getRegisterPageTitle()}`} />
+          <Title content={`계산기 ${registerPageTitle}`} />
           <Tabs
             value={selectRegisterInfo}
             onChange={onChangeRegisterTabs}
@@ -146,9 +246,11 @@ function Register({
                   label={label}
                   icon={
                     isComplete ? (
-                      <CheckCircleIcon />
+                      <Zoom in={isComplete}>
+                        <CheckCircleIcon />
+                      </Zoom>
                     ) : (
-                      <CheckCircleOutlineOutlinedIcon />
+                      <CheckCircleOutlineOutlinedIcon sx={{ opacity: 0.2 }} />
                     )
                   }
                   iconPosition="end"
@@ -169,41 +271,12 @@ function Register({
             <MainButton
               variant="contained"
               sx={{ py: 0.6 }}
-              onClick={registerCalculet}
+              onClick={isEditMode ? onModalOpen : registerCalculet}
+              disabled={!isComplete()}
             >
-              저작 완료
+              {`${registerPageTitle} 완료`}
             </MainButton>
           </FlexBox>
-          {/* <FlexBox gap="1.2rem" sx={{ alignItems: "center" }}>
-              {!previewResultQuizState ? (
-                <Tooltip title="미리 보기">
-                  <div>
-                    <OutlinedIconButton onClick={onClickPreview}>
-                      <VisibilityIcon />
-                    </OutlinedIconButton>
-                  </div>
-                </Tooltip>
-              ) : (
-                <Tooltip title="편집 하기">
-                  <div>
-                    <OutlinedIconButton onClick={onClickEdit}>
-                      <EditIcon />
-                    </OutlinedIconButton>
-                  </div>
-                </Tooltip>
-              )}
-              <Tooltip title={`${writeQuizPageTitle} 완료`}>
-                <div>
-                  <Button
-                    variant="contained"
-                    onClick={handleClickSubmitWrite}
-                    disabled={!isCanSubmit}
-                  >
-                    {`${writeQuizPageTitle} 완료`}
-                  </Button>
-                </div>
-              </Tooltip>
-            </FlexBox> */}
         </FlexBox>
       </SubHeader>
       <Box sx={{ flexGrow: 1, bgcolor: "white" }}>
@@ -221,14 +294,23 @@ function Register({
               return (
                 <Box key={"register-info-id" + label} sx={{ flexGrow: 1 }}>
                   {selectRegisterInfo === index && (
-                    <PageLayout isFull={isFull}>{content}</PageLayout>
+                    <PageLayout
+                      isFull={isFull}
+                      setPage={setRegisterTabs}
+                      isFirstPage={selectRegisterInfo === 0}
+                      isLastPage={
+                        selectRegisterInfo === tabRegisterInfoList.length - 1
+                      }
+                    >
+                      {content}
+                    </PageLayout>
                   )}
                 </Box>
               );
             })
         }
-        {isPreview && ( // {{ display:  "none" }} 대신, 입력한 소스코드에 따라 컴포넌트 업데이트 되도록
-          <PageLayout>
+        {isPreview && ( // {{ display:  "none" }} 대신, 입력한 소스코드에 따라 컴포넌트 업데이트 되도록 함.
+          <PageLayout isPreview>
             <PreviewCalculet
               title={title}
               userName={userInfo.userName}
@@ -236,15 +318,19 @@ function Register({
               srcCode={srcCode}
               manual={manual}
               handleIsPreview={handleIsPreview}
-              isPreview={isPreview}
+              type={type}
+              isPreview
             />
           </PageLayout>
         )}
+        <UpdateLogDialog
+          open={modalOpen}
+          setOpen={setModalOpen}
+          updateLog={updateLog}
+          onChangeInputs={onChangeInputs}
+          onClick={registerCalculet}
+        />
       </Box>
-      <RegisterPageScreenBottom
-        onClickLeftButton={() => {}}
-        onClickRightButton={() => {}}
-      />
     </>
   );
 }
