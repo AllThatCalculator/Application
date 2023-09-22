@@ -31,15 +31,6 @@ async function handleGetCalculetInfo(id, setCalculetObj) {
   }
 
   if (calculetInfoRequest !== null) {
-    switch (calculetInfoRequest.type) {
-      case 0:
-        break;
-      case 1: // 데이터 가공
-        calculetInfoRequest.srcCode = JSON.parse(calculetInfoRequest.srcCode);
-        break;
-      default:
-    }
-
     setCalculetObj(calculetInfoRequest);
   }
 }
