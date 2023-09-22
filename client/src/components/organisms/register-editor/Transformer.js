@@ -51,6 +51,19 @@ function Transformer({ data, updateValue }) {
       defaultValue = "";
     }
     value = defaultValue;
+
+    switch (componentType) {
+      case MULTI_CHECK_BOX: // multi check box일 경우, 모든 옵션에 대한 value값을 false로 초기화
+        for (const key in properties.options) {
+          value = {
+            ...value,
+            [properties.options[key].value]: false,
+          };
+        }
+        break;
+      default:
+        break;
+    }
   }
   properties.value = value;
 

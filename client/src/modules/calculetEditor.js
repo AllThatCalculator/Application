@@ -92,12 +92,6 @@ function createNewComponent(data) {
         break;
       case MULTI_CHECK_BOX:
         defaultValue = {};
-        for (const key in newComponent.options) {
-          defaultValue = {
-            ...defaultValue,
-            [newComponent.options[key].value]: false,
-          };
-        }
         break;
       case DATE_PICKER:
       case PROPERTY_TYPE_DATE:
