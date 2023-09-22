@@ -1,28 +1,28 @@
+import { useEffect, useState } from "react";
 import { Paper } from "@mui/material";
+import DrawerDragHandler from "../common/DrawerDragHandler";
 import {
-  HEIGHT_COMP_EDITOR,
-  MAX_HEIGHT_COMP_EDITOR,
-  MIN_HEIGHT_COMP_EDITOR,
+  HEIGHT_CODE_EDITOR,
+  MAX_HEIGHT_CODE_EDITOR,
+  MIN_HEIGHT_CODE_EDITOR,
   PLAYGROUND_WIDTH,
 } from "../../../constants/register";
-import { useEffect, useState } from "react";
-import DrawerDragHandler from "../common/DrawerDragHandler";
 
 /**
  * resizing 가능한 drawer
  */
-function CodeEditorDrawer({ children, setPlaygroundHeight }) {
-  const minDrawerHeight = MIN_HEIGHT_COMP_EDITOR;
-  const maxDrawerHeight = MAX_HEIGHT_COMP_EDITOR;
+function CodeEditorDrawer({ children }) {
+  const minDrawerHeight = MIN_HEIGHT_CODE_EDITOR;
+  const maxDrawerHeight = MAX_HEIGHT_CODE_EDITOR;
 
-  // MIN_HEIGHT_COMP_EDITOR,MAX_HEIGHT_COMP_EDITOR,
-  const [drawerHeight, setDrawerHeight] = useState(HEIGHT_COMP_EDITOR);
+  // MIN_HEIGHT_CODE_EDITOR,MAX_HEIGHT_CODE_EDITOR,
+  const [drawerHeight, setDrawerHeight] = useState(HEIGHT_CODE_EDITOR);
 
   // local storage drawerKey
   const drawerKey = "register-code-editor-drawer-height";
   function getLocalStorageDrawerManage(drawerKey) {
     const height = localStorage.getItem(drawerKey);
-    if (height === null) return HEIGHT_COMP_EDITOR;
+    if (height === null) return HEIGHT_CODE_EDITOR;
     return height;
   }
   function setLocalStorageDrawerManage() {
@@ -39,7 +39,6 @@ function CodeEditorDrawer({ children, setPlaygroundHeight }) {
     else if (height <= minDrawerHeight) height = minDrawerHeight;
 
     setDrawerHeight(height);
-    setPlaygroundHeight(`calc(79vh - ${height}px)`);
   }
 
   // init height
@@ -51,7 +50,6 @@ function CodeEditorDrawer({ children, setPlaygroundHeight }) {
     const drawerHeight = getLocalStorageDrawerManage(drawerKey);
     if (drawerHeight !== null) {
       setDrawerHeight(Number(drawerHeight));
-      setPlaygroundHeight(`calc(79vh - ${Number(drawerHeight)}px)`);
     }
   }, []);
 
@@ -62,6 +60,9 @@ function CodeEditorDrawer({ children, setPlaygroundHeight }) {
         bottom: 0,
         width: PLAYGROUND_WIDTH,
         height: drawerHeight,
+        minHeight: minDrawerHeight,
+        maxHeight: maxDrawerHeight,
+        pb: 10,
       }}
     >
       <DrawerDragHandler

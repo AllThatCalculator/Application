@@ -1,5 +1,4 @@
 import {
-  ADDRESS,
   CALCULET_BUTTON,
   CHECK_BOX,
   DATE_PICKER,
@@ -7,7 +6,6 @@ import {
   INPUT_HELPER,
   MULTI_CHECK_BOX,
   MULTI_SELECT,
-  PROPERTY_TYPE_STRING,
   RADIO,
   SELECT,
   TEXT_FIELD,
@@ -19,10 +17,17 @@ const calculateButton = [
   {
     name: "계산하기 버튼",
     componentType: CALCULET_BUTTON,
+    width: "fit-content",
   },
 ];
 const text = [
-  { name: "텍스트", componentType: TYPOGRAPHY, variant: "h5", content: "제목" },
+  {
+    name: "텍스트",
+    componentType: TYPOGRAPHY,
+    variant: "h5",
+    content: "제목",
+    width: "fit-content",
+  },
 ];
 // const file = [{ name: "파일", componentType: FILE }];
 const textField = [
@@ -32,10 +37,22 @@ const textField = [
     label: "입력창",
     value: "123",
   },
-  { name: "날짜 선택기", componentType: DATE_PICKER },
+  {
+    name: "날짜 선택기",
+    componentType: DATE_PICKER,
+    label: "날짜 선택기",
+    value: null,
+  },
   // { name: "주소", componentType: ADDRESS },
 ];
-const checkbox = [{ name: "체크 박스", componentType: CHECK_BOX, value: true }];
+const checkbox = [
+  {
+    name: "체크 박스",
+    componentType: CHECK_BOX,
+    value: true,
+    width: "fit-content",
+  },
+];
 const inputHelper = [
   {
     name: "버튼 도우미",
@@ -46,13 +63,14 @@ const inputHelper = [
       2: { label: "÷" },
       3: { label: "x" },
     },
+    width: "fit-content",
   },
 ];
 const select = [
   {
     name: "선택창",
     componentType: SELECT,
-    label: "선택창",
+    label: "단일 선택창",
     value: "0",
     options: {
       0: {
@@ -75,12 +93,14 @@ const select = [
         value: "0",
       },
     },
+    width: "fit-content",
   },
 ];
 const multiselect = [
   {
     name: "선택창",
     componentType: MULTI_SELECT,
+    label: "다중 선택창",
     value: ["0", "1"],
     options: {
       0: {
@@ -108,6 +128,7 @@ const multiselect = [
       },
       2: { label: "고구마" },
     },
+    width: "fit-content",
   },
 ];
 

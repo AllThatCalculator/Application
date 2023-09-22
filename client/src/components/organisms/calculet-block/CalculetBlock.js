@@ -20,7 +20,11 @@ import {
   CALCULET_BUTTON,
   INPUT_HELPER,
 } from "../../../constants/calculetComponent";
-import RGL, { WidthProvider } from "react-grid-layout";
+import {
+  MyReactGridLayout,
+  getStyle,
+  reactGridLayout,
+} from "../common/GridLayout";
 
 const Wrapper = styled.div`
   display: flex;
@@ -29,7 +33,7 @@ const Wrapper = styled.div`
   width: 100%;
 `;
 
-const ReactGridLayout = WidthProvider(RGL);
+// const ReactGridLayout = WidthProvider(RGL);
 
 /**
  * 각 계산기 type에 따라 렌더링하는 함수
@@ -101,10 +105,8 @@ function Calculet({ calculetId, srcCode, type, isPreview }) {
       );
 
       return (
-        <ReactGridLayout
-          compactType={null} // 왼쪽 정렬 해제
-          rowHeight={64}
-          cols={12}
+        <MyReactGridLayout
+          {...reactGridLayout}
           layout={srcCode.layout}
           isDraggable={false}
           isResizable={false}
@@ -123,7 +125,7 @@ function Calculet({ calculetId, srcCode, type, isPreview }) {
               };
 
               return (
-                <div key={id} id={id}>
+                <div key={id} id={id} style={getStyle(rest.componentType)}>
                   <Transformer id={id} data={rest} />
                 </div>
               );
@@ -132,7 +134,7 @@ function Calculet({ calculetId, srcCode, type, isPreview }) {
             rest.value = calculetInputOutput[id];
 
             return (
-              <div key={id} id={id}>
+              <div key={id} id={id} style={getStyle(rest.componentType)}>
                 <Transformer
                   id={id}
                   data={rest}
@@ -151,7 +153,7 @@ function Calculet({ calculetId, srcCode, type, isPreview }) {
               </div>
             );
           })}
-        </ReactGridLayout>
+        </MyReactGridLayout>
       );
     default:
   }

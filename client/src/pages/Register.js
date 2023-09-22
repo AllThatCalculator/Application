@@ -1,4 +1,13 @@
-import { Box, Button, Dialog, Tab, Tabs, Toolbar, Zoom } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Dialog,
+  Tab,
+  Tabs,
+  Toolbar,
+  Zoom,
+} from "@mui/material";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
@@ -23,6 +32,8 @@ import {
   validateAllComponents,
   validateExistCalculetButton,
 } from "../components/organisms/register-editor/validateComponentProperties";
+import LoadingPage from "../components/organisms/common/LoadingPage";
+import useSx from "../hooks/useSx";
 
 // page layout (editor page, bottom button)
 function PageLayout({
@@ -82,7 +93,7 @@ function PageLayout({
  */
 function Register({
   isEditMode,
-  // isLoading,
+  isLoading,
   registerPageTitle,
   isPreview,
   handleIsPreview,
@@ -109,6 +120,8 @@ function Register({
   //
   updateLog,
 }) {
+  const { isWindowSmDown } = useSx();
+
   // 0: 정보 입력하기 | 1: 계산기 만들기 | 2: 설명 입력하기
   const [selectRegisterInfo, setRegisterTabs] = useState(0);
   function onChangeRegisterTabs(event, newValue) {
@@ -216,6 +229,10 @@ function Register({
     );
   }
 
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
   return (
     <>
       <SubHeader>
@@ -280,35 +297,33 @@ function Register({
         </FlexBox>
       </SubHeader>
       <Box sx={{ flexGrow: 1, bgcolor: "white" }}>
-        {/* {isWindowSmDown && (
-          <Alert severity="warning" sx={{ m: "1.2rem 0.8rem" }}>
-            스크린 크기를 키워주세요.
-          </Alert>
-        )} */}
-        {
-          // !isWindowSmDown &&
-          !isPreview &&
-            tabRegisterInfoList.map((data, index) => {
-              const { label, content, isFull } = data;
+        {!isPreview &&
+          tabRegisterInfoList.map((data, index) => {
+            const { label, content, isFull } = data;
 
-              return (
-                <Box key={"register-info-id" + label} sx={{ flexGrow: 1 }}>
-                  {selectRegisterInfo === index && (
-                    <PageLayout
-                      isFull={isFull}
-                      setPage={setRegisterTabs}
-                      isFirstPage={selectRegisterInfo === 0}
-                      isLastPage={
-                        selectRegisterInfo === tabRegisterInfoList.length - 1
-                      }
-                    >
-                      {content}
-                    </PageLayout>
-                  )}
-                </Box>
-              );
-            })
-        }
+            return (
+              <Box key={"register-info-id" + label} sx={{ flexGrow: 1 }}>
+                {selectRegisterInfo === index && (
+                  <PageLayout
+                    isFull={isFull}
+                    setPage={setRegisterTabs}
+                    isFirstPage={selectRegisterInfo === 0}
+                    isLastPage={
+                      selectRegisterInfo === tabRegisterInfoList.length - 1
+                    }
+                  >
+                    {isWindowSmDown ? (
+                      <Alert severity="warning" sx={{ m: "1.2rem 0.8rem" }}>
+                        스크린 크기를 키워주세요.
+                      </Alert>
+                    ) : (
+                      content
+                    )}
+                  </PageLayout>
+                )}
+              </Box>
+            );
+          })}
         {isPreview && ( // {{ display:  "none" }} 대신, 입력한 소스코드에 따라 컴포넌트 업데이트 되도록 함.
           <PageLayout isPreview>
             <PreviewCalculet

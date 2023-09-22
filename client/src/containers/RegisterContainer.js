@@ -34,6 +34,7 @@ import {
   validateAllComponents,
   validateOneComponent,
 } from "../components/organisms/register-editor/validateComponentProperties";
+import LoadingPage from "../components/organisms/common/LoadingPage";
 
 /**
  * 수정 페이지에서 useEffect로 calculet을 가져올 때 리렌더링 현상이 심함
@@ -291,36 +292,33 @@ function RegisterContainer() {
     calculetType === 0 ? srcCode : calculetType === 1 ? userEditorComp : "";
 
   return (
-    <>
-      {((isEditMode && !isLoading) || !isEditMode) && (
-        <Register
-          isEditMode={isEditMode}
-          // isLoading={isEditMode ? isLoading : false}
-          registerPageTitle={registerPageTitle}
-          //
-          isPreview={isPreview}
-          handleIsPreview={handleIsPreview}
-          //
-          title={inputTitle}
-          description={inputDescription}
-          categoryMainId={inputCategoryMainId}
-          categorySubId={inputCategorySubId}
-          onChangeInputs={onChangeRegisterInputs}
-          onChangeCategoryMain={handleChangeCategoryMain}
-          onChangeCategorySub={handleChangeCategorySub}
-          type={calculetType}
-          //
-          srcCode={typeSrcCode}
-          manual={manual}
-          onChangeManual={onChangeManual}
-          //
-          userInfo={userInfo}
-          registerCalculet={registerCalculet}
-          //
-          updateLog={inputUpdateLog}
-        />
-      )}
-    </>
+    <Register
+      isLoading={isEditMode ? isLoading : false}
+      isEditMode={isEditMode}
+      // isLoading={isEditMode ? isLoading : false}
+      registerPageTitle={registerPageTitle}
+      //
+      isPreview={isPreview}
+      handleIsPreview={handleIsPreview}
+      //
+      title={inputTitle}
+      description={inputDescription}
+      categoryMainId={inputCategoryMainId}
+      categorySubId={inputCategorySubId}
+      onChangeInputs={onChangeRegisterInputs}
+      onChangeCategoryMain={handleChangeCategoryMain}
+      onChangeCategorySub={handleChangeCategorySub}
+      type={calculetType}
+      //
+      srcCode={typeSrcCode}
+      manual={manual}
+      onChangeManual={onChangeManual}
+      //
+      userInfo={userInfo}
+      registerCalculet={registerCalculet}
+      //
+      updateLog={inputUpdateLog}
+    />
   );
 }
 export default RegisterContainer;

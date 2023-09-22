@@ -131,7 +131,7 @@ const Components = {
     content: {
       componentType: PROPERTY_TYPE_STRING,
       label: "내용",
-      defaultValue: "",
+      defaultValue: "기본값",
       required: false,
     },
   },

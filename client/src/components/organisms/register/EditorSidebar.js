@@ -1,35 +1,27 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
+import { useDrag } from "react-dnd";
+import { useSelector } from "react-redux";
 import {
   Box,
   Collapse,
-  Divider,
   Drawer,
   List,
   ListItemButton,
   ListItemText,
   Paper,
-  TextField,
   Toolbar,
   Tooltip,
   Typography,
 } from "@mui/material";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import StyledScrollbar from "../../atoms/StyledScrollbar";
-import { FlexColumnBox } from "../common/FlexBox";
-import EditorComponent from "./EditorComponent";
-import SubTitle from "../common/SubTitle";
-import {
-  EDITOR_HEIGHT_MAX,
-  EDITOR_HEIGHT_MIN,
-  EDITOR_ITEM_TYPES,
-} from "../../../constants/register";
-import editorComponentList from "./components";
-import { Components } from "../register-editor/ComponentOptions";
-import Transformer from "../register-editor/Transformer";
-import { useSelector } from "react-redux";
-import { useDrag } from "react-dnd";
 import { CALCULET_BUTTON } from "../../../constants/calculetComponent";
+import { EDITOR_ITEM_TYPES } from "../../../constants/register";
+import StyledScrollbar from "../../atoms/StyledScrollbar";
+import Transformer from "../register-editor/Transformer";
+import EditorComponent from "./EditorComponent";
+import editorComponentList from "./components";
+import SubTitle from "../common/SubTitle";
 
 function DragComponent({ componentType, props }) {
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -72,7 +64,7 @@ function ListComponent({ open, components }) {
         }}
       >
         {components.map((props) => {
-          const { name, componentType } = props;
+          const { name, componentType, width } = props;
 
           // 예외) 계산하기 버튼 1개 존재할 시, 컴포넌트 제공 x
           const isExistCalculetButton =
@@ -87,10 +79,7 @@ function ListComponent({ open, components }) {
               <Typography variant="body2" color="text.secondary">
                 {name}
               </Typography>
-              <Paper
-                elevation={1}
-                sx={{ p: 1.2, my: 0.8, width: "fit-content" }}
-              >
+              <Paper elevation={1} sx={{ p: 1.2, my: 0.8, width: width }}>
                 <DragComponent componentType={componentType} props={props} />
               </Paper>
             </div>
@@ -163,24 +152,6 @@ function EditorSidebar({ drawerWidth }) {
     >
       <Toolbar />
       <Toolbar />
-      {/* <FlexColumnBox sx={{ p: 2, gap: 2 }}>
-        <SubTitle
-          content="편집창 높이 설정"
-          subContent="편집창 높이를 설정해주세요."
-        />
-        <TextField
-          type="number"
-          value={editorRowCount}
-          onChange={onChangeEditorRowCount}
-          InputProps={{
-            inputProps: {
-              max: EDITOR_HEIGHT_MAX,
-              min: EDITOR_HEIGHT_MIN,
-            },
-          }}
-        />
-      </FlexColumnBox>
-      <Divider /> */}
       <StyledScrollbar>
         <Box sx={{ width: "100%" }}>
           <Box sx={{ width: "100%", p: 2 }}>
@@ -190,19 +161,6 @@ function EditorSidebar({ drawerWidth }) {
             />
           </Box>
           <List component="nav">
-            {/* {Object.entries(Components).map(([id, data], index) => {
-              
-
-              return (
-                <ListRowBox
-                  key={id}
-                  title={title}
-                  help={help}
-                  components={components}
-                  // setIsDragging={setIsDragging}
-                />
-              );
-            })} */}
             {Object.entries(editorComponentList).map(([type, comp], index) => {
               const { title, help, components } = comp;
               return (
@@ -211,7 +169,6 @@ function EditorSidebar({ drawerWidth }) {
                   title={title}
                   help={help}
                   components={components}
-                  // setIsDragging={setIsDragging}
                 />
               );
             })}

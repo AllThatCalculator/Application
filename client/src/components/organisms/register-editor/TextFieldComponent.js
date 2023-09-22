@@ -21,7 +21,7 @@ function TextFieldComponent(props) {
       size="small"
       InputLabelProps={{
         shrink: true,
-        sx: { textShadow: "1px 1px 0.5px white" },
+        sx: { textShadow: "1.2px 1.2px 0.2px white" },
       }}
       inputProps={{ maxLength: maxLength }}
       sx={{ "& .MuiOutlinedInput-root": sx }}

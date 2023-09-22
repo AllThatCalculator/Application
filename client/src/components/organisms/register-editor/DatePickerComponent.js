@@ -8,7 +8,9 @@ function DatePickerComponent(props) {
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
         {...prop}
-        slotProps={{ textField: { size: isProp ? "small" : "medium" } }}
+        slotProps={{
+          textField: { size: isProp ? "small" : "medium", fullWidth: true },
+        }}
       />
     </LocalizationProvider>
   );

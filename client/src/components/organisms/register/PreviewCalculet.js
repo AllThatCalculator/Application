@@ -38,6 +38,7 @@ function PreviewCalculet({
     },
     title: title,
   };
+
   return (
     <>
       <CalculetHeader
