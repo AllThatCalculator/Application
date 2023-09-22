@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import dayjs from "dayjs";
 import { TextField } from "@mui/material";
 import {
   TEXT_FIELD,
@@ -45,7 +46,7 @@ function Transformer({ data, updateValue }) {
     ...properties
   } = data;
 
-  if (!value) {
+  if (value === undefined) {
     if (defaultValue === undefined) {
       defaultValue = "";
     }
@@ -68,7 +69,7 @@ function Transformer({ data, updateValue }) {
             break;
           case DATE_PICKER:
           case PROPERTY_TYPE_DATE:
-            updateValue(e);
+            updateValue(e.format("YYYY-MM-DD"));
             break;
           case CHECK_BOX:
           case PROPERTY_TYPE_BOOLEAN:
@@ -108,7 +109,9 @@ function Transformer({ data, updateValue }) {
       return <TextField {...properties} />;
     case DATE_PICKER:
     case PROPERTY_TYPE_DATE:
-      return <DatePickerComponent {...properties} />;
+      const newValue =
+        properties.value === null ? null : dayjs(properties.value);
+      return <DatePickerComponent {...properties} value={newValue} />;
     case SELECT:
     case PROPERTY_TYPE_SELECT:
       return <SelectComponent {...properties} />;
