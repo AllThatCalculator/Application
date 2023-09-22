@@ -32,11 +32,71 @@ const Wrapper = styled.div`
  * 각 계산기 type에 따라 렌더링하는 함수
  */
 function Calculet({ calculetId, srcCode, type, isPreview }) {
+  function createUserFunction() {
+    // eslint-disable-next-line
+    return new Function(
+      "inputObj",
+      // 콘솔 객체 덮어 씌우기
+      // `console = ["log", "dir", "error", "warn", "assert"].reduce(function(obj, key){
+      //   obj[key] = function(){};
+      //   return obj;
+      // }, {...console});` +
+      // override document
+      `const document = null;` +
+        srcCode.userFunction +
+        `;return main(inputObj);`
+    );
+  }
+
   const calculetInputOutput = useSelector((state) => state.calculetInputOutput);
   const { handleSetCalculetObj, handleGetCalculetRecords } =
     useCalculetRecord();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (type === 1) {
+      dispatch(
+        onSetCalculetObj({
+          calculetId,
+          ...Object.entries(srcCode.components).reduce(
+            (obj, key) => {
+              const [id, data] = key;
+              if (data.isInput) {
+                obj.inputObj.push(id);
+                obj.idToLabel[id] = data.label;
+              }
+              if (data.isOutput) {
+                obj.outputObj.push(id);
+                obj.idToLabel[id] = data.label;
+              }
+              if ((data.isInput || data.isOutput) && data.options) {
+                obj.valueToLabel[id] = Object.values(data.options).reduce(
+                  (accumulator, data) => {
+                    return { ...accumulator, [data.value]: data.label };
+                  },
+                  {}
+                );
+              }
+              return obj;
+            },
+            { inputObj: [], outputObj: [], idToLabel: {}, valueToLabel: {} }
+          ),
+        })
+      );
+      // 타입 검사 - 입출력 초기화
+      dispatch(
+        onInitCalculetInputOutput(
+          Object.entries(srcCode.components).reduce((obj, key) => {
+            const [id, data] = key;
+            obj[id] = data.defaultValue; // 기본값 설정
+            return obj;
+          }, {})
+        )
+      );
+    }
+    setIsLoading(false);
+  }, [calculetId, dispatch, srcCode, type, isLoading]);
 
   switch (type) {
     case 0:
@@ -85,55 +145,49 @@ function Calculet({ calculetId, srcCode, type, isPreview }) {
         </>
       );
     case 1:
-      // eslint-disable-next-line
-      const userFunction = new Function(
-        "inputObj",
-        // 콘솔 객체 덮어 씌우기
-        `console = ["log", "dir", "error", "warn", "assert"].reduce(function(obj, key){
-          obj[key] = function(){};
-          return obj;
-        }, {...console});` +
-          srcCode.userFunction +
-          `;return main(inputObj);`
-      );
+      const userFunction = createUserFunction();
 
       return (
         <>
-          {Object.entries(srcCode.components).map(([id, data]) => {
-            // default 값 빼고 전달 - default값은 inputOutput 초기화 과정에서 설정됨
-            const { defaultValue, ...rest } = data;
-            if (rest.componentType === CALCULET_BUTTON) {
-              rest.onClick = () => {
-                const record = {
-                  inputObj: calculetInputOutput,
-                  outputObj: userFunction(calculetInputOutput),
+          {isLoading && <CalculetSkeleton />}
+          {!isLoading &&
+            Object.entries(srcCode.components).map(([id, data]) => {
+              // default 값 빼고 전달 - default값은 inputOutput 초기화 과정에서 설정됨
+              const { defaultValue, ...rest } = data;
+              if (rest.componentType === CALCULET_BUTTON) {
+                rest.onClick = () => {
+                  const record = {
+                    inputObj: calculetInputOutput,
+                    outputObj: userFunction(calculetInputOutput),
+                  };
+                  dispatch(onCalculetExecute(record.outputObj));
+                  dispatch(onUpdateRecentInputOutput(record));
                 };
-                dispatch(onCalculetExecute(record.outputObj));
-                dispatch(onUpdateRecentInputOutput(record));
-              };
 
-              return <Transformer id={id} data={rest} key={id} />;
-            }
+                return <Transformer id={id} data={rest} key={id} />;
+              }
 
-            rest.value = calculetInputOutput[id];
+              rest.value = calculetInputOutput[id];
 
-            return (
-              <Transformer
-                id={id}
-                data={rest}
-                key={id}
-                updateValue={(newValue) => {
-                  dispatch(
-                    onUpdateCalculetInputOutput({
-                      componentId:
-                        rest.componentType === INPUT_HELPER ? rest.target : id,
-                      value: newValue,
-                    })
-                  );
-                }}
-              />
-            );
-          })}
+              return (
+                <Transformer
+                  id={id}
+                  data={rest}
+                  key={id}
+                  updateValue={(newValue) => {
+                    dispatch(
+                      onUpdateCalculetInputOutput({
+                        componentId:
+                          rest.componentType === INPUT_HELPER
+                            ? rest.target
+                            : id,
+                        value: newValue,
+                      })
+                    );
+                  }}
+                />
+              );
+            })}
         </>
       );
     default:
@@ -154,43 +208,6 @@ function CalculetBlock({
   isPreview = false,
   type,
 }) {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (type === 1) {
-      dispatch(
-        onSetCalculetObj({
-          calculetId,
-          ...Object.entries(srcCode.components).reduce(
-            (obj, key) => {
-              const [id, data] = key;
-              if (data.isInput) {
-                obj.inputObj.push(id);
-                obj.labelDict[id] = data.label;
-              }
-              if (data.isOutput) {
-                obj.outputObj.push(id);
-                obj.labelDict[id] = data.label;
-              }
-              return obj;
-            },
-            { inputObj: [], outputObj: [], labelDict: {} }
-          ),
-        })
-      );
-      // 타입 검사 - 입출력 초기화
-      dispatch(
-        onInitCalculetInputOutput(
-          Object.entries(srcCode.components).reduce((obj, key) => {
-            const [id, data] = key;
-            obj[id] = data.defaultValue; // 기본값 설정
-            return obj;
-          }, {})
-        )
-      );
-    }
-  }, [calculetId, dispatch, srcCode, type]);
-
   return (
     <Wrapper>
       <Calculet

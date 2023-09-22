@@ -31,88 +31,10 @@ async function handleGetCalculetInfo(id, setCalculetObj) {
   }
 
   if (calculetInfoRequest !== null) {
-    // for test
-    // calculetInfoRequest.type = 1;
     switch (calculetInfoRequest.type) {
       case 0:
         break;
       case 1: // 데이터 가공
-        // 테스트용 임시로직
-        // const srcCode = {
-        //   components: {
-        //     "a": {
-        //       componentId: "a",
-        //       componentType: "textField",
-        //       copyButton: false,
-        //       disabled: false,
-        //       id: "a",
-        //       isInput: true,
-        //       isOutput: false,
-        //       label: "피연산자1",
-        //       placeholder: "",
-        //       required: false,
-        //       type: "text",
-        //       defaultValue: "10",
-        //     },
-        //     "b": {
-        //       componentId: "b",
-        //       componentType: "textField",
-        //       copyButton: false,
-        //       disabled: false,
-        //       id: "b",
-        //       isInput: true,
-        //       isOutput: false,
-        //       label: "피연산자2",
-        //       placeholder: "",
-        //       required: false,
-        //       type: "text",
-        //       defaultValue: "5",
-        //     },
-        //     "c": {
-        //       componentId: "c",
-        //       componentType: "textField",
-        //       copyButton: true,
-        //       disabled: true,
-        //       id: "c",
-        //       isInput: false,
-        //       isOutput: true,
-        //       label: "계산결과",
-        //       placeholder: "",
-        //       required: false,
-        //       type: "text",
-        //     },
-        //     "d": {
-        //       componentId: "d",
-        //       componentType: "calculetButton",
-        //     },
-
-        //     "fb985e7c-3d99-49aa-889b-39226fb2d3e2": {
-        //       componentId: "fb985e7c-3d99-49aa-889b-39226fb2d3e2",
-        //       componentType: "inputHelper",
-        //       id: "var1",
-        //       label: "inputhelper",
-        //       target: "a",
-        //       options: {
-        //         0: {
-        //           value: "default",
-        //           label: "1",
-        //         },
-        //         1: {
-        //           value: "plus",
-        //           label: "2",
-        //         },
-        //       },
-        //       defaultValue: "",
-        //     },
-
-        //     // userFunction: (a, b) => a + b,
-        //   },
-        //   userFunction: `function main(x) {
-        //     console.warn(x);
-        //     return {c:parseInt(x.a)+parseInt(x.b)};
-        //   }`,
-        // };
-        // calculetInfoRequest.srcCode = srcCode;
         calculetInfoRequest.srcCode = JSON.parse(calculetInfoRequest.srcCode);
         break;
       default:

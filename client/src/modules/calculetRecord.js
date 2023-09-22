@@ -19,7 +19,8 @@ const initialState = {
   calculetObj: {
     inputObj: [],
     outputObj: [],
-    labelDict: {}, // input, output의 대한 사용자 설명
+    idToLabel: {}, // input, output의 대한 사용자 설명
+    valueToLabel: {}, // 따로 label이 존재하는 경우
     calculetId: "",
   },
   // 최근 기록 - v1부터 사용함
