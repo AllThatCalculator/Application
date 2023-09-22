@@ -1,10 +1,7 @@
-import { Paper, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { grey } from "@mui/material/colors";
-import useHover from "../../../hooks/useHover";
 import mouseDownDrag from "../../../utils/mouseDownDrag";
-
-const drawerBleeding = -8;
 
 const Puller = styled(Box)(({ theme }) => ({
   width: 30,

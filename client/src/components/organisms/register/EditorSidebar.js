@@ -24,10 +24,9 @@ import editorComponentList from "./components";
 import SubTitle from "../common/SubTitle";
 
 function DragComponent({ componentType, props }) {
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [, drag] = useDrag(() => ({
     type: EDITOR_ITEM_TYPES.EDITOR,
     item: { componentType: componentType },
-    collect: (monitor) => ({ isDragging: !!monitor.isDragging() }),
   }));
 
   return (
@@ -72,8 +71,8 @@ function ListComponent({ open, components }) {
             Object.values(userEditorComp).findIndex(
               (value) => value.componentType === CALCULET_BUTTON
             ) !== -1;
-          if (isExistCalculetButton) return;
 
+          if (isExistCalculetButton) return <div key={name} />;
           return (
             <div key={name}>
               <Typography variant="body2" color="text.secondary">

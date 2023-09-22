@@ -1,14 +1,17 @@
-import { useDispatch, useSelector } from "react-redux";
-import usePage from "../hooks/usePage";
-import useSnackbar from "../hooks/useSnackbar";
-import Register from "../pages/Register";
 import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { validateAllComponents } from "../components/organisms/register-editor/validateComponentProperties";
+import { onUpdateUserComponent } from "../modules/calculetEditor";
+import { ID_MAIN_CONVERTER } from "../constants/calculetList";
+import useSnackbar from "../hooks/useSnackbar";
+import useSelects from "../hooks/useSelects";
+import useInputs from "../hooks/useInputs";
+import Register from "../pages/Register";
+import usePage from "../hooks/usePage";
 import {
   changeCategoryMain,
   changeCategorySub,
 } from "../utils/changeCategorySelect";
-import useInputs from "../hooks/useInputs";
-import useSelects from "../hooks/useSelects";
 import {
   ID_INPUT_TITLE,
   ID_INPUT_DESCRIPTION,
@@ -22,19 +25,6 @@ import {
   handleGetMyCalculet,
   handlePostCalculet,
 } from "../utils/handleUserActions";
-import { ID_MAIN_CONVERTER } from "../constants/calculetList";
-import useInput from "../hooks/useInput";
-import { v4 as uuidv4 } from "uuid";
-import {
-  onAppendNewComponent,
-  onUpdateUserComponent,
-  onUpdateUserFunction,
-} from "../modules/calculetEditor";
-import {
-  validateAllComponents,
-  validateOneComponent,
-} from "../components/organisms/register-editor/validateComponentProperties";
-import LoadingPage from "../components/organisms/common/LoadingPage";
 
 /**
  * 수정 페이지에서 useEffect로 calculet을 가져올 때 리렌더링 현상이 심함
@@ -99,9 +89,12 @@ function RegisterContainer() {
   const [srcCode, setSrcCode] = useState(DEFAULT_VALUE_INPUT_SRC_CODE);
   // type 1
   // redux) 계산 함수 입력 초기화 이벤트
-  function onInitUserFunction(value) {
-    dispatch(onUpdateUserComponent(value));
-  }
+  const onInitUserFunction = useCallback(
+    (value) => {
+      dispatch(onUpdateUserComponent(value));
+    },
+    [dispatch]
+  );
 
   // 설명 입력하기
   const [manual, setManual] = useState("");
@@ -277,7 +270,14 @@ function RegisterContainer() {
     await setManual(manual);
 
     await setIsLoading(false);
-  }, [blockedUrlId, id, idToken, onSetRegisterInputs, setRegisterSelects]);
+  }, [
+    blockedUrlId,
+    id,
+    idToken,
+    onSetRegisterInputs,
+    setRegisterSelects,
+    onInitUserFunction,
+  ]);
 
   useEffect(() => {
     if (id !== undefined && !isloadedCalculet) {

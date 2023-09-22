@@ -1,39 +1,29 @@
-import {
-  Alert,
-  Box,
-  Button,
-  Dialog,
-  Tab,
-  Tabs,
-  Toolbar,
-  Zoom,
-} from "@mui/material";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
+import { useState } from "react";
+import { Alert, Box, Button, Tab, Tabs, Toolbar, Zoom } from "@mui/material";
 import CheckCircleOutlineOutlinedIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { RegisterPageScreenBottom } from "../components/organisms/common/PageScreenBottom";
+import UpdateLogDialog from "../components/organisms/register/UpdateLogDialog";
 import PreviewCalculet from "../components/organisms/register/PreviewCalculet";
 import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
 import WriteManual from "../components/organisms/register/WriteManual";
 import WriteInform from "../components/organisms/register/WriteInform";
 import { SubHeader } from "../components/organisms/header/SubHeader";
+import LoadingPage from "../components/organisms/common/LoadingPage";
 import { MainButton } from "../components/organisms/common/Buttons";
 import WriteCode from "../components/organisms/register/WriteCode";
 import { FlexBox } from "../components/organisms/common/FlexBox";
-import Title from "../components/organisms/common/Title";
-import useTabs from "../hooks/useTabs";
 import { ID_SELECT_REGISTER_INFO } from "../constants/register";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { DndProvider } from "react-dnd";
-import { useState } from "react";
-import UpdateLogDialog from "../components/organisms/register/UpdateLogDialog";
+import Title from "../components/organisms/common/Title";
+import useSx from "../hooks/useSx";
 import {
   validateAllComponents,
   validateExistCalculetButton,
 } from "../components/organisms/register-editor/validateComponentProperties";
-import LoadingPage from "../components/organisms/common/LoadingPage";
-import useSx from "../hooks/useSx";
 
 // page layout (editor page, bottom button)
 function PageLayout({

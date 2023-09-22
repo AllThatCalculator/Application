@@ -117,6 +117,8 @@ function CalculetManual({ content, calculetId, isPreview, type }) {
         return <MarkdownCode content={content} />;
       case 1:
         return <ParseHtml htmlCodes={content} />;
+      default:
+        return <></>;
     }
   }
 

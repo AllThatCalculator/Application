@@ -1,6 +1,5 @@
 import CalculetBlock from "../calculet-block/CalculetBlock";
 import CalculetHeader from "../calculet-block/CalculetHeader";
-import useSx from "../../../hooks/useSx";
 
 /**
  * 계산기 미리보기

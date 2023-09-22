@@ -1,12 +1,11 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Paper, Button, IconButton, Tooltip } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 import ReplayIcon from "@mui/icons-material/Replay";
-import {
-  HEIGHT_COMP_EDITOR,
-  SRC_CODE_LANGUAGES,
-} from "../../../constants/register";
 import { FlexBox, FlexColumnBox } from "../common/FlexBox";
 import StyledScrollbar from "../../atoms/StyledScrollbar";
+import WarningDialog from "../common/WarningDialog";
+import CodeEditorDrawer from "./CodeEditorDrawer";
 import EditorContainer from "./EditorContainer";
 import SubTitle from "../common/SubTitle";
 import CodeEditor from "./CodeEditor";
@@ -14,11 +13,12 @@ import {
   onClearComponentLayout,
   onUpdateUserFunction,
 } from "../../../modules/calculetEditor";
-import WarningDialog from "../common/WarningDialog";
-import { useState } from "react";
-import CodeEditorDrawer from "./CodeEditorDrawer";
+import {
+  HEIGHT_COMP_EDITOR,
+  SRC_CODE_LANGUAGES,
+} from "../../../constants/register";
 
-function EditorPlayground({}) {
+function EditorPlayground() {
   const dispatch = useDispatch();
   const { components: userEditorComp } = useSelector((state) => ({
     // components

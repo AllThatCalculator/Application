@@ -1,14 +1,14 @@
 import { useCallback, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, Button, Divider, Grid, Typography } from "@mui/material";
+import { Button, Divider, Grid, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { PROPERTY_OPTION_START_NUMBER } from "../../../constants/calculetComponent";
 import { onUpdateComponent } from "../../../modules/calculetEditor";
 import { FlexBox, FlexColumnBox } from "../common/FlexBox";
+import StyledScrollbar from "../../atoms/StyledScrollbar";
 import { Components, Option } from "./ComponentOptions";
 import SubTitle from "../common/SubTitle";
 import Transformer from "./Transformer";
-import StyledScrollbar from "../../atoms/StyledScrollbar";
 
 /**
  * 컴포넌트 type에 따라 속성을 입력하는 필드들을 모은 컴포넌트

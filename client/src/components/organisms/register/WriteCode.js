@@ -9,7 +9,7 @@ import { DRAWER_WIDTH } from "../../../constants/register";
  * - 코드 작성
  * @param {*} props
  */
-function WriteCode({}) {
+function WriteCode() {
   return (
     <FlexBox>
       <EditorSidebar drawerWidth={DRAWER_WIDTH} />

@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import RGL, { WidthProvider } from "react-grid-layout";
 // import ReactGridLayout, { WidthProvider, Responsive } from "react-grid-layout";
 // import css -- IMP!!!
 import "../../../../node_modules/react-grid-layout/css/styles.css";
@@ -8,10 +7,7 @@ import "../../../../node_modules/react-resizable/css/styles.css";
 import { useDrop } from "react-dnd";
 import { v4 as uuidv4 } from "uuid";
 import { Box, Paper, Popover, Typography } from "@mui/material";
-import {
-  CALCULET_BUTTON,
-  CHECK_BOX,
-} from "../../../constants/calculetComponent";
+import { CALCULET_BUTTON } from "../../../constants/calculetComponent";
 import { ComponentSizes } from "../register-editor/ComponentSize";
 import { EDITOR_ITEM_TYPES } from "../../../constants/register";
 import ComponentForm from "../register-editor/ComponentForm";
@@ -85,10 +81,7 @@ function AssembledEditorComponent({ id, data }) {
   );
 }
 
-const ReactGridLayout = WidthProvider(RGL);
-// const ResponsiveReactGridLayout = WidthProvider(Responsive);
-
-function EditorContainer({}) {
+function EditorContainer() {
   const dispatch = useDispatch();
   const { components: userEditorComp, layout } = useSelector(
     (state) => state.calculetEditor
