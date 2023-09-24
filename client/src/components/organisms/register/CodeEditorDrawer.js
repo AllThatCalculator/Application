@@ -19,14 +19,14 @@ function CodeEditorDrawer({ children }) {
   const [drawerHeight, setDrawerHeight] = useState(HEIGHT_CODE_EDITOR);
 
   // local storage drawerKey
-  const drawerKey = "register-code-editor-drawer-height";
-  function getLocalStorageDrawerManage(drawerKey) {
-    const height = localStorage.getItem(drawerKey);
+  const DRAWER_KEY = "register-code-editor-drawer-height";
+  function getLocalStorageDrawerManage(DRAWER_KEY) {
+    const height = localStorage.getItem(DRAWER_KEY);
     if (height === null) return HEIGHT_CODE_EDITOR;
     return height;
   }
   function setLocalStorageDrawerManage() {
-    localStorage.setItem(drawerKey, drawerHeight);
+    localStorage.setItem(DRAWER_KEY, drawerHeight);
   }
 
   // deltaY에 따른 계산
@@ -47,7 +47,7 @@ function CodeEditorDrawer({ children }) {
     if (typeof window === "undefined") return;
 
     // perform localStorage action
-    const drawerHeight = getLocalStorageDrawerManage(drawerKey);
+    const drawerHeight = getLocalStorageDrawerManage(DRAWER_KEY);
     if (drawerHeight !== null) {
       setDrawerHeight(Number(drawerHeight));
     }

@@ -13,7 +13,7 @@ import {
 } from "../../../constants/register";
 
 /**
- *
+ * 계산기v1 수정 시, 수정 사항(업데이트 로그) 작성하기 위한 입력모달창
  * @returns
  */
 function UpdateLogDialog(props) {
