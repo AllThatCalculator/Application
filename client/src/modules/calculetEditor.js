@@ -9,13 +9,16 @@ import {
   Components,
 } from "../components/organisms/register-editor/ComponentOptions";
 import {
+  CALCULET_BUTTON,
   CHECK_BOX,
   DATE_PICKER,
+  INPUT_HELPER,
   MULTI_CHECK_BOX,
   MULTI_SELECT,
   PROPERTY_OPTION_START_NUMBER,
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_DATE,
+  TYPOGRAPHY,
 } from "../constants/calculetComponent";
 import { DEFAULT_VALUE_INPUT_SRC_CODE } from "../constants/register";
 
@@ -120,12 +123,6 @@ function createNewComponent(data) {
         break;
       case MULTI_CHECK_BOX:
         defaultValue = {};
-        for (const key in newComponent.options) {
-          defaultValue = {
-            ...defaultValue,
-            [newComponent.options[key].value]: false,
-          };
-        }
         break;
       case DATE_PICKER:
       case PROPERTY_TYPE_DATE:
@@ -136,6 +133,16 @@ function createNewComponent(data) {
         break;
     }
     newComponent.defaultValue = defaultValue;
+  }
+
+  // isInput 초기화
+  const type = String(newComponent.componentType);
+  if (
+    type !== TYPOGRAPHY &&
+    type !== INPUT_HELPER &&
+    type !== CALCULET_BUTTON
+  ) {
+    newComponent.isInput = true;
   }
 
   return newComponent;
