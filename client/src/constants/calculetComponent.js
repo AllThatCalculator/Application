@@ -13,14 +13,20 @@ const INPUT_HELPER = "inputHelper";
 const CALCULET_BUTTON = "calculetButton";
 
 // calculet component option (property) type
-const PROPERTY_TYPE_STRING = "string";
-const PROPERTY_TYPE_BOOLEAN = "bool";
-const PROPERTY_TYPE_SELECT = "select";
-const PROPERTY_TYPE_DATE = "date";
-const PROPERTY_TYPE_OBJECT = "object";
+const PROPERTY_TYPE_STRING = "propString";
+const PROPERTY_TYPE_BOOLEAN = "propBool";
+const PROPERTY_TYPE_SELECT = "propSelect";
+const PROPERTY_TYPE_DATE = "propDate";
+const PROPERTY_TYPE_OBJECT = "propObject";
 
 // calculet component option start number
 const PROPERTY_OPTION_START_NUMBER = 0;
+
+// dark mode field name
+const PROPERTY_NAME_DARK_MODE = {
+  PROPERTY_ID: "id",
+  PROPERTY_OPTION_TARGET: "target",
+};
 
 export {
   TYPOGRAPHY,
@@ -41,4 +47,5 @@ export {
   PROPERTY_TYPE_DATE,
   PROPERTY_TYPE_OBJECT,
   PROPERTY_OPTION_START_NUMBER,
+  PROPERTY_NAME_DARK_MODE,
 };

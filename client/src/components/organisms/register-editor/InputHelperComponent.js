@@ -22,7 +22,7 @@ function InputHelperComponent(props) {
       <Typography variant="caption">{props.label}</Typography>
       <FlexBox
         sx={{
-          width: "fit-content",
+          width: "100%",
           padding: "1rem",
           gap: "0.5rem",
           borderRadius: "0.25rem",

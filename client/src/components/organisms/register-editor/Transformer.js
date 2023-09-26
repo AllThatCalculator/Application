@@ -26,6 +26,7 @@ import InputHelperComponent from "./InputHelperComponent";
 import CalculetButtonComponent from "./CalculetButtonComponent";
 import TypographyComponent from "./TypographyComponent";
 import DatePickerComponent from "./DatePickerComponent";
+import TextFieldComponent from "./TextFieldComponent";
 
 /**
  * 사용자 입력 객체를 컴포넌트로 변환해주는 함수
@@ -118,21 +119,25 @@ function Transformer({ data, updateValue }) {
     case TYPOGRAPHY:
       return <TypographyComponent {...properties} />;
     case TEXT_FIELD:
+      return <TextField fullWidth {...properties} />;
     case PROPERTY_TYPE_STRING:
-      return <TextField {...properties} />;
+      return <TextFieldComponent {...properties} />;
     case DATE_PICKER:
+      return <DatePickerComponent {...properties} />;
     case PROPERTY_TYPE_DATE:
       const newValue =
         properties.value === null ? null : dayjs(properties.value);
-      return <DatePickerComponent {...properties} value={newValue} />;
+      return <DatePickerComponent isProp {...properties} />;
     case SELECT:
-    case PROPERTY_TYPE_SELECT:
       return <SelectComponent {...properties} />;
+    case PROPERTY_TYPE_SELECT:
+      return <SelectComponent isProp {...properties} />;
     case MULTI_SELECT:
-      return <SelectComponent {...properties} multiple={true} />;
+      return <SelectComponent multiple {...properties} />;
     case CHECK_BOX:
-    case PROPERTY_TYPE_BOOLEAN:
       return <CheckboxComponent {...properties} />;
+    case PROPERTY_TYPE_BOOLEAN:
+      return <CheckboxComponent isProp {...properties} />;
     case MULTI_CHECK_BOX:
       return <MultiCheckboxComponent {...properties} />;
     case RADIO:

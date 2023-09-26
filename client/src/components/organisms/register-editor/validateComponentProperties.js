@@ -1,3 +1,4 @@
+import { CALCULET_BUTTON } from "../../../constants/calculetComponent";
 import { Components } from "./ComponentOptions";
 
 const TEXT_LIMIT = { label: 10 };
@@ -8,6 +9,8 @@ const TEXT_LIMIT = { label: 10 };
  * @param {object} properties: 컴포넌트 속성을 컴포넌트로 만들기 위한 속성 정보
  */
 function validateOneComponent(components, inputs) {
+  // console.log(components);
+
   const properties = Components[inputs.componentType];
   for (const key in properties) {
     if (
@@ -103,10 +106,21 @@ function validateAllComponents(components) {
   return true;
 }
 
+// 계산하기 버튼 있는지 검사
+function validateExistCalculetButton(components) {
+  for (const key in components) {
+    if (components[key].componentType === CALCULET_BUTTON) {
+      return true;
+    }
+  }
+  return false;
+}
+
 export {
   validateOneComponent,
   validateAllComponents,
   validateCharacterLimit,
   validateDuplicatedId,
   validateDuplicateOptionValue,
+  validateExistCalculetButton,
 };

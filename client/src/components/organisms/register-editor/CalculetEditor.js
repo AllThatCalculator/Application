@@ -1,11 +1,10 @@
-import { useDispatch, useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
-
+import { useDispatch, useSelector } from "react-redux";
 import { onAppendNewComponent } from "../../../modules/calculetEditor";
-import { Components } from "./ComponentOptions";
 import { MenuItem, Select } from "@mui/material";
-import useInput from "../../../hooks/useInput";
 import ComponentEditor from "./ComponentEditor";
+import { Components } from "./ComponentOptions";
+import useInput from "../../../hooks/useInput";
 
 function CalculetEditor({ initInputs }) {
   const { components } = useSelector((state) => state.calculetEditor);
@@ -13,6 +12,7 @@ function CalculetEditor({ initInputs }) {
   const { value: componentType, onChange: onChangeComponentType } =
     useInput("");
 
+  // redux에 정보 추가하는 함수
   function addNewComponent(componentType) {
     const componentId = uuidv4();
     dispatch(onAppendNewComponent({ componentId, componentType }));

@@ -616,7 +616,7 @@ function RecordCalculetHistory({ calculetId, isPreview, type }) {
                             selected={isItemSelected}
                             sx={{
                               // 최근 저장 내역인 경우 구분
-                              "backgroundColor":
+                              backgroundColor:
                                 isItemRecentData && "atcGreen.50",
                               "&.Mui-selected": {
                                 backgroundColor:

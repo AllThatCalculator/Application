@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import {
   FormControl,
   Grid,
@@ -6,12 +7,9 @@ import {
   Paper,
   Select,
   TextField,
-  Typography,
 } from "@mui/material";
-import useSx from "../../../hooks/useSx";
 import { FlexBox, FlexColumnBox } from "../common/FlexBox";
 import BoxRecCalculator from "../common/BoxRecCalculator";
-import { useSelector } from "react-redux";
 import { ID_MAIN_CONVERTER } from "../../../constants/calculetList";
 import {
   ID_INPUT_CATEGORY_MAIN_ID,
@@ -19,6 +17,7 @@ import {
   ID_INPUT_DESCRIPTION,
   ID_INPUT_TITLE,
 } from "../../../constants/register";
+import SubTitle from "../common/SubTitle";
 
 /**
  * 계산기 정보 입력창 컴포넌트 (정보 입력 + 배너 미리보기)
@@ -36,7 +35,6 @@ function WriteInform(props) {
     onChangeCategorySub,
   } = props;
 
-  const { subTitleSx } = useSx();
   const { userInfo, calculetCategory } = useSelector((state) => ({
     userInfo: state.userInfo,
     calculetCategory: state.calculetCategory.category,
@@ -46,7 +44,10 @@ function WriteInform(props) {
     <Grid container spacing={4} columns={{ xs: 1, sm: 2 }}>
       <Grid item xs={1} sm={1.15}>
         <FlexColumnBox gap="1.6rem">
-          <Typography sx={{ ...subTitleSx }}>계산기 정보 입력</Typography>
+          <SubTitle
+            content="계산기 정보 입력"
+            subContent="계산기에 대한 정보를 입력해주세요."
+          />
           <TextField
             id={ID_INPUT_TITLE}
             label="계산기 이름"
@@ -122,8 +123,11 @@ function WriteInform(props) {
           </Grid>
         </FlexColumnBox>
       </Grid>
-      <Grid item xs={1} sm={0.85} gap="1.6rem">
-        <Typography sx={{ ...subTitleSx }}>배너 미리보기</Typography>
+      <Grid item xs={1} sm={0.85}>
+        <SubTitle
+          content="배너 미리보기"
+          subContent="추천 계산기에서 보일 배너입니다."
+        />
         <FlexBox
           sx={{
             justifyContent: "center",
@@ -136,7 +140,7 @@ function WriteInform(props) {
             sx={{
               pointerEvents: "none",
               width: "100%",
-              margin: { xs: "0 5.8rem", sm: "0 2.4rem", md: "0 5.8rem" },
+              margin: { xs: "0 1.2rem", sm: "0 2.4rem", md: "0 1.2rem" },
             }}
           >
             <BoxRecCalculator
