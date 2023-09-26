@@ -125,7 +125,7 @@ function Transformer({ data, updateValue }) {
     case DATE_PICKER:
       return <DatePickerComponent {...properties} />;
     case PROPERTY_TYPE_DATE:
-      const newValue =
+      properties.value =
         properties.value === null ? null : dayjs(properties.value);
       return <DatePickerComponent isProp {...properties} />;
     case SELECT:
