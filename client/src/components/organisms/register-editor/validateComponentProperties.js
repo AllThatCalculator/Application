@@ -1,4 +1,8 @@
-import { CALCULET_BUTTON } from "../../../constants/calculetComponent";
+import {
+  CALCULET_BUTTON,
+  INPUT_HELPER,
+  TYPOGRAPHY,
+} from "../../../constants/calculetComponent";
 import { Components } from "./ComponentOptions";
 
 const TEXT_LIMIT = { label: 10 };
@@ -29,9 +33,17 @@ function validateOneComponent(components, inputs) {
     }
   }
   // isInput or isOutput 속성 확인
-  if (!inputs.isInput && !inputs.isOutput) {
+
+  if (
+    inputs.componentType !== TYPOGRAPHY &&
+    inputs.componentType !== INPUT_HELPER &&
+    inputs.componentType !== CALCULET_BUTTON &&
+    !inputs.isInput &&
+    !inputs.isOutput
+  ) {
     return false;
   }
+
   // 변수명이 존재한다면
   if (
     properties.id &&
