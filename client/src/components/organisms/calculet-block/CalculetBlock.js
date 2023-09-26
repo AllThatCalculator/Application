@@ -20,6 +20,11 @@ import {
   CALCULET_BUTTON,
   INPUT_HELPER,
 } from "../../../constants/calculetComponent";
+import {
+  MyReactGridLayout,
+  getStyle,
+  reactGridLayout,
+} from "../common/GridLayout";
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,6 +32,8 @@ const Wrapper = styled.div`
   gap: 10px;
   width: 100%;
 `;
+
+// const ReactGridLayout = WidthProvider(RGL);
 
 /**
  * 각 계산기 type에 따라 렌더링하는 함수
@@ -98,7 +105,12 @@ function Calculet({ calculetId, srcCode, type, isPreview }) {
       );
 
       return (
-        <>
+        <MyReactGridLayout
+          {...reactGridLayout}
+          layout={srcCode.layout}
+          isDraggable={false}
+          isResizable={false}
+        >
           {Object.entries(srcCode.components).map(([id, data]) => {
             // default 값 빼고 전달 - default값은 inputOutput 초기화 과정에서 설정됨
             const { defaultValue, ...rest } = data;
@@ -112,29 +124,36 @@ function Calculet({ calculetId, srcCode, type, isPreview }) {
                 dispatch(onUpdateRecentInputOutput(record));
               };
 
-              return <Transformer id={id} data={rest} key={id} />;
+              return (
+                <div key={id} id={id} style={getStyle(rest.componentType)}>
+                  <Transformer id={id} data={rest} />
+                </div>
+              );
             }
 
             rest.value = calculetInputOutput[id];
 
             return (
-              <Transformer
-                id={id}
-                data={rest}
-                key={id}
-                updateValue={(newValue) => {
-                  dispatch(
-                    onUpdateCalculetInputOutput({
-                      componentId:
-                        rest.componentType === INPUT_HELPER ? rest.target : id,
-                      value: newValue,
-                    })
-                  );
-                }}
-              />
+              <div key={id} id={id} style={getStyle(rest.componentType)}>
+                <Transformer
+                  id={id}
+                  data={rest}
+                  updateValue={(newValue) => {
+                    dispatch(
+                      onUpdateCalculetInputOutput({
+                        componentId:
+                          rest.componentType === INPUT_HELPER
+                            ? rest.target
+                            : id,
+                        value: newValue,
+                      })
+                    );
+                  }}
+                />{" "}
+              </div>
             );
           })}
-        </>
+        </MyReactGridLayout>
       );
     default:
   }

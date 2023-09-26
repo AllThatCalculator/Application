@@ -11,6 +11,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import useSx from "../../../hooks/useSx";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import ParseHtml from "../../atoms/ParseHtml";
 // import Textarea from "@mui/base/Textarea";
 /**
  * 마크다운 문법으로 작성된 문자열을 리액트 컴포넌트로 반환하는 함수
@@ -80,7 +81,7 @@ function CalculetManual({ content, calculetId, isPreview, type }) {
 
   // 더보기 버튼sx
   const fabAtcBlueStyle = {
-    "bgcolor": "atcBlue.200",
+    bgcolor: "atcBlue.200",
     "&:hover": {
       bgcolor: "atcBlue.100",
     },
@@ -106,6 +107,21 @@ function CalculetManual({ content, calculetId, isPreview, type }) {
     },
   ];
 
+  /**
+   * type 0: markdown
+   * type 1: html
+   */
+  function Manual({ type, content }) {
+    switch (type) {
+      case 0:
+        return <MarkdownCode content={content} />;
+      case 1:
+        return <ParseHtml htmlCodes={content} />;
+      default:
+        return <></>;
+    }
+  }
+
   // 계산기 마크다운 콘텐츠
   function CalculetMarkdownCode() {
     return (
@@ -127,7 +143,7 @@ function CalculetManual({ content, calculetId, isPreview, type }) {
               )`,
             }}
           >
-            <MarkdownCode content={content} />
+            <Manual type={type} content={content} />
           </Collapse>
         </Box>
         {fabs.map((fab, index) => (
