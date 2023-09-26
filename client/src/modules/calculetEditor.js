@@ -17,18 +17,31 @@ import {
   PROPERTY_TYPE_BOOLEAN,
   PROPERTY_TYPE_DATE,
 } from "../constants/calculetComponent";
+import { DEFAULT_VALUE_INPUT_SRC_CODE } from "../constants/register";
 
 const CALCULET_EDITOR_COMPONENTS_APPEND =
   "calculetEditor/CALCULET_EDITOR_COMPONENTS_APPEND";
-const CALCULET_EDITOR_COMPONENTS_DELETE =
-  "calculetEditor/CALCULET_EDITOR_COMPONENTS_DELETE";
+const CALCULET_EDITOR_COMPONENT_DELETE =
+  "calculetEditor/CALCULET_EDITOR_COMPONENT_DELETE";
 const CALCULET_EDITOR_COMPONENTS_UPDATE =
   "calculetEditor/CALCULET_EDITOR_COMPONENTS_UPDATE";
+const CALCULET_EDITOR_COMPONENTS_CLEAR =
+  "calculetEditor/CALCULET_EDITOR_COMPONENTS_CLEAR";
+const CALCULET_EDITOR_LAYOUT_UPDATE =
+  "calculetEditor/CALCULET_EDITOR_LAYOUT_UPDATE";
+const CALCULET_EDITOR_USER_FUNCTION_UPDATE =
+  "calculetEditor/CALCULET_EDITOR_USER_FUNCTION_UPDATE";
+const CALCULET_EDITOR_USER_COMPONENT_UPDATE =
+  "calculetEditor/CALCULET_EDITOR_USER_COMPONENT_UPDATE";
 
 /** init State ( 초기 상태 ) */
 const initialState = {
   components: {},
-  userFunction: (x) => x, // (임시)
+  layout: [
+    // editor 편집창 layout
+    // { i: 1, x: 0, y: 0, w: 1, h: 1, minH: 1, maxH: 1 }, // *** -- minH & maxH doesnt effect the grid items
+  ],
+  userFunction: DEFAULT_VALUE_INPUT_SRC_CODE, // 사용자 계산 함수
 };
 
 /**
@@ -39,14 +52,32 @@ const initialState = {
  */
 
 /** Action Creator Function ( 액션 생성 함수 ) */
+// component
 export function onAppendNewComponent(data) {
   return { type: CALCULET_EDITOR_COMPONENTS_APPEND, data };
 }
-export function onDeleteComponent(data) {
-  return { type: CALCULET_EDITOR_COMPONENTS_DELETE, data };
-}
 export function onUpdateComponent(data) {
   return { type: CALCULET_EDITOR_COMPONENTS_UPDATE, data };
+}
+export function onClearComponentLayout() {
+  // delete all component, layout
+  return { type: CALCULET_EDITOR_COMPONENTS_CLEAR };
+}
+export function onDeleteComponentLayout(data) {
+  // delete in component, layout
+  return { type: CALCULET_EDITOR_COMPONENT_DELETE, data };
+}
+// layout
+export function onUpdateLayout(data) {
+  return { type: CALCULET_EDITOR_LAYOUT_UPDATE, data };
+}
+// user function
+export function onUpdateUserFunction(data) {
+  return { type: CALCULET_EDITOR_USER_FUNCTION_UPDATE, data };
+}
+// all update at the same time
+export function onUpdateUserComponent(data) {
+  return { type: CALCULET_EDITOR_USER_COMPONENT_UPDATE, data };
 }
 
 /**
@@ -121,9 +152,17 @@ function calculetEditor(state = initialState, action) {
           [data.componentId]: createNewComponent(data),
         },
       };
-    case CALCULET_EDITOR_COMPONENTS_DELETE:
-      const { [data.componentId]: target, ...rest } = state;
-      return { ...state, components: rest };
+    case CALCULET_EDITOR_COMPONENT_DELETE:
+      // comp
+      const { [data.componentId]: target, ...compRest } = state.components;
+      // layout
+      let layout = [...state.layout];
+      const deleteLayoutIdx = layout.findIndex(
+        (value) => value.i === data.componentId
+      );
+      layout.splice(deleteLayoutIdx, 1);
+      // console.log("layout>>>", layout);
+      return { ...state, components: compRest, layout: layout };
     case CALCULET_EDITOR_COMPONENTS_UPDATE:
       return {
         ...state,
@@ -134,6 +173,25 @@ function calculetEditor(state = initialState, action) {
             [data.targetId]: data.value,
           },
         },
+      };
+    case CALCULET_EDITOR_COMPONENTS_CLEAR:
+      return { ...state, components: {}, layout: [] };
+    case CALCULET_EDITOR_LAYOUT_UPDATE:
+      return {
+        ...state,
+        layout: data,
+      };
+    case CALCULET_EDITOR_USER_FUNCTION_UPDATE:
+      return {
+        ...state,
+        userFunction: data,
+      };
+    case CALCULET_EDITOR_USER_COMPONENT_UPDATE:
+      return {
+        ...state,
+        components: data.components,
+        layout: data.layout,
+        userFunction: data.userFunction,
       };
 
     default:

@@ -20,6 +20,11 @@ import {
   CALCULET_BUTTON,
   INPUT_HELPER,
 } from "../../../constants/calculetComponent";
+import {
+  MyReactGridLayout,
+  getStyle,
+  reactGridLayout,
+} from "../common/GridLayout";
 
 const Wrapper = styled.div`
   display: flex;
@@ -202,7 +207,12 @@ function CalculetV1({ calculetId, srcCode, isPreview }) {
   );
 
   return (
-    <>
+    <MyReactGridLayout
+      {...reactGridLayout}
+      layout={srcCode.layout}
+      isDraggable={false}
+      isResizable={false}
+    >
       {isLoading && <CalculetSkeleton />}
       {!isLoading &&
         Object.entries(srcCode.components).map(([id, data]) => {
@@ -210,8 +220,11 @@ function CalculetV1({ calculetId, srcCode, isPreview }) {
           const { defaultValue, ...rest } = data;
           if (rest.componentType === CALCULET_BUTTON) {
             rest.onClick = () => calculate(calculetInputOutput);
-
-            return <Transformer id={id} data={rest} key={id} />;
+            return (
+              <div key={id} id={id} style={getStyle(rest.componentType)}>
+                <Transformer id={id} data={rest} />
+              </div>
+            );
           }
 
           rest.value = calculetInputOutput[id];
@@ -234,7 +247,7 @@ function CalculetV1({ calculetId, srcCode, isPreview }) {
             />
           );
         })}
-    </>
+    </MyReactGridLayout>
   );
 }
 
@@ -268,54 +281,6 @@ function CalculetBlock({
   isPreview = false,
   type,
 }) {
-  type = 1;
-  srcCode = JSON.stringify({
-    components: {
-      "6f84f38d-a34f-468e-93e4-0d480318bc2f": {
-        componentId: "6f84f38d-a34f-468e-93e4-0d480318bc2f",
-        componentType: "multiCheckbox",
-        id: "a",
-        label: "체크박스",
-        required: false,
-        disabled: false,
-        options: {
-          0: {
-            value: "tomato",
-            label: "토마토",
-          },
-          1: {
-            value: "apple",
-            label: "사과",
-          },
-        },
-        isInput: true,
-      },
-
-      "1b9ca15f-312d-4103-bcc6-e7b4298429fc": {
-        componentId: "1b9ca15f-312d-4103-bcc6-e7b4298429fc",
-        componentType: "textField",
-        id: "result",
-        label: "결과",
-        required: false,
-        disabled: false,
-        isInput: false,
-        isOutput: true,
-        copyButton: false,
-        type: "text",
-        placeholder: "",
-        defaultValue: "",
-      },
-      "button": {
-        componentId: "button",
-        componentType: "calculetButton",
-      },
-    },
-    userFunction: `
-     function main(inputObj){
-      // console.log("???")
-      return {result: Object.keys(inputObj.a).filter(x=>inputObj.a[x]).join(', ')};
-    }`,
-  });
   return (
     <Wrapper>
       <CalculetRouter

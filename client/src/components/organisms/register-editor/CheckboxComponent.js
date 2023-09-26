@@ -1,10 +1,19 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
 
 function CheckboxComponent(props) {
+  const { isProp, ...prop } = props;
+
   return (
     <FormControlLabel
-      {...props}
-      control={<Checkbox checked={Boolean(props.value)} />}
+      {...prop}
+      control={
+        <Checkbox
+          {...prop}
+          checked={Boolean(prop.value)}
+          size={isProp ? "small" : "medium"}
+        />
+      }
+      label={prop.label}
     />
   );
 }

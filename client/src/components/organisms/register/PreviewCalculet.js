@@ -1,8 +1,5 @@
-import { Button, Divider, Typography } from "@mui/material";
 import CalculetBlock from "../calculet-block/CalculetBlock";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CalculetHeader from "../calculet-block/CalculetHeader";
-import useSx from "../../../hooks/useSx";
 
 /**
  * 계산기 미리보기
@@ -19,11 +16,8 @@ function PreviewCalculet({
   profileImgSrc,
   srcCode,
   manual,
-  handleIsPreview,
-  isPreview,
+  type,
 }) {
-  const { subTitleSx } = useSx();
-
   const calculetObj = {
     statistics: {
       bookmark: 0,
@@ -43,24 +37,15 @@ function PreviewCalculet({
     },
     title: title,
   };
+
   return (
     <>
-      <Button
-        sx={{ maxWidth: "fit-content" }}
-        startIcon={<ArrowBackIcon />}
-        onClick={handleIsPreview}
-        size="large"
-      >
-        <Typography sx={{ ...subTitleSx }}>편집 하기</Typography>
-      </Button>
-
-      <Divider />
       <CalculetHeader
+        isPreview
         // 계산기 블록 정보 & 팝업창 정보
         calculetObj={calculetObj}
-        isPreview={true}
       />
-      <CalculetBlock srcCode={srcCode} manual={manual} isPreview={isPreview} />
+      <CalculetBlock isPreview srcCode={srcCode} manual={manual} type={type} />
     </>
   );
 }

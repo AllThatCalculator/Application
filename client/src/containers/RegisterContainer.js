@@ -1,19 +1,23 @@
-import { useSelector } from "react-redux";
-import usePage from "../hooks/usePage";
-import useSnackbar from "../hooks/useSnackbar";
-import Register from "../pages/Register";
 import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { validateAllComponents } from "../components/organisms/register-editor/validateComponentProperties";
+import { onUpdateUserComponent } from "../modules/calculetEditor";
+import { ID_MAIN_CONVERTER } from "../constants/calculetList";
+import useSnackbar from "../hooks/useSnackbar";
+import useSelects from "../hooks/useSelects";
+import useInputs from "../hooks/useInputs";
+import Register from "../pages/Register";
+import usePage from "../hooks/usePage";
 import {
   changeCategoryMain,
   changeCategorySub,
 } from "../utils/changeCategorySelect";
-import useInputs from "../hooks/useInputs";
-import useSelects from "../hooks/useSelects";
 import {
   ID_INPUT_TITLE,
   ID_INPUT_DESCRIPTION,
   ID_INPUT_CATEGORY_MAIN_ID,
   ID_INPUT_CATEGORY_SUB_ID,
+  DEFAULT_VALUE_INPUT_SRC_CODE,
 } from "../constants/register";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import {
@@ -21,71 +25,85 @@ import {
   handleGetMyCalculet,
   handlePostCalculet,
 } from "../utils/handleUserActions";
-import { ID_MAIN_CONVERTER } from "../constants/calculetList";
 
 /**
  * 수정 페이지에서 useEffect로 calculet을 가져올 때 리렌더링 현상이 심함
  * -> cnt를 정해서 1번만 불러오도록 하기 위해 변수 선언
  */
-let isloadedCalculet = false;
+// let isloadedCalculet = false;
 
 function RegisterContainer() {
   const { loginPage, myCalculetPage } = usePage();
   const { openSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
+  const [isloadedCalculet, setIsloadedCalculet] = useState(false);
 
   /**
    * 현재 url에서 저작한 계산기 id 뽑아 내기 => 계산기 저작 || 수정 구분을 위해
    */
   const { id, blockedUrlId } = useGetUrlParam();
 
-  function isEditMode() {
-    // 수정 하기 모드인지
-    return id !== undefined;
-  }
-  function getRegisterPageTitle() {
-    // 저작 or 수정 페이지 제목
-    return isEditMode() ? "수정" : "저작";
-  }
+  // 수정 하기 모드인지
+  const isEditMode = id !== undefined;
 
-  const { idToken, userInfo } = useSelector((state) => ({
+  // 저작 or 수정 페이지 제목
+  const registerPageTitle = isEditMode ? "수정" : "저작";
+
+  const {
+    idToken,
+    userInfo,
+    components: userEditorComp,
+  } = useSelector((state) => ({
     idToken: state.userInfo.idToken,
     userInfo: state.userInfo,
+    // components
+    components: state.calculetEditor,
+    // layout
   }));
 
+  // console.log("userEditorComp >>", userEditorComp);
   // 계산기 수정에서 보낼 type
-  const [calculetType, setCalceultType] = useState(null);
+  const [calculetType, setCalceultType] = useState(1);
 
   // inputs handle
   const {
-    values: registerInputs,
+    values: { inputTitle, inputDescription, inputUpdateLog },
     onChange: onChangeRegisterInputs,
     onSetValues: onSetRegisterInputs,
   } = useInputs({
     inputTitle: "",
     inputDescription: "",
-    inputUpdate: "", // 업데이트 내용
+    inputUpdateLog: "", // 업데이트 내용
   });
 
-  const { inputTitle, inputDescription, inputUpdate } = registerInputs;
-
   const {
-    values: registerSelects,
+    values: { inputCategoryMainId, inputCategorySubId },
     onSetValue: setRegisterSelect,
     onSetValues: setRegisterSelects,
   } = useSelects({
     inputCategoryMainId: "",
     inputCategorySubId: "",
   });
-  const { inputCategoryMainId, inputCategorySubId } = registerSelects;
 
-  const [srcCode, setSrcCode] = useState(
-    `<!DOCTYPE html>\n<html lang="ko">\n<head>\n  <meta charset="UTF-8">\n  <title>계산기 이름</title>\n</head>\n<body>\n  <h1>본인이 구현한 계산기 코드를 작성해주세요.</h1>\n  <input id="input" type="text" class="atc-input atc-calculet-input" atcDesc="입력" value="입력 예시"/>\n  <div id="output" class="atc-output atc-calculet-output" atcDesc="결과">결과 예시</div>\n  <button id="button" class="atc-button">버튼 예시</button>\n</body>\n</html>`
+  // 계산기 만들기
+  // type 0
+  const [srcCode, setSrcCode] = useState(DEFAULT_VALUE_INPUT_SRC_CODE);
+  // type 1
+  // redux) 계산 함수 입력 초기화 이벤트
+  const onInitUserFunction = useCallback(
+    (value) => {
+      dispatch(onUpdateUserComponent(value));
+    },
+    [dispatch]
   );
 
-  // const [srcCode, setSrcCode] = useState(`<!DOCTYPE html>`);
-  const [manual, setManual] = useState(
-    "# 계산기 이름\n본인이 구현한 계산기에 대한 설명을 작성해주세요."
-  );
+  // 설명 입력하기
+  const [manual, setManual] = useState("");
+  // set manual CKEditor
+  function onChangeManual(event, editor) {
+    const data = editor.getData();
+    setManual(data);
+  }
 
   function handleChangeCategoryMain(event) {
     // 대분류 타겟 value 값
@@ -104,19 +122,32 @@ function RegisterContainer() {
     setPreview((prev) => !prev);
   }
 
+  // 속성이 유효한지 확인하는 함수
+  // const invalidComponentOption = useCallback(() => {
+  //   for (const key in userEditorComp) {
+  //     console.log(
+  //       userEditorComp[key].id,
+  //       validateOneComponent(userEditorComp, userEditorComp[key])
+  //     );
+  //   }
+  //   console.log("all", validateAllComponents(userEditorComp));
+  // }, [userEditorComp]);
+
+  // 계산기 등록
   async function registerCalculet() {
     if (!idToken) {
       loginPage();
       return;
     }
-
+    // inputs check
     if (
       !inputTitle ||
       !inputDescription ||
       !inputCategoryMainId ||
       (inputCategorySubId !== Number(ID_MAIN_CONVERTER) &&
         !inputCategorySubId) ||
-      (isEditMode() && !inputUpdate)
+      (isEditMode && !inputUpdateLog) ||
+      !validateAllComponents(userEditorComp.components)
     ) {
       openSnackbar(
         "error",
@@ -131,22 +162,23 @@ function RegisterContainer() {
 
     let body = {
       title: inputTitle,
-      srcCode: srcCode,
+      srcCode: JSON.stringify(userEditorComp),
       manual: manual,
       description: inputDescription,
       categoryMainId: inputCategoryMainId,
       categorySubId: inputCategorySubId,
+      type: calculetType,
     };
 
     let response = false;
     //-------------- (1) 저작하기 ----------------
-    if (!isEditMode()) {
+    if (!isEditMode) {
       response = await handlePostCalculet(idToken, body);
     }
     //-------------- (2) 수정하기 ----------------
     else {
       body = {
-        updateMessage: inputUpdate,
+        updateMessage: inputUpdateLog,
         calculetInfo: {
           id: id,
           type: calculetType,
@@ -164,7 +196,7 @@ function RegisterContainer() {
       openSnackbar(
         "success",
         `성공적으로 ${
-          isEditMode() ? "수정" : "임시 등록"
+          isEditMode ? "수정" : "임시 등록"
         }되었습니다. 공개 여부는 마이 계산기에서 확인할 수 있습니다.`,
         true,
         "top",
@@ -176,7 +208,7 @@ function RegisterContainer() {
       openSnackbar(
         "error",
         `계산기 ${
-          isEditMode() ? "수정" : "임시 등록"
+          isEditMode ? "수정" : "임시 등록"
         }에 실패했습니다. 다시 시도해 주세요.`,
         true,
         "top",
@@ -189,7 +221,7 @@ function RegisterContainer() {
   //-------------- (2) 수정하기 : id를 통해 calculet info 받아오고 값 채워넣기 ----------------
   const [isLoading, setIsLoading] = useState(true);
   const getMyCalculetWithId = useCallback(async () => {
-    await setIsLoading(true);
+    setIsLoading(true);
     /** get param */
     let params = {
       calculetId: id,
@@ -208,42 +240,79 @@ function RegisterContainer() {
       type,
     } = response;
 
+    // type : 0인 경우, 수정 못 하도록 뒤로가기, 스낵바 띄우기
+    if (type === 0) {
+      openSnackbar(
+        "error",
+        "편집할 수 없는 계산기입니다.",
+        true,
+        "top",
+        "center",
+        2400 // 지속시간
+      );
+      window.history.back();
+      return;
+    }
+
     // type
-    await setCalceultType(type);
+    setCalceultType(type);
 
     // 이름, 요약 설명
-    await onSetRegisterInputs([
+    onSetRegisterInputs([
       { id: ID_INPUT_TITLE, value: title },
       { id: ID_INPUT_DESCRIPTION, value: description },
     ]);
 
     // 대분류, 소분류
-    await setRegisterSelects([
+    setRegisterSelects([
       { name: ID_INPUT_CATEGORY_MAIN_ID, value: categoryMainId },
       { name: ID_INPUT_CATEGORY_SUB_ID, value: categorySubId },
     ]);
 
     // 계산기 코드
-    await setSrcCode(srcCode);
-    // 계산기 설명
-    await setManual(manual);
+    if (type === 0) {
+      setSrcCode(srcCode);
+    } else if (type === 1) {
+      const srcCodeObj = JSON.parse(srcCode);
+      onInitUserFunction({
+        components: srcCodeObj.components,
+        layout: srcCodeObj.layout,
+        userFunction: srcCodeObj.userFunction,
+      });
+    }
 
-    await setIsLoading(false);
-  }, [blockedUrlId, id, idToken, onSetRegisterInputs, setRegisterSelects]);
+    // 계산기 설명
+    setManual(manual);
+
+    setIsLoading(false);
+  }, [
+    blockedUrlId,
+    id,
+    idToken,
+    onSetRegisterInputs,
+    setRegisterSelects,
+    onInitUserFunction,
+    openSnackbar,
+  ]);
 
   useEffect(() => {
     if (id !== undefined && !isloadedCalculet) {
+      setIsloadedCalculet(true);
       // Id 있으면 수정, 없으면 등록
       getMyCalculetWithId();
-      isloadedCalculet = true;
     }
-  }, [id, getMyCalculetWithId]);
+  }, [id, isloadedCalculet, getMyCalculetWithId]);
+
+  // type 에 따른 소스코드
+  const typeSrcCode =
+    calculetType === 0 ? srcCode : calculetType === 1 ? userEditorComp : "";
 
   return (
     <Register
-      isEditMode={isEditMode()}
-      isLoading={isEditMode() ? isLoading : false}
-      getRegisterPageTitle={getRegisterPageTitle}
+      isLoading={isEditMode ? isLoading : false}
+      isEditMode={isEditMode}
+      // isLoading={isEditMode ? isLoading : false}
+      registerPageTitle={registerPageTitle}
       //
       isPreview={isPreview}
       handleIsPreview={handleIsPreview}
@@ -255,16 +324,16 @@ function RegisterContainer() {
       onChangeInputs={onChangeRegisterInputs}
       onChangeCategoryMain={handleChangeCategoryMain}
       onChangeCategorySub={handleChangeCategorySub}
+      type={calculetType}
       //
-      srcCode={srcCode}
+      srcCode={typeSrcCode}
       manual={manual}
-      setSrcCode={setSrcCode}
-      setManual={setManual}
+      onChangeManual={onChangeManual}
       //
       userInfo={userInfo}
       registerCalculet={registerCalculet}
       //
-      inputUpdate={inputUpdate}
+      updateLog={inputUpdateLog}
     />
   );
 }

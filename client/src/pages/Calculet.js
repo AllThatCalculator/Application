@@ -14,7 +14,7 @@ import UploadIcon from "@mui/icons-material/Upload";
 import usePage from "../hooks/usePage";
 import getCalculetUpdateLog from "../user-actions/calculets/getCalculetUpdateLog";
 import getUserIdToken from "../utils/getUserIdToken";
-import PageScreenBottom from "../components/organisms/common/PageScreenBottom";
+import { CalculetPageScreenBottom } from "../components/organisms/common/PageScreenBottom";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 
 async function handleGetCalculetInfo(id, setCalculetObj) {
@@ -126,7 +126,7 @@ function Calculet() {
               />
             </PageScreenBox>
           </Grid>
-          <PageScreenBottom
+          <CalculetPageScreenBottom
             helpText="자신만의 계산기를 만드세요!"
             buttonText="계산기 등록"
             handleButton={registerPage}
