@@ -30,12 +30,13 @@ import {
  * 수정 페이지에서 useEffect로 calculet을 가져올 때 리렌더링 현상이 심함
  * -> cnt를 정해서 1번만 불러오도록 하기 위해 변수 선언
  */
-let isloadedCalculet = false;
+// let isloadedCalculet = false;
 
 function RegisterContainer() {
   const { loginPage, myCalculetPage } = usePage();
   const { openSnackbar } = useSnackbar();
   const dispatch = useDispatch();
+  const [isloadedCalculet, setIsloadedCalculet] = useState(false);
 
   /**
    * 현재 url에서 저작한 계산기 id 뽑아 내기 => 계산기 저작 || 수정 구분을 위해
@@ -220,7 +221,7 @@ function RegisterContainer() {
   //-------------- (2) 수정하기 : id를 통해 calculet info 받아오고 값 채워넣기 ----------------
   const [isLoading, setIsLoading] = useState(true);
   const getMyCalculetWithId = useCallback(async () => {
-    await setIsLoading(true);
+    setIsLoading(true);
     /** get param */
     let params = {
       calculetId: id,
@@ -239,27 +240,41 @@ function RegisterContainer() {
       type,
     } = response;
 
+    // type : 0인 경우, 수정 못 하도록 뒤로가기, 스낵바 띄우기
+    if (type === 0) {
+      openSnackbar(
+        "error",
+        "편집할 수 없는 계산기입니다.",
+        true,
+        "top",
+        "center",
+        2400 // 지속시간
+      );
+      window.history.back();
+      return;
+    }
+
     // type
-    await setCalceultType(type);
+    setCalceultType(type);
 
     // 이름, 요약 설명
-    await onSetRegisterInputs([
+    onSetRegisterInputs([
       { id: ID_INPUT_TITLE, value: title },
       { id: ID_INPUT_DESCRIPTION, value: description },
     ]);
 
     // 대분류, 소분류
-    await setRegisterSelects([
+    setRegisterSelects([
       { name: ID_INPUT_CATEGORY_MAIN_ID, value: categoryMainId },
       { name: ID_INPUT_CATEGORY_SUB_ID, value: categorySubId },
     ]);
 
     // 계산기 코드
     if (type === 0) {
-      await setSrcCode(srcCode);
+      setSrcCode(srcCode);
     } else if (type === 1) {
       const srcCodeObj = JSON.parse(srcCode);
-      await onInitUserFunction({
+      onInitUserFunction({
         components: srcCodeObj.components,
         layout: srcCodeObj.layout,
         userFunction: srcCodeObj.userFunction,
@@ -267,9 +282,9 @@ function RegisterContainer() {
     }
 
     // 계산기 설명
-    await setManual(manual);
+    setManual(manual);
 
-    await setIsLoading(false);
+    setIsLoading(false);
   }, [
     blockedUrlId,
     id,
@@ -277,15 +292,16 @@ function RegisterContainer() {
     onSetRegisterInputs,
     setRegisterSelects,
     onInitUserFunction,
+    openSnackbar,
   ]);
 
   useEffect(() => {
     if (id !== undefined && !isloadedCalculet) {
+      setIsloadedCalculet(true);
       // Id 있으면 수정, 없으면 등록
       getMyCalculetWithId();
-      isloadedCalculet = true;
     }
-  }, [id, getMyCalculetWithId]);
+  }, [id, isloadedCalculet, getMyCalculetWithId]);
 
   // type 에 따른 소스코드
   const typeSrcCode =
