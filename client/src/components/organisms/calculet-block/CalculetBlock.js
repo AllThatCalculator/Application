@@ -88,6 +88,9 @@ function CalculetV1({ calculetId, srcCode, isPreview }) {
   const calculetInputOutput = useSelector((state) => state.calculetInputOutput);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  if (!isPreview) {
+    srcCode = JSON.parse(srcCode);
+  }
 
   const userFunction =
     // eslint-disable-next-line
@@ -261,7 +264,7 @@ function CalculetRouter(props) {
     case 0:
       return <CalculetV0 {...info} />;
     case 1:
-      return <CalculetV1 {...info} srcCode={JSON.parse(props.srcCode)} />;
+      return <CalculetV1 {...info} />;
     default:
       return <></>;
   }
