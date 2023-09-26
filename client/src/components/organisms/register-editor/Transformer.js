@@ -46,11 +46,24 @@ function Transformer({ data, updateValue }) {
     ...properties
   } = data;
 
-  if (!value) {
+  if (value === undefined) {
     if (defaultValue === undefined) {
       defaultValue = "";
     }
     value = defaultValue;
+
+    switch (componentType) {
+      case MULTI_CHECK_BOX: // multi check box일 경우, 모든 옵션에 대한 value값을 false로 초기화
+        for (const key in properties.options) {
+          value = {
+            ...value,
+            [properties.options[key].value]: false,
+          };
+        }
+        break;
+      default:
+        break;
+    }
   }
   properties.value = value;
 
@@ -69,7 +82,7 @@ function Transformer({ data, updateValue }) {
             break;
           case DATE_PICKER:
           case PROPERTY_TYPE_DATE:
-            updateValue(e);
+            updateValue(e.format("YYYY-MM-DD"));
             break;
           case CHECK_BOX:
           case PROPERTY_TYPE_BOOLEAN:

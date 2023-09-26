@@ -21,14 +21,17 @@ function validateOneComponent(components, inputs) {
       return false;
     }
     if (
-      // 글자 수 제한 있는 컴포넌트가 길이를 넘었다면
+      // 글자 수 제한 있는 속성이 길이를 넘었다면
       Object.keys(TEXT_LIMIT).includes(key) &&
       !validateCharacterLimit(String(inputs[key]), TEXT_LIMIT[key])
     ) {
       return false;
     }
   }
-
+  // isInput or isOutput 속성 확인
+  if (!inputs.isInput && !inputs.isOutput) {
+    return false;
+  }
   // 변수명이 존재한다면
   if (
     properties.id &&
@@ -36,6 +39,7 @@ function validateOneComponent(components, inputs) {
   ) {
     return false;
   }
+  // 옵션이 있는 컴포넌트라면 옵션 value 중복 확인
   if (inputs.options) {
     for (const key in inputs.options) {
       if (
@@ -117,5 +121,6 @@ export {
   validateAllComponents,
   validateCharacterLimit,
   validateDuplicatedId,
+  validateDuplicateOptionValue,
   validateExistCalculetButton,
 };
