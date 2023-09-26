@@ -88,9 +88,6 @@ function CalculetV1({ calculetId, srcCode, isPreview }) {
   const calculetInputOutput = useSelector((state) => state.calculetInputOutput);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
-  if (!isPreview) {
-    srcCode = JSON.parse(srcCode);
-  }
 
   const userFunction =
     // eslint-disable-next-line
@@ -242,12 +239,9 @@ function CalculetV1({ calculetId, srcCode, isPreview }) {
           };
 
           return (
-            <Transformer
-              id={id}
-              data={rest}
-              key={id}
-              updateValue={updateValue}
-            />
+            <div key={id} id={id} style={getStyle(rest.componentType)}>
+              <Transformer id={id} data={rest} updateValue={updateValue} />
+            </div>
           );
         })}
     </MyReactGridLayout>
@@ -260,11 +254,17 @@ function CalculetV1({ calculetId, srcCode, isPreview }) {
  */
 function CalculetRouter(props) {
   const { type, ...info } = props;
+
   switch (type) {
     case 0:
       return <CalculetV0 {...info} />;
     case 1:
-      return <CalculetV1 {...info} />;
+      let parsedSrcCode = props.isPreview
+        ? props.srcCode
+        : JSON.parse(props.srcCode);
+
+      console.log(props);
+      return <CalculetV1 {...info} srcCode={parsedSrcCode} />;
     default:
       return <></>;
   }
