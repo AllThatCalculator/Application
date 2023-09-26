@@ -90,16 +90,14 @@ export function onUpdateUserComponent(data) {
  */
 function createNewComponent(data) {
   const newComponent = { ...data };
-  Object.entries({ ...Common, ...Components[data.componentType] }).map(
-    ([key, value]) => {
-      if (value.defaultValue !== undefined) {
-        newComponent[key] = value.defaultValue;
-      } else {
-        newComponent[key] = null;
-      }
-      return null;
+  Object.entries({ ...Components[data.componentType] }).map(([key, value]) => {
+    if (value.defaultValue !== undefined) {
+      newComponent[key] = value.defaultValue;
+    } else {
+      newComponent[key] = null;
     }
-  );
+    return null;
+  });
 
   if (newComponent.options) {
     newComponent.options = {
