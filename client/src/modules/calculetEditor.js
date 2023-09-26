@@ -4,10 +4,7 @@
  * 다른 모듈과 이름이 중복되지 않게 하기 위함.
  */
 
-import {
-  Common,
-  Components,
-} from "../components/organisms/register-editor/ComponentOptions";
+import { Components } from "../components/organisms/register-editor/ComponentOptions";
 import {
   CALCULET_BUTTON,
   CHECK_BOX,
