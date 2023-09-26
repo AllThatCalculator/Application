@@ -89,25 +89,30 @@ function CalculetV1({ calculetId, srcCode, isPreview }) {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
 
-  const userFunction =
-    // eslint-disable-next-line
-    Function(
-      "temp",
-      "inputObj",
-      // preview가 아닌 경우 -> 콘솔 객체 덮어 씌우기
-      (isPreview
-        ? ""
-        : `const console = temp.reduce((obj, key) => {
-        obj[key] = function(){};
-        return obj;
-      }, {})
-      delete temp;
-      `) +
-        // override document
-        `;const document = null;` +
-        srcCode.userFunction +
-        `;return main(inputObj);`
-    );
+  let userFunction;
+  try {
+    userFunction =
+      // eslint-disable-next-line
+      Function(
+        "temp",
+        "inputObj",
+        // preview가 아닌 경우 -> 콘솔 객체 덮어 씌우기
+        (isPreview
+          ? ""
+          : `const console = temp.reduce((obj, key) => {
+          obj[key] = function(){};
+          return obj;
+        }, {})
+        delete temp;
+        `) +
+          // override document
+          `;const document = null;` +
+          srcCode.userFunction +
+          `;return main(inputObj);`
+      );
+  } catch (error) {
+    userFunction = () => ({});
+  }
 
   useEffect(() => {
     // 계산 기록 위한 calculetObj 초기화
@@ -265,8 +270,6 @@ function CalculetRouter(props) {
       let parsedSrcCode = props.isPreview
         ? props.srcCode
         : JSON.parse(props.srcCode);
-
-      console.log(props);
       return <CalculetV1 {...info} srcCode={parsedSrcCode} />;
     default:
       return <></>;
