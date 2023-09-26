@@ -138,7 +138,7 @@ function EnhancedTableHead(props) {
 
   return (
     <>
-      {!!calculetObj.labelDict && (
+      {!!calculetObj.idToLabel && (
         <TableHead>
           <TableRow>
             <TableCell
@@ -180,7 +180,7 @@ function EnhancedTableHead(props) {
                   <TableHeadCellBox
                     key={data}
                     headCell={data}
-                    label={calculetObj.labelDict[data]}
+                    label={calculetObj.idToLabel[data]}
                     align="left"
                   />
                 ))
@@ -193,7 +193,7 @@ function EnhancedTableHead(props) {
                   <TableHeadCellBox
                     key={data}
                     headCell={data}
-                    label={calculetObj.labelDict[data]}
+                    label={calculetObj.idToLabel[data]}
                     align="right"
                   />
                 ))
@@ -549,6 +549,14 @@ function RecordCalculetHistory({ calculetId, isPreview, type }) {
     );
   }
 
+  // 기록된 데이터에 대해 가공
+  function processData(value) {
+    if (typeof value === "boolean") {
+      return value ? "✓" : "";
+    }
+    return value;
+  }
+
   // 저장할 계산 내역이 남았는데, 페이지 나가려고 할 때 주의문
   useEffect(() => {
     if (cellRecentDatas.length > 0) {
@@ -648,7 +656,7 @@ function RecordCalculetHistory({ calculetId, isPreview, type }) {
                                   isBold={isItemRecentData}
                                   align="left"
                                 >
-                                  {row.inputObj[id]}
+                                  {processData(row.inputObj[id])}
                                 </FitTableCell>
                               ))}
                             {calculetObj.outputObj &&
@@ -658,7 +666,7 @@ function RecordCalculetHistory({ calculetId, isPreview, type }) {
                                   isBold={isItemRecentData}
                                   align="right"
                                 >
-                                  {row.outputObj[id]}
+                                  {processData(row.outputObj[id])}
                                 </FitTableCell>
                               ))}
                           </TableRow>

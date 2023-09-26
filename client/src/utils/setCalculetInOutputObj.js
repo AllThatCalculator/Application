@@ -14,7 +14,7 @@ function approachIframeTag(className, objectName) {
 
   const calculetObj = {
     [objectName]: [], // id 목록
-    labelDict: {}, // id를 키로, description을 수집한다.
+    idToLabel: {}, // id를 키로, description을 수집한다.
   };
 
   for (const element of iframe.querySelectorAll(`.${className}`)) {
@@ -23,7 +23,7 @@ function approachIframeTag(className, objectName) {
       element.id = uuidv4();
     }
     calculetObj[objectName].push(element.id);
-    calculetObj.labelDict[element.id] = element.attributes.atcDesc.value;
+    calculetObj.idToLabel[element.id] = element.attributes.atcDesc.value;
   }
 
   return calculetObj;
@@ -33,14 +33,14 @@ function approachIframeTag(className, objectName) {
  * 계산기 정보 초기화
  * - inputObj: input tag의 id 목록
  * - outputObj: output tag의 id 목록
- * - labelDict: id - description 매핑 정보
+ * - idToLabel: id - description 매핑 정보
  */
 function setCalculetInOutputObj() {
-  const { inputObj, labelDict: labelDictIn } = approachIframeTag(
+  const { inputObj, idToLabel: idToLabelIn } = approachIframeTag(
     KEY_INPUT,
     "inputObj"
   );
-  const { outputObj, labelDict: labelDictOut } = approachIframeTag(
+  const { outputObj, idToLabel: idToLabelOut } = approachIframeTag(
     KEY_OUTPUT,
     "outputObj"
   );
@@ -48,7 +48,7 @@ function setCalculetInOutputObj() {
   return {
     inputObj,
     outputObj,
-    labelDict: { ...labelDictIn, ...labelDictOut },
+    idToLabel: { ...idToLabelIn, ...idToLabelOut },
   };
 }
 
