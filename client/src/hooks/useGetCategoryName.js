@@ -1,7 +1,5 @@
 import { useSelector } from "react-redux";
 
-const KEY_UNIT = "단위 변환기";
-
 function useGetCategoryName() {
   // calculet category json
   const { calculetCategory } = useSelector((state) => ({
@@ -9,13 +7,17 @@ function useGetCategoryName() {
   }));
 
   // get main category name
-  function getCategoryMainName(categoryId) {
-    if (categoryId === 0) return KEY_UNIT; // 0 (단위 변환기)
+  function getCategoryMainName(id) {
+    const categoryId = Number(id);
+
+    // if (categoryId === 0) return NAME_MAIN_CONVERTER; // 0 (단위 변환기)
     return calculetCategory[categoryId].name;
   }
 
   // get sub category name
-  function getCategorySubName(mainId, subId) {
+  function getCategorySubName(main, sub) {
+    const mainId = Number(main);
+    const subId = Number(sub);
     if (mainId === 0) return getCategoryMainName(subId); // 0 (단위 변환기) => subId가 mainId
     return calculetCategory[mainId][subId];
   }

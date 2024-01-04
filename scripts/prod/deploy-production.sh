@@ -1,7 +1,8 @@
 #!/bin/bash
 
+docker system prune -af
 # unzip frontend build file
-git pull
+git pull origin production
 sudo tar -xzvf ./client/build.tar.gz -C ./client/
 
 IS_BLUE_RUNNING=$(docker ps | grep api_blue)
@@ -45,4 +46,4 @@ docker compose -f ./docker-compose.prod.yml stop $CONTAINER_B
 
 # clear unusing docker
 docker image prune -af
-docker system prune -f
+docker system prune -af

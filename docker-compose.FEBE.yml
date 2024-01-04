@@ -11,13 +11,12 @@ services:
     volumes:
       - /client/node_modules
       - ./client/:/client
-    networks:
-      - app-tier
     tty: true
+    ports:
+      - 3000:3000
     restart: always
     depends_on:
       - backend
-
   nginx:
     container_name: nginx
     build: ./nginx
@@ -29,8 +28,6 @@ services:
     depends_on:
       - frontend
       - backend
-    networks:
-      - app-tier
     restart: always
     command: ["/scripts/auto-reload-nginx.sh"]
 
@@ -43,10 +40,4 @@ services:
     volumes:
       - /server/node_modules
       - ./server/:/server
-    networks:
-      - app-tier
     restart: always
-
-networks:
-  app-tier:
-    driver: bridge

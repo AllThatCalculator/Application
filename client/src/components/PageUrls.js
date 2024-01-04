@@ -11,6 +11,9 @@ const URL = {
   // 계산기 저작
   REGISTER: "/register",
 
+  // 계산기 저작 테스트 페이지
+  REGISTER_TEST: "/register-test",
+
   // 검색 리스트
   SEARCH: "/search",
 
@@ -29,6 +32,9 @@ const URL = {
   // 설정
   SETTING: "/setting",
 
+  // 마이 계산기
+  MY_CALCULET: "/my-calculet",
+
   // 회원탈퇴 완료 페이지
   DELETE_COMPLETE: "/delete-complete",
 
@@ -40,9 +46,14 @@ const URL = {
   CATEGORY_MAIN_ID: "categoryMain",
   CATEGORY_SUB_ID: "categorySub",
   LEN_ID: "len",
+  TARGET_ID: "target",
   /** 설정 id */
   MENU_ID: "menu", // :menu
   ACCOUNT_ID: "account", // 계정
   PASSWORD_ID: "password", // 비밀번호 변경
+  /** uuid */
+  USERUID_ID: "who", // uuid
+  // blocked
+  BLOCKED_ID: "blocked",
 };
 export default URL;

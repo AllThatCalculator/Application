@@ -1,6 +1,7 @@
 #!/bin/bash
 
-git pull
+docker system prune -af
+git pull origin develop
 
 IS_BLUE_RUNNING=$(docker ps | grep api_blue)
 NGINX_CONFIG_FILE="./nginx/nginx.dev-server/green-blue.conf"
@@ -43,4 +44,4 @@ docker compose -f ./docker-compose.dev-server.yml stop $CONTAINER_B
 
 # clear unusing docker
 docker image prune -af
-docker system prune -f
+docker system prune -af

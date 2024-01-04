@@ -3,32 +3,32 @@ import { Divider, Grid, Pagination, Typography } from "@mui/material";
 import {
   PageScreenBox,
   PageWhiteScreenBox,
-} from "../components/global-components/PageScreenBox";
-import Title from "../components/global-components/Title";
+} from "../components/organisms/common/PageScreenBox";
+import Title from "../components/organisms/common/Title";
 import useSx from "../hooks/useSx";
-import { FlexBox } from "../components/global-components/FlexBox";
+import { FlexBox } from "../components/organisms/common/FlexBox";
 import { useDispatch, useSelector } from "react-redux";
 import { onSetSearchResult, onSetSearchResultCount } from "../modules/search";
-import BoxCalculetItem from "../components/atom-components/BoxCalculetItem";
 import usePage from "../hooks/usePage";
-import BoxNoItem from "../components/atom-components/BoxNoItem";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 import getCalculetFind from "../user-actions/calculets/getCalculetFind";
 import getSearchRequestBody from "../utils/getSearchRequestBody";
-import SkeletonPage from "../components/search/SkeletonPage";
-import TotalCount from "../components/atom-components/TotalCount";
-import SearchFilter from "../components/global-components/SearchFilter";
+import SearchFilter from "../components/organisms/common/SearchFilter";
 import {
   changeCategoryMain,
   changeCategorySub,
 } from "../utils/changeCategorySelect";
+import SearchSkeletonPage from "../components/organisms/search/SearchSkeletonPage";
+import SearchCalculetList from "../components/organisms/common/SearchCalculetList";
 
 async function getCalculetResult(
   setIsLoading,
   categoryMainId,
   categorySubId,
   searchUrlId,
-  resultLimit
+  resultLimit,
+  pageNum,
+  searchTarget
 ) {
   let result;
   await setIsLoading(true);
@@ -39,7 +39,9 @@ async function getCalculetResult(
       categoryMainId,
       categorySubId,
       searchUrlId,
-      resultLimit
+      resultLimit,
+      pageNum,
+      searchTarget
     )
   ).then((res) => {
     result = res;
@@ -59,7 +61,7 @@ function Search() {
   // const SELECT_BOX_WIDTH = 132;
 
   const { subTitleSx } = useSx();
-  const { calculetIdPage, searchOptionPage } = usePage();
+  const { searchOptionPage } = usePage();
 
   const { resultList, count: resultCount } = useSelector((state) => ({
     resultList: state.search.resultList,
@@ -70,17 +72,16 @@ function Search() {
    * 현재 url에서 id 뽑아 내기
    * - searchUrlId : 검색 키워드
    */
-  let { searchUrlId, categoryMainUrlId, categorySubUrlId, lenUrlId } =
-    useGetUrlParam();
+  let {
+    searchUrlId,
+    categoryMainUrlId,
+    categorySubUrlId,
+    lenUrlId,
+    targetUrlId,
+  } = useGetUrlParam();
 
   // 로딩 상태
   const [isLoading, setIsLoading] = useState(false);
-
-  // 현재 페이지 네비
-  const [currentPage, setCurrentPage] = useState(1);
-  const handleCurrentPageChange = (event, value) => {
-    setCurrentPage(value);
-  };
 
   // 선택된 대분류, 소분류 id
   const [categoryMainId, setCategoryMainId] = useState(
@@ -94,29 +95,75 @@ function Search() {
   const [resultLimit, setResultLimit] = useState(
     lenUrlId !== null ? lenUrlId : KEY_DEFAULT_LEN
   );
+  // target (default : all)
+  const KEY_DEFAULT_TARGET = "all";
+  const [searchTarget, setSearchTarget] = useState(
+    targetUrlId !== null ? targetUrlId : KEY_DEFAULT_TARGET
+  );
 
+  // limit control
   function handleResultLimitChange(event) {
     let value = event.target.value;
     setResultLimit(value);
     // update
-    searchOptionPage(searchUrlId, categoryMainId, categorySubId, value);
+    searchOptionPage(
+      searchUrlId,
+      categoryMainId,
+      categorySubId,
+      value,
+      searchTarget
+    );
   }
 
+  // main control
   function handleChangeCategoryMain(event) {
     // 대분류 타겟 value 값
     let value = event.target.value;
     changeCategoryMain(value, setCategoryMainId, setCategorySubId);
     // update
-    searchOptionPage(searchUrlId, value, categorySubId, resultLimit);
+    searchOptionPage(
+      searchUrlId,
+      value,
+      categorySubId,
+      resultLimit,
+      searchTarget
+    );
   }
 
+  // sub control
   function handleChangeCategorySub(event) {
     // 소분류 타겟 value 값
     let value = event.target.value;
     changeCategorySub(value, setCategorySubId);
     // update
-    searchOptionPage(searchUrlId, categoryMainId, value, resultLimit);
+    searchOptionPage(
+      searchUrlId,
+      categoryMainId,
+      value,
+      resultLimit,
+      searchTarget
+    );
   }
+
+  // target control
+  function handleChangeSearchTarget(event) {
+    let value = event.target.value;
+    setSearchTarget(value);
+    // update
+    searchOptionPage(
+      searchUrlId,
+      categoryMainId,
+      categorySubId,
+      resultLimit,
+      value
+    );
+  }
+
+  // 현재 페이지 네비
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleCurrentPageChange = (event, value) => {
+    setCurrentPage(value);
+  };
 
   useEffect(() => {
     // get result
@@ -125,43 +172,22 @@ function Search() {
       categoryMainId,
       categorySubId,
       searchUrlId,
-      resultLimit
+      resultLimit,
+      currentPage,
+      searchTarget
     ).then((res) => {
       dispatch(onSetSearchResult(res.calculetList));
       dispatch(onSetSearchResultCount(res.count));
     });
-  }, [searchUrlId, categoryMainId, categorySubId, resultLimit, dispatch]);
-
-  /**
-   * 소분류 카테고리 나열
-   * @param {object} sub 소분류 카테고리 정보 (categorySub, subItems)
-   * @param {string} mainId 해당 소분류의 대분류가 '기타 : 99999' 인지 확인 & 소분류 구분하기 위한 대분류 id
-   */
-  function handleResultList() {
-    return (
-      <Grid
-        container
-        spacing={4}
-        columns={{ xs: 1, sm: 2, md: 3 }}
-        sx={{ alignContent: "stretch" }}
-      >
-        {resultList.length !== 0 ? (
-          resultList.map((calculet) => (
-            <Grid key={calculet.id} item xs={1} sm={1} md={1}>
-              <BoxCalculetItem
-                onClick={() => calculetIdPage(calculet.id)}
-                calculet={calculet}
-              />
-            </Grid>
-          ))
-        ) : (
-          <Grid item xs={1} sm={1} md={1}>
-            <BoxNoItem />
-          </Grid>
-        )}
-      </Grid>
-    );
-  }
+  }, [
+    searchUrlId,
+    categoryMainId,
+    categorySubId,
+    resultLimit,
+    currentPage,
+    searchTarget,
+    dispatch,
+  ]);
 
   return (
     <PageWhiteScreenBox>
@@ -175,29 +201,28 @@ function Search() {
             에 대한 {resultCount}개의 검색 결과
           </Typography>
         </FlexBox>
-        <Grid container sx={{ alignItems: "center" }}>
-          <Grid item xs>
-            {/* 필터된 건수 */}
-            <TotalCount length={resultCount} />
-          </Grid>
-          <Grid item>
-            {/* 필터 */}
-            <SearchFilter
-              categoryMainId={categoryMainId}
-              handleChangeCategoryMain={handleChangeCategoryMain}
-              categorySubId={categorySubId}
-              handleChangeCategorySub={handleChangeCategorySub}
-              resultLimit={resultLimit}
-              handleResultLimitChange={handleResultLimitChange}
-            />
-          </Grid>
-        </Grid>
+
+        {/* 필터 */}
+        <SearchFilter
+          searchTarget={searchTarget}
+          handleChangeSearchTarget={handleChangeSearchTarget}
+          categoryMainId={categoryMainId}
+          handleChangeCategoryMain={handleChangeCategoryMain}
+          categorySubId={categorySubId}
+          handleChangeCategorySub={handleChangeCategorySub}
+          resultLimit={resultLimit}
+          handleResultLimitChange={handleResultLimitChange}
+        />
+
         <Divider />
-        {!isLoading && handleResultList()}
-        {isLoading && <SkeletonPage />}
+        {!isLoading && <SearchCalculetList calculetList={resultList} />}
+        {isLoading && <SearchSkeletonPage />}
         <Grid container sx={{ w: 1, mt: "6.4rem", justifyContent: "center" }}>
           <Pagination
-            count={1}
+            count={
+              // 전체 0일 경우 1 || 전체 / size
+              resultCount === 0 ? 1 : Math.ceil(resultCount / resultLimit)
+            }
             page={currentPage}
             onChange={handleCurrentPageChange}
           />

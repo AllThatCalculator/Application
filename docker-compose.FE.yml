@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  frontend:
+    container_name: frontend
+    stdin_open: true
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    env_file: ./client/.env
+    volumes:
+      - /client/node_modules
+      - ./client/:/client
+    tty: true
+    ports:
+      - 3000:3000
+    restart: always

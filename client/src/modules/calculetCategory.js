@@ -17,7 +17,7 @@ const initialState = {
     //   99999: 기타
     // },
   },
-  created_at: "",
+  // created_at: "",
 };
 
 /** Action Creator Function ( 액션 생성 함수 ) */
@@ -31,7 +31,7 @@ function calculetCategory(state = initialState, action) {
     case CALCULET_CATEGORY:
       return {
         ...state,
-        ...action.data,
+        category: { ...action.data },
       };
     default:
       return state;

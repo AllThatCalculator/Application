@@ -2,10 +2,19 @@
  * find api에 필요한 body형태를 리턴
  * @param {*} categoryMainId
  * @param {*} categorySubId
- * @param {*} title
- * @param {*} limit
+ * @param {*} target
+ * @param {*} keyword
+ * @param {*} size
+ * @param {*} page
  */
-function getSearchRequestBody(categoryMainId, categorySubId, title, limit) {
+function getSearchRequestBody(
+  categoryMainId,
+  categorySubId,
+  keyword,
+  size,
+  page,
+  target
+) {
   let result = {};
 
   if (categoryMainId !== "") {
@@ -14,12 +23,16 @@ function getSearchRequestBody(categoryMainId, categorySubId, title, limit) {
   if (categorySubId !== "") {
     result["categorySubId"] = categorySubId;
   }
-  if (title !== "") {
-    result["title"] = title;
+  if (keyword !== "") {
+    result["keyword"] = keyword;
   }
-  if (limit !== 0) {
-    result["limit"] = limit;
+  result["size"] = size === 0 ? 20 : size; // (default) 20
+  result["page"] = page === 0 ? 1 : page; // (default) 1
+
+  if (target !== "") {
+    result["target"] = target;
   }
+
   return result;
 }
 

@@ -27,15 +27,90 @@ components:
                 $ref: "#/components/schemas/profileImg"
               userInfo:
                 $ref: "#/components/schemas/userUpdateInfo"
-
+    updateMyCalculetInfo:
+      description: 마이 계산기 정보 수정
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              updateMessage:
+                $ref: "#/components/schemas/updateLog/properties/message"
+              calculetInfo:
+                $ref: "#/components/schemas/calculetUpdate"
+  parameters:
+    userId:
+      in: path
+      required: true
+      name: userId
+      schema:
+        $ref: "#/components/schemas/userInfo/properties/id"
+  responses:
+    myCalculetInfo:
+      description: 계산기 불러오기 성공
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/calculet"
+            properties:
+              id:
+                $ref: "#/components/schemas/calculetId"
+    myCalculetList:
+      description: 마이 계산기 리스트
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              calculetList:
+                type: array
+                items:
+                  $ref: "#/components/schemas/myCalculetList"
+              count:
+                $ref: "#/components/schemas/calculetListCount"
+    userPublicInfo:
+      description: 유저 공개 프로필 (정보)
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/userPublicInfo"
+    userPublicCalculet:
+      description: 유저 공개 프로필 (계산기)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              calculetList:
+                type: array
+                items:
+                  $ref: "#/components/schemas/calculetPreview"
+              count:
+                $ref: "#/components/schemas/calculetListCount"
   schemas:
     userSimpleInfo:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/userInfo/properties/id"
+        userName:
+          $ref: "#/components/schemas/userInfo/properties/userName"
+        profileImgSrc:
+          $ref: "#/components/schemas/profileImgSrc"
+    userPublicInfo:
       type: object
       properties:
         userName:
           $ref: "#/components/schemas/userInfo/properties/userName"
         profileImgSrc:
           $ref: "#/components/schemas/profileImgSrc"
+        job:
+          $ref: "#/components/schemas/userInfo/properties/job"
+        bio:
+          $ref: "#/components/schemas/userInfo/properties/bio"
+        isMe:
+          $ref: "#/components/schemas/isMe"
     userProfile:
       $ref: "#/components/schemas/userInfo"
       properties:
@@ -57,6 +132,10 @@ components:
     userInfo:
       type: object
       properties:
+        id:
+          type: string
+          description: firebase uid
+          example: "FmBZs9SG8ybc0hla149hKXXTnT52"
         userName:
           type: string
           description: 사용자 이름
@@ -83,7 +162,7 @@ components:
     profileImgSrc:
       type: string
       description: 사용자 프로필 src path
-      example: "/file/profile/123ae3c23e..."
+      example: "/file/profile/FmBZs9SG8ybc0hla149hKXXTnT52"
     profileImg:
       type: string
       format: binary

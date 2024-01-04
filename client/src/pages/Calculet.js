@@ -1,20 +1,20 @@
-import CalculetBlock from "../components/calculet-block/CalculetBlock";
+import CalculetBlock from "../components/organisms/calculet-block/CalculetBlock";
 import { useCallback, useEffect, useState } from "react";
-import CalculetHeader from "../components/calculet-block/CalculetHeader";
+import CalculetHeader from "../components/organisms/calculet-block/CalculetHeader";
 import {
   updateCalculetCount,
   loadOftenUsedCalculet,
-} from "../components/calculet-block/oftenUsedCalculet";
-import FooterRecommend from "../components/global-components/FooterRecommend";
+} from "../components/organisms/calculet-block/oftenUsedCalculet";
+import FooterRecommend from "../components/organisms/common/FooterRecommend";
 import calculetInfo from "../user-actions/calculets/calculetInfo";
 import { Grid } from "@mui/material";
-import { PageScreenBox } from "../components/global-components/PageScreenBox";
-import LoadingPage from "../components/global-components/LoadingPage";
+import { PageScreenBox } from "../components/organisms/common/PageScreenBox";
+import LoadingPage from "../components/organisms/common/LoadingPage";
 import UploadIcon from "@mui/icons-material/Upload";
 import usePage from "../hooks/usePage";
 import getCalculetUpdateLog from "../user-actions/calculets/getCalculetUpdateLog";
 import getUserIdToken from "../utils/getUserIdToken";
-import PageScreenBottom from "../components/global-components/PageScreenBottom";
+import { CalculetPageScreenBottom } from "../components/organisms/common/PageScreenBottom";
 import useGetUrlParam from "../hooks/useGetUrlParam";
 
 async function handleGetCalculetInfo(id, setCalculetObj) {
@@ -31,7 +31,6 @@ async function handleGetCalculetInfo(id, setCalculetObj) {
   }
 
   if (calculetInfoRequest !== null) {
-    // return;
     setCalculetObj(calculetInfoRequest);
   }
 }
@@ -101,7 +100,7 @@ function Calculet() {
   useEffect(() => {
     if (!!calculetObj) setIsLoading(false);
   }, [calculetObj]);
-
+  // console.log(calculetObj);
   return (
     <>
       {isLoading && <LoadingPage />}
@@ -123,10 +122,11 @@ function Calculet() {
                 srcCode={calculetObj.srcCode}
                 manual={calculetObj.manual}
                 calculetId={id}
+                type={calculetObj.type}
               />
             </PageScreenBox>
           </Grid>
-          <PageScreenBottom
+          <CalculetPageScreenBottom
             helpText="자신만의 계산기를 만드세요!"
             buttonText="계산기 등록"
             handleButton={registerPage}

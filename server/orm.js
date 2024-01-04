@@ -11,6 +11,7 @@ const auto = new SequelizeAuto(
     directory: "./models/",
     caseModel: "c",
     caseFile: "c",
+    caseProp: "c",
   }
 );
 auto.run((err) => {

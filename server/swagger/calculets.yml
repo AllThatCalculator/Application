@@ -30,9 +30,9 @@ components:
         $ref: "#/components/schemas/calculet/properties/categorySubId"
     keyword:
       in: query
-      required: true
+      required: false
       name: keyword
-      description: 검색어
+      description: 검색어 (지정 시 target 지정도 필요함)
       schema:
         type: string
     size:
@@ -51,12 +51,18 @@ components:
         type: integer
     target:
       in: query
-      required: true
+      required: false
       name: target
-      description: 검색 대상 (title | desc | all)
+      description: 검색 대상 (title | desc | all - 지정 시 keyword 지정도 필요)
       schema:
         type: string
       example: title
+    blocked:
+      in: query
+      required: true
+      name: blocked
+      schema:
+        $ref: "#/components/schemas/calculet/properties/blocked"
   responses:
     likeResult:
       content:
@@ -85,6 +91,8 @@ components:
             properties:
               id:
                 $ref: "#/components/schemas/calculetId"
+              isMe:
+                $ref: "#/components/schemas/isMe"
               createdAt:
                 $ref: "#/components/schemas/dateTimeLive"
               contributor:
@@ -93,6 +101,7 @@ components:
                 $ref: "#/components/schemas/statistics"
               userCalculet:
                 $ref: "#/components/schemas/userCalculet"
+
     getCalculetList:
       description: 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
       content:
@@ -113,8 +122,7 @@ components:
                 items:
                   $ref: "#/components/schemas/calculetPreview"
               count:
-                type: integer
-                description: 검색된 계산기 수
+                $ref: "#/components/schemas/calculetListCount"
     getRecommendationList:
       description: 추천 계산기 목록 (아래 스키마는 계산기 하나 미리보기)
       content:
@@ -181,6 +189,14 @@ components:
           type: integer
           description: 카테고리 소분류
           example: 1
+        blocked:
+          type: integer
+          description: 신고 여부
+          example: 0
+        type:
+          type: integer
+          description: 등록 방식 (0 - 기존(default), 1 - simple v1)
+          example: 0
     calculetId:
       type: string
       description: 계산기 UUID
@@ -243,3 +259,84 @@ components:
           type: string
           description: 업데이트 메세지
           example: 업데이트 로그
+    isMe:
+      type: boolean
+      description: 본인이 작성자인지 여부
+    calculetListCount:
+      type: integer
+      description: 계산기 수
+    calculetUpdate:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/calculetId"
+        title:
+          $ref: "#/components/schemas/calculet/properties/title"
+        srcCode:
+          $ref: "#/components/schemas/calculet/properties/srcCode"
+        manual:
+          $ref: "#/components/schemas/calculet/properties/manual"
+        description:
+          $ref: "#/components/schemas/calculet/properties/description"
+        categoryMainId:
+          $ref: "#/components/schemas/calculet/properties/categoryMainId"
+        categorySubId:
+          $ref: "#/components/schemas/calculet/properties/categorySubId"
+        type:
+          $ref: "#/components/schemas/calculet/properties/type"
+        blocked:
+          $ref: "#/components/schemas/calculet/properties/blocked"
+    myCalculetInfo:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/calculetId"
+        title:
+          $ref: "#/components/schemas/calculet/properties/title"
+        description:
+          $ref: "#/components/schemas/calculet/properties/description"
+        categoryMainId:
+          $ref: "#/components/schemas/calculet/properties/categoryMainId"
+        categorySubId:
+          $ref: "#/components/schemas/calculet/properties/categorySubId"
+        createdAt:
+          $ref: "#/components/schemas/dateTimeLive"
+        viewCnt:
+          $ref: "#/components/schemas/statistics/properties/view"
+        likeCnt:
+          $ref: "#/components/schemas/statistics/properties/like"
+        bookmarkCnt:
+          $ref: "#/components/schemas/statistics/properties/bookmark"
+        blocked:
+          $ref: "#/components/schemas/calculet/properties/blocked"
+        isEdit:
+          type: boolean
+          description: 현재 수정중인 계산기가 있는지에 대한 여부
+    myCalculetList:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/calculetId"
+        title:
+          $ref: "#/components/schemas/calculet/properties/title"
+        description:
+          $ref: "#/components/schemas/calculet/properties/description"
+        categoryMainId:
+          $ref: "#/components/schemas/calculet/properties/categoryMainId"
+        categorySubId:
+          $ref: "#/components/schemas/calculet/properties/categorySubId"
+        createdAt:
+          $ref: "#/components/schemas/dateTimeLive"
+        viewCnt:
+          $ref: "#/components/schemas/statistics/properties/view"
+        likeCnt:
+          $ref: "#/components/schemas/statistics/properties/like"
+        bookmarkCnt:
+          $ref: "#/components/schemas/statistics/properties/bookmark"
+        blocked:
+          $ref: "#/components/schemas/calculet/properties/blocked"
+        isEdit:
+          type: boolean
+          description: 현재 수정중인 계산기가 있는지에 대한 여부
+        calculetTemp:
+          $ref: "#/components/schemas/myCalculetInfo"
