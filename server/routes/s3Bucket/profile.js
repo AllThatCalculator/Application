@@ -64,6 +64,7 @@ async function putObjectToS3(profileImg) {
       uuid: newUUID,
     };
   } catch (error) {
+    console.error(error);
     return {
       code: 400,
       uuid: null,
