@@ -1,4 +1,5 @@
 import { CALCULET_DEFAULT_ID } from "../../../constants/calculet";
+import { validate as uuidValidate } from "uuid";
 
 function updateCalculetCount(calculetId) {
   if (calculetId !== localStorage.getItem("previousCalculet")) {
@@ -28,7 +29,10 @@ function loadOftenUsedCalculet() {
   }
 
   // 만약 자주 쓰는 계산기가 비어있다면 초기화
-  if (localStorage.getItem("oftenCalculet") === null) {
+  if (
+    localStorage.getItem("oftenCalculet") === null ||
+    !uuidValidate(localStorage.getItem("oftenCalculet"))
+  ) {
     localStorage.setItem("oftenCalculet", CALCULET_DEFAULT_ID);
     localStorage.setItem("previousCalculet", CALCULET_DEFAULT_ID);
     localStorage.setItem("continueCnt", 0);

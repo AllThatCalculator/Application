@@ -87,18 +87,17 @@ function Calculet() {
     handleGetCalculetInfo(id, setCalculetObj);
   }, [id]);
 
-  const onHandlerLoadClaculetObj = useCallback(() => {
-    loadCalculetObj();
-    updateCalculetCount(id);
-  }, [loadCalculetObj, id]);
   /**
    * 계산기 객체 불러오기
    */
-  useEffect(onHandlerLoadClaculetObj, [onHandlerLoadClaculetObj]);
+  useEffect(loadCalculetObj, [loadCalculetObj]);
 
   // 로딩화면
   useEffect(() => {
-    if (!!calculetObj) setIsLoading(false);
+    if (!!calculetObj) {
+      setIsLoading(false);
+      updateCalculetCount(calculetObj.id);
+    }
   }, [calculetObj]);
   // console.log(calculetObj);
   return (
